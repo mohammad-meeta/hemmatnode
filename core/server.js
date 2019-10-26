@@ -33,7 +33,8 @@ Server.boot = function boot() {
     router.setup(Server);
 
     /* Mongoose */
-    /* TODO: to access mongodb data implement mongoose hereeeeeeeee */
+    const mongoose = use('core', 'modules', 'mongoose-module');
+    mongoose.setup(Server);
 
     /* Add server to global variable */
     global.Server = Server;

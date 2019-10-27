@@ -21,6 +21,9 @@ ExpressModule.setup = function setup(server) {
     /* Setup middlewares */
     ExpressModule.setupMiddlewares(server);
 
+    /* Setup pug */
+    ExpressModule.setupPug(server);
+
     return server;
 };
 
@@ -48,4 +51,22 @@ ExpressModule.setupMiddlewares = function setupMiddlewares(server) {
     global.csrf = csurf({ cookie: true });
 
     return server;
+};
+
+/**
+ * Setup pug
+ */
+ExpressModule.setupPug = function setupPug(server) {
+    const express = require('express');
+    const app = server.App;
+    const appConfig = use('config', 'app');
+    const viewsPath = rPath(appConfig.views_path);
+    const outputPath = rPath(appConfig.output_path);
+
+    /* Static folder */
+    app.use(express.static(outputPath));
+
+    /* Tempalte-engine */
+    app.set('view engine', 'pug');
+    app.set('views', viewsPath);
 };

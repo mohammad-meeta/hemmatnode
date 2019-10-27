@@ -6,10 +6,12 @@ const host = process.env.HOST || `${protocol}://localhost`;
 
 /* Export */
 module.exports = {
+    views_path: process.env.VIEWS_PATH || 'resources/views',
     debug: process.env.DEBUG || false,
     https: process.env.HTTPS || false,
     port: port,
     host: host,
+    output_path: process.env.OUTPUT_PATH || 'public',
     ssl_key: process.env.SSL_KEY ? rPath(process.env.SSL_KEY) : rPath('config', 'ssl', 'key.pem'),
     ssl_cert: process.env.SSL_CERT ? rPath(process.env.SSL_CERT) : rPath('config', 'ssl', 'cert.pem')
 };

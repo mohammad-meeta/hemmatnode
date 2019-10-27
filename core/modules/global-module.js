@@ -12,8 +12,40 @@ module.exports = GlobalFunctions;
 GlobalFunctions.setup = function setup(server) {
     global.rPath = GlobalFunctions.rPath;
     global.use = GlobalFunctions.use;
+    global.mix = GlobalFunctions.mix;
+    global.asset = GlobalFunctions.asset;
 
     return server;
+};
+
+/**
+ * mix function
+ */
+GlobalFunctions.mix = function mix(resource) {
+    if (resource && resource[0] != '/') {
+        resource = '/' + resource;
+    }
+
+    const appConfig = GlobalFunctions.use('config', 'app');
+    const webMix = use(appConfig.output_path, 'mix-manifest.json');
+    let path = webMix[resource] || '';
+
+    return path;
+};
+
+/**
+ * asset function
+ */
+GlobalFunctions.asset = function asset(resource) {
+    if (resource && resource[0] != '/') {
+        resource = '/' + resource;
+    }
+
+    const appConfig = GlobalFunctions.use('config', 'app');
+    const webMix = use(appConfig.output_path, 'mix-manifest.json');
+    let path = webMix[resource] || '';
+
+    return path;
 };
 
 /**

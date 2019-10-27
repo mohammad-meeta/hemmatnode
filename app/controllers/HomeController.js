@@ -11,6 +11,9 @@ module.exports = HomeController;
  * Index route
  */
 HomeController.index = async function index(req, res, next) {
+    res.render('index.pug');
+    return;
+
     const mongoose = require('mongoose');
     const User = mongoose.model('User');
     const users = await User.find({});

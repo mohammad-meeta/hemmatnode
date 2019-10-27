@@ -71,6 +71,13 @@ LoggerModule.init = function init(server) {
  * Log message
  */
 LoggerModule.log = function log(type, msg) {
+    const appConfig = use('config', 'app');
+
+    if ((appConfig.debug == 'true') && (type == 'error')) {
+        console.error(msg);
+        console.trace('TRACE ERROR');
+    }
+
     LoggerModule.logger[type](msg);
 };
 

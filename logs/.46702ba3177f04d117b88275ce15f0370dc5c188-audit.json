@@ -6,39 +6,34 @@
     "auditLog": "logs/.46702ba3177f04d117b88275ce15f0370dc5c188-audit.json",
     "files": [
         {
-            "date": 1572045905254,
-            "name": "logs/log-2019-10-26-02.log",
-            "hash": "06feb1a7481de95f6525623b1631485a"
+            "date": 1572453682151,
+            "name": "logs/log-2019-10-30-20.log",
+            "hash": "37561d80d0227a426dd43a2d759d05ef"
         },
         {
-            "date": 1572046296034,
-            "name": "logs/log-2019-10-26-03.log",
-            "hash": "30e1352aab9c1fa8145fb07f82735eed"
+            "date": 1572531018615,
+            "name": "logs/log-2019-10-31-17.log",
+            "hash": "ac05a95dc27ed764b58c54288cb1a117"
         },
         {
-            "date": 1572120987660,
-            "name": "logs/log-2019-10-26-23.log",
-            "hash": "921ecb0c7c100616982d809304c5e635"
+            "date": 1572536500670,
+            "name": "logs/log-2019-10-31-19.log",
+            "hash": "bdcd881c1c89f2d6f979353d493773de"
         },
         {
-            "date": 1572121800119,
-            "name": "logs/log-2019-10-27-00.log",
-            "hash": "0a62a3fbf67f7e8a3f5c56fa107befa4"
+            "date": 1572702382258,
+            "name": "logs/log-2019-11-02-17.log",
+            "hash": "1e4e9e70780124d6335f5d54222c6f2f"
         },
         {
-            "date": 1572159543506,
-            "name": "logs/log-2019-10-27-10.log",
-            "hash": "76bafc111a9616401b0d0792335bb9c8"
+            "date": 1572705889844,
+            "name": "logs/log-2019-11-02-18.log",
+            "hash": "35e00a33fdd632e6af626f055c57ca6f"
         },
         {
-            "date": 1572182772314,
-            "name": "logs/log-2019-10-27-16.log",
-            "hash": "a92900f4c2052661083b74dc4bdcc284"
-        },
-        {
-            "date": 1572269597599,
-            "name": "logs/log-2019-10-28-17.log",
-            "hash": "4a993791e64fa9bf97ff2b9372f58a14"
+            "date": 1572878655264,
+            "name": "logs/log-2019-11-04-18.log",
+            "hash": "7e8ae29ce54f8d9992ffb6a5e3f0e383"
         }
     ]
 }

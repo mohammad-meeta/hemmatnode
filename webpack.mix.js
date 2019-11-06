@@ -28,15 +28,15 @@ mix.webpackConfig({
         rules: [{
             test: /\.pug$/i,
             oneOf: [{
-                resourceQuery: /^\?vue/i,
-                use: ['pug-plain-loader']
-            },
-            {
-                use: [
-                    'raw-loader',
-                    'pug-plain-loader'
-                ]
-            }
+                    resourceQuery: /^\?vue/i,
+                    use: ['pug-plain-loader']
+                },
+                {
+                    use: [
+                        'raw-loader',
+                        'pug-plain-loader'
+                    ]
+                }
             ]
         }]
     }
@@ -46,8 +46,14 @@ mix.webpackConfig({
 mix.setPublicPath(output)
     .version();
 
+/* Copy Files & Directories */
+mix.copyDirectory('resources/images', `${output}/images`);
+
 /* JS */
-mix.js('resources/js/pages/auth/login/index.js', `${output}/js/pages/auth/login`);
+mix.js('resources/js/core/kernel.js', `${output}/js/core`)
+    .js('resources/js/pages/auth/login/index.js', `${output}/js/pages/auth/login`);
 
 /* SASS */
-mix.sass('resources/sass/pages/auth/login.scss', `${output}/css/pages/auth`);
+mix.sass('resources/sass/core/kernel.scss', `${output}/css/core`)
+    .sass('resources/sass/pages/home/index.scss', `${output}/css/pages/home`)
+    .sass('resources/sass/pages/auth/login.scss', `${output}/css/pages/auth`);

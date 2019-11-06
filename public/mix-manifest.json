@@ -1,4 +1,7 @@
 {
-    "/js/pages/auth/login/index.js": "/js/pages/auth/login/index.js?id=935757b34a02d7a4d178",
-    "/css/pages/auth/login.css": "/css/pages/auth/login.css?id=3db8ca8d985050ee7689"
+    "/js/core/kernel.js": "/js/core/kernel.js?id=17961c14a3439570c712",
+    "/css/core/kernel.css": "/css/core/kernel.css?id=3db8ca8d985050ee7689",
+    "/css/pages/home/index.css": "/css/pages/home/index.css?id=adf2ae87ab0d4173b977",
+    "/css/pages/auth/login.css": "/css/pages/auth/login.css?id=44b89e07b62b3538cd2f",
+    "/js/pages/auth/login/index.js": "/js/pages/auth/login/index.js?id=4edd18a60b367939ea97"
 }

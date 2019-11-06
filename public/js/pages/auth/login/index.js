@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -12949,26 +12949,14 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/sass/pages/auth/login.scss":
-/*!**********************************************!*\
-  !*** ./resources/sass/pages/auth/login.scss ***!
-  \**********************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-
-/***/ 0:
-/*!*********************************************************************************************!*\
-  !*** multi ./resources/js/pages/auth/login/index.js ./resources/sass/pages/auth/login.scss ***!
-  \*********************************************************************************************/
+/***/ 1:
+/*!******************************************************!*\
+  !*** multi ./resources/js/pages/auth/login/index.js ***!
+  \******************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/amisen/Ojvar/Projects/ojvar-projects/task-tracker/resources/js/pages/auth/login/index.js */"./resources/js/pages/auth/login/index.js");
-module.exports = __webpack_require__(/*! /home/amisen/Ojvar/Projects/ojvar-projects/task-tracker/resources/sass/pages/auth/login.scss */"./resources/sass/pages/auth/login.scss");
+module.exports = __webpack_require__(/*! /home/amisen/Ojvar/Projects/ojvar-projects/task-tracker/resources/js/pages/auth/login/index.js */"./resources/js/pages/auth/login/index.js");
 
 
 /***/ })

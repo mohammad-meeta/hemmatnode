@@ -3,7 +3,7 @@
 /**
  * Router rclass
  */
-function RouterModule() { }
+function RouterModule() {}
 module.exports = RouterModule;
 
 /* Defaults */
@@ -20,9 +20,7 @@ RouterModule.setup = function setup(server) {
     /* Register routes */
     const fs = require('fs');
     const files = fs.readdirSync(rPath('routes'));
-    files.forEach(file => {
-        use('routes', file);
-    });
+    files.forEach(file => use('routes', file));
 
     return server;
 };
@@ -67,16 +65,14 @@ RouterModule.getActions = function getActions(actions) {
             const controller = use('app', 'controllers', controllerName);
 
             result.push(controller[actionName]);
-        }
-        else {
+        } else {
             result.push(action);
         }
     })
 
     if (result.length == 1) {
         return result[0];
-    }
-    else {
+    } else {
         return result;
     }
 };
@@ -92,6 +88,7 @@ RouterModule.route = function route(alias, params) {
 
     let routePath = route.route.path;
     routePath = pathHelper.applyParams(routePath, params);
+    routePath = global.server.url + routePath;
 
     return routePath;
 };

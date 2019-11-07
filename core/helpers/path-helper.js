@@ -3,7 +3,7 @@
 /**
  * Path helper class
  */
-function PathHelper() { }
+function PathHelper() {}
 module.exports = PathHelper;
 
 /**

@@ -3,7 +3,7 @@
 /**
  * GlobalFunctions class
  */
-function GlobalFunctions() { }
+function GlobalFunctions() {}
 module.exports = GlobalFunctions;
 
 /**
@@ -22,13 +22,15 @@ GlobalFunctions.setup = function setup(server) {
  * mix function
  */
 GlobalFunctions.mix = function mix(resource) {
+    const appConfig = GlobalFunctions.use('config', 'app');
+    const webMix = GlobalFunctions.use(appConfig.output_path, 'mix-manifest.json');
+
     if (resource && resource[0] != '/') {
         resource = '/' + resource;
     }
-
-    const appConfig = GlobalFunctions.use('config', 'app');
-    const webMix = use(appConfig.output_path, 'mix-manifest.json');
     let path = webMix[resource] || '';
+
+    path = global.server.url + path;
 
     return path;
 };
@@ -41,11 +43,9 @@ GlobalFunctions.asset = function asset(resource) {
         resource = '/' + resource;
     }
 
-    const appConfig = GlobalFunctions.use('config', 'app');
-    const webMix = use(appConfig.output_path, 'mix-manifest.json');
-    let path = webMix[resource] || '';
+    resource = global.server.url + resource;
 
-    return path;
+    return resource;
 };
 
 /**

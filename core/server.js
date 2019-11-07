@@ -3,7 +3,7 @@
 /**
  * Server class
  */
-function Server() { }
+function Server() {}
 module.exports = Server;
 
 /**
@@ -51,18 +51,29 @@ Server.run = function run() {
 
     if (appConfig.https) {
         engine = Server.httpsEngine(appConfig);
-    }
-    else {
+    } else {
         engine = Server.httpEngine(appConfig);
     }
 
     /* Start listening */
-    engine = engine.server.createServer(engine.options, App);
-    engine.listen(appConfig.port, function () {
-        const url = appConfig.host.replace(/\/$/g, '')
-            + `:${appConfig.port}`;
+    let server = engine.server.createServer(engine.options, App);
+
+    // server.listen(appConfig.port, appConfig.host, function () {
+    server.listen(appConfig.port, function () {
+        let url = appConfig.host.replace(/\/$/g, '');
+
+        if (appConfig.port) {
+            url += `:${appConfig.port}`;
+        }
 
         Logger.info(`Server started at port ${url}`);
+
+        /* Set global variable */
+        global.server = {
+            engine,
+            url,
+            server
+        };
     });
 
     return engine;
@@ -76,6 +87,7 @@ Server.httpEngine = function httpEngine(config) {
     const http = require('http');
 
     return {
+        protocol: 'http',
         server: http,
         options: {}
     };
@@ -94,6 +106,7 @@ Server.httpsEngine = function httpsEngine(config) {
     };
 
     return {
+        protocol: 'https',
         server: https,
         options: options
     };

@@ -1,12 +1,26 @@
-<!DOCTYPE html>
-html(lang="en")
-    head
-        meta(charset="UTF-8")
-        meta(name="viewport" content="width=device-width, initial-scale=1.0")
-        meta(http-equiv="X-UA-Compatible" content="ie=edge")
-        title Login
-        link(rel="stylesheet", href=mix('css/pages/auth/login.css'))
-    body
-        #app
-            login(ref="loginComponent")
-        script(defer, src=mix('js/pages/auth/login/index.js'))
+extends ../../layout/app.pug
+
+block title
+    | Welcome to TaskTracker
+
+block styles
+    link(rel="stylesheet", href=mix('css/pages/auth/login.css'))
+
+block content
+    #app.container.has-text-centered
+        .columns.is-vcentered
+            .column.is-5
+                login(ref="loginComponent")
+            .column.is-6.is-offset-1
+                h1.title.is-2
+                    | Login
+                h2.subtitle.is-4
+                    | Enter your email and password
+                    
+block footer
+    ul
+        li
+            a Copyright&copy; Ojvar, 2018-2020
+
+block scripts
+    script(defer, src=mix('js/pages/auth/login/index.js'))

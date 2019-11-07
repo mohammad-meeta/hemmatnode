@@ -26,7 +26,7 @@ Login.initVue = function() {
 
             components: {
                 Login
-            },
+            }
         });
 }
 

@@ -2,16 +2,16 @@
 html(lang="en")
     head
         title
-            block append title
+            block title
                 | TaskTracker
 
         meta(charset="UTF-8")
         meta(name="viewport" content="width=device-width, initial-scale=1.0")
         meta(http-equiv="X-UA-Compatible" content="ie=edge")
 
-        block prepend styles
-            link(rel="shortcut icon" type="image/png", href=asset("images/favicon.png"))
-            link(rel="stylesheet", href=mix("css/core/kernel.css"))
+        link(rel="shortcut icon" type="image/png", href=asset("images/favicon.png"))
+        link(rel="stylesheet", href=mix("css/core/kernel.css"))
+        block styles
 
     body
         section.hero.is-fullheight.is-default.is-bold
@@ -19,5 +19,5 @@ html(lang="en")
             include ./content.pug
             include ./footer.pug
 
-        block prepend scripts
-            script(defer, src=mix("js/core/kernel.js"))
+        script(defer, src=mix("js/core/kernel.js"))
+        block scripts

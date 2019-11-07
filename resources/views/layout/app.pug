@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+html(lang="en")
+    head
+        title
+            block append title
+                | TaskTracker
+
+        meta(charset="UTF-8")
+        meta(name="viewport" content="width=device-width, initial-scale=1.0")
+        meta(http-equiv="X-UA-Compatible" content="ie=edge")
+
+        block prepend styles
+            link(rel="shortcut icon" type="image/png", href=asset("images/favicon.png"))
+            link(rel="stylesheet", href=mix("css/core/kernel.css"))
+
+    body
+        section.hero.is-fullheight.is-default.is-bold
+            include ./head.pug
+            include ./content.pug
+            include ./footer.pug
+
+        block prepend scripts
+            script(defer, src=mix("js/core/kernel.js"))

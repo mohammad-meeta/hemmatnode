@@ -3,7 +3,7 @@
 /**
  * JSCore class
  */
-function JSCore() { }
+function JSCore() {}
 module.exports = JSCore;
 
 /**
@@ -12,16 +12,19 @@ module.exports = JSCore;
 JSCore.setup = function () {
     JSCore.setupVue();
     JSCore.setupAxios();
+    JSCore.setupBulma();
 };
 
 /**
  * Setup Vue
  */
 JSCore.setupVue = function () {
-    const Vue = require('vue').default;
-    const Vuex = require('vuex').default;
+    const Vue = require('vue');
+    const Vuex = require('vuex');
 
     Vue.use(Vuex);
+
+    window.Vue = Vue;
 };
 
 /**
@@ -32,3 +35,22 @@ JSCore.setupAxios = function () {
 
     window.axios = Axios;
 };
+
+/**
+ * Setup Bulma
+ */
+JSCore.setupBulma = function () {
+    const burger = document.querySelector('.burger');
+    const menu = document.querySelector(`#${burger.dataset.target}`);
+
+    if (burger && menu) {
+        burger.addEventListener('click', function () {
+            burger.classList.toggle('is-active');
+            menu.classList.toggle('is-active');
+        });
+    }
+};
+
+
+/*  Run Setup */
+JSCore.setup();

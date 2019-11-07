@@ -1,0 +1,14 @@
+.hero-head
+    nav.navbar
+        .container
+            .navbar-brand
+                a.navbar-item(href='.#')
+                    img(src=asset("images/favicon.png"), alt='Logo')
+                span.navbar-burger.burger(data-target='navbarMenu')
+                    span
+                    span
+                    span
+            #navbarMenu.navbar-menu
+                .navbar-end
+                    .tabs.is-right
+                        include ./menu.pug

@@ -32,6 +32,8 @@
 </template>
 
 <script>
+'use strict';
+
 module.exports = {
     name: "Login",
 

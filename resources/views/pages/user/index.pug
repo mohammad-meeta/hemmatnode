@@ -1,0 +1,30 @@
+extends ../../layout/app.pug
+
+block title
+    | Welcome to TaskTracker
+
+//- block styles
+
+block content
+    #app.container.has-text-centered
+        .columns.is-vcentered
+            .column.is-9
+                user-list
+            .column.is-2.is-offset-1
+                a.button.is-primary.is-fullwidth.is-rounded(href="#")
+                    span.icon.is-small
+                        i.material-icons add_circle
+                    span New User
+                a.button.is-secondary.is-fullwidth.is-rounded(href="#")
+                    span.icon.is-small
+                        i.material-icons edit
+                    span Edit
+
+block footer
+    ul
+        li
+            a Copyright&copy; Ojvar, 2018-2020
+
+block scripts
+    script(defer, src=mix('js/pages/user/index/index.js'))
+

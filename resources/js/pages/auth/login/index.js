@@ -3,21 +3,20 @@
 /**
  * Login class
  */
-const Login = function() {}
+const Login = function () {}
 module.exports = Login;
 
 /**
  * Boot method
  */
-Login.boot = function() {
+Login.boot = function () {
     Login.initVue();
 }
 
 /**
  * Init vue
  */
-Login.initVue = function() {
-    const Vue = require('vue');
+Login.initVue = function () {
     const Login = require('VUE-COMPONENTS/login.vue').default;
 
     window.v =

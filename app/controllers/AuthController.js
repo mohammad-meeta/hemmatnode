@@ -14,3 +14,15 @@ module.exports = AuthController;
 AuthController.login = function login(req, res, next) {
     res.render(PugView.getView('auth/login'));
 };
+
+
+/**
+ * Attempt function 
+ */
+AuthController.attempt = function attempt(req, res, next) {
+    const data = req.body.user_data;
+
+    console.log(data);
+
+    res.end(200);
+}

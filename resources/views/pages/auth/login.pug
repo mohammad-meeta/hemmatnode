@@ -7,15 +7,15 @@ block styles
     link(rel="stylesheet", href=mix('css/pages/auth/login.css'))
 
 block content
-    #app.container.has-text-centered
+    #app.container
         .columns.is-vcentered
             .column.is-5
                 login(ref="loginComponent")
-            .column.is-6.is-offset-1
+            .column.is-6.is-offset-1.has-text-centered
                 h1.title.is-2
-                    | Login
+                    | Welcome
                 h2.subtitle.is-4
-                    | Enter your email and password
+                    | Please login to your account
                     
 block footer
     ul

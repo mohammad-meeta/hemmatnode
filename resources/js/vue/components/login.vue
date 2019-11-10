@@ -25,7 +25,7 @@
                 </div>
             </div>
             <div class="field">
-                <button class="button is-success" @click.prevent="login">Login</button>
+                <button class="button is-success is-medium" @click.prevent="login">Login</button>
             </div>
         </form>
     </div>

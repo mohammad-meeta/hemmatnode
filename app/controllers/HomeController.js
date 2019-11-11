@@ -13,7 +13,9 @@ module.exports = HomeController;
  * Index route
  */
 HomeController.index = async function index(req, res, next) {
-    res.render(PugView.getView('home/index'));
+    res.render(PugView.getView('home/index'), {
+        pageRoute: 'home.index'
+    });
 };
 
 
@@ -21,5 +23,7 @@ HomeController.index = async function index(req, res, next) {
  * About route
  */
 HomeController.about = async function about(req, res, next) {
-    res.render(PugView.getView('home/about'));
+    res.render(PugView.getView('home/about'), {
+        pageRoute: 'home.about'
+    });
 };

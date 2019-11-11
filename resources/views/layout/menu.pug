@@ -1,10 +1,10 @@
 mixin menuItem(url, title)
-    li
+    li(class=((url.toLowerCase() == (pageRoute || "").toLowerCase()) ? "is-active" : ""))
         a(href=route(url))= title
 
 ul
     +menuItem("home.index", "Home")
     +menuItem("home.about", "About")
     +menuItem("auth.login", "Login")
-    +menuItem("", "|")
+    +menuItem("sep", "|")
     +menuItem("user.index", "Users")

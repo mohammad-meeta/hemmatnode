@@ -93,10 +93,9 @@ RouterModule.route = function route(alias, params) {
     return routePath;
 };
 
-
 /* Add other route types */
 const types = [
-    'get', 'head', 'post', 'put', 'patch', 'delete', 'options', 'link'
+    'get', 'head', 'post', 'put', 'patch', 'delete', 'options', 'link', 'use'
 ];
 types.forEach(function (type) {
     RouterModule[type] = (url, actions) => {

@@ -25,6 +25,16 @@ UserIndexPage.initVue = function () {
 
             components: {
                 UserList
+            },
+
+            methods: {
+                /**
+                 * On Command button click
+                 * @param {String} cmd The command
+                 */
+                commandClick(cmd) {
+                    // this.$refs.userList.
+                }
             }
         });
 }

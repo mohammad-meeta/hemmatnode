@@ -3,7 +3,7 @@
 /**
  * Express module
  */
-function ExpressModule() { }
+function ExpressModule() {}
 module.exports = ExpressModule;
 
 /**
@@ -39,7 +39,9 @@ ExpressModule.setupMiddlewares = function setupMiddlewares(server) {
 
     /* Setup body-parser */
     const bodyParser = require('body-parser');
-    app.use(bodyParser.urlencoded({ extended: false }));
+    app.use(bodyParser.urlencoded({
+        extended: false
+    }));
     app.use(bodyParser.json());
 
     /* Setup cookie-parser */
@@ -48,7 +50,9 @@ ExpressModule.setupMiddlewares = function setupMiddlewares(server) {
 
     /* Setup csrf */
     const csurf = require('csurf');
-    global.csrf = csurf({ cookie: true });
+    global.csrf = csurf({
+        cookie: true
+    });
 
     return server;
 };

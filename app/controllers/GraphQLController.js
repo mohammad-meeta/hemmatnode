@@ -45,9 +45,22 @@ GraphQLController.prepareSchemas = function prepareSchemas() {
         const gqlModule = use("graphql", file);
         const initData = gqlModule.init();
 
-        schema.typeDefs += `${initData.typeDefs()}\n`;
         schema.resolvers = _.merge(schema.resolvers, initData.resolvers());
+
+        let typeDefs = initData.typeDefs();
+        Object.keys(typeDefs)
+            .forEach(key => {
+                if (typeDefsCollection[key]) {
+                    typeDefsCollection[key] += `${typeDefs[key]} \n`;
+                }
+                else {
+                    typeDefsCollection[key] = typeDefs[key];
+                }
+            });
     });
+
+    Object.keys(typeDefsCollection)
+        .forEach(key => schema.typeDefs += `type ${key} { ${typeDefsCollection[key]} }`);
 
     /* Generate schema */
     schema = {

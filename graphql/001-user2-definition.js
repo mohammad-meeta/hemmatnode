@@ -23,7 +23,7 @@ Model.init = function init() {
 Model.typeDefs = function typeDefs() {
     return {
         'Query': `
-            hello(user: String!) : String
+            hello2(user: String!) : String
         `
     };
 };
@@ -34,7 +34,7 @@ Model.typeDefs = function typeDefs() {
 Model.resolvers = function resolvers() {
     return {
         Query: {
-            hello: Model.hello
+            hello2: Model.hello
         }
     }
 };
@@ -43,5 +43,5 @@ Model.resolvers = function resolvers() {
  * Hello function
  */
 Model.hello = function hello(_, data) {
-    return 'Hello ' + data.user;
+    return 'Hello(2) ' + data.user;
 };

@@ -16,22 +16,47 @@ Model.init = function init() {
     };
 };
 
-
 /**
  * typeDefs Model
  */
 Model.typeDefs = function typeDefs() {
-    return {
-        'Query': `
-            hello(user: String!) : String
-            friend: Friend
-        `,
-        'Friend': `
-            id: ID
-            firstName: String
-            lastName: String
-        `
-    };
+    return [{
+            type: 'type',
+            name: 'Query',
+            schema: `
+                users(index: Int, size: Int) : [User]
+            `
+        },
+        {
+            type: 'type',
+            name: 'Mutation',
+            schema: `
+                insertUser(user: InputUser) : [User]
+            `
+        },
+        {
+            type: 'type',
+            name: 'User',
+            schema: `
+                id: ID
+                name: String
+                email: String
+                created_at: String
+                updated_at: String
+            `
+        },
+        {
+            type: 'input',
+            name: 'InputUser',
+            schema: `
+                id: ID
+                name: String
+                email: String
+                created_at: String
+                updated_at: String
+            `
+        }
+    ];
 };
 
 /**
@@ -40,30 +65,47 @@ Model.typeDefs = function typeDefs() {
 Model.resolvers = function resolvers() {
     return {
         Query: {
-            hello: Model.hello,
-            friend: Model.friend
+            users: Model.users,
         },
-
-        Friend: {
-
+        Mutation: {
+            insertUser: Model.insertUser
         }
     }
 };
 
 /**
- * Hello function
+ * Users list function
  */
-Model.hello = function hello(_, data) {
-    return 'Hello  From OjvarLand, ' + data.user;
+Model.users = function users(_, payload) {
+    payload = Object.assign({
+        index: 1,
+        size: 10
+    }, payload);
+
+    return [{
+            id: '1',
+            name: 'user 1',
+            pwd: '123456',
+            email: 'user1@tasktracker.dev',
+            created_at: '2020-01-01T10:10:10',
+            updated_at: '2020-01-01T10:10:10'
+        },
+        {
+            id: '2',
+            name: 'user 2',
+            pwd: '123456',
+            email: 'user2@tasktracker.dev',
+            created_at: '2020-01-01T10:10:10',
+            updated_at: '2020-01-01T10:10:10'
+        }
+    ];
 };
 
 /**
- *.friend function
+ * Insert new user
+ *
+ * @param      {Object}  user    The user data
  */
-Model.friend = function friend() {
-    return {
-        id: 'XXXXXX',
-        firstName: 'Ali',
-        lastName: 'Gholi'
-    };
+Model.insertUser = function insertUser(user) {
+    return {};
 };

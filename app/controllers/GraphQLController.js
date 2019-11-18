@@ -5,7 +5,6 @@ const {
     makeExecutableSchema
 } = require('graphql-tools');
 
-
 /**
  * GraphQL Controller class
  */
@@ -46,19 +45,20 @@ GraphQLController.prepareSchemas = function prepareSchemas() {
         schema.resolvers = _.merge(schema.resolvers, initData.resolvers());
 
         let typeDefs = initData.typeDefs();
-        Object.keys(typeDefs)
-            .forEach(key => {
-                if (typeDefsCollection[key]) {
-                    typeDefsCollection[key] += `${typeDefs[key]} \n`;
-                }
-                else {
-                    typeDefsCollection[key] = typeDefs[key];
-                }
-            });
+        typeDefs.forEach(entry => {
+            const key = `${entry.type || 'type'} ${entry.name || 'Query'}`;
+            const schema = entry.schema;
+
+            if (typeDefsCollection[key]) {
+                typeDefsCollection[key] += `${schema}\n`;
+            } else {
+                typeDefsCollection[key] = schema;
+            }
+        });
     });
 
     Object.keys(typeDefsCollection)
-        .forEach(key => schema.typeDefs += `type ${key} { ${typeDefsCollection[key]} }`);
+        .forEach(key => schema.typeDefs += `${key} { ${typeDefsCollection[key]} } \n`);
 
     /* Generate schema */
     schema = {

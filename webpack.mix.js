@@ -26,19 +26,24 @@ mix.alias({
 mix.webpackConfig({
     module: {
         rules: [{
-            test: /\.pug$/i,
-            oneOf: [{
-                    resourceQuery: /^\?vue/i,
-                    use: ['pug-plain-loader']
-                },
-                {
-                    use: [
-                        'raw-loader',
-                        'pug-plain-loader'
-                    ]
-                }
-            ]
-        }]
+                test: /\.pug$/i,
+                oneOf: [{
+                        resourceQuery: /^\?vue/i,
+                        use: ['pug-plain-loader']
+                    },
+                    {
+                        use: [
+                            'raw-loader',
+                            'pug-plain-loader'
+                        ]
+                    }
+                ]
+            },
+            {
+                test: /\.pug$/,
+                loader: 'pug-plain-loader'
+            }
+        ]
     }
 });
 

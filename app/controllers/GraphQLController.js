@@ -18,8 +18,6 @@ module.exports = GraphQLController;
 GraphQLController.run = function run(req, res, next) {
     const graphqlHTTP = require('express-graphql');
 
-    console.log(GraphQLController.schema)
-
     return graphqlHTTP({
         schema: makeExecutableSchema(GraphQLController.schema),
         graphiql: GraphQLController.graphiql

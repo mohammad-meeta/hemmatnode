@@ -17,7 +17,7 @@ UserIndexPage.boot = function () {
  * Init vue
  */
 UserIndexPage.initVue = function () {
-    const UserList = require('VUE-COMPONENTS/user/user-list.vue').default;
+    const UserList = require('VUE-COMPONENTS/user/users.vue').default;
 
     window.v =
         new Vue({
@@ -25,16 +25,6 @@ UserIndexPage.initVue = function () {
 
             components: {
                 UserList
-            },
-
-            methods: {
-                /**
-                 * On Command button click
-                 * @param {String} cmd The command
-                 */
-                commandClick(cmd) {
-                    // this.$refs.userList.
-                }
             }
         });
 }

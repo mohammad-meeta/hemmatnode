@@ -46,14 +46,16 @@ GraphQLController.prepareSchemas = function prepareSchemas() {
 
         let typeDefs = initData.typeDefs();
         typeDefs.forEach(entry => {
-            const key = `${entry.type} ${entry.name}`;
-            const schema = entry.schema;
+            const key = `${entry.type || 'type'} ${entry.category || 'Query'}`;
+            let schema = entry.schema;
 
-            if (typeDefsCollection[key]) {
-                typeDefsCollection[key] += `${schema}\n`;
-            } else {
-                typeDefsCollection[key] = schema;
+            /* Convert schema-array to schema-string */
+            if (Array.isArray(schema) === true) {
+                schema = schema.join('\n');
             }
+
+            /* Append to collection */
+            typeDefsCollection[key] = (typeDefsCollection[key] || "") + `\n${schema}`;
         });
     });
 

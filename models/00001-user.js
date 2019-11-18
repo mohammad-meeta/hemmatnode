@@ -3,7 +3,7 @@
 /**
  * User model
  */
-function UserModel() { }
+function UserModel() {}
 module.exports = UserModel;
 
 /**
@@ -15,6 +15,9 @@ UserModel.setup = function setup() {
     const schema = new mongoose.Schema(model);
 
     UserModel.plugins(schema);
+
+    /* Add statics */
+    schema.statics.newUser = UserModel.newUser;
 
     mongoose.model('User', schema);
 };
@@ -50,4 +53,13 @@ UserModel.plugins = function plugins(schema) {
         createdAt: 'created_at',
         updatedAt: 'updated_at'
     });
+};
+
+/**
+ * Insert user function
+ */
+UserModel.newUser = async function newUser(newUser) {
+    let result = new this(newUser);
+
+    return result.save();
 };

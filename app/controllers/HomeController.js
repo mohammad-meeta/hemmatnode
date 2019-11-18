@@ -8,7 +8,6 @@ const PugView = use('app', 'helpers', 'pug-view');
 function HomeController() {}
 module.exports = HomeController;
 
-
 /**
  * Index route
  */
@@ -17,7 +16,6 @@ HomeController.index = async function index(req, res, next) {
         pageRoute: 'home.index'
     });
 };
-
 
 /**
  * About route

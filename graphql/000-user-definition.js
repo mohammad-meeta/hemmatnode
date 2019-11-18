@@ -1,5 +1,7 @@
 'use strict';
 
+const mongoose = require('mongoose');
+
 /**
  * Model class
  */
@@ -21,22 +23,16 @@ Model.init = function init() {
  */
 Model.typeDefs = function typeDefs() {
     return [{
-            type: 'type',
-            name: 'Query',
-            schema: `
-                users(index: Int, size: Int) : [User]
-            `
+            schema: [
+                'users(index: Int, size: Int) : [User]'
+            ]
         },
         {
-            type: 'type',
-            name: 'Mutation',
-            schema: `
-                insertUser(user: InputUser) : [User]
-            `
+            category: 'Mutation',
+            schema: 'insertUser(user: InputUser) : User'
         },
         {
-            type: 'type',
-            name: 'User',
+            category: 'User',
             schema: `
                 id: ID
                 name: String
@@ -47,13 +43,11 @@ Model.typeDefs = function typeDefs() {
         },
         {
             type: 'input',
-            name: 'InputUser',
+            category: 'InputUser',
             schema: `
-                id: ID
                 name: String
                 email: String
-                created_at: String
-                updated_at: String
+                password: String
             `
         }
     ];
@@ -65,7 +59,7 @@ Model.typeDefs = function typeDefs() {
 Model.resolvers = function resolvers() {
     return {
         Query: {
-            users: Model.users,
+            users: Model.users
         },
         Mutation: {
             insertUser: Model.insertUser
@@ -76,29 +70,16 @@ Model.resolvers = function resolvers() {
 /**
  * Users list function
  */
-Model.users = function users(_, payload) {
+Model.users = async function users(_, payload) {
     payload = Object.assign({
         index: 1,
         size: 10
     }, payload);
 
-    return [{
-            id: '1',
-            name: 'user 1',
-            pwd: '123456',
-            email: 'user1@tasktracker.dev',
-            created_at: '2020-01-01T10:10:10',
-            updated_at: '2020-01-01T10:10:10'
-        },
-        {
-            id: '2',
-            name: 'user 2',
-            pwd: '123456',
-            email: 'user2@tasktracker.dev',
-            created_at: '2020-01-01T10:10:10',
-            updated_at: '2020-01-01T10:10:10'
-        }
-    ];
+    const UserModel = mongoose.model('User');
+    const users = await UserModel.find();
+
+    return users;
 };
 
 /**
@@ -106,6 +87,15 @@ Model.users = function users(_, payload) {
  *
  * @param      {Object}  user    The user data
  */
-Model.insertUser = function insertUser(user) {
-    return {};
+Model.insertUser = async function insertUser(_, data) {
+    /* prepare user data */
+    let user = {
+        ...data.user,
+        pwd: data.user.password
+    };
+
+    const UserModel = mongoose.model('User');
+    const newUser = await UserModel.newUser(user);
+
+    return newUser;
 };

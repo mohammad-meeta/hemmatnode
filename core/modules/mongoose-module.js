@@ -3,7 +3,7 @@
 /**
  * Mongoose module
  */
-function MongooseModule() { }
+function MongooseModule() {}
 module.exports = MongooseModule;
 
 /**
@@ -49,8 +49,7 @@ MongooseModule.getConnectionString = function getConnectionString(config) {
     if (null != config.user) {
         if (null != config.password) {
             connectionString = `${config.user}:${config.password}@${connectionString}`;
-        }
-        else {
+        } else {
             connectionString = `${config.user}@${connectionString}`;
         }
     }

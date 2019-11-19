@@ -19,7 +19,6 @@ mix.alias({
     'VIEWS': 'resources/views'
 });
 
-
 /**
  *  Webpack config
  */

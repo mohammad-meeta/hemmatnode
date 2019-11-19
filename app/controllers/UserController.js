@@ -8,7 +8,6 @@ const PugView = use('app', 'helpers', 'pug-view');
 function UserController() {}
 module.exports = UserController;
 
-
 /**
  * Index route
  */

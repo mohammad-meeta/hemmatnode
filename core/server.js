@@ -7,7 +7,7 @@ function Server() {}
 module.exports = Server;
 
 /**
- * Init server 
+ * Init server
  */
 Server.boot = function boot() {
     const path = require('path');

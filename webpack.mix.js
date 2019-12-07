@@ -10,13 +10,17 @@ const output = appConfig.output_path;
 
 /* Aliases */
 mix.alias({
-    'VUE-COMPONENTS': 'resources/js/vue/components',
     'JS': 'resources/js',
+    'JS-CORE': 'resources/js/core',
     'JS-HELPERS': 'resources/js/helpers',
+    'VUE': 'resources/js/vue',
+    'VUE-COMPONENTS': 'resources/js/vue/components',
+    'VUE-HELPERS': 'resources/js/vue/helpers',
     'SASS': 'resources/sass',
     'FONTS': 'resources/fonts',
     'IMAGES': 'resources/images',
-    'VIEWS': 'resources/views'
+    'VIEWS': 'resources/views',
+    'CONFIGS': 'resources/configs'
 });
 
 /**

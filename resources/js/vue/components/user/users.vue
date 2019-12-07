@@ -11,6 +11,7 @@
 <script>
 "use strict";
 
+const Routes = require("JS-CORE/routes");
 const ENUMS = require("JS-HELPERS/enums");
 const Loading = require("VUE-COMPONENTS/general/loading.vue").default;
 const RegisterUser = require("VUE-COMPONENTS/user/register-user.vue").default;
@@ -45,10 +46,29 @@ module.exports = {
 
     methods: {
         /**
+         * Load users list
+         */
+        loadUsers() {
+            return new Promise((resolve, reject) => {
+                const UserHelper = require("VUE-HELPERS/user-helper");
+
+                UserHelper.loadUsers()
+                    .then(res => {
+                        const data = res.data.data;
+
+                        Vue.set(this, "users", data.users);
+
+                        resolve(res);
+                    })
+                    .catch(err => reject(err));
+            });
+        },
+
+        /**
          * On commands clicked
          */
         onCommand(arg) {
-            switch(arg) {
+            switch (arg) {
                 case ENUMS.COMMAND.NEW:
                     this.changeFormMode(ENUMS.FORM_MODE.REGISTER);
                     break;
@@ -63,24 +83,10 @@ module.exports = {
          * Init method
          */
         init() {
-            /* TODO: REMOVE! JUST FOR REMOVE */
             this.changeFormMode(ENUMS.FORM_MODE.LOADING);
-            setTimeout(() => {
+            this.loadUsers().then(res => {
                 this.changeFormMode(ENUMS.FORM_MODE.LIST);
-            }, 500);
-
-            this.users = [
-                {
-                    id: 1,
-                    name: "John",
-                    email: "john@doe.com"
-                },
-                {
-                    id: 2,
-                    name: "Jane",
-                    email: "jane@doe.com"
-                }
-            ];
+            });
         },
 
         /**

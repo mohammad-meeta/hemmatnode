@@ -13,5 +13,11 @@ block footer
             a Copyright&copy; Ojvar, 2018-2020
 
 block scripts
+    script.
+        document.data = {
+            urls: {
+                usersList: '#{route("user.index")}'
+            }
+        };
     script(defer, src=mix('js/pages/user/index/index.js'))
 

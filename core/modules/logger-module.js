@@ -3,7 +3,7 @@
 /**
  * Logger module
  */
-function LoggerModule() { }
+function LoggerModule() {}
 module.exports = LoggerModule;
 
 /* Defaults */
@@ -29,7 +29,7 @@ LoggerModule.init = function init(server) {
     const appConfig = use('config', 'app');
     const logLevel = logConfig.level || '';
 
-    var dailyTransport = new (winston.transports.DailyRotateFile)({
+    var dailyTransport = new(winston.transports.DailyRotateFile)({
         level: logLevel,
         filename: 'logs/log-%DATE%.log',
         datePattern: 'YYYY-MM-DD-HH',

@@ -1,0 +1,15 @@
+{
+    "base_url": "https://localhost:8000",
+
+    "routes": {
+        "gql": {
+            "method": "post",
+            "url": "/gql"
+        },
+
+        "login": {
+            "method": "post",
+            "url": "/auth"
+        }
+    }
+}

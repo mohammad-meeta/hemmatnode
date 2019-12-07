@@ -9,11 +9,12 @@ module.exports = JSCore;
 /**
  * Setup Function
  */
-JSCore.setup = function() {
+JSCore.setup = function () {
     JSCore.setupVue();
     JSCore.setupAxios();
     JSCore.setupBulma();
     JSCore.setupETC();
+    JSCore.setupRoutes();
 };
 
 /**
@@ -26,7 +27,7 @@ JSCore.setupVue = function setupVue() {
     Vue.use(Vuex);
 
     /* Captalize filter */
-    Vue.filter('capitalize', function(value) {
+    Vue.filter('capitalize', function (value) {
         if (!value) {
             return '';
         }
@@ -58,7 +59,7 @@ JSCore.setupBulma = function setupBulma() {
     const menu = document.querySelector(`#${burger.dataset.target}`);
 
     if (burger && menu) {
-        burger.addEventListener('click', function() {
+        burger.addEventListener('click', function () {
             burger.classList.toggle('is-active');
             menu.classList.toggle('is-active');
         });
@@ -70,7 +71,18 @@ JSCore.setupBulma = function setupBulma() {
  */
 JSCore.setupETC = function setupETC() {
     const _ = require('lodash');
+
     window._ = _;
+};
+
+/**
+ * Setup Routes
+ */
+JSCore.setupRoutes = function setupRoutes() {
+    const routes = require('JS-CORE/routes');
+    
+    JSCore.routes = routes;
+    window.routes = routes;
 };
 
 /*  Run Setup */

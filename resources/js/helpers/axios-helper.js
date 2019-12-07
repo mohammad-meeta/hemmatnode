@@ -7,6 +7,16 @@ function AxiosHelper() {}
 module.exports = AxiosHelper;
 
 /**
+ * To GraphQL object
+ */
+AxiosHelper.toGQL = function toGQL(query = '', variables = {}) {
+    return {
+        query,
+        variables
+    };
+};
+
+/**
  * Send ajax request
  */
 AxiosHelper.send = function send(method, url, data, options) {
@@ -58,7 +68,7 @@ AxiosHelper.send = function send(method, url, data, options) {
         headers: options.headers
     };
 
-    if (postData.getHeaders) {
+    if (null != postData.getHeaders) {
         config['headers'] = postData.getHeaders();
     }
 

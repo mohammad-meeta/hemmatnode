@@ -53,7 +53,7 @@ module.exports = {
          * @param      {Object}  arg     The argument
          */
         commandClick(arg) {
-            this.$emit('on-command', arg);
+            this.$emit("on-command", arg);
         }
     }
 };

@@ -17,23 +17,27 @@ Server.boot = function boot() {
     dotenv.config();
 
     /* Global Fucntions */
-    const globalFunctions = require(path.resolve('core', 'modules', 'global-module'));
+    const globalFunctions = require(path.resolve('core/modules/global-module'));
     globalFunctions.setup(Server);
 
     /* Logger */
-    const logger = use('core', 'modules', 'logger-module');
+    const logger = use('core/modules/logger-module');
     logger.setup(Server);
 
+    /* Events */
+    const events = use('core/modules/events-module');
+    events.setup(Server);
+
     /* Express */
-    const express = use('core', 'modules', 'express-module');
+    const express = use('core/modules/express-module');
     express.setup(Server);
 
     /* Router */
-    const router = use('core', 'modules', 'router-module');
+    const router = use('core/modules/router-module');
     router.setup(Server);
 
     /* Mongoose */
-    const mongoose = use('core', 'modules', 'mongoose-module');
+    const mongoose = use('core/modules/mongoose-module');
     mongoose.setup(Server);
 
     /* Add server to global variable */
@@ -46,7 +50,7 @@ Server.boot = function boot() {
  * Run server
  */
 Server.run = function run() {
-    const appConfig = use('config', 'app');
+    const appConfig = use('config/app');
     let engine;
 
     if (appConfig.https) {

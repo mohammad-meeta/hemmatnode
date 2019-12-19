@@ -22,7 +22,7 @@ GlobalFunctions.setup = function setup(server) {
  * mix function
  */
 GlobalFunctions.mix = function mix(resource) {
-    const appConfig = GlobalFunctions.use('config', 'app');
+    const appConfig = GlobalFunctions.use('config/app');
     const webMix = GlobalFunctions.use(appConfig.output_path, 'mix-manifest.json');
 
     if (resource && resource[0] != '/') {

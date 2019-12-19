@@ -1,10 +1,16 @@
 'use strict';
 
+const Server = use('core/server');
+
 /**
  * Router rclass
  */
 function RouterModule() {}
 module.exports = RouterModule;
+
+/* Constants and ... */
+RouterModule.C_ACTION_SEPARATOR = '@';
+
 
 /* Defaults */
 RouterModule.routes = {};
@@ -54,7 +60,7 @@ RouterModule.getActions = function getActions(actions) {
 
     actions.forEach(action => {
         if ('string' == typeof action) {
-            const tokens = action.split('@');
+            const tokens = action.split(RouterModule.C_ACTION_SEPARATOR);
 
             if (tokens.length != 2) {
                 throw new Error('Invalid action!', actions);
@@ -62,7 +68,7 @@ RouterModule.getActions = function getActions(actions) {
 
             const controllerName = tokens[0];
             const actionName = tokens[1];
-            const controller = use('app', 'controllers', controllerName);
+            const controller = use('app/controllers', controllerName);
 
             result.push(controller[actionName]);
         } else {

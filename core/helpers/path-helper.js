@@ -31,8 +31,6 @@ PathHelper.applyParams = function applyParams(path, params) {
         const paramRegexp = new RegExp(pathParam.param + "\\??", "g");
         const key = pathParam.key;
 
-        console.log(pathParam, paramRegexp, key);
-
         result = result.replace(paramRegexp, params[key] || '');
     });
 

@@ -12,7 +12,9 @@ module.exports = Enums;
 Enums.COMMAND = {
     NEW: 1,
     EDIT: 2,
-    DELETE: 3
+    DELETE: 3,
+    SAVE: 4,
+    CANCEL: 5
 };
 
 /**
@@ -23,5 +25,5 @@ Enums.FORM_MODE = {
     LIST: 2,
     REGISTER: 3,
     EDIT: 4,
-    REMOVE: 5 
+    REMOVE: 5
 };

@@ -13,6 +13,7 @@ mix.alias({
     'JS': 'resources/js',
     'JS-CORE': 'resources/js/core',
     'JS-HELPERS': 'resources/js/helpers',
+    'JS-VALIDATORS': 'resources/js/validators',
     'VUE': 'resources/js/vue',
     'VUE-COMPONENTS': 'resources/js/vue/components',
     'VUE-HELPERS': 'resources/js/vue/helpers',
@@ -20,7 +21,8 @@ mix.alias({
     'FONTS': 'resources/fonts',
     'IMAGES': 'resources/images',
     'VIEWS': 'resources/views',
-    'CONFIGS': 'resources/configs'
+    'CONFIGS': 'resources/configs',
+    'VALIDATORS': 'validators'
 });
 
 /**

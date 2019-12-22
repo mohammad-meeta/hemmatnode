@@ -21,10 +21,30 @@ ExpressModule.setup = function setup(server) {
     /* Setup middlewares */
     ExpressModule.setupMiddlewares(server);
 
+    /* Setup user-middlewares */
+    ExpressModule.setupUserMiddlewares(server);
+
     /* Setup pug */
     ExpressModule.setupPug(server);
 
     return server;
+};
+
+/**
+ * Setup user-middlewares
+ */
+ExpressModule.setupUserMiddlewares = function setupUserMiddlewares(server) {
+    const fs = require('fs');
+    const path = rPath('app/middlewares');
+    const files = fs.readdirSync(path) || [];
+
+    const app = server.App;
+
+    files.forEach(file => {
+        const Middleware = use(path, file);
+
+        app.use(Middleware);
+    });
 };
 
 /**

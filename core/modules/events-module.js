@@ -13,7 +13,7 @@ EventsModule.events = [];
  * Setup function
  */
 EventsModule.setup = function setup(server) {
-    EventsModule.loadHandlers();
+    EventsModule.initHandlers();
 
     return server;
 };
@@ -21,7 +21,7 @@ EventsModule.setup = function setup(server) {
 /**
  * Load handlers files
  */
-EventsModule.loadHandlers = function loadHandlers() {
+EventsModule.initHandlers = function initHandlers() {
     return new Promise((resolve, reject) => {
         const fs = require('fs');
         const baseFolder = rPath('app/handlers');
@@ -45,9 +45,10 @@ EventsModule.define = function define(name, callbacks) {
     return new Promise((resolve, reject) => {
         name = EventsModule.fixName(name);
 
-        if (!Array.isArray(callbacks)){
+        if (!Array.isArray(callbacks)) {
             callbacks = [callbacks];
         }
+        
         EventsModule.events[name] = callbacks;
 
         resolve();

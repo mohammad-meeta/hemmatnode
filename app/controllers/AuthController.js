@@ -24,7 +24,6 @@ AuthController.login = function login(req, res, next) {
 AuthController.attempt = function attempt(req, res, next) {
     const data = req.body.user_data;
 
-
     res.end(200);
 }
 

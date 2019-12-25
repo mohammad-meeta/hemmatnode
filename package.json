@@ -36,6 +36,7 @@
     "mongoose-timestamp": "^0.6.0",
     "pug": "^2.0.4",
     "pug-plain-loader": "^1.0.0",
+    "uuid": "^3.3.3",
     "validatorjs": "^3.18.1",
     "vue": "^2.6.11",
     "vue-router": "^3.1.3",

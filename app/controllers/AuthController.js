@@ -12,8 +12,17 @@ module.exports = AuthController;
  * Login function
  */
 AuthController.login = function login(req, res, next) {
+    const Auth = use('core/helpers/auth-helper');
+    let token = Auth.sign({
+        firstName: 'Amir',
+        lastName: 'Ojvar'
+    });
+    let tokenData = Auth.verify(token);
+
     res.render(PugView.getView('auth/login'), {
-        pageRoute: 'auth.login'
+        pageRoute: 'auth.login',
+        token,
+        tokenData
     });
 };
 
@@ -31,6 +40,7 @@ AuthController.attempt = function attempt(req, res, next) {
  * Test
  */
 AuthController.test = function test(req, res, next) {
+    /* Raise an event */
     const events = use('core/modules/events-module');
 
     const data = {

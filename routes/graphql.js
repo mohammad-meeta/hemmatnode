@@ -1,3 +1,8 @@
 'use strict';
 
-Router.use('/gql', 'GraphQLController@run');
+const AuthHelper = use('core/helpers/auth-helper');
+
+Router.use('/gql', [
+    AuthHelper.checkAuth,
+    'GraphQLController@run'
+]);

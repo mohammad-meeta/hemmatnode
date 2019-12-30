@@ -17,6 +17,14 @@ AuthHelper.expiresIn = '30m';
 AuthHelper.issuer = 'OjvarLand';
 AuthHelper.subject = 'Sunset Framework';
 AuthHelper.audience = 'sunset@ojvarland.org';
+AuthHelper.exceptions = {};
+
+/**
+ * Add exceptions
+ */
+AuthHelper.addException = function addException(path) {
+    AuthHelper.exceptions[path] = true;
+}
 
 /**
  * Sign and generate a JWT token
@@ -51,4 +59,37 @@ AuthHelper.verify = function verify(token, userOptions) {
     const legit = jwt.verify(token, authConfig.jwt.publicKey, options);
 
     return legit;
+};
+
+/**
+ * Get token
+ */
+AuthHelper.checkAuth = function checkAuth(req, res, next) {
+    let authorization = req.headers.authorization || '';
+    authorization = authorization.split(' ');
+
+    if (!authorization ||
+        (authorization.length < 2) ||
+        (authorization.length[0].toLowerCase() != 'bearer')) {
+        const err = {
+            message: 'Missing Authorization Header'
+        };
+
+        res.status(401)
+            .json(err)
+            .end();
+
+        return next();
+    }
+
+    try {
+        const token = authorization[1];
+        const tokenData = AuthHelper.verify(token);
+
+        req.user = tokenData;
+    } catch (error) {
+        return next(error);
+    }
+
+    return next();
 };

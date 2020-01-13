@@ -3,8 +3,8 @@
 /**
  * User Login Validator
  */
-funcLoginrRegisterValidator() {}
-moduLogints = UserRegisterValidator;
+function UserLoginValidator() {}
+module.exports = UserLoginValidator;
 
 /**
  * Validation funciton
@@ -12,7 +12,7 @@ moduLogints = UserRegisterValidator;
 UserLoginValidator.validate = function validate(req, res, next) {
     const validator = use('core/helpers/data-validator');
 
-    validator.validate(UserRegisterValidator, req, res, next);
+    validator.validate(UserLoginValidator, req, res, next);
 };
 
 /**
@@ -21,8 +21,7 @@ UserLoginValidator.validate = function validate(req, res, next) {
 UserLoginValidator.data = function data(req) {
     return {
         name: req.body.name,
-        password: req.body.password,
-        email: req.body.email
+        password: req.body.password
     };
 };
 
@@ -31,9 +30,8 @@ UserLoginValidator.data = function data(req) {
  */
 UserLoginValidator.rules = function rules() {
     return {
-        'name': 'required|minLength:4|maxLength:25',
-        'password': 'required|minLength:6|maxLength:50',
-        'email': 'required|email'
+        'name': 'required|min:4|max:25',
+        'password': 'required|min:6|max:50'
     };
 };
 
@@ -50,7 +48,6 @@ UserLoginValidator.messages = function messages() {
 UserLoginValidator.attributes = function attributes() {
     return {
         name: 'شناسه کاربر',
-        email: 'ایمیل',
         password: 'گذرواژه'
     };
 };

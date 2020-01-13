@@ -2,6 +2,7 @@
 
 const PugView = use('app/helpers/pug-view');
 const Auth = use('core/helpers/auth-helper');
+const authConfig = use('config/auth');
 const events = use('core/modules/events-module');
 
 /**
@@ -26,15 +27,10 @@ AuthController.login = function login(req, res, next) {
  * Attempt function 
  */
 AuthController.attempt = function attempt(req, res, next) {
-    /* Validate */
-    const validator = use('validators/user-login-validator');
-    validator.validate(req, res, next);
-
     /* Get data */
     const data = {
         username: req.body.name,
         password: req.body.password,
-        email: req.body.password
     };
 
     /* Validate */
@@ -42,34 +38,36 @@ AuthController.attempt = function attempt(req, res, next) {
     const user = {
         name: data.username,
         password: data.password,
-        email: data.email
     };
 
     /* If username & password are correct */
+    const loginResult = {};
+
     if (user != null) {
         let token = Auth.sign({
             id: 100,
             username: data.username,
             password: data.password,
         });
-        let tokenData = Auth.verify(token);
 
-        /* Fire attempt-event */
-        events.raise('login.attempt', {
-            success: true,
-            data
-        });
+        loginResult.success = true;
+        loginResult.data = token;
+    } else {
+        loginResult.success = false;
+        loginResult.data = "Invalid Username and Password";
+    }
 
+    /* Fire attempt-event */
+    events.raise('login.attempt', loginResult);
+
+    /* Send result */
+    if (loginResult.success) {
         res.status(200)
-            .send(token)
+            .send(loginResult)
             .end();
     } else {
-        /* Fire attempt-event */
-        events.raise('login.attempt', {
-            success: false,
-            data
-        });
-
-        res.end(403);
+        res.status(403)
+            .send(loginResult)
+            .end();
     }
 };

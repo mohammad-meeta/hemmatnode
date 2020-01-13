@@ -65,8 +65,9 @@ ExpressModule.setupMiddlewares = function setupMiddlewares(server) {
     app.use(bodyParser.json());
 
     /* Setup cookie-parser */
-    const cookieParser = require('cookie-parser')
-    app.use(cookieParser());
+    const authConfig = use('config/auth');
+    const cookieParser = require('cookie-parser');
+    app.use(cookieParser(authConfig.cookie.secret));
 
     /* Setup csrf */
     const csurf = require('csurf');
@@ -90,7 +91,7 @@ ExpressModule.setupPug = function setupPug(server) {
     /* Static folder */
     app.use(express.static(outputPath));
 
-    /* Tempalte-engine */
+    /* Setup Template-engine */
     app.set('view engine', 'pug');
     app.set('views', viewsPath);
 };

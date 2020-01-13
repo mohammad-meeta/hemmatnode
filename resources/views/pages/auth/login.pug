@@ -10,7 +10,7 @@ block content
     #app.container
         .columns.is-vcentered
             .column.is-5
-                login(ref="loginComponent")
+                login(ref="loginComponent", login-url=route('auth.attempt'))
             .column.is-6.is-offset-1.has-text-centered
                 h1.title.is-2
                     | Welcome

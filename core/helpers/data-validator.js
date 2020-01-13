@@ -33,9 +33,10 @@ DataValidator.validate = function validate(customValidator, req, res, next) {
     } else {
         const errors = DataValidator.generateErrors(validator);
 
-        res.status(400)
-            .send(errors)
-            .end();
+        next(errors);
+        // res.status(400)
+        //     .send(errors)
+        //     .end();        
     }
 };
 

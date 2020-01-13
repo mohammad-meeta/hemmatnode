@@ -4,13 +4,13 @@
             .field
                 label.label Email
                 .control.has-icons-left
-                    input.input(type="email", placeholder="e.g. bobsmith@gmail.com", required)
+                    input.input(type="email", placeholder="e.g. bobsmith@gmail.com", required, v-model="userData.name")
                     span.icon.is-small.is-left
                         i.material-icons account_circle
             .field
                 label.label Password
                 .control.has-icons-left
-                    input.input(type="password", placeholder="*******", required)
+                    input.input(type="password", placeholder="*******", required, v-model="userData.password")
                     span.icon.is-small.is-left
                         i.material-icons vpn_key
             .field
@@ -23,13 +23,28 @@
 module.exports = {
     name: "Login",
 
-    data: () => ({}),
+    data: () => ({
+        userData: {
+            name: null,
+            password: null
+        }
+    }),
+
+    props: {
+        loginUrl: {
+            type: String
+        }
+    },
 
     methods: {
         /**
          * Login
          */
-        login() {}
+        login() {
+            axios.post(this.loginUrl, this.userData)
+                .then(res => console.log(res))
+                .catch(err => console.error(err));
+        }
     }
 };
 </script>

@@ -29,7 +29,7 @@ AuthHelper.addException = function addException(path) {
 /**
  * Sign and generate a JWT token
  */
-AuthHelper.sign = function sign(payload, userOptions) {
+AuthHelper.sign = function sign(payload, userOptions = {}) {
     let options = _.merge({
         algorithm: AuthHelper.algorithm,
         expiresIn: AuthHelper.expiresIn,

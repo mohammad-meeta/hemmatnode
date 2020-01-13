@@ -8,13 +8,6 @@ block styles
 
 block content
     #app.container
-        pre
-            | TOKEN 
-            =token 
-            br
-            | DATA 
-            =JSON.stringify(tokenData)
-
         .columns.is-vcentered
             .column.is-5
                 login(ref="loginComponent")

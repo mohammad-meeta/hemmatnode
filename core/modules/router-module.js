@@ -11,7 +11,6 @@ module.exports = RouterModule;
 /* Constants and ... */
 RouterModule.C_ACTION_SEPARATOR = '@';
 
-
 /* Defaults */
 RouterModule.routes = {};
 

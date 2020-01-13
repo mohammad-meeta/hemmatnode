@@ -1,6 +1,6 @@
 'use strict';
 
-const PugView = use('app', 'helpers', 'pug-view');
+const PugView = use('app/helpers/pug-view');
 
 /**
  * Home controller
@@ -12,7 +12,10 @@ module.exports = UserController;
  * Index route
  */
 UserController.index = async function index(req, res, next) {
-    res.render(PugView.getView('user/index'), {
-        pageRoute: 'user.index'
+    const pageRoute = 'user.index';
+
+    res.render(PugView.getView(pageRoute), {
+        req,
+        pageRoute
     });
 };

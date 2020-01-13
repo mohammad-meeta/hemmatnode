@@ -88,6 +88,8 @@ AuthHelper.checkAuth = function checkAuth(req, res, next) {
 
         req.user = tokenData;
     } catch (error) {
+        delete req.user;
+
         return next(error);
     }
 

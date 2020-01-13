@@ -6,5 +6,6 @@ ul
     +menuItem("home.index", "Home")
     +menuItem("home.about", "About")
     +menuItem("auth.login", "Login")
-    +menuItem("sep", "|")
-    +menuItem("user.index", "Users")
+    if((req || {}).user)
+        +menuItem("sep", "|")
+        +menuItem("user.index", "Users")

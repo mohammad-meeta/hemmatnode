@@ -5,5 +5,3 @@ Router.get('/auth/login', 'AuthController@login')
 
 Router.post('/auth/login', 'AuthController@attempt')
     .as('auth.attempt');
-
-Router.get('/auth/test', 'AuthController@test');

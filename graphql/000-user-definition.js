@@ -38,8 +38,7 @@ Model.typeDefs = function typeDefs() {
                 name: String
                 email: String
                 created_at: String
-                updated_at: String
-            `
+                updated_at: String`
         },
         {
             type: 'input',
@@ -47,8 +46,7 @@ Model.typeDefs = function typeDefs() {
             schema: `
                 name: String
                 email: String
-                password: String
-            `
+                password: String`
         }
     ];
 };

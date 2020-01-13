@@ -15,10 +15,13 @@ PugView.getView = function (viewName) {
 
 /** Set view path */
 PugView.viewPath = {
-    'home/index': 'pages/home/index.pug',
-    'home/about': 'pages/home/about.pug',
+    /* Home */
+    'home.index': 'pages/home/index.pug',
+    'home.about': 'pages/home/about.pug',
 
-    'auth/login': 'pages/auth/login.pug',
+    /* Auth */
+    'auth.login': 'pages/auth/login.pug',
 
-    'user/index': 'pages/user/index.pug'
+    /* User */
+    'user.index': 'pages/user/index.pug'
 };

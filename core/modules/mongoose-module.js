@@ -31,7 +31,8 @@ MongooseModule.setup = function setup(server) {
     mongoose.connection.on('error', err => {
         Logger.error('Connection to mongodb failed!');
         Logger.error(err);
-        process.exit(1)
+        console.log(err)
+        process.exit(1);
     });
 
     /* Try to connect */
@@ -46,8 +47,8 @@ MongooseModule.setup = function setup(server) {
 MongooseModule.getConnectionString = function getConnectionString(config) {
     let connectionString = `${config.host}:${config.port}/${config.name}`;
 
-    if (null != config.user) {
-        if (null != config.password) {
+    if ((config.user || '')) {
+        if ((config.password || '')) {
             connectionString = `${config.user}:${config.password}@${connectionString}`;
         } else {
             connectionString = `${config.user}@${connectionString}`;

@@ -1,23 +1,24 @@
 'use strict';
 
 /**
- * User Register Validator
+ * User Login Validator
  */
-function UserRegisterValidator() {}
-module.exports = UserRegisterValidator;
+funcLoginrRegisterValidator() {}
+moduLogints = UserRegisterValidator;
 
 /**
  * Validation funciton
  */
-UserRegisterValidator.validate = function validate(req, res, next) {
-    const DataValidator = use('core/helpers/data-validator');
-    DataValidator.validate(UserRegisterValidator, req, res, next);
+UserLoginValidator.validate = function validate(req, res, next) {
+    const validator = use('core/helpers/data-validator');
+
+    validator.validate(UserRegisterValidator, req, res, next);
 };
 
 /**
  * Data function
  */
-UserRegisterValidator.data = function data(req) {
+UserLoginValidator.data = function data(req) {
     return {
         name: req.body.name,
         password: req.body.password,
@@ -28,7 +29,7 @@ UserRegisterValidator.data = function data(req) {
 /**
  * Rules function
  */
-UserRegisterValidator.rules = function rules() {
+UserLoginValidator.rules = function rules() {
     return {
         'name': 'required|minLength:4|maxLength:25',
         'password': 'required|minLength:6|maxLength:50',
@@ -39,14 +40,14 @@ UserRegisterValidator.rules = function rules() {
 /**
  * Messages function
  */
-UserRegisterValidator.messages = function messages() {
+UserLoginValidator.messages = function messages() {
     return {};
 };
 
 /**
  * Return captions
  */
-UserRegisterValidator.attributes = function attributes() {
+UserLoginValidator.attributes = function attributes() {
     return {
         name: 'شناسه کاربر',
         email: 'ایمیل',

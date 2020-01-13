@@ -27,20 +27,49 @@ AuthController.login = function login(req, res, next) {
  */
 AuthController.attempt = function attempt(req, res, next) {
     /* Validate */
-    const validator = use('validators/user-register-validator');
+    const validator = use('validators/user-login-validator');
     validator.validate(req, res, next);
 
     /* Get data */
-    const data = req.body.user_data;
+    const data = {
+        username: req.body.name,
+        password: req.body.password,
+        email: req.body.password
+    };
 
-    let token = Auth.sign({
-        firstName: 'Amir',
-        lastName: 'Ojvar'
-    });
-    let tokenData = Auth.verify(token);
+    /* Validate */
+    /* TODO: CHECK USERNAME & PASSWORD */
+    const user = {
+        name: data.username,
+        password: data.password,
+        email: data.email
+    };
 
-    /* Fire attempt-event */
-    events.raise('login.attempt', data);
+    /* If username & password are correct */
+    if (user != null) {
+        let token = Auth.sign({
+            id: 100,
+            username: data.username,
+            password: data.password,
+        });
+        let tokenData = Auth.verify(token);
 
-    res.end(200);
+        /* Fire attempt-event */
+        events.raise('login.attempt', {
+            success: true,
+            data
+        });
+
+        res.status(200)
+            .send(token)
+            .end();
+    } else {
+        /* Fire attempt-event */
+        events.raise('login.attempt', {
+            success: false,
+            data
+        });
+
+        res.end(403);
+    }
 };

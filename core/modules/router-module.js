@@ -83,7 +83,7 @@ RouterModule.getActions = function getActions(actions) {
 };
 
 /* Add route method */
-RouterModule.route = function route(alias, params) {
+RouterModule.route = function route(alias, params, query) {
     const pathHelper = use('core', 'helpers', 'path-helper');
     const route = RouterModule.routes[alias];
 
@@ -94,6 +94,10 @@ RouterModule.route = function route(alias, params) {
     let routePath = route.route.path;
     routePath = pathHelper.applyParams(routePath, params);
     routePath = global.server.url + routePath;
+
+    if (null != query) {
+        routePaht += `?${query}`;
+    }
 
     return routePath;
 };

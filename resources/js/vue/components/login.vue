@@ -2,9 +2,9 @@
     .column
         form.box.action
             .field
-                label.label Email
+                label.label Username
                 .control.has-icons-left
-                    input.input(type="email", placeholder="e.g. bobsmith@gmail.com", required, v-model="userData.name")
+                    input.input(type="email", placeholder="e.g. Amisen", required, v-model="userData.name")
                     span.icon.is-small.is-left
                         i.material-icons account_circle
             .field
@@ -82,8 +82,13 @@ module.exports = {
          * Show login error message
          */
         showLoginError(err) {
-            const message =
-                (err.response || {}).data || "Server connection failed!";
+            let message;
+
+            if (err.response.status == 400) {
+                message = err.response.data.replace(/\n/g, '<br/>');
+            } else {
+                message = "Server connection failed!";
+            }
 
             this.setNotification(message, "is-danger");
         },

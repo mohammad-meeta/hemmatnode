@@ -1,7 +1,5 @@
 'use strict';
 
-const Validator = require("validatorjs");
-
 /**
  * DataValidator class
  */
@@ -12,11 +10,38 @@ module.exports = DataValidator;
  * Validate
  */
 DataValidator.validate = function validate(customValidator, req, res, next) {
-    const data = customValidator.data(req) || {};
-    const rules = customValidator.rules() || {};
-    const messages = customValidator.messages() || {};
-    const attributes = customValidator.attributes() || {};
+    const Validator = require("validatorjs");
 
+    let data = {};
+    let rules = {};
+    let messages = {};
+    let attributes = {};
+    let lang = req.lang || 'en';
+    
+    if (customValidator.data) {
+        data = customValidator.data(req);
+    }
+
+    if (customValidator.rules) {
+        rules = customValidator.rules();
+    }
+
+    if (customValidator.messages) {
+        messages = customValidator.messages();
+    }
+
+    if (customValidator.attributes) {
+        attributes = customValidator.attributes();
+    }
+
+
+    /* Setup language */
+    if (null != customValidator.lang) {
+        lang = customValidator.lang();
+    }
+    Validator.useLang(lang);
+
+    /* Make a new instance */
     const validator = new Validator(data, rules, messages);
 
     /* Set attribute name */
@@ -33,10 +58,9 @@ DataValidator.validate = function validate(customValidator, req, res, next) {
     } else {
         const errors = DataValidator.generateErrors(validator);
 
-        next(errors);
-        // res.status(400)
-        //     .send(errors)
-        //     .end();        
+        res.status(400)
+            .send(errors)
+            .end();
     }
 };
 
@@ -47,14 +71,11 @@ DataValidator.generateErrors = function generateErrors(validator) {
     const allErrors = validator.errors.all();
 
     /* All errors */
+    const errors = [];
     Object.keys(allErrors)
         .forEach(key => {
-            console.log(allErrors[key]);
+            errors.push(allErrors[key].join('\n'));
         });
 
-    /* TODO: MAKE ERROR STRING */
-    return [
-        'aaaaaaaa',
-        'bbbbbbbbb'
-    ];
+    return errors.join('\n');
 };

@@ -66,7 +66,7 @@ AuthController.attempt = function attempt(req, res, next) {
             .end();
     } else {
         res.status(403)
-            .cookie('token', null, authConfig.cookie.options)
+            .cookie('token', "", authConfig.cookie.options)
             .send(loginResult)
             .end();
     }

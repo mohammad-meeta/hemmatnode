@@ -15,6 +15,13 @@ UserLoginValidator.validate = function validate(req, res, next) {
     validator.validate(UserLoginValidator, req, res, next);
 };
 
+// /**
+//  * Validation funciton
+//  */
+// UserLoginValidator.lang = function lang() {
+//     return 'en';
+// };
+
 /**
  * Data function
  */
@@ -47,7 +54,7 @@ UserLoginValidator.messages = function messages() {
  */
 UserLoginValidator.attributes = function attributes() {
     return {
-        name: 'شناسه کاربر',
-        password: 'گذرواژه'
+        name: 'Username',
+        password: 'Password'
     };
 };

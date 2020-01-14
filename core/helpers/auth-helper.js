@@ -70,7 +70,7 @@ AuthHelper.checkAuth = function checkAuth(req, res, next) {
 
     if (!authorization ||
         (authorization.length < 2) ||
-        (authorization.length[0].toLowerCase() != 'bearer')) {
+        (authorization[0].toLowerCase() != 'bearer')) {
         const err = {
             message: 'Missing Authorization Header'
         };

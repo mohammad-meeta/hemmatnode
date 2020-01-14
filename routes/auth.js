@@ -15,7 +15,7 @@ Router.post('/auth/login', [
 Router.get('/auth/test', [
     authHelper.checkAuth, (req, res, next) => {
         res.status(200)
-            .send(req.user)
+            .send("Your are Logged in")
             .end();
     }
 ]);

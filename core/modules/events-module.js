@@ -28,7 +28,6 @@ EventsModule.initHandlers = function initHandlers() {
 
         let files = fs.readdirSync(baseFolder) || [];
 
-
         files.forEach(file => {
             const name = file.replace(/\-handler/i, '')
                 .replace(/\.js/i, '');

@@ -44,29 +44,29 @@ AuthController.attempt = function attempt(req, res, next) {
     const loginResult = {};
 
     if (user != null) {
-        let token = Auth.sign({
+        loginResult.success = true;
+        loginResult.data = Auth.sign({
             id: 100,
             username: data.username,
             password: data.password,
         });
-
-        loginResult.success = true;
-        loginResult.data = token;
     } else {
         loginResult.success = false;
         loginResult.data = "Invalid Username and Password";
     }
 
     /* Fire attempt-event */
-    events.raise('login.attempt', loginResult);
+    events.raise('login-attempt', loginResult);
 
     /* Send result */
     if (loginResult.success) {
         res.status(200)
+            .cookie('token', loginResult.data, authConfig.cookie.options)
             .send(loginResult)
             .end();
     } else {
         res.status(403)
+            .cookie('token', null, authConfig.cookie.options)
             .send(loginResult)
             .end();
     }

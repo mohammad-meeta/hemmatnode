@@ -10,5 +10,5 @@ module.exports = LoginHandler;
  * Run Handler function
  */
 LoginHandler.run = function run(payload) {
-    console.log('Auth test-event', payload);
+    console.log('LOGIN-ATTEMPT:', payload);
 };

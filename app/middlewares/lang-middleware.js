@@ -1,9 +1,9 @@
 'use strict';
 
 /**
- * Test middleware
+ * Lang middleware
  */
-module.exports = function TestMiddleware(req, res, next) {
+module.exports = function LangMiddleware(req, res, next) {
     req.lang = req.params.lang || req.query.lang || 'en';
 
     next();

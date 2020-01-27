@@ -1,0 +1,40 @@
+Routes Structure
+
+All user's routes defines here.
+It's quite simple. Use "Router" to define routes.
+
+Router.type (url, [functions/'controller@action'])
+
+first argument is the TYPE of the request:
+    that can be one of : get/post/put/path/delete/option/link
+
+second argument is an array, each element can be of these options:
+    I: A function in format of  function(req, res, next){}
+    II: A string in format of  controller@action
+
+
+=====================================================
+EXAMPLE
+=====================================================
+
+'use strict';
+
+const validator = use('validators/user-login-validator');
+const authHelper = use('core/helpers/auth-helper');
+
+Router.get('/auth/login', 'AuthController@login')
+    .as('auth.login');
+
+Router.post('/auth/login', [
+        validator.validate,
+        'AuthController@attempt'
+    ])
+    .as('auth.attempt');
+
+Router.get('/auth/test', [
+    authHelper.checkAuth, (req, res, next) => {
+        res.status(200)
+            .send("Your are Logged in")
+            .end();
+    }
+]);

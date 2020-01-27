@@ -1,0 +1,59 @@
+Files Structure
+
+    app
+        controllers
+            : User controllers
+
+        handlers
+            : Event handlers
+
+        helpers
+            : User custom helpers
+
+        middlewars
+            : User middlewares
+
+    bin
+        : [SYSTEM FOLDER]
+
+    config
+        auth
+            : [AUTH SSL KEYS]
+        ssl
+            : [SERVER SSL KEYS] and Key-Generator file
+    core
+        helpers
+            : [SYSTEM HELPERS]
+        modules
+            : [SYSTEM CORE MODULES]
+    docs
+        : User manuals and so ...
+    graphql
+        : GraphQL Schemas
+    logs
+        : Log files
+    models
+        : Mongoose Models
+    public
+        : COMPILED RESURCES FILES
+    resources
+        configs
+            : Client-Side javascript configs
+        fonts
+            : Client-Side fonts
+        images
+            : Client-Side images
+        js
+            : Client-Side JavaScript files
+        sass
+            : Client-Side SASS, CSS, ..
+        views
+            : Client-Side PUG files
+    routes
+        : System Routes
+    rules
+        : User rules
+    storage
+        : Uploaded files
+    validators
+        : User data validators

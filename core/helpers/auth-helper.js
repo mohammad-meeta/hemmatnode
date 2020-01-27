@@ -65,12 +65,10 @@ AuthHelper.verify = function verify(token, userOptions) {
  * Get token
  */
 AuthHelper.checkAuth = function checkAuth(req, res, next) {
-    let authorization = req.headers.authorization || '';
-    authorization = authorization.split(' ');
+    AuthHelper.extractAuth(req);
 
-    if (!authorization ||
-        (authorization.length < 2) ||
-        (authorization[0].toLowerCase() != 'bearer')) {
+    /* Check token data */
+    if (null == req.user) {
         const err = {
             message: 'Missing Authorization Header'
         };
@@ -79,19 +77,44 @@ AuthHelper.checkAuth = function checkAuth(req, res, next) {
             .json(err)
             .end();
 
-        return next();
+        return;
     }
 
+    return next();
+};
+
+/**
+ * Extract auth data
+ *
+ * @param      {Object}  req     The request
+ */
+AuthHelper.extractAuth = function extractAuth(req) {
+    let token;
+    let authorization = req.headers.authorization;
+
+    /* Check header */
+    if (authorization) {
+        authorization = authorization.split(' ');
+
+        if (authorization &&
+            (authorization.length > 1) &&
+            (authorization[0].toLowerCase() == 'bearer')) {
+
+            token = authorization[1];
+        }
+    }
+    /* Try to check cookie */
+    else {
+        // token = req.cookies['token'];
+        token = req.signedCookies['token'];
+    }
+
+    /* Verify token */
     try {
-        const token = authorization[1];
         const tokenData = AuthHelper.verify(token);
 
         req.user = tokenData;
     } catch (error) {
         delete req.user;
-
-        return next(error);
     }
-
-    return next();
 };

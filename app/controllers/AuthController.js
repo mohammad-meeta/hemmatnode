@@ -24,7 +24,7 @@ AuthController.login = function login(req, res, next) {
 };
 
 /**
- * Attempt function 
+ * Attempt function
  */
 AuthController.attempt = function attempt(req, res, next) {
     /* Get data */
@@ -62,11 +62,13 @@ AuthController.attempt = function attempt(req, res, next) {
     if (loginResult.success) {
         res.status(200)
             .cookie('token', loginResult.data, authConfig.cookie.options)
+            // .cookie('token', loginResult.data)
             .send(loginResult)
             .end();
     } else {
         res.status(403)
-            .cookie('token', "", authConfig.cookie.options)
+            // .cookie('token', '', authConfig.cookie.options)
+            .cookie('token', '')
             .send(loginResult)
             .end();
     }

@@ -1,8 +1,15 @@
+TIPS:
+        https://expressjs.com/en/advanced/best-practice-security.html
+        
 TODO:
         //// ADD VHOST module to virtual-host support
         express-module.js
                 /* Setup VHost */
                 const vhost = require('vhost');
+
+        //// Use RateLimiter
+                https://github.com/animir/node-rate-limiter-flexible
+                https://github.com/animir/node-rate-limiter-flexible/wiki/Overall-example#login-endpoint-protection
 
 
 # Usage

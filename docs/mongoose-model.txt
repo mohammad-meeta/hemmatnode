@@ -1,3 +1,22 @@
+Mongoose Models
+
+Each file in the folder "models" make a mongoose model.
+
+Function model()
+    Model definition come here into this function
+
+Function plugins()
+    All additional plugins can be placed into this function
+
+Function extraFunctions()
+    All "Statics" and "Methods" can be places into this function
+
+
+
+=====================================================
+EXAMPLE
+=====================================================
+
 'use strict';
 
 /**
@@ -65,6 +84,9 @@ UserModel.plugins = function plugins(schema) {
 UserModel.extraFunctions = function extraFunctions(schema) {
     schema.statics.newUser = UserModel.newUser;
     schema.statics.attempt = UserModel.attempt;
+
+    schema.methods.active = UserModel.active;
+    schema.methods.deactive = UserModel.deactive;
 }
 
 /**
@@ -98,7 +120,6 @@ UserModel.attempt = function attempt(data) {
         });
     });
 };
-
 
 /**
  * Active the user

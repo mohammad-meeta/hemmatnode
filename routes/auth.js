@@ -13,7 +13,8 @@ Router.post('/auth/login', [
     .as('auth.attempt');
 
 Router.get('/auth/test', [
-    authHelper.checkAuth, (req, res, next) => {
+    authHelper.checkAuth,
+    (req, res, next) => {
         res.status(200)
             .send("Your are Logged in")
             .end();

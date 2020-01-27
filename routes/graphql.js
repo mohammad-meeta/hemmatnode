@@ -3,6 +3,6 @@
 const AuthHelper = use('core/helpers/auth-helper');
 
 Router.use('/gql', [
-    AuthHelper.checkAuth,
+    // AuthHelper.checkAuth,
     'GraphQLController@run'
 ]);

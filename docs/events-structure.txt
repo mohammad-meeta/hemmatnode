@@ -1,0 +1,10 @@
+Events-Handlers Structure
+
+All event handlers place in /app/handlers folder
+
+Event-handler files should be in format "XXX-event.js"
+You can raise an event "XXX" by doing this, use event name without "-event.js" ;)
+
+    const events = use('core/modules/events-module');
+    const data = {};
+    events.raise('XXX', data);

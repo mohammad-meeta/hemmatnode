@@ -67,7 +67,7 @@ ExpressModule.setupMiddlewares = function setupMiddlewares(server) {
     /* Setup cookie-parser */
     const authConfig = use('config/auth');
     const cookieParser = require('cookie-parser');
-    app.use(cookieParser(authConfig.cookie.secret));
+    app.use(cookieParser(authConfig.cookie.secret, authConfig.cookie.options));
 
     /* Setup csrf */
     const csurf = require('csurf');

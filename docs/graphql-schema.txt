@@ -1,3 +1,38 @@
+GraphQL Schema
+
+Each GraphQL-Schema creates a Graphql schema
+
+This module contains of two part:
+    1- Type definitions
+    2- Resolvers
+
+
+    1- TypeDefs [Type definitions]
+        It's an array, each element should be in this structure:
+            {
+                schema: ARRAY,
+                category: STRING
+                type: STRING
+            }
+
+        Schema:
+            It's an array each element of defines a schema
+            All elements integrated in one statement
+        Category:
+            Specify type of schema, Query, Mutation or ...
+        Type:
+            This attribute specify the "Type" type as Input or Output
+
+
+    2- Resovlers
+        All functions definition come there
+
+
+
+=====================================================
+EXAMPLE
+=====================================================
+
 'use strict';
 
 const mongoose = require('mongoose');
@@ -146,3 +181,4 @@ Model.insertUser = async function insertUser(_, data) {
 
     return newUser;
 };
+

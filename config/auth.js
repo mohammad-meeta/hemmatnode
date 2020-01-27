@@ -13,9 +13,8 @@ module.exports = {
     cookie: {
         secret: '@@_2020//_SUNS3T_s3cr3T_K3Y_$$',
         options: {
-            expires: 1,
-            secure: true,
-            maxAge: 60 * 1000,
+            httpOnly: true,
+            maxAge: 10 * 60 * 1000,
             signed: true
         }
     }

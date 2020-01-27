@@ -1,1 +1,1 @@
-nodemon bin/www.js
+npm run start

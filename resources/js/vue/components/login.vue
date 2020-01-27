@@ -23,6 +23,7 @@
 "use strict";
 
 const AxiosHelper = require("JS-HELPERS/axios-helper");
+const PageHelper = require("JS-HELPERS/page-helper");
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
 module.exports = {
@@ -43,6 +44,9 @@ module.exports = {
 
     props: {
         loginUrl: {
+            type: String
+        },
+        homePageUrl: {
             type: String
         }
     },
@@ -73,6 +77,8 @@ module.exports = {
         checkLoginResult(data) {
             if (data.success == true) {
                 this.setNotification("Login was successfully");
+
+                PageHelper.redirect(this.homePageUrl);
             } else {
                 this.setNotification(data.data);
             }

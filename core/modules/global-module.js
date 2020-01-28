@@ -14,8 +14,19 @@ GlobalFunctions.setup = function setup(server) {
     global.use = GlobalFunctions.use;
     global.mix = GlobalFunctions.mix;
     global.asset = GlobalFunctions.asset;
+    global.isAjax = GlobalFunctions.isAjax;
 
     return server;
+};
+
+/**
+ * Check the request is an ajax request
+ *
+ * @param      {Object}   req     The request
+ * @return     {boolean}  True if the specified request is ajax, False otherwise.
+ */
+GlobalFunctions.isAjax = function isAjax(req) {
+    return (req.xhr || req.headers.accept.indexOf('json') > -1);
 };
 
 /**

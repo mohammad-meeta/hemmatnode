@@ -62,7 +62,7 @@ AuthHelper.verify = function verify(token, userOptions) {
 };
 
 /**
- * Get token
+ * Check token
  */
 AuthHelper.checkAuth = function checkAuth(req, res, next) {
     AuthHelper.extractAuth(req);
@@ -70,17 +70,20 @@ AuthHelper.checkAuth = function checkAuth(req, res, next) {
     /* Check token data */
     if (null == req.user) {
         const err = {
-            message: 'Missing Authorization Header'
+            message: 'Authorization header missing'
         };
 
-        res.status(401)
-            .json(err)
-            .end();
-
-        return;
+        if (isAjax(req)) {
+            res.status(401)
+                .json(err)
+                .end();
+        } else {
+            res.redirect(route(authConfig.loginRoute));
+        }
     }
-
-    return next();
+    else {
+        return next();
+    }
 };
 
 /**
@@ -105,7 +108,7 @@ AuthHelper.extractAuth = function extractAuth(req) {
     }
     /* Try to check cookie */
     else {
-        // token = req.cookies['token'];
+        // token = req.cookies['token'];    /* for unsigned cookies */
         token = req.signedCookies['token'];
     }
 

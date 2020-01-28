@@ -10,6 +10,7 @@ module.exports = {
         privateKey,
         publicKey
     },
+    loginRoute: 'auth.login',
     cookie: {
         secret: '@@_2020//_SUNS3T_s3cr3T_K3Y_$$',
         options: {

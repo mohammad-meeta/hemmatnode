@@ -1,6 +1,6 @@
 TIPS:
         https://expressjs.com/en/advanced/best-practice-security.html
-        
+
 TODO:
         //// ADD VHOST module to virtual-host support
         express-module.js
@@ -16,3 +16,7 @@ TODO:
     ## axios-helper
             ### To carry out token in axios request:
                     add "token" field to "options"
+
+# Change Token expiration time
+    In file config/auth.js
+        set value of "maxAge" in miliseconds

@@ -80,9 +80,27 @@ AuthHelper.checkAuth = function checkAuth(req, res, next) {
         } else {
             res.redirect(route(authConfig.loginRoute));
         }
-    }
-    else {
+    } else {
         return next();
+    }
+};
+
+/**
+ * Check token
+ */
+AuthHelper.clearAuth = function checkAuth(req, res, next) {
+    res.cookie('token', null, authConfig.cookie.options);
+
+    if (isAjax(req)) {
+        res.status(200)
+            .send({
+                success: true,
+                data: route(authConfig.loginRoute)
+            })
+            .end();
+    } else {
+        res.redirect(route(authConfig.loginRoute))
+            .end();
     }
 };
 

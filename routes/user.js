@@ -1,7 +1,8 @@
 'use strict';
 
 const {
-    checkAuth
+    checkAuth,
+    clearAuth
 } = use('core/helpers/auth-helper');
 
 Router.get('/user', [
@@ -9,3 +10,6 @@ Router.get('/user', [
         'UserController@index'
     ])
     .as('user.index');
+
+Router.get('/user/logout', clearAuth)
+    .as('user.logout');

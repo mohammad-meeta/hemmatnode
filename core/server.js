@@ -40,6 +40,10 @@ Server.boot = function boot() {
     const mongoose = use('core/modules/mongoose-module');
     mongoose.setup(Server);
 
+    /* Services */
+    const services = use('core/modules/services-module');
+    services.setup(Server);
+
     /* Add server to global variable */
     global.Server = Server;
 

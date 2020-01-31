@@ -1,0 +1,53 @@
+extends ../../layout/app.pug
+
+block title
+    | Welcome to Task:Tracker
+
+block styles
+    link(rel="stylesheet", href=mix("css/pages/home/index.css"))
+    style.
+        body {
+            font: 10px sans-serif;
+        }
+
+        text {
+            fill: #000;
+        }
+
+        button {
+            position: absolute;
+            right: 20px;
+            top: 440px;
+            display: none;
+        }
+
+        path.candle {
+            stroke: #000000;
+        }
+
+        path.candle.body {
+            stroke-width: 0;
+        }
+
+        path.candle.up {
+            fill: #00AA00;
+            stroke: #00AA00;
+        }
+
+        path.candle.down {
+            fill: #FF0000;
+            stroke: #FF0000;
+        }
+
+block content
+    .container.has-text-centered
+        .columns.is-vcentered
+            | Follow the mouse clock
+
+block footer
+    ul
+        li
+            a Copyright&copy; Ojvar, 2018-2020
+
+block scripts
+    script.

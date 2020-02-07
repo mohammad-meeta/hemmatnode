@@ -7,13 +7,18 @@ function LoggerModule() {}
 module.exports = LoggerModule;
 
 /* Defaults */
-LoggerModule.Logger = console;
+LoggerModule.logger = console;
 
 /**
  * Setup function
  */
 LoggerModule.setup = function setup(server) {
     LoggerModule.init(server);
+    LoggerModule.setupTypes();
+
+    /* Set server logger */
+    server.Logger =
+        global.Logger = LoggerModule;
 
     return server;
 };
@@ -25,8 +30,8 @@ LoggerModule.init = function init(server) {
     const winston = require('winston');
     require('winston-daily-rotate-file');
 
-    const logConfig = use('config', 'log');
-    const appConfig = use('config', 'app');
+    const logConfig = use('config/log');
+    const appConfig = use('config/app');
     const logLevel = logConfig.level || '';
 
     var dailyTransport = new(winston.transports.DailyRotateFile)({
@@ -38,12 +43,22 @@ LoggerModule.init = function init(server) {
         maxFiles: '7d'
     });
 
-    // transport.on('rotate', function (oldFilename, newFilename) {
-    // });
+    const errorStackTracerFormat = winston.format(function (info) {
+        if (info.stack) {
+            info.message = `${info.message} ${info.stack}`;
+        }
+
+        return info;
+    });
 
     const logger = winston.createLogger({
         level: logLevel,
-        format: winston.format.json(),
+        format: winston.format.combine(
+            /* Necessary to produce the 'meta' property */
+            winston.format.splat(),
+            errorStackTracerFormat(),
+            winston.format.simple()
+        ),
         defaultMeta: null,
         transports: [
             dailyTransport
@@ -58,35 +73,29 @@ LoggerModule.init = function init(server) {
     }
 
     /* Set logger */
-    LoggerModule.Logger = logger;
-
-    /* Set server logger */
-    server.Logger = LoggerModule.Logger;
-    global.Logger = server.Logger;
+    LoggerModule.logger = logger;
 
     return server;
 };
 
 /**
- * Log message
+ * Setup other log types
+ * @param {Object} logger Logger Object
  */
-LoggerModule.log = function log(type, msg) {
-    const appConfig = use('config', 'app');
+LoggerModule.setupTypes = function setupTypes() {
+    const appConfig = use('config/app');
+    const types = [
+        'info', 'debug', 'warn', 'error'
+    ];
 
-    if ((appConfig.debug == 'true') && (type == 'error')) {
-        console.error(msg);
-        console.trace('TRACE ERROR');
-    }
+    types.forEach(function (type) {
+        LoggerModule[type] = function log(msg) {
+            if ((appConfig.debug == 'true') && (type == 'error')) {
+                console.error(msg);
+                console.trace('TRACE ERROR');
+            }
 
-    LoggerModule.logger[type](msg);
-};
-
-/* Setup other log types */
-const types = [
-    'info', 'debug', 'warn', 'error'
-];
-types.forEach(function (type) {
-    LoggerModule[type] = function (payload) {
-        LoggerModule.log(type, payload);
-    };
-});
+            LoggerModule.logger[type](msg);
+        };
+    });
+}

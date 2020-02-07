@@ -1,9 +1,11 @@
 'use strict';
 
+const Server = use('core/server');
+
 /**
  * Services module
  */
-function ServicesModule() {}
+function ServicesModule() { }
 module.exports = ServicesModule;
 
 /**

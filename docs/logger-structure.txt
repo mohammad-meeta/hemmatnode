@@ -1,0 +1,10 @@
+Logger Structure
+
+To use logger system, just use Logger command by methods comes as follow
+    info    Log an info message
+    warn    Log a warning message
+    error   Log an error message
+    debug   Log a debug message
+
+Or if you want to log stach trace, just log an error object
+    Logger.error(new Error("YOUR ERROR MESSAGE"))

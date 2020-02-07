@@ -13,7 +13,5 @@ module.exports = UserRule;
  * @return     {boolean}  User can/can't do action
  */
 UserRule.can = function can(payload) {
-    console.log('CAN MODULE', data);
-
     return true;
 };

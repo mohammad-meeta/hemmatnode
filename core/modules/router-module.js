@@ -24,8 +24,13 @@ RouterModule.setup = function setup(server) {
 
     /* Register routes */
     const fs = require('fs');
-    const files = fs.readdirSync(rPath('routes'));
-    files.forEach(file => use('routes', file));
+    const path = rPath('routes');
+
+    if (fs.existsSync(path)) {
+        const files = fs.readdirSync(path);
+
+        files.forEach(file => use('routes', file));
+    }
 
     return server;
 };

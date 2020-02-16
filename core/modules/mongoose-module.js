@@ -65,10 +65,14 @@ MongooseModule.getConnectionString = function getConnectionString(config) {
  */
 MongooseModule.loadModels = function loadModels() {
     const fs = require('fs');
-    const modelsList = fs.readdirSync(rPath('models'));
+    const path = rPath('models');
 
-    modelsList.forEach(file => {
-        const model = use('models', file);
-        model.setup();
-    });
+    if (fs.existsSync(path)) {
+        const modelsList = fs.readdirSync(path);
+
+        modelsList.forEach(file => {
+            const model = use('models', file);
+            model.setup();
+        });
+    }
 };

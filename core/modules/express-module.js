@@ -36,15 +36,17 @@ ExpressModule.setup = function setup(server) {
 ExpressModule.setupUserMiddlewares = function setupUserMiddlewares(server) {
     const fs = require('fs');
     const path = rPath('app/middlewares');
-    const files = fs.readdirSync(path) || [];
-
     const app = server.App;
 
-    files.forEach(file => {
-        const Middleware = use(path, file);
+    if (fs.existsSync(path)) {
+        const files = fs.readdirSync(path) || [];
 
-        app.use(Middleware);
-    });
+        files.forEach(file => {
+            const Middleware = use(path, file);
+
+            app.use(Middleware);
+        });
+    }
 };
 
 /**

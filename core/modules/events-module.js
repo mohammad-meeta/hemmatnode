@@ -26,14 +26,16 @@ EventsModule.initHandlers = function initHandlers() {
         const fs = require('fs');
         const baseFolder = rPath('app/handlers');
 
-        let files = fs.readdirSync(baseFolder) || [];
+        if (fs.existsSync(baseFolder)) {
+            let files = fs.readdirSync(baseFolder) || [];
 
-        files.forEach(file => {
-            const name = file.replace(/\-handler/i, '')
-                .replace(/\.js/i, '');
+            files.forEach(file => {
+                const name = file.replace(/\-handler/i, '')
+                    .replace(/\.js/i, '');
 
-            EventsModule.define(name, file);
-        });
+                EventsModule.define(name, file);
+            });
+        }
     });
 };
 
@@ -47,7 +49,7 @@ EventsModule.define = function define(name, callbacks) {
         if (!Array.isArray(callbacks)) {
             callbacks = [callbacks];
         }
-        
+
         EventsModule.events[name] = callbacks;
 
         resolve();

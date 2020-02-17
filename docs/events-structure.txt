@@ -3,8 +3,27 @@ Events-Handlers Structure
 All event handlers place in /app/handlers folder
 
 Event-handler files should be in format "XXX-event.js"
+Example of a handler :
+    example-event.js
+
+        'use strict';
+
+        /**
+        * TSetAllRowsUpdate Handler class
+        */
+        function TSetAllRowsUpdateHandler() {}
+        module.exports = TSetAllRowsUpdateHandler;
+
+        /**
+        * Run Handler function
+        */
+        TSetAllRowsUpdateHandler.run = function run(payload) {
+            console.log('TSetAllRowsUpdate-ATTEMPT:', payload);
+        };
+
 You can raise an event "XXX" by doing this, use event name without "-event.js" ;)
 
     const events = use('core/modules/events-module');
     const data = {};
     events.raise('XXX', data);
+

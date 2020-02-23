@@ -56,15 +56,16 @@ Server.boot = function boot() {
 Server.run = function run() {
     const appConfig = use('config/app');
     let engine;
+    let server;
 
-    if (appConfig.https) {
+    if (appConfig.https == "true") {
         engine = Server.httpsEngine(appConfig);
     } else {
         engine = Server.httpEngine(appConfig);
     }
-
-    /* Start listening */
-    let server = engine.server.createServer(engine.options, App);
+    
+    /* Create server */
+    server = engine.server.createServer(engine.options, App);
 
     // server.listen(appConfig.port, appConfig.host, function () {
     server.listen(appConfig.port, function () {
@@ -74,7 +75,7 @@ Server.run = function run() {
             url += `:${appConfig.port}`;
         }
 
-        Logger.info(`Server started at port ${url}`);
+        Logger.info(`Server started at ${url}`);
 
         /* Set global variable */
         global.server = {

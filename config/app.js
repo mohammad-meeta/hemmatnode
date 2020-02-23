@@ -1,8 +1,10 @@
 'use strict';
 
-const protocol = process.env.HTTPS ? 'https' : 'http';
+const protocol = (process.env.HTTPS == "true") ? 'https' : 'http';
 const port = process.env.PORT || 8000;
-const host = process.env.HOST || `${protocol}://localhost`;
+const host = `${protocol}://` + (process.env.HOST || 'localhost');
+
+console.log(host)
 
 /* Export */
 module.exports = {

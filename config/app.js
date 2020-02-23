@@ -4,8 +4,6 @@ const protocol = (process.env.HTTPS == "true") ? 'https' : 'http';
 const port = process.env.PORT || 8000;
 const host = `${protocol}://` + (process.env.HOST || 'localhost');
 
-console.log(host)
-
 /* Export */
 module.exports = {
     views_path: process.env.VIEWS_PATH || 'resources/views',

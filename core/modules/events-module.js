@@ -107,7 +107,7 @@ EventsModule.runEventCallback = function runEventCallback(callback, data) {
 
         resolve();
     });
-}
+};
 
 /**
  * Fix the listener name

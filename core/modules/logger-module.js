@@ -103,4 +103,4 @@ LoggerModule.setupTypes = function setupTypes() {
             LoggerModule.logger[type](msg);
         };
     });
-}
+};

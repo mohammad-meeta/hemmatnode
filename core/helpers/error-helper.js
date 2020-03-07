@@ -15,4 +15,4 @@ ErrorHelper.callStack = function callStack() {
     Error.captureStackTrace(obj, ErrorHelper.callStack);
     
     return obj.stack;
-}
+};

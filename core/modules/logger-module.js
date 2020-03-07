@@ -95,6 +95,11 @@ LoggerModule.setupTypes = function setupTypes() {
                 console.trace('TRACE ERROR');
             }
 
+            if ((type == 'error') &&
+                !(msg instanceof Error)) {
+                msg = new Error(msg);
+            }
+
             LoggerModule.logger[type](msg);
         };
     });

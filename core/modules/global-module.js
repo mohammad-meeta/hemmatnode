@@ -1,5 +1,7 @@
 'use strict';
 
+const _ = require('lodash');
+
 /**
  * GlobalFunctions class
  */
@@ -15,8 +17,19 @@ GlobalFunctions.setup = function setup(server) {
     global.mix = GlobalFunctions.mix;
     global.asset = GlobalFunctions.asset;
     global.isAjax = GlobalFunctions.isAjax;
+    global.config = GlobalFunctions.config;
 
     return server;
+};
+
+
+/**
+ * Get config value
+ */
+GlobalFunctions.config = function config(configFile, path, defaultValue = null) {
+    let configData = GlobalFunctions.use(`config/${configFile}`);
+
+    return _.get(configData, path, defaultValue);
 };
 
 /**

@@ -5,5 +5,4 @@ module.exports = HomeIndex();
 
 
 HomeIndex.init = function init() {
-	
 };

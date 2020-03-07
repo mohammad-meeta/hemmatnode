@@ -55,6 +55,10 @@ ExpressModule.setupUserMiddlewares = function setupUserMiddlewares(server) {
 ExpressModule.setupMiddlewares = function setupMiddlewares(server) {
     const app = server.App;
 
+    /* Setup cors */
+    const cors = require('cors');
+    app.use(cors());
+
     /* Setup helmet */
     const helmet = require('helmet')
     app.use(helmet());

@@ -1,0 +1,84 @@
+Validator Structure
+
+This module use "validatorjs" npm module.
+You should implement validate(), data() and rules() functions
+
+validate function gets arguments {req, res, next}
+and use "data-validator" helper in "core/helpers" folder
+
+These two lines of code must be write in validate function
+    const validator = use('core/helpers/data-validator');
+    validator.validate(MyValidator, req, res, next);
+
+    "MyValidator" is your class name
+
+In data() function you should return a data object that you collected from "res" input argument
+In rule() function you should reutrn a data object that presents your validation rules;
+
+Additionaly, You can implement tow other methods, messages() and attributes()
+    In messages() function you return an object that return your custom messages
+    and in attributes() function you can specify your custom field names
+
+
+Sample: 
+    'use strict';
+
+    /**
+    * User Login Validator
+    */
+    function UserLoginValidator() {}
+    module.exports = UserLoginValidator;
+
+    /**
+    * Validation funciton
+    */
+    UserLoginValidator.validate = function validate(req, res, next) {
+        const validator = use('core/helpers/data-validator');
+
+        validator.validate(UserLoginValidator, req, res, next);
+    };
+
+    // /**
+    //  * Validation funciton
+    //  */
+    // UserLoginValidator.lang = function lang() {
+    //     return 'en';
+    // };
+
+    /**
+    * Data function
+    */
+    UserLoginValidator.data = function data(req) {
+        return {
+            name: req.body.name,
+            password: req.body.password
+        };
+    };
+
+    /**
+    * Rules function
+    */
+    UserLoginValidator.rules = function rules() {
+        return {
+            'name': 'required|min:4|max:25',
+            'password': 'required|min:6|max:50'
+        };
+    };
+
+    /**
+    * Messages function
+    */
+    UserLoginValidator.messages = function messages() {
+        return {};
+    };
+
+    /**
+    * Return captions
+    */
+    UserLoginValidator.attributes = function attributes() {
+        return {
+            name: 'Username',
+            password: 'Password'
+        };
+    };
+

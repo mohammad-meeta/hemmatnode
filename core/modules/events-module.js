@@ -1,5 +1,7 @@
 'use strict';
 
+const DirectoryHelper = use('./core/helpers/directory-helper');
+
 /**
  * Event module
  */
@@ -8,6 +10,7 @@ module.exports = EventsModule;
 
 /* Variables */
 EventsModule.events = [];
+EventsModule.MODULE_SEPARATOR = '.';
 
 /**
  * Setup function
@@ -22,19 +25,25 @@ EventsModule.setup = function setup(server) {
  * Load handlers files
  */
 EventsModule.initHandlers = function initHandlers() {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         const fs = require('fs');
-        const baseFolder = rPath('app/handlers');
+        const {
+            sep
+        } = require('path');
+        const baseFolder = rPath('app/handlers/');
+
+        const filesCallback = (file) => {
+            const name = file.replace(/\-handler/i, '')
+                .replace(/\.js/i, '')
+                .replace(baseFolder, '')
+                .replace(new RegExp(sep, 'g'), EventsModule.MODULE_SEPARATOR)
+                .replace(/^\.*/i, '');
+
+            EventsModule.define(name, file);
+        };
 
         if (fs.existsSync(baseFolder)) {
-            let files = fs.readdirSync(baseFolder) || [];
-
-            files.forEach(file => {
-                const name = file.replace(/\-handler/i, '')
-                    .replace(/\.js/i, '');
-
-                EventsModule.define(name, file);
-            });
+            await DirectoryHelper.getDirectories(baseFolder, '**/**/*.js', filesCallback);
         }
     });
 };

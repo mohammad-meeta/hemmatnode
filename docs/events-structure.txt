@@ -1,6 +1,15 @@
 Events-Handlers Structure
 
 All event handlers place in /app/handlers folder
+This module load all handler files within subdirectories, and named them by '.' separator, As example:
+   app/handler/foo-handler.js
+   app/handler/sub1/bar-handler.js
+   app/handler/sub1/sub2/baz-handler.js
+
+    Can be raised by following codes:
+        Events.raise('foo');
+        Events.raise('sub1.bar');
+        Events.raise('sub1.sub2.baz');
 
 Event-handler files should be in format "XXX-event.js"
 Example of a handler :

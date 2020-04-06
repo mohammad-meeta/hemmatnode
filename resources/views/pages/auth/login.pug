@@ -7,7 +7,7 @@ block styles
     link(rel="stylesheet", href=mix('css/pages/auth/login.css'))
 
 block content
-    #app.container
+    .container
         .columns.is-vcentered
             .column.is-5
                 login(ref="loginComponent", login-url=route('auth.attempt'), home-page-url=route('home.index'))

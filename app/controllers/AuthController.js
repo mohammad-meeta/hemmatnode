@@ -6,7 +6,7 @@ const authConfig = use('config/auth');
 const events = use('core/modules/events-module');
 
 /**
- * Home controller
+ * Auth controller
  */
 function AuthController() {}
 module.exports = AuthController;

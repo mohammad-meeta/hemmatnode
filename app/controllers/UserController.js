@@ -3,7 +3,7 @@
 const PugView = use('app/helpers/pug-view');
 
 /**
- * Home controller
+ * Auth controller
  */
 function UserController() {}
 module.exports = UserController;

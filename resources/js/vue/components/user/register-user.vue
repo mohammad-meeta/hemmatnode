@@ -31,13 +31,6 @@
 const ENUMS = require("JS-HELPERS/enums");
 
 module.exports = {
-    props: {
-        "on-command": {
-            type: Function,
-            default: () => false
-        }
-    },
-
     data: () => ({
         ENUMS,
         userData: {
@@ -48,55 +41,12 @@ module.exports = {
 
     methods: {
         /**
-         * Validate user data
-         */
-        validate(userData, errorMessages) {
-            
-        },
-
-        /**
-         * Register user
-         */
-        registerUser() {
-            this.validate(this.userData).then(function(matched) {
-                if (!matched) {
-                    console.log(this.errors);
-                    alert("not ok");
-                } else {
-                    alert("ok");
-                }
-            });
-        },
-
-        /**
          * On Command
          *
          * @param      {Object}  arg     The argument
          */
         commandClick(arg) {
-            switch (arg) {
-                case ENUMS.COMMAND.SAVE:
-                    this.registerUser();
-                    break;
-
-                case ENUMS.COMMAND.CANCEL:
-                    let payload = {
-                        type: arg
-                    };
-
-                    this.$emit("register-user", payload);
-
-                    break;
-            }
-        },
-
-        /**
-         * Validate form
-         */
-        validate() {
-            const errors = [];
-
-            return errors.length == 0;
+            this.$emit("on-command", arg);
         }
     }
 };

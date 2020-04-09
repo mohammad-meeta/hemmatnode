@@ -1,50 +1,51 @@
 'use strict';
 
 /**
- * User model
+ * Article model
  */
-function UserModel() {}
-module.exports = UserModel;
+function ArticleModel() {}
+module.exports = ArticleModel;
 
 /**
  * Setup model
  */
-UserModel.setup = function setup() {
+ArticleModel.setup = function setup() {
     const mongoose = require('mongoose');
-    const model = UserModel.model();
+    const model = ArticleModel.model();
     const schema = new mongoose.Schema(model);
 
-    UserModel.plugins(schema);
-    UserModel.extraFunctions(schema);
+    ArticleModel.plugins(schema);
+    ArticleModel.extraFunctions(schema);
 
-    mongoose.model('User', schema);
+    mongoose.model('Article', schema);
 };
 
 /**
  * Get model
  */
-UserModel.model = function model() {
+ArticleModel.model = function model() {
     return {
-        'name': {
-            type: String,
-            required: true,
-            trim: true
-        },
-        'pwd': {
+        'title': {
             type: String,
             required: true
         },
-        'email': {
+        'article_type': {
             type: String,
-            trim: true
+            required: true
+        },
+        'body': {
+            type: String
         },
         'is_active': {
             type: Boolean,
             default: false
         },
+        'user': {
+            type: String
+        },
         'slug': {
             type: String,
-            default: ''
+            required: true
         }
     };
 };
@@ -52,7 +53,7 @@ UserModel.model = function model() {
 /**
  * Setup plugins
  */
-UserModel.plugins = function plugins(schema) {
+ArticleModel.plugins = function plugins(schema) {
     const timestamps = require('mongoose-timestamp');
 
     schema.plugin(timestamps, {
@@ -66,16 +67,16 @@ UserModel.plugins = function plugins(schema) {
  *
  * @param      {Object}  schema  The schema
  */
-UserModel.extraFunctions = function extraFunctions(schema) {
-    schema.statics.newUser = UserModel.newUser;
-    schema.statics.attempt = UserModel.attempt;
+ArticleModel.extraFunctions = function extraFunctions(schema) {
+    schema.statics.newArticle = ArticleModel.newArticle;
+    schema.statics.attempt = ArticleModel.attempt;
 }
 
 /**
  * Insert user function
  */
-UserModel.newUser = async function newUser(newUser) {
-    let result = new this(newUser);
+ArticleModel.newArticle = async function newArticle(newArticle) {
+    let result = new this(newArticle);
 
     return result.save();
 };
@@ -83,7 +84,7 @@ UserModel.newUser = async function newUser(newUser) {
 /**
  * Insert user function
  */
-UserModel.attempt = function attempt(data) {
+ArticleModel.attempt = function attempt(data) {
     return new Promise((resolve, reject) => {
         const user = data.user;
 
@@ -106,7 +107,7 @@ UserModel.attempt = function attempt(data) {
 /**
  * Active the user
  */
-UserModel.active = function active(callback) {
+ArticleModel.active = function active(callback) {
     this.is_active = true;
     this.save();
 
@@ -116,7 +117,7 @@ UserModel.active = function active(callback) {
 /**
  * Deactive the user
  */
-UserModel.deactive = function deactive(callback) {
+ArticleModel.deactive = function deactive(callback) {
     this.is_active = false;
     this.save();
 

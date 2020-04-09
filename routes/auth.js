@@ -12,6 +12,13 @@ Router.post('/auth/login', [
     ])
     .as('auth.attempt');
 
+Router.get('/auth/register', 'AuthController@register')
+    .as('auth.register');
+
+Router.post('/auth/register', 'AuthController@registerUser')
+    .as('auth.register-user');
+
+
 Router.get('/auth/test', [
     authHelper.checkAuth,
     (req, res, next) => {

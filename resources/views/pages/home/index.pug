@@ -4,23 +4,53 @@ block title
     | Welcome to Task:Tracker
 
 block styles
-    link(rel="stylesheet", href=mix("css/pages/home/index.css"))
+    link(rel="stylesheet", href=mix("css/global/app.css"))
 
 block content
-    .container.has-text-centered
-        .columns.is-vcentered
-            .column.is-5
-                figure.image.is-4by3
-                    img(class="is-rounded", src=asset("images/pages/home/img1.jpg"), alt='Home Image')
-            .column.is-6.is-offset-1
-                h1.title.is-2
-                    | Task Tracker
-                h2.subtitle.is-4
-                    | An Intelligent Tracker
-
-block footer
-    ul
-        li
-            a Copyright&copy; Ojvar, 2018-2020
+    .front-page-top
+        .front-page-img
+            img(src=asset('images/frontpage-img.jpg'))
+        .front-page-bg
+            img(src=asset('images/frontpage-bg.png'))
+        .sitename
+            h1 همکاری بین بخشی و مشارکت مردم در سلامت استان
+            h2 سامانه همت
+    .front-page-link-box.container.columns.is-mobile.is-multiline
+        .column.py-3.has-text-centered.is-one-third
+            .blue-luzy.icon-container
+                a(href='/')
+                    img(src=asset('images/icons/handshake.svg'))
+            .icon-container-text.py-2
+                a(href='/') همکاری بین بخشی
+        .column.py-3.has-text-centered.is-one-third
+            .orange-luzy.icon-container
+                a(href='/')
+                    img(src=asset('images/icons/three-users.svg'))
+            .icon-container-text.py-2
+                a(href='/') مشارکت مردم
+        .column.py-3.has-text-centered.is-one-third
+            .blueg-luzy.icon-container
+                a(href='/')
+                    img(src=asset('images/icons/refresh-button.svg'))
+            .icon-container-text.py-2
+                a(href='/') هماهنگی درون بخشی
+        .column.py-3.has-text-centered.is-one-third
+            .green-luzy.icon-container
+                a(href='/')
+                    img(src=asset('images/icons/add-heart.svg'))
+            .icon-container-text.py-2
+                a(href='/') دیده بانی سلامت استان
+        .column.py-3.has-text-centered.is-one-third
+            .oranger-luzy.icon-container
+                a(href='/')
+                    img(src=asset('images/icons/calendar.svg'))
+            .icon-container-text.py-2
+                a(href='/') رویدادها
+        .column.py-3.has-text-centered.is-one-third
+            .purple-luzy.icon-container
+                a(href='/')
+                    img(src=asset('images/icons/asnadrahbordi.svg'))
+            .icon-container-text.py-2
+                a(href='/') مرکز اسناد راهبردی
 
 block scripts

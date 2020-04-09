@@ -1,28 +1,21 @@
 <template lang="pug">
     .columns.is-vcentered
-        .column.is-9.has-text-left
+        .column.is-9.has-text-left(v-show="isLoadingMode")
+            h1 Loading...
+        .column.is-9.has-text-left(v-show="! isLoadingMode")
             .field
                 label.label Username
                 .control
                     input.input(type='text', placeholder='e.g. john doe', autofocus, v-model='userData.name')
                 p.help New user name
             .field
-                label.label Email
+                label.label Password
                 .control
-                    input.input(type='email', placeholder='e.g. john@doe.dev', v-model='userData.email')
-                p.help User email
-        .column.is-2.is-offset-1
-            ul
-                li
-                    a.button.is-fullwidth.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
-                        span.icon.is-small
-                            i.material-icons.icon add_circle
-                        span Save
-                li
-                    a.button.is-fullwidth.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.CANCEL)")
-                        span.icon.is-small
-                            i.material-icons.icon close
-                        span Cancel
+                    input.input(type='password', v-model='userData.password')
+                p.help User password
+        .column.is-2.is-offset-1(v-show="! isLoadingMode")
+            a.button.is-fullwidth.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
+                span Register
 </template>
 
 <script>
@@ -31,43 +24,27 @@
 const ENUMS = require("JS-HELPERS/enums");
 
 module.exports = {
-    props: {
-        "on-command": {
-            type: Function,
-            default: () => false
-        }
-    },
-
     data: () => ({
         ENUMS,
         userData: {
             name: null,
-            email: null
-        }
+            password: null
+        },
+        showLoadingFlag: false
     }),
 
+    props: {
+        registerUrl: {
+            type: String,
+            default: ''
+        }
+    },
+
+    computed: {
+        isLoadingMode: state => state.showLoadingFlag == true
+    },
+
     methods: {
-        /**
-         * Validate user data
-         */
-        validate(userData, errorMessages) {
-            
-        },
-
-        /**
-         * Register user
-         */
-        registerUser() {
-            this.validate(this.userData).then(function(matched) {
-                if (!matched) {
-                    console.log(this.errors);
-                    alert("not ok");
-                } else {
-                    alert("ok");
-                }
-            });
-        },
-
         /**
          * On Command
          *
@@ -78,25 +55,54 @@ module.exports = {
                 case ENUMS.COMMAND.SAVE:
                     this.registerUser();
                     break;
-
-                case ENUMS.COMMAND.CANCEL:
-                    let payload = {
-                        type: arg
-                    };
-
-                    this.$emit("register-user", payload);
-
-                    break;
             }
         },
 
         /**
-         * Validate form
+         * Show Loading
          */
-        validate() {
-            const errors = [];
+        showLoading() {
+            Vue.set(this, 'showLoadingFlag', true);
+        },
 
-            return errors.length == 0;
+        /**
+         * HideLoading
+         */
+        hideLoading() {
+            Vue.set(this, 'showLoadingFlag', false);
+        },
+
+        /**
+         * Register new user
+         */
+        registerUser(){
+            const isValid = this.validate();
+
+            if (! isValid){
+                return;
+            }
+
+            this.showLoading();
+
+            const url = this.registerUrl;
+            axios.post(url, this.userData)
+                .then(res => {
+                    const data = res.data;
+
+                    console.log(data);
+                })
+                .catch(err => {
+                    console.error(err);
+                })
+                .then(() => this.hideLoading());
+        },
+
+        /**
+         * Validate new user data
+         */
+        validate(){
+            /* Validate user data */
+            return true;
         }
     }
 };

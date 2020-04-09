@@ -12,7 +12,6 @@ module.exports = JSCore;
 JSCore.setup = function () {
     JSCore.setupVue();
     JSCore.setupAxios();
-    JSCore.setupBulma();
     JSCore.setupETC();
     JSCore.setupRoutes();
 };
@@ -52,21 +51,6 @@ JSCore.setupAxios = function setupAxios() {
 };
 
 /**
- * Setup Bulma
- */
-JSCore.setupBulma = function setupBulma() {
-    const burger = document.querySelector('.burger');
-    const menu = document.querySelector(`#${burger.dataset.target}`);
-
-    if (burger && menu) {
-        burger.addEventListener('click', function () {
-            burger.classList.toggle('is-active');
-            menu.classList.toggle('is-active');
-        });
-    }
-};
-
-/**
  * Setup ETC
  */
 JSCore.setupETC = function setupETC() {
@@ -80,7 +64,7 @@ JSCore.setupETC = function setupETC() {
  */
 JSCore.setupRoutes = function setupRoutes() {
     const routes = require('JS-CORE/routes');
-    
+
     JSCore.routes = routes;
     window.routes = routes;
 };

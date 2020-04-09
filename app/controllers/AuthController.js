@@ -1,9 +1,10 @@
 'use strict';
 
+const Mongoose = require('mongoose');
 const PugView = use('app/helpers/pug-view');
 const Auth = use('core/helpers/auth-helper');
 const authConfig = use('config/auth');
-const events = use('core/modules/events-module');
+const Events = use('core/modules/events-module');
 
 /**
  * Home controller
@@ -15,12 +16,48 @@ module.exports = AuthController;
  * Login function
  */
 AuthController.login = function login(req, res, next) {
-    const pageRoute = 'auth.login';
+    const pageRoute = PugView.getView('auth.login');
 
-    res.render(PugView.getView(pageRoute), {
+    res.render(pageRoute, {
         req,
         pageRoute,
     });
+};
+
+/**
+ * Show Register page
+ */
+AuthController.register = function register(req, res, next) {
+    const pageRoute = PugView.getView('auth.register');
+
+    res.render(pageRoute, {
+        req,
+        pageRoute,
+    });
+};
+
+/**
+ * Register a user
+ */
+AuthController.registerUser = function registerUser(req, res, next) {
+    const name = req.body.name;
+    const password = req.body.password;
+
+    const User = Mongoose.model('User');
+    let newUser = {
+        'name': name,
+        'pwd': password,
+        'email': name + '@test.dev',
+        'is_active': false
+    };
+
+    newUser = User.newUser(newUser);
+
+    res.send({
+            success: true,
+            data: newUser
+        })
+        .end(200);
 };
 
 /**
@@ -56,7 +93,7 @@ AuthController.attempt = function attempt(req, res, next) {
     }
 
     /* Fire attempt-event */
-    events.raise('login-attempt', loginResult);
+    Events.raise('login-attempt', loginResult);
 
     /* Send result */
     if (loginResult.success) {

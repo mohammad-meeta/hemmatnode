@@ -57,14 +57,18 @@ mix.setPublicPath(output)
     .version();
 
 /* Copy Files & Directories */
-mix.copyDirectory('resources/images', `${output}/images`);
+mix.copyDirectory('resources/images', `${output}/images`)
+    .copyDirectory('resources/fonts', `${output}/fonts`);
 
 /* JS */
 mix.js('resources/js/core/kernel.js', `${output}/js/core`)
+    .js('resources/js/helpers/main.js', `${output}/js/helpers`)
     .js('resources/js/pages/auth/login/index.js', `${output}/js/pages/auth/login`)
+    .js('resources/js/pages/auth/register/index.js', `${output}/js/pages/auth/register`)
     .js('resources/js/pages/user/index/index.js', `${output}/js/pages/user/index`);
 
 /* SASS */
 mix.sass('resources/sass/core/kernel.scss', `${output}/css/core`)
+    .sass('resources/sass/global/app.scss' , `${output}/css/global`)
     .sass('resources/sass/pages/home/index.scss', `${output}/css/pages/home`)
     .sass('resources/sass/pages/auth/login.scss', `${output}/css/pages/auth`);

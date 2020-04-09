@@ -14,10 +14,12 @@ html(lang="en")
         block styles
 
     body
-        section.hero.is-fullheight.is-default.is-bold
+        #app
             include ./head.pug
             include ./content.pug
             include ./footer.pug
 
         script(defer, src=mix("js/core/kernel.js"))
+        script(defer, src=mix("js/helpers/main.js"))
+
         block scripts

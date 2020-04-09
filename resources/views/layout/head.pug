@@ -1,14 +1,53 @@
-.hero-head
-    nav.navbar
-        .container
-            .navbar-brand
-                a.navbar-item(href='.#')
-                    img(src=asset("images/favicon.png"), alt='Logo')
-                span.navbar-burger.burger(data-target='navbarMenu')
-                    span
-                    span
-                    span
-            #navbarMenu.navbar-menu
-                .navbar-end
-                    .tabs.is-right
-                        include ./menu.pug
+nav.navbar.navbar-expand-md
+    .container
+        input#responsive-menu(type='checkbox')
+        label(for='responsive-menu')
+            span#menu-icon
+        #overlay.is-flex
+            .menu-background
+                img(src=asset('images/menu-background.jpg'))
+            .menu-links
+                a(href='/') خانه
+                a(href='/') ثبت نام
+                a(href='/') ورود
+                a(href='/') داشبورد
+                a(href='/') تماس با ما
+                a(href='/') درباره ما
+            .menu-links
+                a(href='/') همکاری درون بخشی
+                a(href='/') مشارکت مردم
+                a(href='/') همکاری بین بخشی
+                a(href='/') دیده بانی سلامت استان
+                a(href='/') رویدادها
+                a(href='/') مرکز اسناد راهبردی
+        .nav-user-container.is-flex
+            .nav-user-container-icon.columns.is-centered
+                img(src=asset('images/user.svg'))
+            button.navbar-toggler(type='button',
+                                data-toggle='collapse',
+                                data-target='#navbarSupportedContent',
+                                aria-controls='navbarSupportedContent',
+                                aria-expanded='false',
+                                aria-label="Toggle navigation")
+                span.navbar-toggler-icon
+            #navbarSupportedContent.collapse.navbar-collapse
+                // Left Side Of Navbar
+                ul.navbar-nav.mr-2
+                // Right Side Of Navbar
+                ul.navbar-nav.mr-2
+                    // Authentication Links
+                        li.nav-item
+                            a.nav-link(href="/") ورود
+                        li.nav-item
+                            a.nav-link(href="/") ثبت نام
+                    .dropdown
+                        .dropdown-trigger
+                            button.button(aria-haspopup='true', aria-controls='dropdown-menu')
+                                span محمد محمدی
+                                span.icon.is-small
+                                    i.fa.fa-chevron-down(aria-hidden='true')
+                        #dropdown-menu.dropdown-menu(role='menu')
+                            .dropdown-content
+                                a.dropdown-item(href='#') خروج
+        a.navbar-brand(href="/")
+            img(src=asset('images/logo.png'))

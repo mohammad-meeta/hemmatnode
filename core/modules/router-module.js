@@ -70,8 +70,12 @@ RouterModule.getActions = function getActions(actions) {
                 throw new Error('Invalid action!', actions);
             }
 
-            const controllerName = tokens[0];
+            let controllerName = tokens[0];
             const actionName = tokens[1];
+
+            if (!controllerName.endsWith('Controller')) {
+                controllerName += "Controller";
+            }
             const controller = use('app/controllers', controllerName);
 
             result.push(controller[actionName]);

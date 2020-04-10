@@ -1,21 +1,35 @@
 <template lang="pug">
     .columns.is-vcentered
         .column.is-9.has-text-left(v-show="isLoadingMode")
-            h1 Loading...
-        .column.is-9.has-text-left(v-show="! isLoadingMode")
+            h1 در حال بارگذاری
+        .column.is-9(v-show="! isLoadingMode")
             .field
-                label.label Username
+                label.label نام کاربری
                 .control
-                    input.input(type='text', placeholder='e.g. john doe', autofocus, v-model='userData.name')
-                p.help New user name
+                    input.input(type='text', placeholder='نام کاربری', autofocus, v-model='userData.name' required)
             .field
-                label.label Password
+                label.label پست الکترونیک
                 .control
-                    input.input(type='password', v-model='userData.password')
-                p.help User password
-        .column.is-2.is-offset-1(v-show="! isLoadingMode")
-            a.button.is-fullwidth.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
-                span Register
+                    input.input(type='email', placeholder='پست اکترونیک', v-model='userData.email' required)
+            .field
+                label.label نام
+                .control
+                    input.input(type='text', placeholder='نام', v-model='userData.firstName' required)
+            .field
+                label.label نام خانوادگی
+                .control
+                    input.input(type='text', placeholder='نام خانوادگی', v-model='userData.lastName' required)
+            .field
+                label.label کد ملی
+                .control
+                    input.input(type='number', placeholder='کد ملی', v-model='userData.nationCode' required)
+            .field
+                label.label شماره موبایل
+                .control
+                    input.input(type='number', placeholder='شماره موبایل', v-model='userData.cellphone' required)
+            .column.is-2(v-show="! isLoadingMode")
+                a.button.is-fullwidth.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
+                    |   ثبت نام
 </template>
 
 <script>

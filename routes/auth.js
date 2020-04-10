@@ -3,12 +3,12 @@
 const validator = use('validators/user-login-validator');
 const authHelper = use('core/helpers/auth-helper');
 
-Router.get('/auth/login', 'AuthController@login')
+Router.get('/auth/login', 'Auth@login')
     .as('auth.login');
 
 Router.post('/auth/login', [
         validator.validate,
-        'AuthController@attempt'
+        'Auth@attempt'
     ])
     .as('auth.attempt');
 

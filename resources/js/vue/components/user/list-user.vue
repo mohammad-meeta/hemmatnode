@@ -4,12 +4,23 @@
             table.table.is-striped.is-hoverable.is-fullwidth
                 thead
                     tr
-                        th Username
-                        th Email
+                        th نام کاربری
+                        th پست الکترونیک
+                        th نام و نام خانوادگی
+                        th کد ملی
+                        th شماره موبایل
+                        th وضعیت
+                        th تاریخ ثبت نام
+
                 tbody
                     tr(v-for='user in users', :key='user.id')
                         td {{ user.name }}
-                        td {{ user.email | capitalize }}
+                        td {{ user.email }}
+                        td {{ user.firstName }} {{ user.lastname }}
+                        td {{ user.nationCode }}
+                        td {{ user.cellphone }}
+                        td {{ user.isActive }}
+                        td {{ user.createdAt }}
         .column.is-2.is-offset-1
             ul
                 li

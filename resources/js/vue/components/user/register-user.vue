@@ -1,57 +1,67 @@
 <template lang="pug">
-    .columns.is-vcentered
-        .column.is-9.has-text-left(v-show="isLoadingMode")
-            h1 در حال بارگذاری
-        .column.is-9(v-show="! isLoadingMode")
-            .field
-                label.label نام کاربری
-                .control
-                    input.input(type='text', placeholder='نام کاربری', autofocus, v-model='userData.name' required)
-            .field
-                label.label پست الکترونیک
-                .control
-                    input.input(type='email', placeholder='پست اکترونیک', v-model='userData.email' required)
-            .field
-                label.label نام
-                .control
-                    input.input(type='text', placeholder='نام', v-model='userData.firstName' required)
-            .field
-                label.label نام خانوادگی
-                .control
-                    input.input(type='text', placeholder='نام خانوادگی', v-model='userData.lastName' required)
-            .field
-                label.label کد ملی
-                .control
-                    input.input(type='number', placeholder='کد ملی', v-model='userData.nationCode' required)
-            .field
-                label.label شماره موبایل
-                .control
-                    input.input(type='number', placeholder='شماره موبایل', v-model='userData.cellphone' required)
-            .column.is-2(v-show="! isLoadingMode")
-                a.button.is-fullwidth.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
-                    |   ثبت نام
+    .container
+        .notification.is-danger
+            button.delete
+            | dfdd
+        .columns.is-vcentered
+            .column.is-9.has-text-left(v-show="isLoadingMode")
+                h1 در حال بارگذاری
+            .column.is-9(v-show="! isLoadingMode")
+                .field
+                    label.label نام کاربری
+                    .control
+                        input.input(type='text', placeholder='نام کاربری', autofocus, v-model='userData.name' required)
+                .field
+                    label.label پست الکترونیک
+                    .control
+                        input.input(type='email', placeholder='پست اکترونیک', v-model='userData.email' required)
+                .field
+                    label.label نام
+                    .control
+                        input.input(type='text', placeholder='نام', v-model='userData.firstName' required)
+                .field
+                    label.label نام خانوادگی
+                    .control
+                        input.input(type='text', placeholder='نام خانوادگی', v-model='userData.lastName' required)
+                .field
+                    label.label کد ملی
+                    .control
+                        input.input(type='number', placeholder='کد ملی', v-model='userData.nationCode' required)
+                .field
+                    label.label شماره موبایل
+                    .control
+                        input.input(type='number', placeholder='شماره موبایل', v-model='userData.cellphone' required)
+                .column.is-2(v-show="! isLoadingMode")
+                    a.button.is-fullwidth.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
+                        |   ثبت نام
 </template>
 
 <script>
 "use strict";
 
 const ENUMS = require("JS-HELPERS/enums");
+const Validator = require("validatorjs");
+const UserValidator = require("JS-VALIDATORS/user-register-validator");
 
 module.exports = {
     data: () => ({
         ENUMS,
         userData: {
             name: null,
-            password: null
+            password: null,
+            email: null,
+            firstName: null,
+            lastName: null,
+            nationCode: null,
+            cellphone: null
         },
         showLoadingFlag: false
     }),
 
-<<<<<<< HEAD
     props: {
         registerUrl: {
             type: String,
-            default: ''
+            default: ""
         }
     },
 
@@ -59,8 +69,6 @@ module.exports = {
         isLoadingMode: state => state.showLoadingFlag == true
     },
 
-=======
->>>>>>> c75ff99f97f4c9c12fc23d1391bf9d24e02987b9
     methods: {
         /**
          * On Command
@@ -68,7 +76,6 @@ module.exports = {
          * @param      {Object}  arg     The argument
          */
         commandClick(arg) {
-<<<<<<< HEAD
             switch (arg) {
                 case ENUMS.COMMAND.SAVE:
                     this.registerUser();
@@ -80,30 +87,30 @@ module.exports = {
          * Show Loading
          */
         showLoading() {
-            Vue.set(this, 'showLoadingFlag', true);
+            Vue.set(this, "showLoadingFlag", true);
         },
 
         /**
          * HideLoading
          */
         hideLoading() {
-            Vue.set(this, 'showLoadingFlag', false);
+            Vue.set(this, "showLoadingFlag", false);
         },
 
         /**
          * Register new user
          */
-        registerUser(){
+        registerUser() {
             const isValid = this.validate();
-
-            if (! isValid){
+            if (!isValid) {
                 return;
             }
 
             this.showLoading();
 
             const url = this.registerUrl;
-            axios.post(url, this.userData)
+            axios
+                .post(url, this.userData)
                 .then(res => {
                     const data = res.data;
 
@@ -118,12 +125,21 @@ module.exports = {
         /**
          * Validate new user data
          */
-        validate(){
-            /* Validate user data */
-            return true;
-=======
-            this.$emit("on-command", arg);
->>>>>>> c75ff99f97f4c9c12fc23d1391bf9d24e02987b9
+        validate() {
+            const result = UserValidator.validate(this.userData);
+
+            if (result.passes) {
+                return true;
+            }
+
+            const errors = result.validator.errors.all();
+            const error = Object.keys(errors)
+                .map(key => errors[key].join("\n"))
+                .join("\n");
+
+            console.log(error);
+
+            return false;
         }
     }
 };

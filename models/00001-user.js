@@ -1,5 +1,7 @@
 'use strict';
 
+const mongoose = require('mongoose');
+
 /**
  * User model
  */
@@ -10,7 +12,6 @@ module.exports = UserModel;
  * Setup model
  */
 UserModel.setup = function setup() {
-    const mongoose = require('mongoose');
     const model = UserModel.model();
     const schema = new mongoose.Schema(model);
 
@@ -42,10 +43,20 @@ UserModel.model = function model() {
             type: Boolean,
             default: false
         },
-        'slug': {
-            type: String,
-            default: ''
-        }
+        'profile': new mongoose.Schema({
+            'first_name': {
+                type: String,
+                default: null
+            },
+            'last_name': {
+                type: String,
+                default: null
+            },
+            'nation_code': {
+                type: String,
+                default: null
+            }
+        })
     };
 };
 
@@ -95,8 +106,7 @@ UserModel.attempt = function attempt(data) {
         this.findOne(condition, (err, data) => {
             if (err) {
                 reject(err);
-            }
-            else {
+            } else {
                 resolve(data);
             }
         });

@@ -1,5 +1,7 @@
 'use strict';
 
+const mongoose = require('mongoose');
+
 /**
  * User model
  */
@@ -10,7 +12,6 @@ module.exports = UserModel;
  * Setup model
  */
 UserModel.setup = function setup() {
-    const mongoose = require('mongoose');
     const model = UserModel.model();
     const schema = new mongoose.Schema(model);
 
@@ -91,8 +92,7 @@ UserModel.attempt = function attempt(data) {
         this.findOne(condition, (err, data) => {
             if (err) {
                 reject(err);
-            }
-            else {
+            } else {
                 resolve(data);
             }
         });

@@ -7,7 +7,7 @@ const {
 
 Router.get('/user', [
         checkAuth,
-        'UserController@index'
+        'User@index'
     ])
     .as('user.index');
 

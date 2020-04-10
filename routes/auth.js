@@ -3,27 +3,17 @@
 const validator = use('validators/user-login-validator');
 const authHelper = use('core/helpers/auth-helper');
 
-Router.get('/auth/login', 'AuthController@login')
+Router.get('/auth/login', 'Auth@login')
     .as('auth.login');
 
 Router.post('/auth/login', [
         validator.validate,
-        'AuthController@attempt'
+        'Auth@attempt'
     ])
     .as('auth.attempt');
 
-Router.get('/auth/register', 'AuthController@register')
+Router.get('/auth/register', 'Auth@register')
     .as('auth.register');
 
-Router.post('/auth/register', 'AuthController@registerUser')
+Router.post('/auth/register', 'Auth@registerUser')
     .as('auth.register-user');
-
-
-Router.get('/auth/test', [
-    authHelper.checkAuth,
-    (req, res, next) => {
-        res.status(200)
-            .send("Your are Logged in")
-            .end();
-    }
-]);

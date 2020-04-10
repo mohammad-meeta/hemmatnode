@@ -113,9 +113,8 @@ Model.attempt = async function attempt(_, payload) {
                 token: user
             };
         }
-    }
-    catch(error) {
-        /* Log ERROR */
+    } catch (error) {
+        Logger.error(error);
     }
 
     if (null == user) {

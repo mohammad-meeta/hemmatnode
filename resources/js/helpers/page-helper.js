@@ -5,7 +5,6 @@ const qs = require('qs');
 function PageHelper() {}
 module.exports = PageHelper;
 
-
 /**
  * Redirect to url
  *
@@ -19,10 +18,9 @@ PageHelper.redirect = function redirect(url, args, replace) {
 
     if (replace == true) {
         window.location.replace = url;
-    }
-    else {
+    } else {
         window.location.href = url;
     }
 
     return url;
-}
+};

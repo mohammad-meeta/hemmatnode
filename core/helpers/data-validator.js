@@ -1,5 +1,7 @@
 'use strict';
 
+const Validator = require("validatorjs");
+
 /**
  * DataValidator class
  */
@@ -10,8 +12,6 @@ module.exports = DataValidator;
  * Validate
  */
 DataValidator.validate = function validate(customValidator, req, res, next) {
-    const Validator = require("validatorjs");
-
     let data = {};
     let rules = {};
     let messages = {};

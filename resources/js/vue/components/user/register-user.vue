@@ -33,6 +33,7 @@ module.exports = {
         showLoadingFlag: false
     }),
 
+<<<<<<< HEAD
     props: {
         registerUrl: {
             type: String,
@@ -44,6 +45,8 @@ module.exports = {
         isLoadingMode: state => state.showLoadingFlag == true
     },
 
+=======
+>>>>>>> c75ff99f97f4c9c12fc23d1391bf9d24e02987b9
     methods: {
         /**
          * On Command
@@ -51,6 +54,7 @@ module.exports = {
          * @param      {Object}  arg     The argument
          */
         commandClick(arg) {
+<<<<<<< HEAD
             switch (arg) {
                 case ENUMS.COMMAND.SAVE:
                     this.registerUser();
@@ -103,6 +107,9 @@ module.exports = {
         validate(){
             /* Validate user data */
             return true;
+=======
+            this.$emit("on-command", arg);
+>>>>>>> c75ff99f97f4c9c12fc23d1391bf9d24e02987b9
         }
     }
 };

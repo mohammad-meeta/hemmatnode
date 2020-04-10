@@ -1,21 +1,22 @@
 'use strict';
 
+const mongoose = require('mongoose');
+
 /**
  * Article model
  */
-function ArticleModel() {}
-module.exports = ArticleModel;
+function Model() {}
+module.exports = Model;
 
 /**
  * Setup model
  */
-ArticleModel.setup = function setup() {
-    const mongoose = require('mongoose');
-    const model = ArticleModel.model();
+Model.setup = function setup() {
+    const model = Model.model();
     const schema = new mongoose.Schema(model);
 
-    ArticleModel.plugins(schema);
-    ArticleModel.extraFunctions(schema);
+    Model.plugins(schema);
+    Model.extraFunctions(schema);
 
     mongoose.model('Article', schema);
 };
@@ -23,7 +24,7 @@ ArticleModel.setup = function setup() {
 /**
  * Get model
  */
-ArticleModel.model = function model() {
+Model.model = function model() {
     return {
         'title': {
             type: String,
@@ -53,7 +54,7 @@ ArticleModel.model = function model() {
 /**
  * Setup plugins
  */
-ArticleModel.plugins = function plugins(schema) {
+Model.plugins = function plugins(schema) {
     const timestamps = require('mongoose-timestamp');
 
     schema.plugin(timestamps, {
@@ -67,15 +68,15 @@ ArticleModel.plugins = function plugins(schema) {
  *
  * @param      {Object}  schema  The schema
  */
-ArticleModel.extraFunctions = function extraFunctions(schema) {
-    schema.statics.newArticle = ArticleModel.newArticle;
-    schema.statics.attempt = ArticleModel.attempt;
+Model.extraFunctions = function extraFunctions(schema) {
+    schema.statics.newArticle = Model.newArticle;
+    schema.statics.attempt = Model.attempt;
 }
 
 /**
  * Insert user function
  */
-ArticleModel.newArticle = async function newArticle(newArticle) {
+Model.newArticle = async function newArticle(newArticle) {
     let result = new this(newArticle);
 
     return result.save();
@@ -84,7 +85,7 @@ ArticleModel.newArticle = async function newArticle(newArticle) {
 /**
  * Insert user function
  */
-ArticleModel.attempt = function attempt(data) {
+Model.attempt = function attempt(data) {
     return new Promise((resolve, reject) => {
         const user = data.user;
 
@@ -96,8 +97,7 @@ ArticleModel.attempt = function attempt(data) {
         this.findOne(condition, (err, data) => {
             if (err) {
                 reject(err);
-            }
-            else {
+            } else {
                 resolve(data);
             }
         });
@@ -107,7 +107,7 @@ ArticleModel.attempt = function attempt(data) {
 /**
  * Active the user
  */
-ArticleModel.active = function active(callback) {
+Model.active = function active(callback) {
     this.is_active = true;
     this.save();
 
@@ -117,7 +117,7 @@ ArticleModel.active = function active(callback) {
 /**
  * Deactive the user
  */
-ArticleModel.deactive = function deactive(callback) {
+Model.deactive = function deactive(callback) {
     this.is_active = false;
     this.save();
 

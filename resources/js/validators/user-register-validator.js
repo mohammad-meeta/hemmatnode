@@ -12,9 +12,12 @@ module.exports = UserRegisterValidator;
 UserRegisterValidator.validate = function validate(data) {
     const BaseValidator = require('JS-VALIDATORS/base-validator');
     const rules = {
-        'name': 'required|minLength:4|maxLength:25',
-        'password': 'required|minLength:6|maxLength:50',
-        'email': 'required|email'
+        name: 'required',
+        email: 'required|email',
+        firstName: 'required',
+        lastName: 'required',
+        nationCode: 'required|number|min:10',
+        cellphone: 'required|number|min:10'
     };
 
     return BaseValidator.validate(data, rules);

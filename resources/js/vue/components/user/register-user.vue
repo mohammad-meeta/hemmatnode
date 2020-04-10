@@ -11,6 +11,15 @@
                 .control
                     input.input(type='email', placeholder='e.g. john@doe.dev', v-model='userData.email')
                 p.help User email
+            .field
+                label.label Password
+                .control
+                    input.input(type='password', v-model='userData.password')
+                p.help User email
+            .field
+                h1(v-if="errors")
+                    pre {{ errors }}
+
         .column.is-2.is-offset-1
             ul
                 li
@@ -29,14 +38,18 @@
 "use strict";
 
 const ENUMS = require("JS-HELPERS/enums");
+const RegisterValidator = require("JS-VALIDATORS/user-register-validator");
+const ErrorHelper = require("JS-HELPERS/error-helper");
 
 module.exports = {
     data: () => ({
         ENUMS,
         userData: {
             name: null,
-            email: null
-        }
+            email: null,
+            password: null
+        },
+        errors: null
     }),
 
     methods: {
@@ -46,6 +59,20 @@ module.exports = {
          * @param      {Object}  arg     The argument
          */
         commandClick(arg) {
+            if (arg == ENUMS.COMMAND.SAVE) {
+                const result = RegisterValidator.validate(this.userData);
+
+                if (!result.passes) {
+                    const errStr = ErrorHelper.getErrorText(
+                        result.validator.errors.all()
+                    );
+
+                    Vue.set(this, "errors", errStr);
+                } else {
+                    Vue.set(this, "errors", null);
+                }
+            }
+
             this.$emit("on-command", arg);
         }
     }

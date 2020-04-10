@@ -5,18 +5,18 @@ const mongoose = require('mongoose');
 /**
  * User model
  */
-function UserModel() {}
-module.exports = UserModel;
+function Model() {}
+module.exports = Model;
 
 /**
  * Setup model
  */
-UserModel.setup = function setup() {
-    const model = UserModel.model();
+Model.setup = function setup() {
+    const model = Model.model();
     const schema = new mongoose.Schema(model);
 
-    UserModel.plugins(schema);
-    UserModel.extraFunctions(schema);
+    Model.plugins(schema);
+    Model.extraFunctions(schema);
 
     mongoose.model('User', schema);
 };
@@ -24,7 +24,7 @@ UserModel.setup = function setup() {
 /**
  * Get model
  */
-UserModel.model = function model() {
+Model.model = function model() {
     return {
         'name': {
             type: String,
@@ -49,7 +49,7 @@ UserModel.model = function model() {
 /**
  * Setup plugins
  */
-UserModel.plugins = function plugins(schema) {
+Model.plugins = function plugins(schema) {
     const timestamps = require('mongoose-timestamp');
 
     schema.plugin(timestamps, {
@@ -63,15 +63,15 @@ UserModel.plugins = function plugins(schema) {
  *
  * @param      {Object}  schema  The schema
  */
-UserModel.extraFunctions = function extraFunctions(schema) {
-    schema.statics.newUser = UserModel.newUser;
-    schema.statics.attempt = UserModel.attempt;
+Model.extraFunctions = function extraFunctions(schema) {
+    schema.statics.newUser = Model.newUser;
+    schema.statics.attempt = Model.attempt;
 }
 
 /**
  * Insert user function
  */
-UserModel.newUser = async function newUser(newUser) {
+Model.newUser = async function newUser(newUser) {
     let result = new this(newUser);
 
     return result.save();
@@ -80,7 +80,7 @@ UserModel.newUser = async function newUser(newUser) {
 /**
  * Insert user function
  */
-UserModel.attempt = function attempt(data) {
+Model.attempt = function attempt(data) {
     return new Promise((resolve, reject) => {
         const user = data.user;
 
@@ -103,7 +103,7 @@ UserModel.attempt = function attempt(data) {
 /**
  * Active the user
  */
-UserModel.active = function active(callback) {
+Model.active = function active(callback) {
     this.is_active = true;
     this.save();
 
@@ -113,7 +113,7 @@ UserModel.active = function active(callback) {
 /**
  * Deactive the user
  */
-UserModel.activate = function activate(callback) {
+Model.activate = function activate(callback) {
     this.is_active = false;
     this.save();
 

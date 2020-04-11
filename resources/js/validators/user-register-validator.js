@@ -16,8 +16,8 @@ UserRegisterValidator.validate = function validate(data) {
         email: 'required|email',
         firstName: 'required',
         lastName: 'required',
-        nationCode: 'required|number|min:10',
-        cellphone: 'required|number|min:10'
+        nationCode: 'required|numeric|min:10',
+        cellphone: 'required|numeric|min:10'
     };
 
     return BaseValidator.validate(data, rules);

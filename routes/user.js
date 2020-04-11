@@ -18,7 +18,7 @@ Router.get('/user/create', [
     .as('user.create');
 
 Router.post('/user', [
-    checkAuth,
+    // checkAuth,
     'User@store'
 ])
     .as('user.store');

@@ -28,3 +28,19 @@ UserHelper.loadAllUserData = function loadAllUserData(algorithm_id) {
             .catch(err => reject(err));
     });
 };
+/**
+ * insert user data  
+ */
+UserHelper.insertNewUser = function insertNewUser(data) {
+
+    return new Promise((resolve, reject) => {
+        const User = mongoose.model('User');
+        const user = new User(data)
+
+        user.save()
+            .then(res => {
+                resolve(res);
+            })
+            .catch(err => reject(err));
+    });
+};

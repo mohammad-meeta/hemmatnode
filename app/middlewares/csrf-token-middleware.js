@@ -1,7 +1,5 @@
 'use strict';
 
-const AuthHelper = use('core/helpers/auth-helper');
-
 /**
  * Test middleware
  */

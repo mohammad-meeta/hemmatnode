@@ -1,0 +1,14 @@
+extends ../../layout/app.pug
+
+block title
+    | دسته بندی مطالب
+
+block styles
+    link(rel="stylesheet", href=mix("css/global/app.css"))
+
+block content
+    .container
+        register-article-type(register-url=route('article-type.register-article-type'))
+
+block scripts
+    script(defer, src=mix('js/pages/article-type/index.js'))

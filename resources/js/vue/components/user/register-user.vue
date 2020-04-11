@@ -1,8 +1,7 @@
 <template lang="pug">
     .container
-        .notification.is-danger
-            button.delete
-            | dfdd
+        notification(:notification-type="notificationType", @on-close="closeNotification", v-if="showNotification")
+            span(v-html="notificationMessage")
         .columns.is-vcentered
             .column.is-9.has-text-left(v-show="isLoadingMode")
                 h1 در حال بارگذاری
@@ -14,7 +13,7 @@
                 .field
                     label.label پست الکترونیک
                     .control
-                        input.input(type='email', placeholder='پست اکترونیک', v-model='userData.email' required)
+                        input.input(type='email', placeholder='پست الکترونیک', v-model='userData.email' required)
                 .field
                     label.label نام
                     .control
@@ -42,8 +41,14 @@
 const ENUMS = require("JS-HELPERS/enums");
 const Validator = require("validatorjs");
 const UserValidator = require("JS-VALIDATORS/user-register-validator");
+const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
 module.exports = {
+    name: "RegisterUser",
+    components: {
+        Notification
+    },
+
     data: () => ({
         ENUMS,
         userData: {
@@ -55,6 +60,8 @@ module.exports = {
             nationCode: null,
             cellphone: null
         },
+        notificationMessage: null,
+        notificationType: "is-info",
         showLoadingFlag: false
     }),
 
@@ -66,7 +73,8 @@ module.exports = {
     },
 
     computed: {
-        isLoadingMode: state => state.showLoadingFlag == true
+        isLoadingMode: state => state.showLoadingFlag == true,
+        showNotification: state => state.notificationMessage != null
     },
 
     methods: {
@@ -95,6 +103,21 @@ module.exports = {
          */
         hideLoading() {
             Vue.set(this, "showLoadingFlag", false);
+        },
+
+        /**
+         * Set notification
+         */
+        setNotification(message, notificationType = "is-info") {
+            Vue.set(this, "notificationType", notificationType);
+            Vue.set(this, "notificationMessage", message);
+        },
+
+        /**
+         * Close Notification
+         */
+        closeNotification() {
+            this.setNotification(null);
         },
 
         /**
@@ -129,16 +152,17 @@ module.exports = {
             const result = UserValidator.validate(this.userData);
 
             if (result.passes) {
+                this.closeNotification()
                 return true;
             }
 
             const errors = result.validator.errors.all();
             const error = Object.keys(errors)
                 .map(key => errors[key].join("\n"))
-                .join("\n");
+                .join("</br>");
 
             console.log(error);
-
+            this.setNotification(error, "is-danger");
             return false;
         }
     }

@@ -72,7 +72,7 @@ module.exports = {
                 case ENUMS.COMMAND.NEW:
                     this.changeFormMode(ENUMS.FORM_MODE.REGISTER);
                     break;
-            
+
                 case ENUMS.COMMAND.REGISTER:
                     /* TODO: REGISTER NEW USER */
                     console.log("REGISTER NEW USER", arg)

@@ -3,9 +3,9 @@
         notification(:notification-type="notificationType", @on-close="closeNotification", v-if="showNotification")
             span(v-html="notificationMessage")
         .columns.is-vcentered
-            .column.is-9.has-text-left(v-show="isLoadingMode")
+            .column.is-full(v-show="isLoadingMode")
                 h1 در حال بارگذاری
-            .column.is-9(v-show="! isLoadingMode")
+            .column.is-full(v-show="! isLoadingMode")
                 .field
                     label.label نام کاربری
                     .control
@@ -30,9 +30,13 @@
                     label.label شماره موبایل
                     .control
                         input.input(type='number', placeholder='شماره موبایل', v-model='userData.cellphone' required)
-                .column.is-2(v-show="! isLoadingMode")
-                    a.button.is-fullwidth.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
-                        |   ثبت نام
+                .field.is-grouped
+                    .control(v-show="! isLoadingMode")
+                        a.button.is-link.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
+                            |   ثبت نام
+                    .control(v-show="! isLoadingMode")
+                        a.button.is-link.is-light.is-rounded(href="/")
+                            |   انصراف
 </template>
 
 <script>

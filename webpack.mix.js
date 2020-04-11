@@ -64,7 +64,7 @@ mix.copyDirectory('resources/images', `${output}/images`)
 mix.js('resources/js/core/kernel.js', `${output}/js/core`)
     .js('resources/js/helpers/main.js', `${output}/js/helpers`)
     .js('resources/js/pages/auth/login/index.js', `${output}/js/pages/auth/login`)
-    .js('resources/js/pages/auth/register/index.js', `${output}/js/pages/auth/register`)
+    .js('resources/js/pages/user/register/index.js', `${output}/js/pages/user/register`)
     .js('resources/js/pages/user/index/index.js', `${output}/js/pages/user/index`);
 
 /* SASS */

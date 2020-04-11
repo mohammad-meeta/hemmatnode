@@ -15,9 +15,9 @@ module.exports = AuthController;
  * Login function
  */
 AuthController.login = function login(req, res, next) {
-    const pageRoute = 'auth.login';
+    const pageRoute = PugView.getView('auth.login');
 
-    res.render(PugView.getView(pageRoute), {
+    res.render(pageRoute, {
         req,
         pageRoute,
     });

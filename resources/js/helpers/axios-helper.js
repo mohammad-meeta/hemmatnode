@@ -72,6 +72,17 @@ AxiosHelper.send = function send(method, url, data, options) {
         config['headers'] = postData.getHeaders();
     }
 
+    /* Add CSRF token */
+    const csrf = options.csrfToken ||
+        (document.querySelector('meta[name="csrf-token"]') || {
+            content: ''
+        }).content;
+    axios.defaults.headers.common['X-CSRF-TOKEN'] =
+        options.headers['x-xsrf-token'] =
+        options.headers['x-csrf-token'] =
+        options.headers['xsrf-token'] =
+        options.headers['csrf-token'] = csrf;
+
     /* Add bearer token */
     if (null != options.token) {
         config.headers['authorization'] = `Bearer ${options.token}`;
@@ -79,6 +90,8 @@ AxiosHelper.send = function send(method, url, data, options) {
 
     /* Create axios instance */
     let instance = axios.create(config);
+
+    console.log(options)
 
     return instance[method](url, postData);
 };

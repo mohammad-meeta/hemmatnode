@@ -7,32 +7,15 @@
                 h1 در حال بارگذاری
             .column.is-9(v-show="! isLoadingMode")
                 .field
-                    label.label نام کاربری
+                    label.label عنوان
                     .control
-                        input.input(type='text', placeholder='نام کاربری', autofocus, v-model='userData.name' required)
-                .field
-                    label.label پست الکترونیک
-                    .control
-                        input.input(type='email', placeholder='پست الکترونیک', v-model='userData.email' required)
-                .field
-                    label.label نام
-                    .control
-                        input.input(type='text', placeholder='نام', v-model='userData.firstName' required)
-                .field
-                    label.label نام خانوادگی
-                    .control
-                        input.input(type='text', placeholder='نام خانوادگی', v-model='userData.lastName' required)
-                .field
-                    label.label کد ملی
-                    .control
-                        input.input(type='number', placeholder='کد ملی', v-model='userData.nationCode' required)
-                .field
-                    label.label شماره موبایل
-                    .control
-                        input.input(type='number', placeholder='شماره موبایل', v-model='userData.cellphone' required)
+                        input.input(type='text', placeholder='عنوان', autofocus, v-model='articleType.name' required)
                 .column.is-2(v-show="! isLoadingMode")
                     a.button.is-fullwidth.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
                         |   ثبت نام
+                .column.is-2(v-show="! isLoadingMode")
+                    a.button.is-fullwidth.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
+                        |   انصراف
 </template>
 
 <script>
@@ -40,25 +23,19 @@
 
 const ENUMS = require("JS-HELPERS/enums");
 const Validator = require("validatorjs");
-const UserValidator = require("JS-VALIDATORS/user-register-validator");
+const ArticleTypeValidator = require("JS-VALIDATORS/article-type-register-validator");
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
 module.exports = {
-    name: "RegisterUser",
+    name: "RegisterArticleType",
     components: {
         Notification
     },
 
     data: () => ({
         ENUMS,
-        userData: {
-            name: null,
-            password: null,
-            email: null,
-            firstName: null,
-            lastName: null,
-            nationCode: null,
-            cellphone: null
+        articleTypeData: {
+            title: null,
         },
         notificationMessage: null,
         notificationType: "is-info",
@@ -86,7 +63,7 @@ module.exports = {
         commandClick(arg) {
             switch (arg) {
                 case ENUMS.COMMAND.SAVE:
-                    this.registerUser();
+                    this.registerArticleType();
                     break;
             }
         },
@@ -121,9 +98,9 @@ module.exports = {
         },
 
         /**
-         * Register new user
+         * Register new article type
          */
-        registerUser() {
+        registerArticleType() {
             const isValid = this.validate();
             if (!isValid) {
                 return;
@@ -133,24 +110,24 @@ module.exports = {
 
             const url = this.registerUrl;
             axios
-                .post(url, this.userData)
+                .post(url, this.articleTypeData)
                 .then(res => {
                     const data = res.data;
-                    this.setNotification(".کاربر با موفقیت ذخیره شد", "is-success");
+                    this.setNotification(".نوع مطلب با موفقیت ذخیره شد", "is-success");
                     console.log(data);
                 })
                 .catch(err => {
                     console.error(err);
-                    this.setNotification(".خطا در خیره کاربر", "is-danger");
+                    this.setNotification(".خطا در ذخیره نوع مطلب", "is-danger");
                 })
                 .then(() => this.hideLoading());
         },
 
         /**
-         * Validate new user data
+         * Validate new article type data
          */
         validate() {
-            const result = UserValidator.validate(this.userData);
+            const result = ArticleTypeValidator.validate(this.articleTypeData);
 
             if (result.passes) {
                 this.closeNotification()

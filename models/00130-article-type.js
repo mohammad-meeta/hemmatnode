@@ -3,7 +3,7 @@
 const mongoose = require('mongoose');
 
 /**
- * User model
+ * ArticleType model
  */
 function Model() { }
 module.exports = Model;
@@ -18,7 +18,7 @@ Model.setup = function setup() {
     Model.plugins(schema);
     Model.extraFunctions(schema);
 
-    mongoose.model('User', schema, 'users');
+    mongoose.model('ArticleType', schema, 'article_types');
 };
 
 /**
@@ -26,37 +26,14 @@ Model.setup = function setup() {
  */
 Model.model = function model() {
     return {
-        'name': {
-            type: String,
-            required: true,
-            trim: true
-        },
-        'pwd': {
+        'title': {
             type: String,
             required: true
-        },
-        'email': {
-            type: String,
-            trim: true
         },
         'is_active': {
             type: Boolean,
             default: false
-        },
-        'profile': new mongoose.Schema({
-            'first_name': {
-                type: String,
-                default: null
-            },
-            'last_name': {
-                type: String,
-                default: null
-            },
-            'nation_code': {
-                type: String,
-                default: null
-            }
-        })
+        }
     };
 };
 
@@ -68,7 +45,8 @@ Model.plugins = function plugins(schema) {
 
     schema.plugin(timestamps, {
         createdAt: 'created_at',
-        updatedAt: 'updated_at'
+        updatedAt: 'updated_at',
+        deletedAt: 'deleted_at'
     });
 };
 
@@ -78,18 +56,19 @@ Model.plugins = function plugins(schema) {
  * @param      {Object}  schema  The schema
  */
 Model.extraFunctions = function extraFunctions(schema) {
-    schema.statics.newUser = Model.newUser;
+    schema.statics.newArticleType = Model.newArticleType;
     schema.statics.attempt = Model.attempt;
 
     schema.methods.enable = Model.enable;
     schema.methods.disable = Model.disable;
-}
+
+};
 
 /**
  * Insert user function
  */
-Model.newUser = function newUser(newUser) {
-    let result = new this(newUser);
+Model.newArticleType = async function newArticleType(newArticleType) {
+    let result = new this(newArticleType);
 
     return result.save();
 };
@@ -117,7 +96,7 @@ Model.attempt = function attempt(data) {
 };
 
 /**
- * Enable an user
+ * Enable an article type
  */
 Model.enable = function enable() {
     this.is_active = true;
@@ -126,7 +105,7 @@ Model.enable = function enable() {
 };
 
 /**
- * Disable an user
+ * Disable an article type
  */
 Model.disable = function disable() {
     this.is_active = false;

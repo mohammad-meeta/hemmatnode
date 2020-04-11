@@ -24,5 +24,6 @@ PugView.viewPath = {
     'auth.register': 'pages/auth/register.pug',
 
     /* User */
-    'user.index': 'pages/user/index.pug'
+    'user.index': 'pages/user/index.pug',
+    'user.create': 'pages/user/register.pug'
 };

@@ -1,5 +1,7 @@
 'use strict';
 
+const validator = use('core/helpers/data-validator');
+
 /**
  * User Login Validator
  */
@@ -10,8 +12,6 @@ module.exports = UserLoginValidator;
  * Validation funciton
  */
 UserLoginValidator.validate = function validate(req, res, next) {
-    const validator = use('core/helpers/data-validator');
-
     validator.validate(UserLoginValidator, req, res, next);
 };
 

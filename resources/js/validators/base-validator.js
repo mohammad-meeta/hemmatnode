@@ -12,7 +12,7 @@ module.exports = DataValidator;
  * Validate
  */
 DataValidator.validate = function validate(data, rules, options) {
-
+    options = options || {};
     const lang = options.lang || 'en';
     const messages = options.messages || {};
     const attributes = options.attributes || {};

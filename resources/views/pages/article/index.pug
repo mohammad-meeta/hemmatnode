@@ -1,0 +1,14 @@
+extends ../../layout/app.pug
+
+block title
+    | مطالب
+
+block styles
+    link(rel="stylesheet", href=mix("css/global/app.css"))
+
+block content
+    .container
+        register-user(register-url=route('auth.register-user'))
+
+block scripts
+    script(defer, src=mix('js/pages/auth/register/index.js'))

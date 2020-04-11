@@ -12,10 +12,10 @@ module.exports = DataValidator;
  * Validate
  */
 DataValidator.validate = function validate(data, rules, options) {
+
     const lang = options.lang || 'en';
     const messages = options.messages || {};
     const attributes = options.attributes || {};
-
     /* Set validator language */
     Validator.useLang(lang);
 

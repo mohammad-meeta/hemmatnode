@@ -16,8 +16,8 @@ UserRegisterValidator.validate = function validate(data) {
         email: 'required|email',
         firstName: 'required',
         lastName: 'required',
-        nationCode: 'required|numeric|size:10',
-        cellphone: 'required|numeric|size:11'
+        nationCode: ['required', 'min:10', 'max:10', 'regex:/^[0-9]*$/'],
+        cellphone: ['required', 'min:11', 'max:11', 'regex:/^[0-9]*$/']
     };
 
     return BaseValidator.validate(data, rules);

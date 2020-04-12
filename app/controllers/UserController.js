@@ -1,7 +1,6 @@
 'use strict';
-
+const PasswordGenerator = require('generate-password');
 const PugView = use('app/helpers/pug-view');
-
 const UserHelper = use('app/helpers/user-helper');
 /**
  * Auth controller
@@ -44,19 +43,24 @@ UserController.create = async function create(req, res, next) {
  * store data user
  */
 UserController.store = async function store(req, res, next) {
-    const data = req.params.data;
+    let password = PasswordGenerator.generate({
+        length: 15,
+        numbers: true,
+        symbols: true
+    });
 
-    // const dataSample = {
-    //     name: "Hossein",
-    //     pwd: "8521545",
-    //     email: "ojvar.amirhossien@gmail.com",
-    //     is_active: true,
-    //     profile: {
-    //         first_name: "amirhossein",
-    //         last_name: "ojvar",
-    //         nation_code: "8564257925"
-    //     }
-    // };
+    const data = {
+        "name": req.body.name,
+        "pwd": password,
+        "email": req.body.email,
+        "cellphone": req.body.cellphone,
+        "is_active": false,
+        "profile": {
+            "first_name": req.body.firstName,
+            "last_name": req.body.lastName,
+            "nation_code": req.body.nationCode
+        }
+    };
 
     const UserInsert = UserHelper.insertNewUser(data)
         .then(data => {

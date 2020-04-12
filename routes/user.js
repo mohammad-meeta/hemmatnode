@@ -1,4 +1,5 @@
 'use strict';
+const validator = use('validators/user-register-validator');
 
 const {
     checkAuth,
@@ -22,6 +23,7 @@ Router.get('/user/create', [
 Router.post('/user', [
     checkAuth,
     global.csrf,
+    validator.validate,
     'User@store'
 ])
     .as('user.store');

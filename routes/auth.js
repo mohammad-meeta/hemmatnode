@@ -15,9 +15,3 @@ Router.post('/auth/login', [
         'Auth@attempt'
     ])
     .as('auth.attempt');
-
-Router.get('/auth/register', 'Auth@register')
-    .as('auth.register');
-
-Router.post('/auth/register', 'Auth@registerUser')
-    .as('auth.register-user');

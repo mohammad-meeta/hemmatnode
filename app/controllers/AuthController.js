@@ -25,42 +25,6 @@ AuthController.login = function login(req, res, next) {
 };
 
 /**
- * Show Register page
- */
-AuthController.register = function register(req, res, next) {
-    const pageRoute = PugView.getView('auth.register');
-
-    res.render(pageRoute, {
-        req,
-        pageRoute,
-    });
-};
-
-/**
- * Register a user
- */
-AuthController.registerUser = function registerUser(req, res, next) {
-    const name = req.body.name;
-    const password = req.body.password;
-
-    const User = Mongoose.model('User');
-    let newUser = {
-        'name': name,
-        'pwd': password,
-        'email': name + '@test.dev',
-        'is_active': false
-    };
-
-    newUser = User.newUser(newUser);
-
-    res.send({
-            success: true,
-            data: newUser
-        })
-        .end(200);
-};
-
-/**
  * Attempt function
  */
 AuthController.attempt = function attempt(req, res, next) {

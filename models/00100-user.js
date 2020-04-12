@@ -39,6 +39,10 @@ Model.model = function model() {
             type: String,
             trim: true
         },
+        'cellphone': {
+            type: String,
+            required: true
+        },
         'is_active': {
             type: Boolean,
             default: false

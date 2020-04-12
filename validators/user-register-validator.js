@@ -20,15 +20,12 @@ UserRegisterValidator.validate = function validate(req, res, next) {
  */
 UserRegisterValidator.data = function data(req) {
     return {
-        Username: req.body.name,
-        Password: req.body.password,
-        Email: req.body.email,
-
-        First_Name: req.body.firstName,
-        Last_Name: req.body.lastName,
-        Nation_Code: req.body.nationCode,
-        CellPhone: req.body.cellPhone
-
+        name: req.body.name,
+        email: req.body.email,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        nationCode: req.body.nationCode,
+        cellphone: req.body.cellphone
     };
 };
 
@@ -37,13 +34,12 @@ UserRegisterValidator.data = function data(req) {
  */
 UserRegisterValidator.rules = function rules() {
     return {
-        'name': 'required|min:4|max:25',
+        'name': 'required|min:3|max:25',
         'email': 'required|email',
-        'first_name': 'required|min:3|max:25',
-        'last_name': 'required|min:4|max:25',
-        'nation_code': 'required|size:10',
-        'cell_phone': 'required|size:11'
-
+        'firstName': 'required|min:3|max:25',
+        'lastName': 'required|min:4|max:25',
+        'nationCode': 'required|size:10',
+        'cellphone': 'required|size:11'
     };
 };
 
@@ -59,12 +55,11 @@ UserRegisterValidator.messages = function messages() {
  */
 UserRegisterValidator.attributes = function attributes() {
     return {
-        name: 'Username',
-        password: 'Password',
-        email: 'Email',
-        first_name: 'First_Name',
-        last_name: 'Last_Name',
-        nation_code: 'Nation_Code',
-        cell_phone: 'cellPhone'
+        name: 'userName',
+        email: 'email',
+        firstName: 'firstName',
+        lastName: 'lastName',
+        nationCode: 'nationCode',
+        cellphone: 'cellphone'
     };
 };

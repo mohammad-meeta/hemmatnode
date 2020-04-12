@@ -19,7 +19,7 @@ Router.get('/user/create', [
 ])
     .as('user.create');
 
-Router.post('/user/:data', [
+Router.post('/user', [
     checkAuth,
     global.csrf,
     'User@store'

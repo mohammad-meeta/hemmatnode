@@ -21,7 +21,6 @@ PugView.viewPath = {
 
     /* Auth */
     'auth.login': 'pages/auth/login.pug',
-    'auth.register': 'pages/auth/register.pug',
 
     /* User */
     'user.index': 'pages/user/index.pug',

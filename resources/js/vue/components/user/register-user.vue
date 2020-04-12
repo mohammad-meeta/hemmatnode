@@ -145,7 +145,7 @@ module.exports = {
                 })
                 .catch(err => {
                     console.error(err);
-                    this.setNotification(".خطا در خیره کاربر", "is-danger");
+                    this.setNotification(".خطا در ذخیره کاربر", "is-danger");
                 })
                 .then(() => this.hideLoading());
         },

@@ -24,9 +24,10 @@ UserRegisterValidator.data = function data(req) {
         Password: req.body.password,
         Email: req.body.email,
 
-        First_Name: req.body.profile.first_name,
-        Last_Name: req.body.profile.last_name,
-        Nation_Code: req.body.profile.nation_code
+        First_Name: req.body.firstName,
+        Last_Name: req.body.lastName,
+        Nation_Code: req.body.nationCode,
+        CellPhone: req.body.cellPhone
 
     };
 };
@@ -37,11 +38,12 @@ UserRegisterValidator.data = function data(req) {
 UserRegisterValidator.rules = function rules() {
     return {
         'name': 'required|min:4|max:25',
-        'pwd': 'required|min:6|max:50',
         'email': 'required|email',
         'first_name': 'required|min:3|max:25',
         'last_name': 'required|min:4|max:25',
-        'nation_code': 'required|min:10|max:10'
+        'nation_code': 'required|size:10',
+        'cell_phone': 'required|size:11'
+
     };
 };
 
@@ -62,6 +64,7 @@ UserRegisterValidator.attributes = function attributes() {
         email: 'Email',
         first_name: 'First_Name',
         last_name: 'Last_Name',
-        nation_code: 'Nation_Code'
+        nation_code: 'Nation_Code',
+        cell_phone: 'cellPhone'
     };
 };

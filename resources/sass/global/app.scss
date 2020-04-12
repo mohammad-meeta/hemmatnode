@@ -93,7 +93,9 @@
 }
 
 /*======================= bulma RTL*/
-
+.field.is-grouped>.control:not(:last-child) {
+    margin-left: 0.75rem;
+}
 /*======================= bulma RTL*/
 
 main {

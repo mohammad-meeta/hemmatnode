@@ -42,6 +42,7 @@
 <script>
 "use strict";
 
+const AxiosHelper = require("JS-HELPERS/axios-helper");
 const ENUMS = require("JS-HELPERS/enums");
 const Validator = require("validatorjs");
 const UserValidator = require("JS-VALIDATORS/user-register-validator");
@@ -136,11 +137,13 @@ module.exports = {
             this.showLoading();
 
             const url = this.registerUrl;
-            axios
-                .post(url, this.userData)
+            AxiosHelper.send("post", url, this.userData)
                 .then(res => {
                     const data = res.data;
-                    this.setNotification(".کاربر با موفقیت ذخیره شد", "is-success");
+                    this.setNotification(
+                        ".کاربر با موفقیت ذخیره شد",
+                        "is-success"
+                    );
                     console.log(data);
                 })
                 .catch(err => {
@@ -157,7 +160,7 @@ module.exports = {
             const result = UserValidator.validate(this.userData);
 
             if (result.passes) {
-                this.closeNotification()
+                this.closeNotification();
                 return true;
             }
 

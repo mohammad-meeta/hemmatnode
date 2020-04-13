@@ -9,6 +9,13 @@ function DataValidator() {}
 module.exports = DataValidator;
 
 /**
+ * Load custom rules
+ */
+DataValidator.loadCustomRules = function loadCustomRules() {
+    require('JS-VALIDATORS/rules/custom-rules');
+};
+
+/**
  * Validate
  */
 DataValidator.validate = function validate(data, rules, options) {
@@ -16,6 +23,7 @@ DataValidator.validate = function validate(data, rules, options) {
     const lang = options.lang || 'en';
     const messages = options.messages || {};
     const attributes = options.attributes || {};
+
     /* Set validator language */
     Validator.useLang(lang);
 
@@ -36,3 +44,6 @@ DataValidator.validate = function validate(data, rules, options) {
         validator
     };
 };
+
+/* Load custom rules */
+DataValidator.loadCustomRules();

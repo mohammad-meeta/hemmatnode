@@ -25,11 +25,11 @@
                 .field
                     label.label کد ملی
                     .control
-                        input.input(type='number', placeholder='کد ملی', v-model='userData.nationCode' required)
+                        input.input(type='text', placeholder='کد ملی', v-model='userData.nationCode' required)
                 .field
                     label.label شماره موبایل
                     .control
-                        input.input(type='number', placeholder='شماره موبایل', v-model='userData.cellphone' required)
+                        input.input(type='text', placeholder='شماره موبایل', v-model='userData.cellphone' required)
                 .field.is-grouped
                     .control(v-show="! isLoadingMode")
                         a.button.is-link.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
@@ -44,7 +44,6 @@
 
 const AxiosHelper = require("JS-HELPERS/axios-helper");
 const ENUMS = require("JS-HELPERS/enums");
-const Validator = require("validatorjs");
 const UserValidator = require("JS-VALIDATORS/user-register-validator");
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 

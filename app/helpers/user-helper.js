@@ -17,7 +17,7 @@ UserHelper.loadAllUserData = function loadAllUserData() {
 
     const filterQuery = {};
     const projection = {
-        _id: 0,
+        pwd: 0
     };
 
     return new Promise((resolve, reject) => {
@@ -39,7 +39,6 @@ UserHelper.loadUserData = function loadUserData(userName) {
         name: userName
     };
     const projection = {
-        _id: 0,
         pwd: 0
     };
 
@@ -73,13 +72,26 @@ UserHelper.insertNewUser = function insertNewUser(data) {
  * update user data  
  */
 UserHelper.updateUserData = function updateUserData(data) {
-    console.log(data)
-    // return new Promise((resolve, reject) => {
-    //     const User = mongoose.model('User');
-    //     User.findOneAndUpdate({ "_id": data._id }, data)
-    //         .then(res => {
-    //             resolve(res);
-    //         })
-    //         .catch(err => reject(err));
-    // });
+    return new Promise((resolve, reject) => {
+        const User = mongoose.model('User');
+        User.findByIdAndUpdate(data._id, data, { useFindAndModify: false })
+            .then(res => {
+                resolve(res);
+            })
+            .catch(err => reject(err));
+    });
+};
+
+/**
+ * delete user data  
+ */
+UserHelper.deleteUserData = function deleteUserData(data) {
+    return new Promise((resolve, reject) => {
+        const User = mongoose.model('User');
+        User.findByIdAndUpdate(data._id, { is_active: false }, { useFindAndModify: false })
+            .then(res => {
+                resolve(res);
+            })
+            .catch(err => reject(err));
+    });
 };

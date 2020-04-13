@@ -75,25 +75,42 @@ UserController.edit = async function edit(req, res, next) {
  */
 UserController.update = async function update(req, res, next) {
     const data = {
-        "_id": req.params._id,
-        "name": req.params.name,
-        "email": req.params.email,
-        "cellphone": req.params.cellphone,
-        "is_active": req.params.is_active,
+        "_id": req.body._id,
+        "name": req.body.name,
+        "email": req.body.email,
+        "cellphone": req.body.cellphone,
+        "is_active": req.body.is_active,
         "profile": {
-            "first_name": req.params.firstName,
-            "last_name": req.params.lastName,
-            "nation_code": req.params.nationCode
+            "first_name": req.body.first_name,
+            "last_name": req.body.last_name,
+            "nation_code": req.body.nation_code
         }
     };
-    console.log(req.params)
-    // const UserUpdate = UserHelper.updateUserData(data)
-    //     .then(data => {
-    //         res.status(200)
-    //             .send(data)
-    //             .end();
-    //     })
-    //     .catch(err => console.error(err));
+
+    const UserUpdate = UserHelper.updateUserData(data)
+        .then(data => {
+            res.status(200)
+                .send(data)
+                .end();
+        })
+        .catch(err => console.error(err));
+};
+
+/**
+ * delete data user
+ */
+UserController.destroy = async function destroy(req, res, next) {
+    const data = {
+        "_id": req.body._id
+    };
+
+    const UserDelete = UserHelper.deleteUserData(data)
+        .then(data => {
+            res.status(200)
+                .send(data)
+                .end();
+        })
+        .catch(err => console.error(err));
 };
 
 /**
@@ -124,9 +141,9 @@ UserController.store = async function store(req, res, next) {
         "cellphone": req.body.cellphone,
         "is_active": false,
         "profile": {
-            "first_name": req.body.firstName,
-            "last_name": req.body.lastName,
-            "nation_code": req.body.nationCode
+            "first_name": req.body.first_name,
+            "last_name": req.body.last_name,
+            "nation_code": req.body.nation_code
         }
     };
 

@@ -43,6 +43,11 @@ Router.patch('/user/:userData', [
 ])
     .as('user.update');
 
+Router.delete('/user/:userData', [
+    // checkAuth,
+    'User@destroy'
+])
+    .as('user.destroy');
 
 Router.get('/user/logout', clearAuth)
     .as('user.logout');

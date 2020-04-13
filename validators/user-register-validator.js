@@ -1,6 +1,7 @@
 'use strict';
 
 const validator = use('core/helpers/data-validator');
+const Validator = require('validatorjs');
 
 /**
  * User Login Validator
@@ -8,10 +9,13 @@ const validator = use('core/helpers/data-validator');
 function UserRegisterValidator() { }
 module.exports = UserRegisterValidator;
 
+UserRegisterValidator.async = true;
+
 /**
  * Validation funciton
  */
 UserRegisterValidator.validate = function validate(req, res, next) {
+
     validator.validate(UserRegisterValidator, req, res, next);
 };
 
@@ -34,8 +38,8 @@ UserRegisterValidator.data = function data(req) {
  */
 UserRegisterValidator.rules = function rules() {
     return {
-        'name': 'required|min:3|max:25',
-        'email': 'required|email',
+        'name': 'required|min:3|max:25|username_available',
+        'email': 'required|email|email_available',
         'firstName': 'required|min:3|max:25',
         'lastName': 'required|min:4|max:25',
         'nationCode': 'required|size:10',

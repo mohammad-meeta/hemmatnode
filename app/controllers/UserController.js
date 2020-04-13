@@ -29,6 +29,74 @@ UserController.index = async function index(req, res, next) {
 };
 
 /**
+ * show route
+ */
+UserController.show = async function show(req, res, next) {
+    const userName = req.params.userData;
+    const pageRoute = 'user.show';
+    UserHelper.loadUserData(userName)
+        .then(data => {
+            const result = {
+                success: true,
+                data: data
+            };
+            res.render(PugView.getView(pageRoute), {
+                req,
+                pageRoute,
+                result
+            });
+        })
+        .catch(err => console.error(err));
+};
+
+/**
+ * edit route
+ */
+UserController.edit = async function edit(req, res, next) {
+    const userName = req.params.userData;
+    const pageRoute = 'user.show';
+    UserHelper.loadUserData(userName)
+        .then(data => {
+            const result = {
+                success: true,
+                data: data
+            };
+            res.render(PugView.getView(pageRoute), {
+                req,
+                pageRoute,
+                result
+            });
+        })
+        .catch(err => console.error(err));
+};
+
+/**
+ * update data user
+ */
+UserController.update = async function update(req, res, next) {
+    const data = {
+        "_id": req.params._id,
+        "name": req.params.name,
+        "email": req.params.email,
+        "cellphone": req.params.cellphone,
+        "is_active": req.params.is_active,
+        "profile": {
+            "first_name": req.params.firstName,
+            "last_name": req.params.lastName,
+            "nation_code": req.params.nationCode
+        }
+    };
+    console.log(req.params)
+    // const UserUpdate = UserHelper.updateUserData(data)
+    //     .then(data => {
+    //         res.status(200)
+    //             .send(data)
+    //             .end();
+    //     })
+    //     .catch(err => console.error(err));
+};
+
+/**
  * Create route return page
  */
 UserController.create = async function create(req, res, next) {

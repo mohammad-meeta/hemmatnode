@@ -1,6 +1,7 @@
 'use strict';
 
 const validator = use('core/helpers/data-validator');
+const Validator = require('validatorjs');
 
 /**
  * User Login Validator
@@ -8,10 +9,13 @@ const validator = use('core/helpers/data-validator');
 function UserRegisterValidator() { }
 module.exports = UserRegisterValidator;
 
+UserRegisterValidator.async = true;
+
 /**
  * Validation funciton
  */
 UserRegisterValidator.validate = function validate(req, res, next) {
+
     validator.validate(UserRegisterValidator, req, res, next);
 };
 
@@ -22,9 +26,9 @@ UserRegisterValidator.data = function data(req) {
     return {
         name: req.body.name,
         email: req.body.email,
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        nationCode: req.body.nationCode,
+        first_name: req.body.first_name,
+        last_name: req.body.last_name,
+        nation_code: req.body.nation_code,
         cellphone: req.body.cellphone
     };
 };
@@ -34,11 +38,11 @@ UserRegisterValidator.data = function data(req) {
  */
 UserRegisterValidator.rules = function rules() {
     return {
-        'name': 'required|min:3|max:25',
-        'email': 'required|email',
-        'firstName': 'required|min:3|max:25',
-        'lastName': 'required|min:4|max:25',
-        'nationCode': 'required|size:10',
+        'name': 'required|min:3|max:25|user_name_available',
+        'email': 'required|email|email_available',
+        'first_name': 'required|min:3|max:25',
+        'last_name': 'required|min:4|max:25',
+        'nation_code': 'required|size:10',
         'cellphone': 'required|size:11'
     };
 };
@@ -55,11 +59,11 @@ UserRegisterValidator.messages = function messages() {
  */
 UserRegisterValidator.attributes = function attributes() {
     return {
-        name: 'userName',
+        name: 'user_name',
         email: 'email',
-        firstName: 'firstName',
-        lastName: 'lastName',
-        nationCode: 'nationCode',
+        first_name: 'first_name',
+        last_name: 'last_name',
+        nation_code: 'nation_code',
         cellphone: 'cellphone'
     };
 };

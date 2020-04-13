@@ -5,7 +5,7 @@ const Validator = require("validatorjs");
 /**
  * DataValidator class
  */
-function DataValidator() {}
+function DataValidator() { }
 module.exports = DataValidator;
 
 /**
@@ -17,7 +17,7 @@ DataValidator.validate = function validate(customValidator, req, res, next) {
     let messages = {};
     let attributes = {};
     let lang = req.lang || 'en';
-    
+
     if (customValidator.data) {
         data = customValidator.data(req);
     }
@@ -51,16 +51,27 @@ DataValidator.validate = function validate(customValidator, req, res, next) {
     validator.setAttributeNames(attributes);
 
     /* Validate */
-    const passes = validator.passes();
+    if (true == customValidator.async) {
+        validator.checkAsync(next, () => {
+            const errors = DataValidator.generateErrors(validator);
 
-    if (passes) {
-        next();
-    } else {
-        const errors = DataValidator.generateErrors(validator);
+            res.status(400)
+                .send(errors)
+                .end();
+        });
+    }
+    else {
+        const passes = validator.passes();
 
-        res.status(400)
-            .send(errors)
-            .end();
+        if (passes) {
+            next();
+        } else {
+            const errors = DataValidator.generateErrors(validator);
+
+            res.status(400)
+                .send(errors)
+                .end();
+        }
     }
 };
 

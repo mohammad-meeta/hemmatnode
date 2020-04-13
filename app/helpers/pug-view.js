@@ -3,7 +3,7 @@
 /**
  * Pug view helper class
  */
-function PugView() {}
+function PugView() { }
 module.exports = PugView;
 
 /**
@@ -24,5 +24,7 @@ PugView.viewPath = {
 
     /* User */
     'user.index': 'pages/user/index.pug',
-    'user.create': 'pages/user/register.pug'
+    'user.create': 'pages/user/register.pug',
+    'user.show': 'pages/user/show.pug',
+    'user.edit': 'pages/user/edit.pug'
 };

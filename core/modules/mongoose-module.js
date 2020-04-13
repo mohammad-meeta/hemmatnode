@@ -47,14 +47,6 @@ MongooseModule.setup = function setup(server) {
 MongooseModule.getConnectionString = function getConnectionString(config) {
     let connectionString = `${config.host}:${config.port}/${config.name}`;
 
-    if ((config.user || '')) {
-        if ((config.password || '')) {
-            connectionString = `${config.user}:${config.password}@${connectionString}`;
-        } else {
-            connectionString = `${config.user}@${connectionString}`;
-        }
-    }
-
     connectionString = `mongodb://${connectionString}`;
 
     return connectionString;

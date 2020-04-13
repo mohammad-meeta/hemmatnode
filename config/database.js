@@ -13,6 +13,10 @@ module.exports = {
             user: process.env.DB_USER,
             password: process.env.DB_PASSWORD,
             options: {
+                auth: {
+                    user: process.env.DB_USER,
+                    password: process.env.DB_PASSWORD
+                },
                 useNewUrlParser: true,
                 useUnifiedTopology: true
             }

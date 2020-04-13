@@ -5,7 +5,7 @@
         .columns.is-vcentered
             .column.is-full(v-show="isLoadingMode")
                 h1 در حال بارگذاری
-            .column.is-full(v-show="! isLoadingMode")
+            .column.is-full.form-small(v-show="! isLoadingMode")
                 .field
                     label.label نام کاربری
                     .control

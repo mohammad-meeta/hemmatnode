@@ -6,6 +6,12 @@ block title
 block styles
     link(rel="stylesheet", href=mix("css/global/app.css"))
 
+block heading
+    section.hero
+        .container.page-header
+            .title
+                h1 ثبت نام کاربر جدید
+
 block content
     .container
         register-user(register-url=route('user.store'))

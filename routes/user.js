@@ -12,7 +12,7 @@ Router.get('/user', [
 ])
     .as('user.index');
 
-Router.get('/api/user/:page/:pageSize?', [
+Router.get('/api/user/:page/:size?', [
     // checkAuth,
     'User@paginateUserData'
 ])

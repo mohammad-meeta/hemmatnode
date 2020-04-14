@@ -63,22 +63,29 @@ UserController.show = async function show(req, res, next) {
 };
 
 /**
- * edit route
+ * edit page route
  */
 UserController.edit = async function edit(req, res, next) {
-    const userName = req.params.userData;
-    const pageRoute = 'user.show';
+    const pageRoute = 'user.edit';
+    res.render(PugView.getView(pageRoute), {
+        req,
+        pageRoute
+    });
+};
+
+/**
+ * return edit data route
+ */
+UserController.editUserData = async function editUserData(req, res, next) {
     UserHelper.loadUserData(userName)
         .then(data => {
             const result = {
                 success: true,
                 data: data
             };
-            res.render(PugView.getView(pageRoute), {
-                req,
-                pageRoute,
-                result
-            });
+            res.status(200)
+                .send(result)
+                .end();
         })
         .catch(err => console.error(err));
 };

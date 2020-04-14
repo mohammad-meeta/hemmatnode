@@ -12,7 +12,10 @@ module.exports = UserHelper;
 /**
  * find all users data result 
  */
-UserHelper.loadAllUserData = function loadAllUserData() {
+UserHelper.loadAllUserData = function loadAllUserData(dataPaginate) {
+    const page = parseInt(dataPaginate.page)
+    const pageSize = parseInt(dataPaginate.pageSize)
+    const skip = page > 0 ? ((page - 1) * pageSize) : 0
     const User = mongoose.model('User');
 
     const filterQuery = {};
@@ -21,7 +24,7 @@ UserHelper.loadAllUserData = function loadAllUserData() {
     };
 
     return new Promise((resolve, reject) => {
-        User.find(filterQuery, projection, {})
+        User.find(filterQuery, projection, { skip: skip, limit: pageSize })
             .then(res => {
                 resolve(res);
             })

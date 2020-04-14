@@ -13,20 +13,33 @@ module.exports = UserController;
  */
 UserController.index = async function index(req, res, next) {
     const pageRoute = 'user.index';
-    UserHelper.loadAllUserData()
+    res.render(PugView.getView(pageRoute), {
+        req,
+        pageRoute
+    });
+};
+/**
+ * Index route
+ */
+UserController.paginateUserData = async function paginateUserData(req, res, next) {
+    const dataPaginate = {
+        page: req.params.page,
+        pageSize: req.params.pageSize || 10
+    };
+
+    UserHelper.loadAllUserData(dataPaginate)
         .then(data => {
             const result = {
                 success: true,
                 data: data
             };
-            res.render(PugView.getView(pageRoute), {
-                req,
-                pageRoute,
-                result
-            });
+            res.status(200)
+                .send(result)
+                .end();
         })
         .catch(err => console.error(err));
 };
+
 
 /**
  * show route
@@ -89,8 +102,12 @@ UserController.update = async function update(req, res, next) {
 
     const UserUpdate = UserHelper.updateUserData(data)
         .then(data => {
+            const result = {
+                success: true,
+                data: data
+            };
             res.status(200)
-                .send(data)
+                .send(result)
                 .end();
         })
         .catch(err => console.error(err));
@@ -106,8 +123,12 @@ UserController.destroy = async function destroy(req, res, next) {
 
     const UserDelete = UserHelper.deleteUserData(data)
         .then(data => {
+            const result = {
+                success: true,
+                data: data
+            };
             res.status(200)
-                .send(data)
+                .send(result)
                 .end();
         })
         .catch(err => console.error(err));
@@ -149,8 +170,12 @@ UserController.store = async function store(req, res, next) {
 
     const UserInsert = UserHelper.insertNewUser(data)
         .then(data => {
+            const result = {
+                success: true,
+                data: data
+            };
             res.status(200)
-                .send(data)
+                .send(result)
                 .end();
         })
         .catch(err => console.error(err));

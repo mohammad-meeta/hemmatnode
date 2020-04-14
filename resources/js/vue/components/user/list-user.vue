@@ -1,7 +1,8 @@
 <template lang="pug">
     .columns.is-vcentered
         .column.is-9.has-text-left
-            table.table.is-striped.is-hoverable.is-fullwidth
+            h1(v-if="! hasUsers") | No Any User has been registered
+            table.table.is-striped.is-hoverable.is-fullwidth(v-if="hasUsers")
                 thead
                     tr
                         th نام کاربری
@@ -47,33 +48,32 @@ const ENUMS = require("JS-HELPERS/enums");
 
 module.exports = {
     props: {
-        users: {
-            type: Array,
-            default: []
-        },
         listUrl: {
             type: String,
-            default: ''
+            default: ""
         }
     },
 
     data: () => ({
-        ENUMS
+        ENUMS,
+        users: []
     }),
+
+    computed: {
+        hasUsers: state => (state.users || []).length
+    },
 
     methods: {
         /**
          * Load users
          */
-        loadUsers(){
+        loadUsers() {
             const url = this.listUrl;
-
-            axios.get(url)
-                .then(res => {
-                    const data = res.data;
-
-                    console.log(data);
-                });
+            AxiosHelper.send("get", url, '').then(res => {
+                const data = res.data;
+                Vue.set(this, "users", data.data);
+                console.log(this.users);
+            });
         },
 
         /**

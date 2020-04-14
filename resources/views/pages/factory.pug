@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        meta(http-equiv="X-UA-Compatible", content="ie=edge")
+
+        title Factory
+
+        link(rel="stylesheet", href=mix("css/core/kernel.css"))
+    body
+        #app.container
+            user-list(ref="userList", list-url=route('api.user', { page : 1, size : 100 }))
+
+        script(defer, src=mix("js/core/kernel.js"))
+        script(defer, src=mix('js/pages/factory.js'))

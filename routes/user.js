@@ -38,11 +38,18 @@ Router.get('/user/:userData', [
 ])
     .as('user.show');
 
-Router.get('/user/:userData/edit', [
+Router.get('/user/edit', [
     // checkAuth,
     'User@edit'
 ])
     .as('user.edit');
+
+
+Router.get('/api/user/:userData/edit', [
+    // checkAuth,
+    'User@editUserData'
+])
+    .as('api.user.edit');
 
 Router.patch('/user/:userData', [
     // checkAuth,

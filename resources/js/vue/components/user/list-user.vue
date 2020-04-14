@@ -50,6 +50,10 @@ module.exports = {
         users: {
             type: Array,
             default: []
+        },
+        listUrl: {
+            type: String,
+            default: ''
         }
     },
 
@@ -58,6 +62,20 @@ module.exports = {
     }),
 
     methods: {
+        /**
+         * Load users
+         */
+        loadUsers(){
+            const url = this.listUrl;
+
+            axios.get(url)
+                .then(res => {
+                    const data = res.data;
+
+                    console.log(data);
+                });
+        },
+
         /**
          * On Command
          *

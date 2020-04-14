@@ -1,7 +1,5 @@
 'use strict';
 
-const Server = use('core/server');
-
 /**
  * Router rclass
  */

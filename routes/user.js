@@ -47,6 +47,7 @@ Router.get('/user/edit', [
 
 Router.get('/api/user/:userData/edit', [
     // checkAuth,
+    validator.validate,
     'User@editUserData'
 ])
     .as('api.user.edit');

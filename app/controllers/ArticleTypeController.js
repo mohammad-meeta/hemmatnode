@@ -1,18 +1,17 @@
 'use strict';
-const PasswordGenerator = require('generate-password');
 const PugView = use('app/helpers/pug-view');
-const UserHelper = use('app/helpers/user-helper');
+const ArticleTypeHelper = use('app/helpers/article-type-helper');
 /**
  * Auth controller
  */
-function UserController() { }
-module.exports = UserController;
+function ArticleTypeController() { }
+module.exports = ArticleTypeController;
 
 /**
  * Index route
  */
-UserController.index = async function index(req, res, next) {
-    const pageRoute = 'user.index';
+ArticleTypeController.index = async function index(req, res, next) {
+    const pageRoute = 'articletype.index';
     res.render(PugView.getView(pageRoute), {
         req,
         pageRoute
@@ -21,13 +20,13 @@ UserController.index = async function index(req, res, next) {
 /**
  * paginate route
  */
-UserController.paginateUserData = async function paginateUserData(req, res, next) {
+ArticleTypeController.paginateArticleTypeData = async function paginateArticleTypeData(req, res, next) {
     const dataPaginate = {
         page: req.params.page,
         pageSize: req.params.size || 10
     };
 
-    UserHelper.loadAllUserData(dataPaginate)
+    ArticleTypeHelper.loadAllArticleTypeData(dataPaginate)
         .then(data => {
             const result = {
                 success: true,
@@ -44,10 +43,10 @@ UserController.paginateUserData = async function paginateUserData(req, res, next
 /**
  * show route
  */
-UserController.show = async function show(req, res, next) {
-    const userName = req.params.userData;
-    const pageRoute = 'user.show';
-    UserHelper.loadUserData(userName)
+ArticleTypeController.show = async function show(req, res, next) {
+    const ArticleTypeName = req.params.articleTypeData;
+    const pageRoute = 'articletype.show';
+    ArticleTypeHelper.loadArticleTypeData(ArticleTypeName)
         .then(data => {
             const result = {
                 success: true,
@@ -65,8 +64,8 @@ UserController.show = async function show(req, res, next) {
 /**
  * edit page route
  */
-UserController.edit = async function edit(req, res, next) {
-    const pageRoute = 'user.edit';
+ArticleTypeController.edit = async function edit(req, res, next) {
+    const pageRoute = 'articletype.edit';
     res.render(PugView.getView(pageRoute), {
         req,
         pageRoute
@@ -76,9 +75,9 @@ UserController.edit = async function edit(req, res, next) {
 /**
  * return edit data route
  */
-UserController.editUserData = async function editUserData(req, res, next) {
-    const userName = req.params.userData;
-    UserHelper.loadUserData(userName)
+ArticleTypeController.editArticleTypeData = async function editArticleTypeData(req, res, next) {
+    const ArticleTypeName = req.params.articleTypeData;
+    ArticleTypeHelper.loadArticleTypeData(ArticleTypeName)
         .then(data => {
             const result = {
                 success: true,
@@ -92,23 +91,17 @@ UserController.editUserData = async function editUserData(req, res, next) {
 };
 
 /**
- * update data user
+ * update data ArticleType
  */
-UserController.update = async function update(req, res, next) {
+ArticleTypeController.update = async function update(req, res, next) {
     const data = {
         "_id": req.body._id,
-        "name": req.body.name,
-        "email": req.body.email,
-        "cellphone": req.body.cellphone,
-        "is_active": req.body.is_active,
-        "profile": {
-            "first_name": req.body.first_name,
-            "last_name": req.body.last_name,
-            "nation_code": req.body.nation_code
-        }
+        "user_id": req.body.user_id,
+        "title": req.body.title,
+        "is_active": req.body.is_active
     };
 
-    const UserUpdate = UserHelper.updateUserData(data)
+    const ArticleTypeUpdate = ArticleTypeHelper.updateArticleTypeData(data)
         .then(data => {
             const result = {
                 success: true,
@@ -122,14 +115,14 @@ UserController.update = async function update(req, res, next) {
 };
 
 /**
- * delete data user
+ * delete data ArticleType
  */
-UserController.destroy = async function destroy(req, res, next) {
+ArticleTypeController.destroy = async function destroy(req, res, next) {
     const data = {
         "_id": req.body._id
     };
 
-    const UserDelete = UserHelper.deleteUserData(data)
+    const ArticleTypeDelete = ArticleTypeHelper.deleteArticleTypeData(data)
         .then(data => {
             const result = {
                 success: true,
@@ -145,8 +138,8 @@ UserController.destroy = async function destroy(req, res, next) {
 /**
  * Create route return page
  */
-UserController.create = async function create(req, res, next) {
-    const pageRoute = 'user.create';
+ArticleTypeController.create = async function create(req, res, next) {
+    const pageRoute = 'articletype.create';
     res.render(PugView.getView(pageRoute), {
         req,
         pageRoute
@@ -154,29 +147,17 @@ UserController.create = async function create(req, res, next) {
 };
 
 /**
- * store data user
+ * store data ArticleType
  */
-UserController.store = async function store(req, res, next) {
-    let password = PasswordGenerator.generate({
-        length: 15,
-        numbers: true,
-        symbols: true
-    });
+ArticleTypeController.store = async function store(req, res, next) {
 
     const data = {
-        "name": req.body.name,
-        "pwd": password,
-        "email": req.body.email,
-        "cellphone": req.body.cellphone,
-        "is_active": false,
-        "profile": {
-            "first_name": req.body.first_name,
-            "last_name": req.body.last_name,
-            "nation_code": req.body.nation_code
-        }
+        "user_id": req.body.user_id,
+        "title": req.body.title,
+        "is_active": req.body.is_active || false
     };
 
-    const UserInsert = UserHelper.insertNewUser(data)
+    const ArticleTypeInsert = ArticleTypeHelper.insertNewArticleType(data)
         .then(data => {
             const result = {
                 success: true,

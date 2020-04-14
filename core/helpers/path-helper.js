@@ -27,11 +27,10 @@ PathHelper.applyParams = function applyParams(path, params) {
 
     /* Search and replace in path */
     let result = path;
-    pathParams.forEach(pathParam => {
-        const paramRegexp = new RegExp(pathParam.param + "\\??", "g");
-        const key = pathParam.key;
 
-        result = result.replace(paramRegexp, params[key] || '');
+    pathParams.forEach(pathParam => {
+        const key = pathParam.key;
+        result = result.replace(pathParam.param, params[key] || '');
     });
 
     /* Remove last '/' sign */

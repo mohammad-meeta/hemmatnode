@@ -12,7 +12,7 @@ Router.get('/article-type', [
 ])
     .as('articletype.index');
 
-Router.get('/api/article-type/:page/:size?', [
+Router.get('/api/article-types/:page/:size?', [
     // checkAuth,
     'ArticleType@paginateArticleTypeData'
 ])
@@ -45,15 +45,15 @@ Router.get('/article-type/edit', [
     .as('articletype.edit');
 
 
-Router.get('/api/user/:articleTypeData/edit', [
+Router.get('/api/article-type/:articleTypeData/edit', [
     // checkAuth,
-    validator.validate,
     'ArticleType@editArticleTypeData'
 ])
     .as('api.articletype.edit');
 
 Router.patch('/article-type/:articleTypeData', [
     // checkAuth,
+    validator.validate,
     'ArticleType@update'
 ])
     .as('articletype.update');

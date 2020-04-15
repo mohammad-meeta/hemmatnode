@@ -1,15 +1,15 @@
 const Validator = require('validatorjs');
-/**********user=> username_available**************** */
-Validator.registerAsync('user_name_available', function (username, attribute, req, passes) {
+/**********user=> articletype_title_available**************** */
+Validator.registerAsync('article_type_available', function (title, attribute, req, passes) {
     const Mongoose = require('mongoose');
-    const Model = Mongoose.model("User");
+    const Model = Mongoose.model("ArticleType");
 
-    Model.findOne({ name: username }, { _id: 0, name: 1 }, {})
+    Model.findOne({ _id: title }, { _id: 0, name: 1 }, {})
         .then(res => {
             if (res == null) {
-                passes();
+                passes(false, 'title dont already exists.');
             } else {
-                passes(false, 'Username has already been taken.');
+                passes();
             }
         })
         .catch(err => {
@@ -18,16 +18,16 @@ Validator.registerAsync('user_name_available', function (username, attribute, re
 });
 
 /**********user=> email_available**************** */
-Validator.registerAsync('email_available', function (email, attribute, req, passes) {
+Validator.registerAsync('user_id_available', function (user_id, attribute, req, passes) {
     const Mongoose = require('mongoose');
     const Model = Mongoose.model("User");
 
-    Model.findOne({ email: email }, { _id: 0, name: 1 }, {})
+    Model.findOne({ _id: user_id }, { }, {})
         .then(res => {
             if (res == null) {
-                passes();
+                passes(false, 'user_id has already been taken.');
             } else {
-                passes(false, 'Email has already been taken.');
+                passes();
             }
         })
         .catch(err => {

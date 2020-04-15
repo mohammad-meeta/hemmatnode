@@ -12,7 +12,7 @@ Router.get('/user', [
 ])
     .as('user.index');
 
-Router.get('/api/user/:page/:size?', [
+Router.get('/api/users/:page/:size?', [
     // checkAuth,
     'User@paginateUserData'
 ])
@@ -47,7 +47,6 @@ Router.get('/user/edit', [
 
 Router.get('/api/user/:userData/edit', [
     // checkAuth,
-    validator.validate,
     'User@editUserData'
 ])
     .as('api.user.edit');

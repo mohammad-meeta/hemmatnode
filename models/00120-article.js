@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 /**
  * Article model
  */
-function Model() {}
+function Model() { }
 module.exports = Model;
 
 /**
@@ -20,17 +20,31 @@ Model.setup = function setup() {
 
     mongoose.model('Article', schema);
 };
-
 /**
  * Get model
  */
 Model.model = function model() {
+    const File = new mongoose.Schema({
+        'file_name': {
+            type: String,
+            required: true
+        },
+        'extention': {
+            type: String,
+            required: true
+        },
+        'original_file_name': {
+            type: String,
+            required: true
+        }
+    });
+
     return {
         'title': {
             type: String,
             required: true
         },
-        'article_type': {
+        'type': {
             type: String,
             required: true
         },
@@ -43,6 +57,9 @@ Model.model = function model() {
         },
         'user': {
             type: String
+        },
+        'files': {
+            type: [File]
         },
         'slug': {
             type: String,

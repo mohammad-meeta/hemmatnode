@@ -33,7 +33,7 @@ ArticleTypeHelper.loadAllArticleTypeData = function loadAllArticleTypeData(dataP
 /**
  * find ArticleType data result 
  */
-ArticleTypeHelper.loadUserData = function loadUserData(articleTypeTitle) {
+ArticleTypeHelper.loadArticleTypeData = function loadArticleTypeData(articleTypeTitle) {
     const ArticleType = mongoose.model('ArticleType');
 
     const filterQuery = {
@@ -42,7 +42,7 @@ ArticleTypeHelper.loadUserData = function loadUserData(articleTypeTitle) {
     const projection = {};
 
     return new Promise((resolve, reject) => {
-        User.findOne(filterQuery, projection, {})
+        ArticleType.findOne(filterQuery, projection, {})
             .then(res => {
                 resolve(res);
             })
@@ -70,9 +70,10 @@ ArticleTypeHelper.insertNewArticleType = function insertNewArticleType(data) {
 /**
  * update ArticleType data  
  */
-ArticleTypeHelper.updateUserData = function updateUserData(data) {
+ArticleTypeHelper.updateArticleTypeData = function updateArticleTypeData(data) {
     return new Promise((resolve, reject) => {
         const ArticleType = mongoose.model('ArticleType');
+
         ArticleType.findByIdAndUpdate(data._id, data, { useFindAndModify: false })
             .then(res => {
                 resolve(res);
@@ -87,6 +88,7 @@ ArticleTypeHelper.updateUserData = function updateUserData(data) {
 ArticleTypeHelper.deleteArticleType = function deleteArticleType(data) {
     return new Promise((resolve, reject) => {
         const ArticleType = mongoose.model('ArticleType');
+
         ArticleType.findByIdAndUpdate(data._id, { is_active: false }, { useFindAndModify: false })
             .then(res => {
                 resolve(res);

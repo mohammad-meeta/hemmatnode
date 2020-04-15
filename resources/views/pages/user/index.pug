@@ -11,8 +11,7 @@ block heading
 
 block content
     .container.has-text-centered
-        user-list(ref="userList")
-        h1= result.data
+        user-list(ref="userList", list-url=route('api.user', { page : 1, size : 100 }))
 
 block scripts
     script.
@@ -21,5 +20,6 @@ block scripts
                 usersList: '#{route("user.index")}'
             }
         };
+
     script(defer, src=mix('js/pages/user/index/index.js'))
 

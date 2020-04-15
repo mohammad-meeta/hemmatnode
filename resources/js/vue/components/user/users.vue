@@ -3,7 +3,7 @@
         .column(v-if="modeLoading")
             loading
         .column(v-show="!modeLoading && modeList")
-            list-user(:users="users", @on-command="onCommand")
+            list-user(ref="listUser", @on-command="onCommand")
         .column(v-show="!modeLoading && modeRegister")
             register-user(@on-command="onCommand")
 </template>
@@ -44,6 +44,10 @@ module.exports = {
         this.init();
     },
 
+    mounted() {
+        this.$refs.listUser.loadUsers();
+    },
+
     methods: {
         /**
          * Load users list
@@ -75,7 +79,7 @@ module.exports = {
 
                 case ENUMS.COMMAND.REGISTER:
                     /* TODO: REGISTER NEW USER */
-                    console.log("REGISTER NEW USER", arg)
+                    console.log("REGISTER NEW USER", arg);
                     break;
 
                 case ENUMS.COMMAND.CANCEL:

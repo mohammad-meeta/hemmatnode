@@ -36,3 +36,4 @@ Page.init = function init() {
 };
 
 Page.init();
+

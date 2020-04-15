@@ -97,6 +97,19 @@
     margin-left: 0.75rem;
     margin-right: 0px;
 }
+
+table th {
+    text-align: center !important;
+}
+
+table td {
+    text-align: right !important;
+}
+
+.button .icon:first-child:not(:last-child) {
+    margin-left: 0.25em;
+    margin-right: calc(-0.5em - 1px);
+}
 /*======================= bulma RTL*/
 
 main {
@@ -592,3 +605,5 @@ h2.item-category {
     box-shadow: 0px 5px 7px #3E4D6124;
     padding: 20px 15px;
 }
+
+

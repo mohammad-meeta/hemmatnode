@@ -1,6 +1,7 @@
 <template lang="pug">
+div
     .columns.is-vcentered
-        .column.is-9.has-text-left
+        .column
             h1(v-if="! hasUsers") | No Any User has been registered
             table.table.is-striped.is-hoverable.is-fullwidth(v-if="hasUsers")
                 thead
@@ -12,40 +13,32 @@
                         th شماره موبایل
                         th وضعیت
                         th تاریخ ثبت نام
-
+                        th عملیات
                 tbody
                     tr(v-for='user in users', :key='user.id')
                         td {{ user.name }}
                         td {{ user.email }}
-                        td {{ user.firstName }} {{ user.lastname }}
-                        td {{ user.nationCode }}
+                        td {{ user.profile.first_name }} {{ user.profile.last_name }}
+                        td {{ user.profile.nation_code }}
                         td {{ user.cellphone }}
-                        td {{ user.isActive }}
-                        td {{ user.createdAt }}
-        .column.is-2.is-offset-1
-            ul
-                li
-                    a.button.is-fullwidth.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.NEW)")
-                        span.icon.is-small
-                            i.material-icons.icon add_circle
-                        span New user
-                li
-                    a.button.is-fullwidth.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.EDIT)")
-                        span.icon.is-small
-                            i.material-icons.icon check_circle
-                        span Edit user
-                li
-                    a.button.is-fullwidth.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.DELETE)")
-                        span.icon.is-small
-                            i.material-icons.icon swap_horizontal_circle
-                        span Active/Deactive
+                        td {{ user.is_active }}
+                        td {{ toPersianDate(user.created_at) }}
+                        td
+                            a.button.is-primary.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.EDIT)")
+                                span.icon.is-small
+                                    i.material-icons.icon check_circle
+                                span ویرایش
+                            a.button.is-warning.is-rounded.mt-2(href="#", @click.prevent="commandClick(ENUMS.COMMAND.DELETE)")
+                                span.icon.is-small
+                                    i.material-icons.icon swap_horizontal_circle
+                                span فعال/مسدود
+
 </template>
 
 <script>
 "use strict";
 
 const ENUMS = require("JS-HELPERS/enums");
-
 module.exports = {
     props: {
         listUrl: {
@@ -69,10 +62,9 @@ module.exports = {
          */
         loadUsers() {
             const url = this.listUrl;
-            AxiosHelper.send("get", url, '').then(res => {
+            AxiosHelper.send("get", url, "").then(res => {
                 const data = res.data;
                 Vue.set(this, "users", data.data);
-                console.log(this.users);
             });
         },
 
@@ -83,6 +75,13 @@ module.exports = {
          */
         commandClick(arg) {
             this.$emit("on-command", arg);
+        },
+
+        /**
+         * To Persian Date
+         */
+        toPersianDate(date) {
+            return DateHelper.toPersianDateLong(date);
         }
     }
 };

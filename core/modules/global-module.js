@@ -77,7 +77,7 @@ GlobalFunctions.asset = function asset(resource) {
  */
 GlobalFunctions.rPath = function rPath() {
     const path = require('path');
-
+    
     return path.resolve(...arguments);
 };
 

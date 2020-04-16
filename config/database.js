@@ -1,8 +1,10 @@
 'use strict';
 
 /* Prepare options */
-const auth = null;
+let auth = null;
 if (process.env.DB_USER || process.env.DB_PASSWORD) {
+    auth = {};
+
     if (process.env.DB_USER) {
         auth.user = process.env.DB_USER;
     }

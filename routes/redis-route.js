@@ -4,7 +4,6 @@ const Rule = use('core/helpers/rule-helper');
 
 Router.get('/redis/test', [
         Rule.can('redis.rule1'),
-        Rule.can('empty-user'),
         function (req, res, next) {
             global.redisClient.get('time', (err, value) => {
                 console.log(err, value)

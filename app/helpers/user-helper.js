@@ -41,12 +41,13 @@ UserHelper.loadUserData = function loadUserData(userName) {
     const filterQuery = {
         name: userName
     };
+
     const projection = {
         pwd: 0
     };
 
     return new Promise((resolve, reject) => {
-        User.findOne(filterQuery, projection, {})
+        User.findOne(filterQuery, projection)
             .then(res => {
                 resolve(res);
             })
@@ -91,7 +92,8 @@ UserHelper.updateUserData = function updateUserData(data) {
 UserHelper.deleteUserData = function deleteUserData(data) {
     return new Promise((resolve, reject) => {
         const User = mongoose.model('User');
-        User.findByIdAndUpdate(data._id, { is_active: false }, { useFindAndModify: false })
+
+        User.findOneAndUpdate(data._id, { is_active: false }, { useFindAndModify: false })
             .then(res => {
                 resolve(res);
             })

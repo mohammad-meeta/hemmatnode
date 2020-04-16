@@ -9,4 +9,5 @@ module.exports = ValidationRuleService;
 ValidationRuleService.boot = function boot() {
     require("../helpers/service-helpers/user-service-heper.js");
     require("../helpers/service-helpers/article-type-service-heper.js");
+    require("../helpers/service-helpers/article-service-heper.js");
 };

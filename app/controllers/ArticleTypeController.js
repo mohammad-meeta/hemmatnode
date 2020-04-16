@@ -119,10 +119,10 @@ ArticleTypeController.update = async function update(req, res, next) {
  */
 ArticleTypeController.destroy = async function destroy(req, res, next) {
     const data = {
-        "_id": req.body._id
+        "_id": req.params.articleTypeData
     };
 
-    const ArticleTypeDelete = ArticleTypeHelper.deleteArticleTypeData(data)
+    const ArticleTypeDelete = ArticleTypeHelper.deleteArticleType(data)
         .then(data => {
             const result = {
                 success: true,

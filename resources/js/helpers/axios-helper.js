@@ -19,10 +19,11 @@ AxiosHelper.toGQL = function toGQL(query = '', variables = {}) {
 /**
  * Send ajax request
  */
-AxiosHelper.send = function send(method, url, data, options) {
+AxiosHelper.send = function send(method, url, data = {}, options) {
     const FormData = require('form-data');
 
-    let postData = {};
+    let postData;
+    data = data || {};
 
     /* Setup options */
     options = _.merge({
@@ -90,8 +91,6 @@ AxiosHelper.send = function send(method, url, data, options) {
 
     /* Create axios instance */
     let instance = axios.create(config);
-
-    postData = postData || {};
 
     return instance[method](url, postData);
 };

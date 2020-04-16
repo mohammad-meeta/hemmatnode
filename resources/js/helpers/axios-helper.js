@@ -91,7 +91,7 @@ AxiosHelper.send = function send(method, url, data, options) {
     /* Create axios instance */
     let instance = axios.create(config);
 
-    console.log(options)
+    postData = postData || {};
 
     return instance[method](url, postData);
 };

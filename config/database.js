@@ -1,15 +1,16 @@
 'use strict';
 
 /* Prepare options */
-const auth = {};
+const auth = null;
+if (process.env.DB_USER || process.env.DB_PASSWORD) {
+    if (process.env.DB_USER) {
+        auth.user = process.env.DB_USER;
+    }
 
-if (process.env.DB_USER){
-    auth.user = process.env.DB_USER;
+    if (process.env.DB_PASSWORD) {
+        auth.password = process.env.DB_PASSWORD;
+    }
 }
-if (process.env.DB_USER){
-    auth.password = process.env.DB_PASSWORD;
-}
-
 
 /* Export */
 module.exports = {

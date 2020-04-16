@@ -16,6 +16,7 @@ const ENUMS = require("JS-HELPERS/enums");
 const Loading = require("VUE-COMPONENTS/general/loading.vue").default;
 const RegisterUser = require("VUE-COMPONENTS/user/register-user.vue").default;
 const ListUser = require("VUE-COMPONENTS/user/list-user.vue").default;
+const EditUser = require("VUE-COMPONENTS/user/edit-user.vue").default;
 
 module.exports = {
     name: "UserList",
@@ -23,7 +24,8 @@ module.exports = {
     components: {
         Loading,
         ListUser,
-        RegisterUser
+        RegisterUser,
+        EditUser
     },
 
     data: () => ({
@@ -37,7 +39,8 @@ module.exports = {
 
         modeLoading: state => state.formMode == ENUMS.FORM_MODE.LOADING,
         modeList: state => state.formMode == ENUMS.FORM_MODE.LIST,
-        modeRegister: state => state.formMode == ENUMS.FORM_MODE.REGISTER
+        modeRegister: state => state.formMode == ENUMS.FORM_MODE.REGISTER,
+        modeEdit: state => state.formMode == ENUMS.FORM_MODE.EDIT
     },
 
     created() {
@@ -80,6 +83,11 @@ module.exports = {
                 case ENUMS.COMMAND.REGISTER:
                     /* TODO: REGISTER NEW USER */
                     console.log("REGISTER NEW USER", arg);
+                    break;
+
+                case ENUMS.COMMAND.EDIT:
+                    /* TODO: REGISTER NEW USER */
+                    console.log("EDIT USER", arg);
                     break;
 
                 case ENUMS.COMMAND.CANCEL:

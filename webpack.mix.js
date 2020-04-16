@@ -67,6 +67,7 @@ mix.js('resources/js/core/kernel.js', `${output}/js/core`)
     .js('resources/js/pages/factory.js', `${output}/js/pages`)
     .js('resources/js/pages/auth/login/index.js', `${output}/js/pages/auth/login`)
     .js('resources/js/pages/user/register/index.js', `${output}/js/pages/user/register`)
+    .js('resources/js/pages/user/edit/index.js', `${output}/js/pages/user/edit`)
     .js('resources/js/pages/user/index/index.js', `${output}/js/pages/user/index`);
 
 /* SASS */

@@ -1,6 +1,6 @@
 'use strict';
 
-const UserList = require('VUE-COMPONENTS/user/list-user.vue').default;
+const EditUser = require('VUE-COMPONENTS/user/edit-user.vue').default;
 
 function Page(){}
 module.exports = Page;
@@ -14,7 +14,7 @@ Page.init = function init() {
             el: "#app",
 
             components: {
-                UserList
+                EditUser
             },
 
             data: {},

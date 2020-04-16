@@ -18,12 +18,17 @@ Router.get('/api/user/:page/:size?', [
 ])
     .as('api.user');
 
-
 Router.get('/user/create', [
     // checkAuth,
     'User@create'
 ])
     .as('user.create');
+
+Router.get('/user/edit', [
+        // checkAuth,
+        'User@edit'
+    ])
+    .as('user.edit');
 
 Router.post('/user', [
     // checkAuth,
@@ -38,13 +43,6 @@ Router.get('/user/:userData', [
 ])
     .as('user.show');
 
-Router.get('/user/edit', [
-    // checkAuth,
-    'User@edit'
-])
-    .as('user.edit');
-
-
 Router.get('/api/user/:userData/edit', [
     // checkAuth,
     validator.validate,
@@ -52,11 +50,14 @@ Router.get('/api/user/:userData/edit', [
 ])
     .as('api.user.edit');
 
+
+
 Router.patch('/user/:userData', [
     // checkAuth,
     'User@update'
 ])
     .as('user.update');
+
 
 Router.delete('/user/:userData', [
     // checkAuth,
@@ -66,3 +67,4 @@ Router.delete('/user/:userData', [
 
 Router.get('/user/logout', clearAuth)
     .as('user.logout');
+

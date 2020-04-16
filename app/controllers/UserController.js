@@ -12,9 +12,9 @@ module.exports = UserController;
  * Index route
  */
 UserController.index = async function index(req, res, next) {
-    const pageRoute = 'user.index';
+    const pageRoute = PugView.getView('user.index');
 
-    res.render(PugView.getView(pageRoute), {
+    res.render(pageRoute, {
         req,
         pageRoute
     });

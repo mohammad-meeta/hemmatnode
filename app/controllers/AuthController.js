@@ -19,7 +19,7 @@ AuthController.login = function login(req, res, next) {
 
     res.render(pageRoute, {
         req,
-        pageRoute,
+        pageRoute
     });
 };
 

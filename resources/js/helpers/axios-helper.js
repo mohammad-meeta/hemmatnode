@@ -22,7 +22,7 @@ AxiosHelper.toGQL = function toGQL(query = '', variables = {}) {
 AxiosHelper.send = function send(method, url, data, options) {
     const FormData = require('form-data');
 
-    let postData;
+    let postData = {};
 
     /* Setup options */
     options = _.merge({

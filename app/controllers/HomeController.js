@@ -12,9 +12,9 @@ module.exports = HomeController;
  * Index route
  */
 HomeController.index = async function index(req, res, next) {
-    const pageRoute = 'home.index';
+    const pageRoute = PugView.getView('home.index');
 
-    res.render(PugView.getView(pageRoute), {
+    res.render(pageRoute, {
         req,
         pageRoute
     });
@@ -24,9 +24,9 @@ HomeController.index = async function index(req, res, next) {
  * About route
  */
 HomeController.about = async function about(req, res, next) {
-    const pageRoute = 'home.about';
+    const pageRoute = PugView.getView('home.about');
 
-    res.render(PugView.getView(pageRoute), {
+    res.render(pageRoute, {
         req,
         pageRoute
     });

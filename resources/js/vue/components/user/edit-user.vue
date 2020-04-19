@@ -65,7 +65,7 @@ module.exports = {
         },
         notificationMessage: null,
         notificationType: "is-info",
-        showLoadingFlag: false
+        showLoadingFlag: false,
     }),
 
     props: {
@@ -81,6 +81,19 @@ module.exports = {
     },
 
     methods: {
+        /**
+         * Load users
+         */
+        loadUserData(id) {
+            const url = this.editUrl.replace("$userData$", id);
+
+            AxiosHelper.send("get", url, {}).then(res => {
+                const data = res.data;
+
+                Vue.set(this, "userData", data.data);
+            });
+        },
+
         /**
          * On Command
          *

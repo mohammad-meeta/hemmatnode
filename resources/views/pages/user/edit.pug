@@ -14,7 +14,7 @@ block heading
 
 block content
     .container
-        edit-user(edit-url=route('user.edit'))
+        edit-user(ref="userEdit", edit-url=route('api.user.edit', { userData : "$userData$" }))
 
 block scripts
     script(defer, src=mix('js/pages/user/edit/index.js'))

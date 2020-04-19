@@ -25,7 +25,21 @@ Edit.initVue = function () {
 
             components: {
                 EditUser
-            }
+            },
+
+            mounted() {
+                this.init();
+            },
+
+            methods: {
+                init() {
+                    this.loadUserData();
+                },
+
+                loadUserData() {
+                    this.$refs.userEdit.loadUserData(1);
+                }
+            },
         });
 }
 

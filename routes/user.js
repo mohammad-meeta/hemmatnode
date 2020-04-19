@@ -7,21 +7,21 @@ const {
 } = use('core/helpers/auth-helper');
 
 Router.get('/user', [
-    // checkAuth,
-    'User@index'
-])
+        // checkAuth,
+        'User@index'
+    ])
     .as('user.index');
 
 Router.get('/api/users/:page/:size?', [
-    // checkAuth,
-    'User@paginateUserData'
-])
+        // checkAuth,
+        'User@paginateUserData'
+    ])
     .as('api.user');
 
 Router.get('/user/create', [
-    // checkAuth,
-    'User@create'
-])
+        // checkAuth,
+        'User@create'
+    ])
     .as('user.create');
 
 Router.get('/user/edit', [
@@ -31,39 +31,35 @@ Router.get('/user/edit', [
     .as('user.edit');
 
 Router.post('/user', [
-    // checkAuth,
-    validator.validate,
-    'User@store'
-])
+        // checkAuth,
+        validator.validate,
+        'User@store'
+    ])
     .as('user.store');
 
 Router.get('/user/:userData', [
-    // checkAuth,
-    'User@show'
-])
+        // checkAuth,
+        'User@show'
+    ])
     .as('user.show');
 
 Router.get('/api/user/:userData/edit', [
-    // checkAuth,
-    'User@editUserData'
-])
+        // checkAuth,
+        'User@editUserData'
+    ])
     .as('api.user.edit');
 
-
-
 Router.patch('/user/:userData', [
-    // checkAuth,
-    'User@update'
-])
+        // checkAuth,
+        'User@update'
+    ])
     .as('user.update');
 
-
 Router.delete('/user/:userData', [
-    // checkAuth,
-    'User@destroy'
-])
+        // checkAuth,
+        'User@destroy'
+    ])
     .as('user.destroy');
 
 Router.get('/user/logout', clearAuth)
     .as('user.logout');
-

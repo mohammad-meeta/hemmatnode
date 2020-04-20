@@ -18,14 +18,14 @@ UserIndexPage.boot = function () {
  * Init vue
  */
 UserIndexPage.initVue = function () {
-    const UserList = require('VUE-COMPONENTS/user/list-user.vue').default;
+    const Users = require('VUE-COMPONENTS/user/users.vue').default;
 
     window.v =
         new Vue({
             el: '#app',
 
             components: {
-                UserList
+                Users
             },
 
             data: {},
@@ -40,7 +40,7 @@ UserIndexPage.initVue = function () {
                 },
 
                 loadUsers() {
-                    this.$refs.userList.loadUsers();
+                    this.$refs.users.loadUsers();
                 }
             }
         });

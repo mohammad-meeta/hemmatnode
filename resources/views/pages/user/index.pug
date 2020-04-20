@@ -10,16 +10,13 @@ block heading
                 h1 کاربران
 
 block content
+    h1= route('api.user', { page: 1, size: 10 })
     .container.has-text-centered
-        users(ref="users")
+        users(list-url=route('api.user', { page: 1, size: 10 }),
+            register-user=route('user.create')
+        )
 
 block scripts
-    script.
-        document.data = {
-            urls: {
-                users: '#{route("user.index")}'
-            }
-        };
-
     script(defer, src=mix('js/pages/user/index/index.js'))
+
 

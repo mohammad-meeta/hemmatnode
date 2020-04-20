@@ -2,7 +2,7 @@
 div
     .columns.is-vcentered
         .column
-            h1(v-if="! hasUsers") | No Any User has been registered
+            h1(v-if="! hasUsers") کاربری ثبت نام نکرده!
             table.table.is-striped.is-hoverable.is-fullwidth(v-if="hasUsers")
                 thead
                     tr
@@ -62,8 +62,10 @@ module.exports = {
          */
         loadUsers() {
             const url = this.listUrl;
+
             AxiosHelper.send("get", url, "").then(res => {
                 const data = res.data;
+
                 Vue.set(this, "users", data.data);
             });
         },

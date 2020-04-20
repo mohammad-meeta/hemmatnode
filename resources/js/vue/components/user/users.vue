@@ -2,9 +2,10 @@
     .columns.is-vcentered
         .column(v-if="modeLoading")
             loading
-        h2 hhhhhhhhhhhhhhhh
+
         .column(v-show="!modeLoading && modeList")
-            user-list(ref="userList", @on-command="onCommand", list-url=listUrl)
+            list-user(ref="userList", @on-command="onCommand", :list-url="listUrl")
+
         .column(v-show="!modeLoading && modeRegister")
             register-user(@on-command="onCommand")
 </template>
@@ -20,7 +21,7 @@ const ListUser = require("VUE-COMPONENTS/user/list-user.vue").default;
 const EditUser = require("VUE-COMPONENTS/user/edit-user.vue").default;
 
 module.exports = {
-    name: "UserList",
+    name: "Users",
 
     components: {
         Loading,
@@ -36,7 +37,17 @@ module.exports = {
     }),
 
     props: {
+        title: {
+            type: String,
+            default: null
+        },
+
         listUrl: {
+            type: String,
+            default: null
+        },
+
+        registerUrl: {
             type: String,
             default: null
         }
@@ -56,28 +67,11 @@ module.exports = {
     },
 
     mounted() {
-        this.$refs.listUser.loadUsers();
+        this.changeFormMode(ENUMS.FORM_MODE.LIST);
+        this.$refs.userList.loadUsers();
     },
 
     methods: {
-        /**
-         * Load users list
-         */
-        loadUsers() {
-            return new Promise((resolve, reject) => {
-                const UserHelper = require("VUE-HELPERS/user-helper");
-
-                UserHelper.loadUsers()
-                    .then(res => {
-                        const data = res.data.data;
-
-                        Vue.set(this, "users", data.users);
-
-                        resolve(res);
-                    })
-                    .catch(err => reject(err));
-            });
-        },
 
         /**
          * On commands clicked
@@ -109,9 +103,6 @@ module.exports = {
          */
         init() {
             this.changeFormMode(ENUMS.FORM_MODE.LOADING);
-            this.loadUsers().then(res => {
-                this.changeFormMode(ENUMS.FORM_MODE.LIST);
-            });
         },
 
         /**

@@ -40,7 +40,7 @@ UserIndexPage.initVue = function () {
                 },
 
                 loadUsers() {
-                    this.$refs.users.loadUsers();
+                    //this.$refs.users.loadUsers();
                 }
             }
         });

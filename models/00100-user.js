@@ -47,6 +47,9 @@ Model.model = function model() {
             type: Boolean,
             default: false
         },
+        'roles': {
+            type: Array
+        },
         'profile': new mongoose.Schema({
             'first_name': {
                 type: String,

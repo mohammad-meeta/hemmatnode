@@ -37,7 +37,7 @@ UserLoginValidator.data = function data(req) {
  */
 UserLoginValidator.rules = function rules() {
     return {
-        'name': 'required|min:4|max:25',
+        'name': 'required|min:3|max:25',
         'password': 'required|min:6|max:50'
     };
 };

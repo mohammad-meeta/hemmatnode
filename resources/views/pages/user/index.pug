@@ -11,13 +11,13 @@ block heading
 
 block content
     .container.has-text-centered
-        user-list(ref="userList", list-url=route('api.user', { page : 1, size : 100 }))
+        users(ref="users")
 
 block scripts
     script.
         document.data = {
             urls: {
-                usersList: '#{route("user.index")}'
+                users: '#{route("user.index")}'
             }
         };
 

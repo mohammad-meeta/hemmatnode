@@ -2,8 +2,9 @@
     .columns.is-vcentered
         .column(v-if="modeLoading")
             loading
+        h2 hhhhhhhhhhhhhhhh
         .column(v-show="!modeLoading && modeList")
-            list-user(ref="listUser", @on-command="onCommand")
+            user-list(ref="userList", @on-command="onCommand", list-url=listUrl)
         .column(v-show="!modeLoading && modeRegister")
             register-user(@on-command="onCommand")
 </template>
@@ -33,6 +34,13 @@ module.exports = {
         formModeStack: [],
         users: []
     }),
+
+    props: {
+        listUrl: {
+            type: String,
+            default: null
+        }
+    },
 
     computed: {
         formMode: state => state.formModeStack[state.formModeStack.length - 1],

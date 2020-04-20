@@ -25,6 +25,13 @@ Router.get('/article-type/create', [
 ])
     .as('articletype.create');
 
+Router.get('/article-type/edit', [
+    // checkAuth,
+    'ArticleType@edit'
+])
+    .as('articletype.edit');
+
+
 Router.post('/article-type', [
     // checkAuth,
     validator.validate,
@@ -37,13 +44,6 @@ Router.get('/article-type/:articleTypeData', [
     'ArticleType@show'
 ])
     .as('articletype.show');
-
-Router.get('/article-type/edit', [
-    // checkAuth,
-    'ArticleType@edit'
-])
-    .as('articletype.edit');
-
 
 Router.get('/api/article-type/:articleTypeData/edit', [
     // checkAuth,

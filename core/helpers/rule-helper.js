@@ -3,7 +3,7 @@
 /**
  * User-rule class
  */
-function Rule() {}
+function Rule() { }
 module.exports = Rule;
 
 /**
@@ -19,7 +19,7 @@ Rule.can = function can(ruleName, data) {
     if (!ruleName.endsWith('-rule')) {
         ruleName += '-rule';
     }
-    
+
     ruleName = `rules/${ruleName}`;
 
     /* Try to laod rule-module */
@@ -35,5 +35,39 @@ Rule.can = function can(ruleName, data) {
         } else {
             next("Not enought permission to do this request");
         }
+    }
+};
+
+/**
+ * Can-Async function
+ *
+ * @param      {Object}   payload  The payload
+ * @return     {boolean}  User can/can't do action
+ */
+Rule.canAsync = function canAsync(ruleName, data) {
+    /* Prepare ruleName for loading from sub-folders */
+    ruleName = ruleName.replace(/\./g, '\/');
+
+    if (!ruleName.endsWith('-rule')) {
+        ruleName += '-rule';
+    }
+
+    ruleName = `rules/${ruleName}`;
+
+    /* Try to laod rule-module */
+    const RuleModule = use(ruleName);
+
+    /* Return check function */
+    return (req, res, next) => {
+        const user = req.user;
+        RuleModule.check(user, data)
+            .then(result => {
+                if (result) {
+                    next();
+                } else {
+                    next("Not enought permission to do this request");
+                }
+            })
+            .catch(err => next("Not enought permission to do this request"));
     }
 };

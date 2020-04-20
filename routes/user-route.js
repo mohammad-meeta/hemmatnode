@@ -1,5 +1,6 @@
 'use strict';
 const validator = use('validators/user-register-validator');
+const Rule = use('core/helpers/rule-helper');
 
 const {
     checkAuth,
@@ -7,58 +8,60 @@ const {
 } = use('core/helpers/auth-helper');
 
 Router.get('/user', [
-        // checkAuth,
-        'User@index'
-    ])
+    // checkAuth,
+    Rule.canAsync('user.permision', 'user.index'),
+    'User@index'
+])
     .as('user.index');
 
 Router.get('/api/users/:page/:size?', [
-        // checkAuth,
-        'User@paginateUserData'
-    ])
+    // checkAuth,
+    'User@paginateUserData'
+])
     .as('api.user');
 
 Router.get('/user/create', [
-        // checkAuth,
-        'User@create'
-    ])
+    // checkAuth,
+    Rule.canAsync('user.permision', 'user.create'),
+    'User@create'
+])
     .as('user.create');
 
 Router.get('/user/edit', [
-        // checkAuth,
-        'User@edit'
-    ])
+    // checkAuth,
+    'User@edit'
+])
     .as('user.edit');
 
 Router.post('/user', [
-        // checkAuth,
-        validator.validate,
-        'User@store'
-    ])
+    // checkAuth,
+    validator.validate,
+    'User@store'
+])
     .as('user.store');
 
 Router.get('/user/:userData', [
-        // checkAuth,
-        'User@show'
-    ])
+    // checkAuth,
+    'User@show'
+])
     .as('user.show');
 
 Router.get('/api/user/:userData/edit', [
-        // checkAuth,
-        'User@editUserData'
-    ])
+    // checkAuth,
+    'User@editUserData'
+])
     .as('api.user.edit');
 
 Router.patch('/user/:userData', [
-        // checkAuth,
-        'User@update'
-    ])
+    // checkAuth,
+    'User@update'
+])
     .as('user.update');
 
 Router.delete('/user/:userData', [
-        // checkAuth,
-        'User@destroy'
-    ])
+    // checkAuth,
+    'User@destroy'
+])
     .as('user.destroy');
 
 Router.get('/user/logout', clearAuth)

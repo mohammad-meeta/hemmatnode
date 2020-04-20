@@ -3,6 +3,12 @@
         .column(v-if="modeLoading")
             loading
 
+        .column.exposed-form(v-show="!modeLoading")
+            a.button.is-primary.is-rounded(href="#", @click.prevent="commandClick(ENUMS.FORM_MODE.REGISTER)")
+                span.icon.is-small
+                    i.material-icons.icon check_circle
+                span ویرایش
+
         .column(v-show="!modeLoading && modeList")
             list-user(ref="userList", @on-command="onCommand", :list-url="listUrl")
 

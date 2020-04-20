@@ -25,6 +25,12 @@ Router.get('/article/create', [
 ])
     .as('article.create');
 
+Router.get('/article/edit', [
+    // checkAuth,
+    'Article@edit'
+])
+    .as('article.edit');
+
 Router.post('/article', [
     // checkAuth,
     validator.validate,
@@ -37,12 +43,6 @@ Router.get('/article/:articleData', [
     'Article@show'
 ])
     .as('article.show');
-
-Router.get('/article/edit', [
-    // checkAuth,
-    'Article@edit'
-])
-    .as('article.edit');
 
 
 Router.get('/api/article/:articleData/edit', [

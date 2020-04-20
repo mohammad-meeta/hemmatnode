@@ -15,7 +15,7 @@ module.exports = {
         secret: '@@_2020//_SUNS3T_s3cr3T_K3Y_$$',
         options: {
             httpOnly: true,
-            maxAge: 20 * 60 * 1000,
+            maxAge: 40 * 60 * 1000,
             signed: true
         }
     }

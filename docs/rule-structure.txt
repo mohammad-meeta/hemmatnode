@@ -1,0 +1,41 @@
+Rule Structure
+
+All rules can be used as a node-express middleware,
+Just, create your own custom rule in "rules" folder (postfix "-rule" is mandatory).
+and implement your check function. This function receive two argument, "user" and "data".
+user filled by framework (by JWT token), and data is an optional parameter that use can pass it while use it as middleware.
+When you define your custom rule, you shoud import "core/helpers/rule-helper" module in your route file and call "can" function as a middleware of route by passign rule filename (and subfolders shoud be separated by "." sign).
+
+Pay attension to example ;)
+
+=====================================================
+EXAMPLE
+=====================================================
+
+redis-route.js
+    const Rule = use('core/helpers/rule-helper");
+
+    Router.get('/redis/test', [
+        Rule('redis.rule1),
+        function(req, res, next){
+            res.end(200);
+        }
+    ]);
+
+In folder "rules/redis", file "rule1-rule.js"
+    'use strict';
+
+    /**
+    * Rule
+    */
+    function Rule() {}
+    module.exports = Rule;
+
+    /**
+    * Check data
+    */
+    Rule.check = function check(user, data) {
+        Logger.debug("This is a test rule for redis route, it return true");
+        
+        return true;
+    };

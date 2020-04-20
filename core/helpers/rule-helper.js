@@ -1,25 +1,39 @@
 'use strict';
 
 /**
- * Rule Helper class
+ * User-rule class
  */
-function RuleHelper() {}
-module.exports = RuleHelper;
-
-
-/* Contants */
-RuleHelper.BASE_PATH = 'rules';
-RuleHelper.SUFFIX = '-rule';
+function Rule() {}
+module.exports = Rule;
 
 /**
- * Can function
+ * Can read function
+ *
+ * @param      {Object}   payload  The payload
+ * @return     {boolean}  User can/can't do action
  */
-RuleHelper.can = function can(module, data, method = 'can') {
-    if (! module.contains(RuleHelper.SUFFIX)){
-        module += RuleHelper.SUFFIX;
+Rule.can = function can(ruleName, data) {
+    /* Prepare ruleName for loading from sub-folders */
+    ruleName = ruleName.replace(/\./g, '\/');
+
+    if (!ruleName.endsWith('-rule')) {
+        ruleName += '-rule';
     }
+    
+    ruleName = `rules/${ruleName}`;
 
-    const Rule = use(RuleHelper.BASE_PATH, module);
+    /* Try to laod rule-module */
+    const RuleModule = use(ruleName);
 
-    return Rule[method](data);
+    /* Return check function */
+    return (req, res, next) => {
+        const user = req.user;
+        const result = RuleModule.check(user, data);
+
+        if (result) {
+            next();
+        } else {
+            next("Not enought permission to do this request");
+        }
+    }
 };

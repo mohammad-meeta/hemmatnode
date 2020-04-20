@@ -20,7 +20,8 @@ AuthHelper.loadUserData = function loadUserData(userData) {
 
     const filterQuery = {
         name: name,
-        pwd: pwd
+        pwd: pwd,
+        is_active: true
     };
 
     const projection = {

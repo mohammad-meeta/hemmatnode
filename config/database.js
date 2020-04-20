@@ -1,5 +1,19 @@
 'use strict';
 
+/* Prepare options */
+let auth = null;
+if (process.env.DB_USER || process.env.DB_PASSWORD) {
+    auth = {};
+
+    if (process.env.DB_USER) {
+        auth.user = process.env.DB_USER;
+    }
+
+    if (process.env.DB_PASSWORD) {
+        auth.password = process.env.DB_PASSWORD;
+    }
+}
+
 /* Export */
 module.exports = {
     default: 'mongodb',
@@ -13,10 +27,7 @@ module.exports = {
             user: process.env.DB_USER,
             password: process.env.DB_PASSWORD,
             options: {
-                auth: {
-                    user: process.env.DB_USER,
-                    password: process.env.DB_PASSWORD
-                },
+                auth,
                 useNewUrlParser: true,
                 useUnifiedTopology: true
             }

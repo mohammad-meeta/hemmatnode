@@ -147,8 +147,9 @@ UserController.destroy = async function destroy(req, res, next) {
  * Create route return page
  */
 UserController.create = async function create(req, res, next) {
-    const pageRoute = 'user.create';
-    res.render(PugView.getView(pageRoute), {
+    const pageRoute = PugView.getView('user.create');
+
+    res.render(pageRoute, {
         req,
         pageRoute
     });

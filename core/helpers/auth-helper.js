@@ -99,8 +99,7 @@ AuthHelper.clearAuth = function checkAuth(req, res, next) {
             })
             .end();
     } else {
-        res.redirect(route(authConfig.loginRoute))
-            .end();
+        res.redirect(route(authConfig.loginRoute));
     }
 };
 

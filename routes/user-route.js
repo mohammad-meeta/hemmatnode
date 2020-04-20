@@ -8,58 +8,64 @@ const {
 } = use('core/helpers/auth-helper');
 
 Router.get('/user', [
-    // checkAuth,
+    checkAuth,
     Rule.canAsync('user.permision', 'user.index'),
     'User@index'
 ])
     .as('user.index');
 
 Router.get('/api/users/:page/:size?', [
-    // checkAuth,
+    checkAuth,
     'User@paginateUserData'
 ])
     .as('api.user');
 
 Router.get('/user/create', [
-    // checkAuth,
+    checkAuth,
     Rule.canAsync('user.permision', 'user.create'),
     'User@create'
 ])
     .as('user.create');
 
 Router.get('/user/edit', [
-    // checkAuth,
+    checkAuth,
+    Rule.canAsync('user.permision', 'user.edit'),
     'User@edit'
 ])
     .as('user.edit');
 
 Router.post('/user', [
-    // checkAuth,
+    checkAuth,
+    Rule.canAsync('user.permision', 'user.store'),
     validator.validate,
     'User@store'
 ])
     .as('user.store');
 
 Router.get('/user/:userData', [
-    // checkAuth,
+    checkAuth,
+    Rule.canAsync('user.permision', 'user.show'),
     'User@show'
 ])
     .as('user.show');
 
 Router.get('/api/user/:userData/edit', [
-    // checkAuth,
+    checkAuth,
+    Rule.canAsync('user.permision', 'api.user.edit'),
     'User@editUserData'
 ])
     .as('api.user.edit');
 
 Router.patch('/user/:userData', [
-    // checkAuth,
+    checkAuth,
+    Rule.canAsync('user.permision', 'user.update'),
     'User@update'
 ])
     .as('user.update');
 
 Router.delete('/user/:userData', [
-    // checkAuth,
+    checkAuth,
+    Rule.canAsync('user.permision', 'user.destroy'),
     'User@destroy'
 ])
     .as('user.destroy');

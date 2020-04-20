@@ -1,6 +1,6 @@
 'use strict';
 
-const Mongoose = require('mongoose');
+const AuthHelper = use('app/helpers/auth-helper');
 const PugView = use('app/helpers/pug-view');
 const Auth = use('core/helpers/auth-helper');
 const authConfig = use('config/auth');
@@ -9,7 +9,7 @@ const Events = use('core/modules/events-module');
 /**
  * Auth controller
  */
-function AuthController() {}
+function AuthController() { }
 module.exports = AuthController;
 
 /**
@@ -41,36 +41,44 @@ AuthController.attempt = function attempt(req, res, next) {
         password: data.password,
     };
 
-    /* If username & password are correct */
-    const loginResult = {};
+    AuthHelper.loadUserData(user)
+        .then(data => {
+            const loginResult = {
+                success: false,
+                data: null
+            };
+            /* If username & password are correct */
+            if (null != data) {
+                loginResult.success = true;
 
-    if (user != null) {
-        loginResult.success = true;
-        loginResult.data = Auth.sign({
-            id: 100,
-            username: data.username,
-            password: data.password,
-        });
-    } else {
-        loginResult.success = false;
-        loginResult.data = "Invalid Username and Password";
-    }
+                loginResult.data = Auth.sign({
+                    id: data._id,
+                    username: data.name,
+                    password: data.pwd,
+                });
+            } else {
+                loginResult.success = false;
+                loginResult.data = "Invalid Username and Password";
+            }
 
-    /* Fire attempt-event */
-    Events.raise('login-attempt', loginResult);
+            /* Fire attempt-event */
+            Events.raise('login-attempt', loginResult);
 
-    /* Send result */
-    if (loginResult.success) {
-        res.status(200)
-            .cookie('token', loginResult.data, authConfig.cookie.options)
-            // .cookie('token', loginResult.data)
-            .send(loginResult)
-            .end();
-    } else {
-        res.status(403)
-            // .cookie('token', '', authConfig.cookie.options)
-            .cookie('token', '')
-            .send(loginResult)
-            .end();
-    }
+            /* Send result */
+            if (loginResult.success) {
+                res.status(200)
+                    .cookie('token', loginResult.data, authConfig.cookie.options)
+                    // .cookie('token', loginResult.data)
+                    .send(loginResult)
+                    .end();
+            } else {
+                res.status(403)
+                    // .cookie('token', '', authConfig.cookie.options)
+                    .cookie('token', '')
+                    .send(loginResult)
+                    .end();
+            }
+        })
+        .catch(err => console.error(err));
+
 };

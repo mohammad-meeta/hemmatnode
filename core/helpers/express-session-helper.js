@@ -22,7 +22,7 @@ ExpressSessionHelper.setupConfig = function setupConfig(session) {
         cookie: {
             secure: sessionConfig.secure
         }
-    }
+    };
 
     if ('redis' == sessionConfig.session_store) {
         result.store = ExpressSessionHelper.setupRedisStore(session);

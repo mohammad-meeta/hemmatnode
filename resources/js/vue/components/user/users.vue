@@ -1,19 +1,34 @@
 <template lang="pug">
-    .columns.is-vcentered
-        .column(v-if="modeLoading")
-            loading
+    .container-parent
+        section.hero
+            .container.page-header
+                .title
+                    h1(v-show="modeList") کاربران
+                    h1(v-show="modeRegister") ثبت نام کاربر جدید
+        .columns.exposed-form(v-show="!modeLoading")
+            .column.is-one-fifth(v-show="modeList")
+                a.button.is-primary.is-rounded(href="#",
+                @click.prevent="commandClick(ENUMS.COMMAND.NEW)")
+                    span.icon.is-small
+                        i.material-icons.icon check_circle
+                    span ثبت نام
 
-        .column.exposed-form(v-show="!modeLoading")
-            a.button.is-primary.is-rounded(href="#", @click.prevent="commandClick(ENUMS.FORM_MODE.REGISTER)")
-                span.icon.is-small
-                    i.material-icons.icon check_circle
-                span ویرایش
+            .column.is-one-fifth(v-show="!modeList")
+                a.button.is-warning.is-rounded(href="#",
+                @click.prevent="commandClick(ENUMS.COMMAND.CANCEL)")
+                    span.icon.is-small
+                        i.material-icons.icon check_circle
+                    span بازگشت
 
-        .column(v-show="!modeLoading && modeList")
-            list-user(ref="userList", @on-command="onCommand", :list-url="listUrl")
+        .columns.is-vcentered
+            .column(v-if="modeLoading")
+                loading
 
-        .column(v-show="!modeLoading && modeRegister")
-            register-user(@on-command="onCommand")
+            .column(v-show="!modeLoading && modeList")
+                list-user(ref="userList", @on-command="onCommand", :list-url="listUrl")
+
+            .column(v-show="!modeLoading && modeRegister")
+                register-user(@on-command="onCommand")
 </template>
 
 <script>
@@ -102,6 +117,15 @@ module.exports = {
                     this.changeFormMode(null, { pop: true });
                     break;
             }
+        },
+
+        /**
+         * On Command
+         *
+         * @param      {Object}  arg     The argument
+         */
+        commandClick(arg) {
+            this.onCommand(arg);
         },
 
         /**

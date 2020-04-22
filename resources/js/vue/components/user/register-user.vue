@@ -1,42 +1,50 @@
 <template lang="pug">
-    .container
+    .container-child
         notification(:notification-type="notificationType", @on-close="closeNotification", v-if="showNotification")
             span(v-html="notificationMessage")
-        .columns.is-vcentered
-            .column.is-full(v-show="isLoadingMode")
-                h1 در حال بارگذاری
-            .column.is-full.form-small(v-show="! isLoadingMode")
-                .field
-                    label.label نام کاربری
-                    .control
-                        input.input(type='text', placeholder='نام کاربری', autofocus, v-model='userData.name' required)
-                .field
-                    label.label پست الکترونیک
-                    .control
-                        input.input(type='email', placeholder='پست الکترونیک', v-model='userData.email' required)
-                .field
-                    label.label نام
-                    .control
-                        input.input(type='text', placeholder='نام', v-model='userData.firstName' required)
-                .field
-                    label.label نام خانوادگی
-                    .control
-                        input.input(type='text', placeholder='نام خانوادگی', v-model='userData.lastName' required)
-                .field
-                    label.label کد ملی
-                    .control
-                        input.input(type='text', placeholder='کد ملی', v-model='userData.nationCode' required)
-                .field
-                    label.label شماره موبایل
-                    .control
-                        input.input(type='text', placeholder='شماره موبایل', v-model='userData.cellphone' required)
-                .field.is-grouped
-                    .control(v-show="! isLoadingMode")
-                        a.button.is-link.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
-                            |   ثبت نام
-                    .control(v-show="! isLoadingMode")
-                        a.button.is-link.is-light.is-rounded(href="/")
-                            |   انصراف
+
+        .column.is-full(v-show="isLoadingMode")
+            h1 در حال بارگذاری
+        .form-small(v-show="! isLoadingMode")
+            .field
+                label.label نام کاربری
+                .control
+                    input.input(type='text', placeholder='نام کاربری', autofocus, v-model='userData.name' required)
+            .field
+                label.label پست الکترونیک
+                .control
+                    input.input(type='email', placeholder='پست الکترونیک', v-model='userData.email' required)
+            .field
+                label.label نام
+                .control
+                    input.input(type='text', placeholder='نام', v-model='userData.firstName' required)
+            .field
+                label.label نام خانوادگی
+                .control
+                    input.input(type='text', placeholder='نام خانوادگی', v-model='userData.lastName' required)
+            .field
+                label.label کد ملی
+                .control
+                    input.input(type='text', placeholder='کد ملی', v-model='userData.nationCode' required)
+            .field
+                label.label شماره موبایل
+                .control
+                    input.input(type='text', placeholder='شماره موبایل', v-model='userData.cellphone' required)
+            .field
+                label.checkbox(v-for='role in roles')
+                    input(type='checkbox', v-model="userData.roles[role]", :value="role")
+                    |   {{ role }}
+            .field
+                label.checkbox
+                    input(type='checkbox', v-model="userData.isActive")
+                    |   فعال
+            .field.is-grouped
+                .control(v-show="! isLoadingMode")
+                    a.button.is-link.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
+                        |   ثبت نام
+                .control(v-show="! isLoadingMode")
+                    a.button.is-link.is-light.is-rounded(href="/")
+                        |   انصراف
 </template>
 
 <script>
@@ -62,8 +70,13 @@ module.exports = {
             firstName: null,
             lastName: null,
             nationCode: null,
-            cellphone: null
+            cellphone: null,
+            roles: {},
+            isActive: false
         },
+        roles: [
+             "superadmin", "admin", "karmand1"
+        ],
         notificationMessage: null,
         notificationType: "is-info",
         showLoadingFlag: false
@@ -132,11 +145,23 @@ module.exports = {
             if (!isValid) {
                 return;
             }
-
+            let userData = {
+                    name: this.userData.name,
+                    password: this.userData.password,
+                    email: this.userData.email,
+                    first_name: this.userData.first_name,
+                    last_name: this.userData.last_name,
+                    nation_code: this.userData.nation_code,
+                    cellphone: this.userData.cellphone,
+                    roles: this.userData.roles,
+                    is_active: this.userData.isActive
+                }
+            Object.keys(userData.roles)
+                .filter(key => userData.roles[key]);
             this.showLoading();
 
             const url = this.registerUrl;
-            AxiosHelper.send("post", url, this.userData)
+            AxiosHelper.send("post", url, userData)
                 .then(res => {
                     const data = res.data;
                     this.setNotification(

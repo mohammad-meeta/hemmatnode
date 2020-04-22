@@ -1,0 +1,23 @@
+Session Structure
+
+Using session is very simple,
+by "req.session" you can read/write from/to user session.
+Also, you can use redis as primary session store, by setting 
+    APP_AUTH_TOKEN=session.auth
+    APP_SESSION_STORE=redis
+in .env config file.
+
+=====================================================
+EXAMPLE
+=====================================================
+
+'use strict';
+
+Router.get('/auth/check', (req, res, next) => {
+        if (req.session.auth) {
+            next();
+        }
+        else {
+            res.end(404);
+        }
+    });

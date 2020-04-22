@@ -44,12 +44,14 @@ AuthController.attempt = function attempt(req, res, next) {
     const loginResult = {};
 
     if (user != null) {
-        loginResult.success = true;
-        loginResult.data = Auth.sign({
+        req.session.auth = {
             id: 100,
             username: data.username,
             password: data.password,
-        });
+        };
+
+        loginResult.success = true;
+        loginResult.data = Auth.sign(req.session.auth);
     } else {
         loginResult.success = false;
         loginResult.data = "Invalid Username and Password";

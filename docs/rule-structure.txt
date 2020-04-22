@@ -6,7 +6,13 @@ and implement your check function. This function receive two argument, "user" an
 user filled by framework (by JWT token), and data is an optional parameter that use can pass it while use it as middleware.
 When you define your custom rule, you shoud import "core/helpers/rule-helper" module in your route file and call "can" function as a middleware of route by passign rule filename (and subfolders shoud be separated by "." sign).
 
+Rule.can() function take 3 arguments: 
+    'rule.file.name': rule file name
+    additional-data: Additional data object that passes to can() function
+    'auth-token-name': for extract auth data ([jwt token] or [session token] name)
+
 Pay attension to example ;)
+
 
 =====================================================
 EXAMPLE
@@ -16,7 +22,7 @@ redis-route.js
     const Rule = use('core/helpers/rule-helper");
 
     Router.get('/redis/test', [
-        Rule('redis.rule1),
+        Rule.can('redis.rule1'),
         function(req, res, next){
             res.end(200);
         }

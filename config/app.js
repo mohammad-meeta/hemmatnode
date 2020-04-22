@@ -13,5 +13,6 @@ module.exports = {
     host: host,
     output_path: process.env.OUTPUT_PATH || 'public',
     ssl_key: process.env.SSL_KEY ? rPath(process.env.SSL_KEY) : rPath('config', 'ssl', 'key.pem'),
-    ssl_cert: process.env.SSL_CERT ? rPath(process.env.SSL_CERT) : rPath('config', 'ssl', 'cert.pem')
+    ssl_cert: process.env.SSL_CERT ? rPath(process.env.SSL_CERT) : rPath('config', 'ssl', 'cert.pem'),
+    auth_token: process.env.APP_AUTH_TOKEN || 'auth'
 };

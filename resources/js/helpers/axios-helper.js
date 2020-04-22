@@ -78,6 +78,7 @@ AxiosHelper.send = function send(method, url, data = {}, options) {
         (document.querySelector('meta[name="csrf-token"]') || {
             content: ''
         }).content;
+        
     axios.defaults.headers.common['X-CSRF-TOKEN'] =
         options.headers['x-xsrf-token'] =
         options.headers['x-csrf-token'] =

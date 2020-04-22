@@ -12,5 +12,5 @@ module.exports = Rule;
 Rule.check = function check(user, data) {
     Logger.debug("This is a test rule for redis route, it return true");
     
-    return true;
+    return false;
 };

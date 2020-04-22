@@ -1,5 +1,7 @@
 'use strict';
 
+const createError = require('http-errors');
+
 /**
  * User-rule class
  */
@@ -7,7 +9,7 @@ function Rule() { }
 module.exports = Rule;
 
 /**
- * Can read function
+ * Can function
  *
  * @param      {Object}   payload  The payload
  * @return     {boolean}  User can/can't do action
@@ -33,7 +35,7 @@ Rule.can = function can(ruleName, data) {
         if (result) {
             next();
         } else {
-            next("Not enought permission to do this request");
+            next(createError(403));
         }
     }
 };
@@ -62,12 +64,16 @@ Rule.canAsync = function canAsync(ruleName, data) {
         const user = req.user;
         RuleModule.check(user, data)
             .then(result => {
+
                 if (result) {
                     next();
                 } else {
-                    next("Not enought permission to do this request");
+                    next(createError(403));
                 }
             })
-            .catch(err => next("Not enought permission to do this request"));
+            .catch(err => {
+                next(err);
+            })
+
     }
 };

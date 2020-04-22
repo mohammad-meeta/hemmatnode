@@ -27,10 +27,59 @@ RouterModule.setup = function setup(server) {
     if (fs.existsSync(path)) {
         const files = fs.readdirSync(path);
 
-        files.forEach(file => use('routes', file));
+        for (let i = 0; i < files.length; ++i) {
+            use('routes', files[i]);
+        }
     }
 
+    /* Register router handler */
+    RouterModule.handleErrors();
+
     return server;
+};
+
+
+/**
+ * Handle Error function
+ */
+RouterModule.handleErrors = function handleErrors() {
+    // catch 404 and forward to error handler
+    App.use((req, res, next) => {
+        next(createError(404));
+    });
+
+    // error handler
+    App.use((error, req, res, next) => {
+        const isAjax = (req.headers["x-requested-with"] == 'XMLHttpRequest') ||
+            req.xhr;
+
+        const devMode = (req.app.get('env') === 'development') ||
+            (process.env.debug || true);
+
+        // set locals, only providing error in development
+        res.locals.message = error.message;
+        res.locals.error = devMode ? error : {};
+
+        // render the error page
+        const errCode = error.status || 500;
+        res.status(errCode);
+
+        const errorObject = {
+            success: false,
+            data: {
+                code: errCode,
+                message: res.locals.message,
+                error: res.locals.error,
+            }
+        };
+
+        if (isAjax) {
+            res.send(errorObject)
+                .end();
+        } else {
+            res.render(`errors/${errCode}.pug`, errorObject);
+        }
+    });
 };
 
 /**

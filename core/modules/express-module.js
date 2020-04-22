@@ -18,6 +18,9 @@ ExpressModule.setup = function setup(server) {
     global.App = app;
     server.App = app;
 
+    /* trust first proxy */
+    app.set('trust proxy', 1) ;
+
     /* Setup middlewares */
     ExpressModule.setupMiddlewares(server);
 
@@ -54,7 +57,7 @@ ExpressModule.setupUserMiddlewares = function setupUserMiddlewares(server) {
  */
 ExpressModule.setupMiddlewares = function setupMiddlewares(server) {
     const app = server.App;
-
+   
     /* Setup cors */
     const cors = require('cors');
     app.use(cors());
@@ -80,6 +83,11 @@ ExpressModule.setupMiddlewares = function setupMiddlewares(server) {
     global.csrf = csurf({
         cookie: true
     });
+
+    /* Setup session */
+    const session = require('express-session');
+    const sessionConfig = config('app', 'session');
+    app.use(session(sessionConfig));
 
     return server;
 };

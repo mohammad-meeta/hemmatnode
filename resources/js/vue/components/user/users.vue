@@ -101,7 +101,11 @@ module.exports = {
         /**
          * On commands clicked
          */
-        onCommand(arg) {
+        onCommand(payload) {
+            console.log(payload);
+            const arg = payload.arg;
+            const data = payload.data;
+
             switch (arg) {
                 case ENUMS.COMMAND.NEW:
                     this.changeFormMode(ENUMS.FORM_MODE.REGISTER);

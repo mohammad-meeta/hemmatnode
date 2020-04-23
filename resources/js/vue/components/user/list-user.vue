@@ -22,11 +22,11 @@
                 td {{ user.is_active }}
                 td {{ toPersianDate(user.created_at) }}
                 td.function-links
-                    a.button.is-primary.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.EDIT)")
+                    a.button.is-primary.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.EDIT, user)")
                         span.icon.is-small
                             i.material-icons.icon check_circle
                         span ویرایش
-                    a.button.is-warning.is-rounded.mt-2(href="#", @click.prevent="commandClick(ENUMS.COMMAND.DELETE)")
+                    a.button.is-warning.is-rounded.mt-2(href="#", @click.prevent="commandClick(ENUMS.COMMAND.DELETE, user)")
                         span.icon.is-small
                             i.material-icons.icon swap_horizontal_circle
                         span فعال/مسدود
@@ -38,8 +38,8 @@
 
 const ENUMS = require("JS-HELPERS/enums");
 module.exports = {
-    props: {
-        listUrl: {
+    props: {        listUrl: {
+
             type: String,
             default: ""
         }
@@ -73,8 +73,8 @@ module.exports = {
          *
          * @param      {Object}  arg     The argument
          */
-        commandClick(arg) {
-            this.$emit("on-command", arg);
+        commandClick(arg, data) {
+            this.$emit("on-command", {arg, data});
         },
 
         /**

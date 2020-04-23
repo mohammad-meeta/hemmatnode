@@ -75,6 +75,10 @@ module.exports = {
         }
     },
 
+    mounted() {
+
+    },
+
     computed: {
         isLoadingMode: state => state.showLoadingFlag == true,
         showNotification: state => state.notificationMessage != null

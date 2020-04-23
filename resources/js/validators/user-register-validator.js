@@ -21,6 +21,18 @@ UserRegisterValidator.validate = function validate(data) {
         nationCode: 'required|nationCode',
         cellphone: 'required|cellphone'
     };
-
+    let options = {
+        lang : "fa",
+        attributes : {
+            name: 'نام کاربری',
+            email: 'پست الکترونیک',
+            password: 'گذرواژه',
+            firstName: 'نام',
+            lastName: 'نام خانوادگی',
+            nationCode: 'کد ملی',
+            cellphone: 'شماره موبایل'
+        }
+    };
     return BaseValidator.validate(data, rules, options);
 };
+

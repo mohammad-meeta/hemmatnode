@@ -86,7 +86,7 @@ module.exports = {
          */
         loadUserData(id) {
             const url = this.editUrl.replace("$userData$", id);
-
+            console.log(url);
             AxiosHelper.send("get", url, {}).then(res => {
                 const data = res.data;
 

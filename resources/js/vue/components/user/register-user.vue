@@ -82,9 +82,7 @@ module.exports = {
             roles: {},
             isActive: false
         },
-        roles: [
-             "superadmin", "admin", "karmand1"
-        ],
+        roles: ["superadmin", "admin", "karmand1"],
         notificationMessage: null,
         notificationType: "is-info",
         showLoadingFlag: false
@@ -154,18 +152,17 @@ module.exports = {
                 return;
             }
             let userData = {
-                    name: this.userData.name,
-                    password: this.userData.password,
-                    email: this.userData.email,
-                    first_name: this.userData.firstName,
-                    last_name: this.userData.lastName,
-                    nation_code: this.userData.nationCode,
-                    cellphone: this.userData.cellphone,
-                    roles: this.userData.roles,
-                    is_active: this.userData.isActive
-                }
-            Object.keys(userData.roles)
-                .filter(key => userData.roles[key]);
+                name: this.userData.name,
+                password: this.userData.password,
+                email: this.userData.email,
+                first_name: this.userData.firstName,
+                last_name: this.userData.lastName,
+                nation_code: this.userData.nationCode,
+                cellphone: this.userData.cellphone,
+                roles: this.userData.roles,
+                is_active: this.userData.isActive
+            };
+            Object.keys(userData.roles).filter(key => userData.roles[key]);
             this.showLoading();
 
             const url = this.registerUrl;
@@ -176,11 +173,10 @@ module.exports = {
                         ".کاربر با موفقیت ذخیره شد",
                         "is-success"
                     );
-                    console.log(data);
                 })
                 .catch(err => {
-                    console.error(err);
-                    this.setNotification(".خطا در ذخیره کاربر", "is-danger");
+                    const data = err.response.data;
+                    this.setNotification(data, "is-danger");
                 })
                 .then(() => this.hideLoading());
         },

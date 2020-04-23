@@ -14,6 +14,13 @@ UserRegisterValidator.async = true;
 /**
  * Validation funciton
  */
+UserRegisterValidator.lang = function lang() {
+    return 'fa';
+};
+
+/**
+ * Validation funciton
+ */
 UserRegisterValidator.validate = function validate(req, res, next) {
 
     validator.validate(UserRegisterValidator, req, res, next);
@@ -40,7 +47,7 @@ UserRegisterValidator.data = function data(req) {
 UserRegisterValidator.rules = function rules() {
     return {
         'name': 'required|min:3|max:25|user_name_available',
-        'password': 'required|size:6',
+        'password': 'required|min:6',
         'email': 'required|email|email_available',
         'first_name': 'required|min:3|max:25',
         'last_name': 'required|min:4|max:25',

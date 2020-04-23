@@ -38,5 +38,11 @@ PugView.viewPath = {
     'article.index': 'pages/article/index.pug',
     'article.create': 'pages/article/register.pug',
     'article.show': 'pages/article/show.pug',
-    'article.edit': 'pages/article/edit.pug'
+    'article.edit': 'pages/article/edit.pug',
+
+    /* Role */
+    'role.index': 'pages/role/index.pug',
+    'role.create': 'pages/role/register.pug',
+    'role.show': 'pages/role/show.pug',
+    'role.edit': 'pages/role/edit.pug',
 };

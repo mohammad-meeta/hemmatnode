@@ -15,12 +15,12 @@ UserLoginValidator.validate = function validate(req, res, next) {
     validator.validate(UserLoginValidator, req, res, next);
 };
 
-// /**
-//  * Validation funciton
-//  */
-// UserLoginValidator.lang = function lang() {
-//     return 'en';
-// };
+/**
+ * Validation funciton
+ */
+UserLoginValidator.lang = function lang() {
+    return 'fa';
+};
 
 /**
  * Data function

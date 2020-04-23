@@ -15,6 +15,7 @@ UserRegisterValidator.validate = function validate(data) {
     const rules = {
         name: 'required|min:3|max:25',
         email: 'required|email',
+        password: 'required|min:6|confirmed',
         firstName: 'required',
         lastName: 'required',
         nationCode: 'required|nationCode',

@@ -5,6 +5,7 @@
                 .title
                     h1(v-show="modeList") کاربران
                     h1(v-show="modeRegister") ثبت نام کاربر جدید
+                    h1(v-show="modeEdit") ویرایش کاربر
         .columns.exposed-form(v-show="!modeLoading")
             .column.is-one-fifth(v-show="modeList")
                 a.button.is-primary.is-rounded(href="#",
@@ -29,6 +30,9 @@
 
             .column(v-show="!modeLoading && modeRegister")
                 register-user(@on-command="onCommand")
+
+            .column(v-show="!modeLoading && modeEdit")
+                edit-user(@on-command="onCommand")
 </template>
 
 <script>
@@ -111,6 +115,7 @@ module.exports = {
                 case ENUMS.COMMAND.EDIT:
                     /* TODO: REGISTER NEW USER */
                     console.log("EDIT USER", arg);
+                    this.changeFormMode(ENUMS.FORM_MODE.EDIT);
                     break;
 
                 case ENUMS.COMMAND.CANCEL:

@@ -22,5 +22,5 @@ UserRegisterValidator.validate = function validate(data) {
         cellphone: 'required|cellphone'
     };
 
-    return BaseValidator.validate(data, rules);
+    return BaseValidator.validate(data, rules, options);
 };

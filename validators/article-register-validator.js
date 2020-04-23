@@ -14,6 +14,14 @@ ArticleRegisterValidator.async = true;
 /**
  * Validation funciton
  */
+ArticleRegisterValidator.lang = function lang() {
+    return 'fa';
+};
+
+
+/**
+ * Validation funciton
+ */
 ArticleRegisterValidator.validate = function validate(req, res, next) {
 
     validator.validate(ArticleRegisterValidator, req, res, next);

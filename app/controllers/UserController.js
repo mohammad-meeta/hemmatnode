@@ -5,7 +5,7 @@ const UserHelper = use('app/helpers/user-helper');
 /**
  * Auth controller
  */
-function UserController() { }
+function UserController() {}
 module.exports = UserController;
 
 /**
@@ -170,7 +170,7 @@ UserController.store = async function store(req, res, next) {
         "pwd": password,
         "email": req.body.email,
         "cellphone": req.body.cellphone,
-        "is_active": false,
+        "is_active": req.body.is_active || false,
         "profile": {
             "first_name": req.body.first_name,
             "last_name": req.body.last_name,

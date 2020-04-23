@@ -5,11 +5,12 @@ const PugView = use('app/helpers/pug-view');
 const Auth = use('core/helpers/auth-helper');
 const authConfig = use('config/auth');
 const Events = use('core/modules/events-module');
+const UserHelper = use('app/helpers/user-helper');
 
 /**
  * Auth controller
  */
-function AuthController() { }
+function AuthController() {}
 module.exports = AuthController;
 
 /**
@@ -22,6 +23,25 @@ AuthController.login = function login(req, res, next) {
         req,
         pageRoute
     });
+};
+
+/**
+ * load profile function
+ */
+AuthController.profile = function profile(req, res, next) {
+    const userName = req.session.auth.userName;
+
+    UserHelper.loadUserData(userName)
+        .then(data => {
+            const result = {
+                success: true,
+                data: data
+            };
+            res.status(200)
+                .send(result)
+                .end();
+        })
+        .catch(err => console.error(err));
 };
 
 /**
@@ -49,7 +69,19 @@ AuthController.attempt = function attempt(req, res, next) {
             };
             /* If username & password are correct */
             if (null != data) {
-                loginResult.success = true;
+
+                if (user != null) {
+                    req.session.auth = {
+                        userName: data.name,
+                        userId: data._id
+                    };
+
+                    loginResult.success = true;
+                    loginResult.data = Auth.sign(req.session.auth);
+                } else {
+                    loginResult.success = false;
+                    loginResult.data = "Invalid Username and Password";
+                }
 
                 loginResult.data = Auth.sign({
                     id: data._id,
@@ -80,5 +112,4 @@ AuthController.attempt = function attempt(req, res, next) {
             }
         })
         .catch(err => console.error(err));
-
 };

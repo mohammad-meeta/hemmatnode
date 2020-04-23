@@ -1,5 +1,7 @@
 'use strict';
-
+const {
+    checkSession
+} = use('app/helpers/auth-helper');
 const validator = use('validators/user-login-validator');
 const authHelper = use('core/helpers/auth-helper');
 
@@ -15,3 +17,10 @@ Router.post('/auth/login', [
         'Auth@attempt'
     ])
     .as('auth.attempt');
+
+Router.get('/auth/profile', [
+        checkSession,
+        global.csrf,
+        'Auth@profile'
+    ])
+    .as('auth.profile');

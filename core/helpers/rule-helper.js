@@ -1,12 +1,26 @@
 'use strict';
 
+const _ = require('lodash');
 const createError = require('http-errors');
 
 /**
  * User-rule class
  */
-function Rule() { }
+function Rule() {}
 module.exports = Rule;
+
+/* Default values */
+Rule.authToken = config('app', 'auth_token');
+
+/**
+ * Get auth token
+ */
+Rule.getAuthToken = function getAuthToken(req, authToken) {
+    const tokenName = authToken || Rule.authToken || 'auth';
+    const token = _.get(req, tokenName, null);
+
+    return token;
+};
 
 /**
  * Can function
@@ -14,7 +28,7 @@ module.exports = Rule;
  * @param      {Object}   payload  The payload
  * @return     {boolean}  User can/can't do action
  */
-Rule.can = function can(ruleName, data) {
+Rule.can = function can(ruleName, data, authToken) {
     /* Prepare ruleName for loading from sub-folders */
     ruleName = ruleName.replace(/\./g, '\/');
 
@@ -29,7 +43,7 @@ Rule.can = function can(ruleName, data) {
 
     /* Return check function */
     return (req, res, next) => {
-        const user = req.user;
+        const user = Rule.getAuthToken(req, authToken);
         const result = RuleModule.check(user, data);
 
         if (result) {
@@ -46,7 +60,7 @@ Rule.can = function can(ruleName, data) {
  * @param      {Object}   payload  The payload
  * @return     {boolean}  User can/can't do action
  */
-Rule.canAsync = function canAsync(ruleName, data) {
+Rule.canAsync = function canAsync(ruleName, data, authToken) {
     /* Prepare ruleName for loading from sub-folders */
     ruleName = ruleName.replace(/\./g, '\/');
 
@@ -61,10 +75,10 @@ Rule.canAsync = function canAsync(ruleName, data) {
 
     /* Return check function */
     return (req, res, next) => {
-        const user = req.user;
+        const user = Rule.getAuthToken(req, authToken);
+
         RuleModule.check(user, data)
             .then(result => {
-
                 if (result) {
                     next();
                 } else {

@@ -54,7 +54,23 @@ AuthController.attempt = function attempt(req, res, next) {
                     userId: data._id
                 };
 
+<<<<<<< HEAD
                 loginResult.success = true;
+=======
+    if (user != null) {
+        req.session.auth = {
+            id: 100,
+            username: data.username,
+            password: data.password,
+        };
+
+        loginResult.success = true;
+        loginResult.data = Auth.sign(req.session.auth);
+    } else {
+        loginResult.success = false;
+        loginResult.data = "Invalid Username and Password";
+    }
+>>>>>>> da705d6bc8de3c2e6485e8f3e5f2323e1a9f81a1
 
                 loginResult.data = Auth.sign({
                     id: data._id,

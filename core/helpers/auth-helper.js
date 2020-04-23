@@ -90,6 +90,7 @@ AuthHelper.checkAuth = function checkAuth(req, res, next) {
  */
 AuthHelper.clearAuth = function checkAuth(req, res, next) {
     res.cookie('token', null, authConfig.cookie.options);
+    req.session.destroy();
 
     if (isAjax(req)) {
         res.status(200)

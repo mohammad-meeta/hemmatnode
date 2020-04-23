@@ -3,7 +3,7 @@
 const Rule = use('core/helpers/rule-helper');
 
 Router.get('/redis/test', [
-        // Rule.can('redis.rule1'),
+        Rule.can('redis.rule1'),
         function (req, res, next) {
             if (req.session.time) {
                 req.session.time++;

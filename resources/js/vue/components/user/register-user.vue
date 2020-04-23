@@ -15,6 +15,14 @@
                 .control
                     input.input(type='email', placeholder='پست الکترونیک', v-model='userData.email' required)
             .field
+                label.label گذر واژه
+                .control
+                    input.input(type='password', placeholder='گذر واژه', v-model='userData.password' required)
+            .field
+                label.label تایید گذر واژه
+                .control
+                    input.input(type='password', placeholder='تایید گذر واژه', v-model='userData.password_confirmation' required)
+            .field
                 label.label نام
                 .control
                     input.input(type='text', placeholder='نام', v-model='userData.firstName' required)
@@ -149,9 +157,9 @@ module.exports = {
                     name: this.userData.name,
                     password: this.userData.password,
                     email: this.userData.email,
-                    first_name: this.userData.first_name,
-                    last_name: this.userData.last_name,
-                    nation_code: this.userData.nation_code,
+                    first_name: this.userData.firstName,
+                    last_name: this.userData.lastName,
+                    nation_code: this.userData.nationCode,
                     cellphone: this.userData.cellphone,
                     roles: this.userData.roles,
                     is_active: this.userData.isActive

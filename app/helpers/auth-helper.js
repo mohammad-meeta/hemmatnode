@@ -36,3 +36,15 @@ AuthHelper.loadUserData = function loadUserData(userData) {
             .catch(err => reject(err));
     });
 };
+
+/**
+ * Check session
+ */
+AuthHelper.checkSession = function checkSession(req, res, next) {
+    if (req.session.auth) {
+        next();
+    }
+    else {
+        res.redirect(route('auth.login'));
+    }
+};

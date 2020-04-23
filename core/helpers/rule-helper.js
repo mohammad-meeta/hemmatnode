@@ -6,7 +6,7 @@ const createError = require('http-errors');
 /**
  * User-rule class
  */
-function Rule() { }
+function Rule() {}
 module.exports = Rule;
 
 /* Default values */
@@ -60,7 +60,7 @@ Rule.can = function can(ruleName, data, authToken) {
  * @param      {Object}   payload  The payload
  * @return     {boolean}  User can/can't do action
  */
-Rule.canAsync = function canAsync(ruleName, data) {
+Rule.canAsync = function canAsync(ruleName, data, authToken) {
     /* Prepare ruleName for loading from sub-folders */
     ruleName = ruleName.replace(/\./g, '\/');
 

@@ -167,7 +167,7 @@ UserController.store = async function store(req, res, next) {
 
     const data = {
         "name": req.body.name,
-        "pwd": password,
+        "pwd": req.body.password,
         "email": req.body.email,
         "cellphone": req.body.cellphone,
         "is_active": req.body.is_active || false,

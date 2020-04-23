@@ -1,37 +1,35 @@
 <template lang="pug">
-div
-    .columns.is-vcentered
-        .column
-            h1(v-if="! hasUsers") کاربری ثبت نام نکرده!
-            table.table.is-striped.is-hoverable.is-fullwidth(v-if="hasUsers")
-                thead
-                    tr
-                        th نام کاربری
-                        th پست الکترونیک
-                        th نام و نام خانوادگی
-                        th کد ملی
-                        th شماره موبایل
-                        th وضعیت
-                        th تاریخ ثبت نام
-                        th عملیات
-                tbody
-                    tr(v-for='user in users', :key='user.id')
-                        td {{ user.name }}
-                        td {{ user.email }}
-                        td {{ user.profile.first_name }} {{ user.profile.last_name }}
-                        td {{ user.profile.nation_code }}
-                        td {{ user.cellphone }}
-                        td {{ user.is_active }}
-                        td {{ toPersianDate(user.created_at) }}
-                        td
-                            a.button.is-primary.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.EDIT)")
-                                span.icon.is-small
-                                    i.material-icons.icon check_circle
-                                span ویرایش
-                            a.button.is-warning.is-rounded.mt-2(href="#", @click.prevent="commandClick(ENUMS.COMMAND.DELETE)")
-                                span.icon.is-small
-                                    i.material-icons.icon swap_horizontal_circle
-                                span فعال/مسدود
+.container-child
+    h1(v-if="! hasUsers") کاربری ثبت نام نکرده!
+    table.table.is-striped.is-hoverable.is-fullwidth(v-if="hasUsers")
+        thead
+            tr
+                th نام کاربری
+                th پست الکترونیک
+                th نام و نام خانوادگی
+                th کد ملی
+                th شماره موبایل
+                th وضعیت
+                th تاریخ ثبت نام
+                th عملیات
+        tbody
+            tr(v-for='user in users', :key='user.id')
+                td {{ user.name }}
+                td {{ user.email }}
+                td {{ user.profile.first_name }} {{ user.profile.last_name }}
+                td {{ user.profile.nation_code }}
+                td {{ user.cellphone }}
+                td {{ user.is_active }}
+                td {{ toPersianDate(user.created_at) }}
+                td.function-links
+                    a.button.is-primary.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.EDIT)")
+                        span.icon.is-small
+                            i.material-icons.icon check_circle
+                        span ویرایش
+                    a.button.is-warning.is-rounded.mt-2(href="#", @click.prevent="commandClick(ENUMS.COMMAND.DELETE)")
+                        span.icon.is-small
+                            i.material-icons.icon swap_horizontal_circle
+                        span فعال/مسدود
 
 </template>
 

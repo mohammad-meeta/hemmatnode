@@ -3,15 +3,8 @@ extends ../../layout/app.pug
 block title
     | کاربران
 
-block heading
-    section.hero
-        .container.page-header
-            .title
-                h1 کاربران
-
 block content
-    h1= route('api.user', { page: 1, size: 10 })
-    .container.has-text-centered
+    .container
         users(list-url=route('api.user', { page: 1, size: 10 }),
             register-user=route('user.create')
         )

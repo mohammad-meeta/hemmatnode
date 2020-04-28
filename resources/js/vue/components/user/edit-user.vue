@@ -112,7 +112,7 @@ module.exports = {
          */
         loadUserData(data) {
             const temp = {
-                _id: data.id,
+                _id: data._id,
                 name: data.name,
                 password: data.password,
                 email: data.email,

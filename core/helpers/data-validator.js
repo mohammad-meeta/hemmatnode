@@ -17,21 +17,21 @@ DataValidator.validate = function validate(customValidator, req, res, next) {
     let messages = {};
     let attributes = {};
     let lang = req.lang || 'en';
-    
+
     if (customValidator.data) {
         data = customValidator.data(req);
     }
 
     if (customValidator.rules) {
-        rules = customValidator.rules();
+        rules = customValidator.rules(req);
     }
 
     if (customValidator.messages) {
-        messages = customValidator.messages();
+        messages = customValidator.messages(req);
     }
 
     if (customValidator.attributes) {
-        attributes = customValidator.attributes();
+        attributes = customValidator.attributes(req);
     }
 
 

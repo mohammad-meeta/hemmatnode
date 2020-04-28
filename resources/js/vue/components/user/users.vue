@@ -29,7 +29,7 @@
                 list-user(ref="userList", @on-command="onCommand", :list-url="listUrl")
 
             .column(v-show="!modeLoading && modeRegister")
-                register-user(@on-command="onCommand")
+                register-user(@on-command="onCommand", :roles-url="rolsUrl")
 
             .column(v-show="!modeLoading && modeEdit")
                 edit-user(ref="userEdit", @on-command="onCommand")
@@ -68,6 +68,11 @@ module.exports = {
         },
 
         listUrl: {
+            type: String,
+            default: null
+        },
+
+        rolesUrl: {
             type: String,
             default: null
         },

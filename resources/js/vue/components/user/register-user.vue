@@ -93,6 +93,7 @@ module.exports = {
             type: String,
             default: ""
         },
+
         rolesUrl: {
             type: String,
             default: ""
@@ -126,7 +127,7 @@ module.exports = {
          * load all roles for select roles in form
          */
         loadRoles() {
-            let roles = ["superadmin", "admin", "karmand1"];
+            //let roles = ["superadmin", "admin", "karmand1"];
 
             const url = this.rolesUrl;
 

@@ -72,6 +72,7 @@ module.exports = {
     data: () => ({
         ENUMS,
         userData: {
+            _id: null,
             name: null,
             password: null,
             email: null,
@@ -111,6 +112,7 @@ module.exports = {
          */
         loadUserData(data) {
             const temp = {
+                _id: data.id,
                 name: data.name,
                 password: data.password,
                 email: data.email,

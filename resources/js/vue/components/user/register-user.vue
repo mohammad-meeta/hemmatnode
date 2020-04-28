@@ -92,6 +92,10 @@ module.exports = {
         registerUrl: {
             type: String,
             default: ""
+        },
+        rolesUrl: {
+            type: String,
+            default: ""
         }
     },
 
@@ -123,6 +127,17 @@ module.exports = {
          */
         loadRoles() {
             let roles = ["superadmin", "admin", "karmand1"];
+
+            const url = this.rolesUrl;
+
+            AxiosHelper.send("get", url, "").then(res => {
+                const data = res.data;
+
+                console.log(data);
+                Vue.set(this.userData, "roles", data.data);
+            });
+
+
             Vue.set(this.userData, "roles", roles);
         },
 

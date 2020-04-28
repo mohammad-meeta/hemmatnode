@@ -39,7 +39,7 @@
                 .control
                     input.input(type='text', placeholder='شماره موبایل', v-model='userData.cellphone' required)
             .field
-                label.checkbox(v-for='role in roles')
+                label.checkbox(v-for='role in userData.roles')
                     input(type='checkbox', v-model="userData.roles[role]", :value="role")
                     |   {{ role }}
             .field
@@ -79,10 +79,10 @@ module.exports = {
             lastName: null,
             nationCode: null,
             cellphone: null,
-            roles: {},
+            roles: [],
             isActive: false
         },
-        roles: ["superadmin", "admin", "karmand1"],
+
         notificationMessage: null,
         notificationType: "is-info",
         showLoadingFlag: false
@@ -93,6 +93,10 @@ module.exports = {
             type: String,
             default: ""
         }
+    },
+
+    mounted() {
+        this.loadRoles();
     },
 
     computed: {
@@ -112,6 +116,14 @@ module.exports = {
                     this.registerUser();
                     break;
             }
+        },
+
+        /**
+         * load all roles for select roles in form
+         */
+        loadRoles() {
+            let roles = ["superadmin", "admin", "karmand1"];
+            Vue.set(this.userData, "roles", roles);
         },
 
         /**

@@ -15,6 +15,14 @@
                     .control
                         input.input(type='email', placeholder='پست الکترونیک', v-model='userData.email' required)
                 .field
+                    label.label گذر واژه
+                    .control
+                        input.input(type='password', placeholder='گذر واژه', v-model='userData.password' required)
+                .field
+                    label.label تایید گذر واژه
+                    .control
+                        input.input(type='password', placeholder='تایید گذر واژه', v-model='userData.password_confirmation' required)
+                .field
                     label.label نام
                     .control
                         input.input(type='text', placeholder='نام', v-model='userData.firstName' required)
@@ -30,6 +38,14 @@
                     label.label شماره موبایل
                     .control
                         input.input(type='text', placeholder='شماره موبایل', v-model='userData.cellphone' required)
+                .field
+                    label.checkbox(v-for='role in roles')
+                        input(type='checkbox', v-model="userData.roles[role]", :value="role")
+                        |   {{ role }}
+                .field
+                    label.checkbox
+                        input(type='checkbox', v-model="userData.isActive")
+                        |   فعال
                 .field.is-grouped
                     .control(v-show="! isLoadingMode")
                         a.button.is-link.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
@@ -44,6 +60,7 @@
 
 const AxiosHelper = require("JS-HELPERS/axios-helper");
 const ENUMS = require("JS-HELPERS/enums");
+const UserValidator = require("JS-VALIDATORS/user-register-validator");
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
 module.exports = {
@@ -61,8 +78,11 @@ module.exports = {
             firstName: null,
             lastName: null,
             nationCode: null,
-            cellphone: null
+            cellphone: null,
+            roles: {},
+            is_active: false
         },
+        roles: ["superadmin", "admin", "karmand1"],
         notificationMessage: null,
         notificationType: "is-info",
         showLoadingFlag: false,
@@ -72,7 +92,8 @@ module.exports = {
         editUrl: {
             type: String,
             default: ""
-        }
+        },
+        userDatas: {}
     },
 
     mounted() {
@@ -86,16 +107,21 @@ module.exports = {
 
     methods: {
         /**
-         * Load users
+         * Load specific user
          */
-        loadUserData(id) {
-            const url = this.editUrl.replace("$userData$", id);
-            console.log(url);
-            AxiosHelper.send("get", url, {}).then(res => {
-                const data = res.data;
-
-                Vue.set(this, "userData", data.data);
-            });
+        loadUserData(data) {
+            const temp = {
+                name: data.name,
+                password: data.password,
+                email: data.email,
+                firstName: data.profile.first_name,
+                lastName: data.profile.last_name,
+                nationCode: data.profile.nation_code,
+                cellphone: data.cellphone,
+                roles: data.roles,
+                is_active: data.isActive
+            };
+            Vue.set(this, "userData", temp);
         },
 
         /**

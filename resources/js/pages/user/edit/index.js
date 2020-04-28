@@ -28,7 +28,7 @@ Edit.initVue = function () {
             },
 
             mounted() {
-                this.init();
+
             },
 
             methods: {
@@ -37,7 +37,7 @@ Edit.initVue = function () {
                 },
 
                 loadUserData() {
-                    this.$refs.userEdit.loadUserData(1);
+                    this.$refs.userEdit.loadUserData();
                 }
             },
         });

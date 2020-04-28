@@ -32,7 +32,7 @@
                 register-user(@on-command="onCommand")
 
             .column(v-show="!modeLoading && modeEdit")
-                edit-user(@on-command="onCommand")
+                edit-user(ref="userEdit", @on-command="onCommand")
 </template>
 
 <script>
@@ -102,10 +102,11 @@ module.exports = {
          * On commands clicked
          */
         onCommand(payload) {
-            console.log(payload);
-            const arg = payload.arg;
-            const data = payload.data;
-
+            let arg = payload.arg || null;
+            const data = payload.data || {};
+            if(null == arg) {
+                arg = payload;
+            }
             switch (arg) {
                 case ENUMS.COMMAND.NEW:
                     this.changeFormMode(ENUMS.FORM_MODE.REGISTER);
@@ -118,6 +119,8 @@ module.exports = {
 
                 case ENUMS.COMMAND.EDIT:
                     /* TODO: REGISTER NEW USER */
+                     this.$refs.userEdit.loadUserData(data);
+
                     console.log("EDIT USER", arg);
                     this.changeFormMode(ENUMS.FORM_MODE.EDIT);
                     break;

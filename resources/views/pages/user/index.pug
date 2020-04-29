@@ -6,7 +6,7 @@ block title
 block content
     .container
         users(list-url=route('api.user', { page: 1, size: 10 }),
-            roles-url=route('api.roles', { page: 1, size: 1000 }),
+            roles-url=route('api.role', { page: 1, size: 1000 }),
             register-url=route('user.create'),
             edit-url=route('user.update', { id :'$id$'})
         )

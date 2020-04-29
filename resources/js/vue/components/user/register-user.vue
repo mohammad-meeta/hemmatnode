@@ -39,9 +39,9 @@
                 .control
                     input.input(type='text', placeholder='شماره موبایل', v-model='userData.cellphone' required)
             .field
-                label.checkbox(v-for='role in userData.roles')
+                label.checkbox(v-for='role in roles')
                     input(type='checkbox', v-model="userData.roles[role]", :value="role")
-                    |   {{ role }}
+                    |   {{ role.name }}
             .field
                 label.checkbox
                     input(type='checkbox', v-model="userData.isActive")
@@ -71,6 +71,7 @@ module.exports = {
 
     data: () => ({
         ENUMS,
+        roles : [],
         userData: {
             name: null,
             password: null,
@@ -127,19 +128,16 @@ module.exports = {
          * load all roles for select roles in form
          */
         loadRoles() {
-            let roles = ["superadmin", "admin", "karmand1"];
+            //let roles = ["superadmin", "admin", "karmand1"];
 
-           /* const url = this.rolesUrl;
+            const url = this.rolesUrl;
 
             AxiosHelper.send("get", url, "").then(res => {
-                const data = res.data;
+                const datas = res.data.data;
+                Vue.set(this, "roles", datas);
+            });
 
-                console.log(data);
-                Vue.set(this.userData, "roles", data.data);
-            });*/
-
-
-            Vue.set(this.userData, "roles", roles);
+//            Vue.set(this.userData, "roles", roles);
         },
 
         /**

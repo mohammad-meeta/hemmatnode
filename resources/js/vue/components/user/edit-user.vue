@@ -214,7 +214,7 @@ module.exports = {
          * Validate new user data
          */
         validate() {
-            const result = UserValidator.validate(this.userData);
+            const result = UserValidator.validateEdit(this.userData);
 
             if (result.passes) {
                 this.closeNotification();

@@ -29,7 +29,7 @@
                 list-user(ref="userList", @on-command="onCommand", :list-url="listUrl")
 
             .column(v-show="!modeLoading && modeRegister")
-                register-user(@on-command="onCommand", :roles-url="rolsUrl")
+                register-user(@on-command="onCommand", :roles-url="rolesUrl")
 
             .column(v-show="!modeLoading && modeEdit")
                 edit-user(ref="userEdit", @on-command="onCommand")

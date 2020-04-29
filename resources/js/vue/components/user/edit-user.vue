@@ -190,7 +190,7 @@ module.exports = {
                 is_active: this.userData.isActive
             };
             const url = this.editUrl;
-            AxiosHelper.send("post", url, userData)
+            AxiosHelper.send("patch", url, userData)
                 .then(res => {
                     const data = res.data;
                     this.setNotification(

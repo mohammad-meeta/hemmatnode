@@ -44,7 +44,7 @@ UserRegisterValidator.data = function data(req) {
  * Rules function
  */
 UserRegisterValidator.rules = function rules(req) {
-    const id = req.body._id;
+    const id = req.body._id || 'XXX';
 
     return {
         'name': 'required|min:3|max:25|user_name_available:' + id,

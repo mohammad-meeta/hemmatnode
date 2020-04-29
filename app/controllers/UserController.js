@@ -96,7 +96,7 @@ UserController.editUserData = async function editUserData(req, res, next) {
  */
 UserController.update = async function update(req, res, next) {
     let data = {};
-    if (req.body.password.length == 0) {
+    if (req.body.password == undefined) {
         data = {
             "_id": req.body._id,
             "name": req.body.name,
@@ -174,16 +174,12 @@ UserController.create = async function create(req, res, next) {
  * store data user
  */
 UserController.store = async function store(req, res, next) {
-    let password = PasswordGenerator.generate({
-        length: 15,
-        numbers: true,
-        symbols: true
-    });
 
     const data = {
         "name": req.body.name,
         "pwd": req.body.password,
         "email": req.body.email,
+        "roles": req.body.roles || [],
         "cellphone": req.body.cellphone,
         "is_active": req.body.is_active || false,
         "profile": {

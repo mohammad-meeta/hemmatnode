@@ -190,7 +190,7 @@ module.exports = {
                 is_active: this.userData.isActive
             };
 
-            const data = JSON.stringify(userData);
+            //const data = JSON.stringify(userData);
             const url = this.editUrl.replace("$data$", data);
             AxiosHelper.send("patch", url, userData)
                 .then(res => {

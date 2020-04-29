@@ -80,8 +80,8 @@ module.exports = {
             lastName: null,
             nationCode: null,
             cellphone: null,
-            roles: {},
-            is_active: false
+            roles: [],
+            isActive: false
         },
         roles: ["superadmin", "admin", "karmand1"],
         notificationMessage: null,
@@ -121,7 +121,7 @@ module.exports = {
                 nationCode: data.profile.nation_code,
                 cellphone: data.cellphone,
                 roles: data.roles,
-                is_active: data.isActive
+                isActive: data.isActive
             };
             Vue.set(this, "userData", temp);
         },
@@ -176,11 +176,21 @@ module.exports = {
             if (!isValid) {
                 return;
             }
-
             this.showLoading();
-
+            let userData = {
+                _id: this.userData._id,
+                name: this.userData.name,
+                password: this.userData.password,
+                email: this.userData.email,
+                first_name: this.userData.firstName,
+                last_name: this.userData.lastName,
+                nation_code: this.userData.nationCode,
+                cellphone: this.userData.cellphone,
+                roles: this.userData.roles,
+                is_active: this.userData.isActive
+            };
             const url = this.editUrl;
-            AxiosHelper.send("post", url, this.userData)
+            AxiosHelper.send("post", url, userData)
                 .then(res => {
                     const data = res.data;
                     this.setNotification(

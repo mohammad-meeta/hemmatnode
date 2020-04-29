@@ -127,16 +127,16 @@ module.exports = {
          * load all roles for select roles in form
          */
         loadRoles() {
-            //let roles = ["superadmin", "admin", "karmand1"];
+            let roles = ["superadmin", "admin", "karmand1"];
 
-            const url = this.rolesUrl;
+           /* const url = this.rolesUrl;
 
             AxiosHelper.send("get", url, "").then(res => {
                 const data = res.data;
 
                 console.log(data);
                 Vue.set(this.userData, "roles", data.data);
-            });
+            });*/
 
 
             Vue.set(this.userData, "roles", roles);

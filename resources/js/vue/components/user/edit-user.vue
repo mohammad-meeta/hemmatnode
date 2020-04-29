@@ -192,11 +192,8 @@ module.exports = {
                 roles: this.userData.roles,
                 is_active: this.userData.isActive
             };
-
-            console.log(userData, this.editUrl);
-            return;
-
-            const url = this.editUrl.replace("$data$", userData._id);
+            const url = this.editUrl.replace("$id$", userData._id);
+            console.log(url);
             AxiosHelper.send("patch", url, userData)
                 .then(res => {
                     const data = res.data;

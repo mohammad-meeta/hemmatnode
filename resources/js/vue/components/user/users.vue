@@ -80,6 +80,11 @@ module.exports = {
         registerUrl: {
             type: String,
             default: null
+        },
+
+        editUrl: {
+            type: String,
+            default: null
         }
     },
 

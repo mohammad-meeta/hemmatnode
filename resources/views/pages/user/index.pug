@@ -6,7 +6,8 @@ block title
 block content
     .container
         users(list-url=route('api.user', { page: 1, size: 10 }),
-            register-user=route('user.create')
+            register-user=route('user.create'),
+            edit-user=route('user.update', { data:'$data$'})
         )
 
 block scripts

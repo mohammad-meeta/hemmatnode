@@ -105,7 +105,7 @@ ArticleController.update = async function update(req, res, next) {
         "files": req.body.files || [],
         "is_active": req.body.is_active || false
     };
-    console.log(data)
+
     const ArticleUpdate = ArticleHelper.updateArticleData(data)
         .then(data => {
             const result = {

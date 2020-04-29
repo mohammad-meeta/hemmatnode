@@ -16,7 +16,6 @@ Validator.registerAsync('user_name_available', function (username, attribute, re
             name: 1
         }, {})
         .then(res => {
-            console.log(res)
             if (res == null) {
                 passes();
             } else {
@@ -55,9 +54,7 @@ Validator.registerAsync('email_available', function (email, attribute, req, pass
 });
 
 /**********password available**************** */
-Validator.register('password_available', function (password, attribute, req, passes) {
-    console.log(password)
-    console.log(attribute)
+Validator.registerAsync('password_available', function (password, attribute, req, passes) {
 
     if (attribute == undefined) {
         if (password.length >= 6) {

@@ -40,7 +40,6 @@ UserController.paginateUserData = async function paginateUserData(req, res, next
         .catch(err => console.error(err));
 };
 
-
 /**
  * show route
  */
@@ -96,8 +95,9 @@ UserController.editUserData = async function editUserData(req, res, next) {
  * update data user
  */
 UserController.update = async function update(req, res, next) {
+    let data = {};
     if (req.body.password.length == 0) {
-        const data = {
+        data = {
             "_id": req.body._id,
             "name": req.body.name,
             "email": req.body.email,
@@ -110,7 +110,7 @@ UserController.update = async function update(req, res, next) {
             }
         };
     } else {
-        const data = {
+        data = {
             "_id": req.body._id,
             "name": req.body.name,
             "email": req.body.email,
@@ -122,7 +122,6 @@ UserController.update = async function update(req, res, next) {
                 "last_name": req.body.last_name,
                 "nation_code": req.body.nation_code
             }
-
         };
     }
     const UserUpdate = UserHelper.updateUserData(data)

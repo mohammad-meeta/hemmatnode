@@ -1,7 +1,6 @@
 'use strict';
 
 const validator = use('core/helpers/data-validator');
-const Validator = require('validatorjs');
 
 /**
  * User Login Validator
@@ -44,11 +43,13 @@ UserRegisterValidator.data = function data(req) {
 /**
  * Rules function
  */
-UserRegisterValidator.rules = function rules() {
+UserRegisterValidator.rules = function rules(req) {
+    const id = req.body._id;
+
     return {
-        'name': 'required|min:3|max:25|user_name_available',
-        'password': 'required|min:6',
-        'email': 'required|email|email_available',
+        'name': 'required|min:3|max:25|user_name_available:' + id,
+        'password': 'password_available:' + id,
+        'email': 'required|email|email_available:' + id,
         'first_name': 'required|min:3|max:25',
         'last_name': 'required|min:4|max:25',
         'nation_code': 'required|size:10',

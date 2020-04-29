@@ -23,7 +23,7 @@ DataValidator.validate = function validate(customValidator, req, res, next) {
     }
 
     if (customValidator.rules) {
-        rules = customValidator.rules();
+        rules = customValidator.rules(req);
     }
 
     if (customValidator.messages) {

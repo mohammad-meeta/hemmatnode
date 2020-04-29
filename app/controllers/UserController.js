@@ -96,19 +96,35 @@ UserController.editUserData = async function editUserData(req, res, next) {
  * update data user
  */
 UserController.update = async function update(req, res, next) {
-    const data = {
-        "_id": req.body._id,
-        "name": req.body.name,
-        "email": req.body.email,
-        "cellphone": req.body.cellphone,
-        "is_active": req.body.is_active,
-        "profile": {
-            "first_name": req.body.first_name,
-            "last_name": req.body.last_name,
-            "nation_code": req.body.nation_code
-        }
-    };
+    if (req.body.password.length == 0) {
+        const data = {
+            "_id": req.body._id,
+            "name": req.body.name,
+            "email": req.body.email,
+            "cellphone": req.body.cellphone,
+            "is_active": req.body.is_active,
+            "profile": {
+                "first_name": req.body.first_name,
+                "last_name": req.body.last_name,
+                "nation_code": req.body.nation_code
+            }
+        };
+    } else {
+        const data = {
+            "_id": req.body._id,
+            "name": req.body.name,
+            "email": req.body.email,
+            "pwd": req.body.password,
+            "cellphone": req.body.cellphone,
+            "is_active": req.body.is_active,
+            "profile": {
+                "first_name": req.body.first_name,
+                "last_name": req.body.last_name,
+                "nation_code": req.body.nation_code
+            }
 
+        };
+    }
     const UserUpdate = UserHelper.updateUserData(data)
         .then(data => {
             const result = {

@@ -55,7 +55,10 @@ Validator.registerAsync('email_available', function (email, attribute, req, pass
 });
 
 /**********password available**************** */
-Validator.registerAsync('password_available', function (password, attribute, req, passes) {
+Validator.register('password_available', function (password, attribute, req, passes) {
+    console.log(password)
+    console.log(attribute)
+
     if (attribute == undefined) {
         if (password.length >= 6) {
             passes();

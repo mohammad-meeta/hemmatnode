@@ -60,9 +60,10 @@ Router.get('/api/user/:userData/edit', [
     ])
     .as('api.user.edit');
 
-Router.patch('/user/:userData', [
+Router.patch('/user/:id', [
         checkSession,
         Rule.canAsync('user.permision', 'user.update'),
+        validator.validate,
         'User@update'
     ])
     .as('user.update');

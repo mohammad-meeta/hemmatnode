@@ -173,10 +173,13 @@ module.exports = {
          */
         editUser() {
             const isValid = this.validate();
+
             if (!isValid) {
                 return;
             }
+
             this.showLoading();
+
             let userData = {
                 _id: this.userData._id,
                 name: this.userData.name,
@@ -190,8 +193,10 @@ module.exports = {
                 is_active: this.userData.isActive
             };
 
-            //const data = JSON.stringify(userData);
-            const url = this.editUrl.replace("$data$", data);
+            console.log(userData, this.editUrl);
+            return;
+
+            const url = this.editUrl.replace("$data$", userData._id);
             AxiosHelper.send("patch", url, userData)
                 .then(res => {
                     const data = res.data;

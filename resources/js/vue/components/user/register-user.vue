@@ -40,7 +40,7 @@
                     input.input(type='text', placeholder='شماره موبایل', v-model='userData.cellphone' required)
             .field
                 label.checkbox(v-for='role in roles')
-                    input(type='checkbox', v-model="userData.roles[role]", :value="role")
+                    input(type='checkbox', v-model="userData.roles[role.name]", :value="role.name")
                     |   {{ role.name }}
             .field
                 label.checkbox

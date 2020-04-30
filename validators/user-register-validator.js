@@ -30,6 +30,7 @@ UserRegisterValidator.validate = function validate(req, res, next) {
  */
 UserRegisterValidator.data = function data(req) {
     return {
+        user_id: req.body.user_id,
         name: req.body.name,
         password: req.body.password,
         email: req.body.email,
@@ -47,6 +48,7 @@ UserRegisterValidator.rules = function rules(req) {
     const id = req.body._id || 'XXX';
 
     return {
+        'user_id': 'required',
         'name': 'required|min:3|max:25|user_name_available:' + id,
         'password': 'password_available:' + id,
         'email': 'required|email|email_available:' + id,
@@ -69,6 +71,7 @@ UserRegisterValidator.messages = function messages() {
  */
 UserRegisterValidator.attributes = function attributes() {
     return {
+        user_id: 'user_id',
         name: 'user_name',
         password: 'password',
         email: 'email',

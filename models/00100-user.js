@@ -35,6 +35,10 @@ Model.model = function model() {
             type: String,
             required: true
         },
+        'user_id': {
+            type: String,
+            required: true
+        },
         'email': {
             type: String,
             trim: true

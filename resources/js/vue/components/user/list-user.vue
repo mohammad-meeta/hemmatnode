@@ -48,7 +48,12 @@
 "use strict";
 
 const ENUMS = require("JS-HELPERS/enums");
+const Paginator = require("paginator").default;
 module.exports = {
+    components: {
+        Paginator
+    },
+
     props: {
         listUrl: {
             type: String,
@@ -93,6 +98,13 @@ module.exports = {
          */
         toPersianDate(date) {
             return DateHelper.toPersianDateLong(date);
+        },
+
+        /**
+         * Paginator
+         */
+        paginator(size, length ) {
+
         }
     }
 };

@@ -50,10 +50,6 @@
 const ENUMS = require("JS-HELPERS/enums");
 const Paginator = require("paginator").default;
 module.exports = {
-    components: {
-        Paginator
-    },
-
     props: {
         listUrl: {
             type: String,
@@ -63,7 +59,8 @@ module.exports = {
 
     data: () => ({
         ENUMS,
-        users: []
+        users: [],
+        usersCount: 0
     }),
 
     computed: {
@@ -76,11 +73,13 @@ module.exports = {
          */
         loadUsers() {
             const url = this.listUrl;
-
             AxiosHelper.send("get", url, "").then(res => {
-                const data = res.data;
+                const resData = res.data;
 
-                Vue.set(this, "users", data.data);
+                Vue.set(this, "users", resData.data.data);
+                Vue.set(this, "usersCount", resData.data.count);
+
+                this.paginator();
             });
         },
 
@@ -90,7 +89,7 @@ module.exports = {
          * @param      {Object}  arg     The argument
          */
         commandClick(arg, data) {
-            this.$emit("on-command", {arg, data});
+            this.$emit("on-command", { arg, data });
         },
 
         /**
@@ -103,8 +102,9 @@ module.exports = {
         /**
          * Paginator
          */
-        paginator(size, length ) {
-
+        paginator() {
+            var paginator = new Paginator(10, 6);
+            var pagination_info = paginator.build(this.usersCount, 50);
         }
     }
 };

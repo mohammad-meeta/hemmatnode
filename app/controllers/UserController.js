@@ -27,15 +27,24 @@ UserController.paginateUserData = async function paginateUserData(req, res, next
         pageSize: req.params.size || 10
     };
 
-    UserHelper.loadAllUserData(dataPaginate)
+    let count = 0;
+    UserHelper.loadAllCountUserData()
         .then(data => {
-            const result = {
-                success: true,
-                data: data
-            };
-            res.status(200)
-                .send(result)
-                .end();
+            count = data;
+            console.log(count)
+
+            UserHelper.loadAllUserData(dataPaginate)
+                .then(data => {
+                    const result = {
+                        success: true,
+                        data: data,
+                        count: count
+                    };
+                    res.status(200)
+                        .send(result)
+                        .end();
+                })
+                .catch(err => console.error(err));
         })
         .catch(err => console.error(err));
 };

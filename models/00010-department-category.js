@@ -26,10 +26,14 @@ Model.setup = function setup() {
  */
 Model.model = function model() {
     return {
-        'name': {
+        'title': {
             type: String,
             required: true,
             trim: true
+        },
+        'user_id': {
+            type: String,
+            required: true
         },
         'is_active': {
             type: Boolean,

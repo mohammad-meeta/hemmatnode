@@ -30,7 +30,7 @@ DepartmentCategoryValidator.validate = function validate(req, res, next) {
  */
 DepartmentCategoryValidator.data = function data(req) {
     return {
-        user_id: req.body.user_id,
+        user_id: req.session.auth.userId,
         title: req.body.title
     };
 };

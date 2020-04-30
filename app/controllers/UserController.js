@@ -31,7 +31,6 @@ UserController.paginateUserData = async function paginateUserData(req, res, next
     UserHelper.loadAllCountUserData()
         .then(data => {
             count = data;
-            console.log(count)
 
             UserHelper.loadAllUserData(dataPaginate)
                 .then(data => {
@@ -108,6 +107,7 @@ UserController.update = async function update(req, res, next) {
     if (req.body.password == undefined) {
         data = {
             "_id": req.body._id,
+            "user_id": req.session.auth.userId,
             "name": req.body.name,
             "email": req.body.email,
             "cellphone": req.body.cellphone,
@@ -121,6 +121,7 @@ UserController.update = async function update(req, res, next) {
     } else {
         data = {
             "_id": req.body._id,
+            "user_id": req.session.auth.userId,
             "name": req.body.name,
             "email": req.body.email,
             "pwd": req.body.password,
@@ -186,6 +187,7 @@ UserController.store = async function store(req, res, next) {
 
     const data = {
         "name": req.body.name,
+        "user_id": req.session.auth.userId,
         "pwd": req.body.password,
         "email": req.body.email,
         "roles": req.body.roles || [],

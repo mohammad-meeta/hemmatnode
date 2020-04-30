@@ -193,6 +193,7 @@ module.exports = {
                         .filter(key => true == userData.roles[key])
                         .map(key => key)
 
+            userData.roles = t;
             console.log(t);
 
             this.showLoading();

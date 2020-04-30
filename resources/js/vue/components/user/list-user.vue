@@ -30,6 +30,17 @@
                         span.icon.is-small
                             i.material-icons.icon swap_horizontal_circle
                         span فعال/مسدود
+    nav.pagination(role='navigation', aria-label='pagination')
+    a.pagination-previous(title='This is the first page', disabled='') صفحه قبل
+    a.pagination-next صفحه بعد
+    ul.pagination-list
+        li
+            a.pagination-link.is-current(aria-label='Page 1', aria-current='page') 1
+        li
+            a.pagination-link(aria-label='Goto page 2') 2
+        li
+            a.pagination-link(aria-label='Goto page 3') 3
+
 
 </template>
 

@@ -31,6 +31,22 @@ DepartmentCategoryHelper.loadAllDepCatData = function loadAllDepCatData(dataPagi
             .catch(err => reject(err));
     });
 };
+/**
+ * find all dep cat count data result 
+ */
+DepartmentCategoryHelper.loadAllDepCatCountData = function loadAllDepCatCountData() {
+    const DepartementCategory = mongoose.model('DepartementCategory');
+
+    const filterQuery = {};
+
+    return new Promise((resolve, reject) => {
+        DepartementCategory.countDocuments(filterQuery)
+            .then(res => {
+                resolve(res);
+            })
+            .catch(err => reject(err));
+    });
+};
 
 /**
  * find dep cat data result 

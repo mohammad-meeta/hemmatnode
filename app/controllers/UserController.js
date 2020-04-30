@@ -36,8 +36,10 @@ UserController.paginateUserData = async function paginateUserData(req, res, next
                 .then(data => {
                     const result = {
                         success: true,
-                        data: data,
-                        count: count
+                        data: {
+                            data: data,
+                            count: count
+                        }
                     };
                     res.status(200)
                         .send(result)

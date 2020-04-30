@@ -26,15 +26,25 @@ RoleController.paginateRoleData = async function paginateRoleData(req, res, next
         pageSize: req.params.size || 10
     };
 
-    RoleHelper.loadAllRoleData(dataPaginate)
+    let count = 0;
+    RoleHelper.loadAllCountRoleData()
         .then(data => {
-            const result = {
-                success: true,
-                data: data
-            };
-            res.status(200)
-                .send(result)
-                .end();
+            count = data;
+
+            RoleHelper.loadAllRoleData(dataPaginate)
+                .then(data => {
+                    const result = {
+                        success: true,
+                        data: {
+                            data: data,
+                            count: count
+                        }
+                    };
+                    res.status(200)
+                        .send(result)
+                        .end();
+                })
+                .catch(err => console.error(err));
         })
         .catch(err => console.error(err));
 };
@@ -96,8 +106,10 @@ RoleController.editRoleData = async function editRoleData(req, res, next) {
 RoleController.update = async function update(req, res, next) {
     const data = {
         "_id": req.body._id,
+        "user_id": req.session.auth.userId,
         "name": req.body.name,
-        "permision": req.body.permision
+        "permision": req.body.permision,
+        "is_active": req.body.is_active
     };
 
     const RoleUpdate = RoleHelper.updateRoleData(data)
@@ -150,8 +162,10 @@ RoleController.create = async function create(req, res, next) {
  * store data role
  */
 RoleController.store = async function store(req, res, next) {
-    
+
     const data = {
+        "user_id": req.session.auth.userId,
+        "is_active": req.body.is_active || false,
         "name": req.body.name,
         "permision": req.body.permision
     };

@@ -39,7 +39,7 @@
                 .control
                     input.input(type='text', placeholder='شماره موبایل', v-model='userData.cellphone' required)
             .field
-                label.checkbox(v-for='role in roles')
+                label.checkbox(v-for='(role, roleIndex) in roles')
                     input(type='checkbox', v-model="userData.roles[role.name]", :value="role.name")
                     |   {{ role.name }}
             .field
@@ -80,7 +80,7 @@ module.exports = {
             lastName: null,
             nationCode: null,
             cellphone: null,
-            roles: [],
+            roles: {},
             isActive: false
         },
 
@@ -188,11 +188,18 @@ module.exports = {
                 roles: this.userData.roles,
                 is_active: this.userData.isActive
             };
-            Object.keys(userData.roles).filter(key => userData.roles[key]);
+
+            let t = Object.keys(userData.roles)
+                        .filter(key => true == userData.roles[key])
+                        .map(key => key)
+
+            console.log(t);
+
             this.showLoading();
 
             const url = this.registerUrl;
             console.log(url);
+            console.log(userData);
             AxiosHelper.send("post", url, userData)
                 .then(res => {
                     const data = res.data;

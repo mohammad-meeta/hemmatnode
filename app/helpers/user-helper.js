@@ -1,4 +1,3 @@
-
 'use strict';
 
 const mongoose = require('mongoose');
@@ -6,7 +5,7 @@ const mongoose = require('mongoose');
 /**
  * Algorithm controller
  */
-function UserHelper() { }
+function UserHelper() {}
 module.exports = UserHelper;
 
 /**
@@ -24,13 +23,32 @@ UserHelper.loadAllUserData = function loadAllUserData(dataPaginate) {
     };
 
     return new Promise((resolve, reject) => {
-        User.find(filterQuery, projection, { skip: skip, limit: pageSize })
+        User.find(filterQuery, projection, {
+                skip: skip,
+                limit: pageSize
+            })
             .then(res => {
                 resolve(res);
             })
             .catch(err => reject(err));
     });
 };
+
+/**
+ * find all count users data result 
+ */
+UserHelper.loadAllCountUserData = function loadAllCountUserData() {
+    const User = mongoose.model('User');
+
+    return new Promise((resolve, reject) => {
+        User.countDocuments({})
+            .then(res => {
+                resolve(res);
+            })
+            .catch(err => reject(err));
+    });
+};
+
 
 /**
  * find user data result 
@@ -78,7 +96,9 @@ UserHelper.insertNewUser = function insertNewUser(data) {
 UserHelper.updateUserData = function updateUserData(data) {
     return new Promise((resolve, reject) => {
         const User = mongoose.model('User');
-        User.findByIdAndUpdate(data._id, data, { useFindAndModify: false })
+        User.findByIdAndUpdate(data._id, data, {
+                useFindAndModify: false
+            })
             .then(res => {
                 resolve(res);
             })
@@ -93,7 +113,11 @@ UserHelper.deleteUserData = function deleteUserData(data) {
     return new Promise((resolve, reject) => {
         const User = mongoose.model('User');
 
-        User.findOneAndUpdate(data._id, { is_active: false }, { useFindAndModify: false })
+        User.findOneAndUpdate(data._id, {
+                is_active: false
+            }, {
+                useFindAndModify: false
+            })
             .then(res => {
                 resolve(res);
             })

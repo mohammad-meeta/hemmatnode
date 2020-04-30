@@ -1,33 +1,171 @@
 'use strict';
+const PugView = use('app/helpers/pug-view');
+const DepCatHelper = use('app/helpers/department-category-helper');
+/**
+ * Dep cat controller
+ */
+function DepartmentCategory() {}
+module.exports = DepartmentCategory;
 
 /**
- * DepartmentCategory controller
+ * Index route
  */
-function DepartmentCategoryController() {}
-module.exports = DepartmentCategoryController;
-
+DepartmentCategory.index = async function index(req, res, next) {
+    const pageRoute = 'departmentcategory.index';
+    res.render(PugView.getView(pageRoute), {
+        req,
+        pageRoute
+    });
+};
 /**
- * Register a new department-category
+ * paginate route
  */
-DepartmentCategoryController.register = async function register(req, res, next) {
-    res.send({
-            success: true,
-            data: {
-                id: 1
-            }
+DepartmentCategory.paginateDepartmentCategory = async function paginateDepartmentCategory(req, res, next) {
+    const dataPaginate = {
+        page: req.params.page,
+        pageSize: req.params.size || 10
+    };
+
+    DepCatHelper.loadAllDepCatData(dataPaginate)
+        .then(data => {
+            const result = {
+                success: true,
+                data: data
+            };
+            res.status(200)
+                .send(result)
+                .end();
         })
-        .end(200);
+        .catch(err => console.error(err));
 };
 
 /**
- * Delete a department-category
+ * show route
  */
-DepartmentCategoryController.destroy = async function destroy(req, res, next) {
-    res.send({
-            success: true,
-            data: {
-                id: 2
-            }
+DepartmentCategory.show = async function show(req, res, next) {
+    const depCatTitle = req.params.depCatData;
+    const pageRoute = 'departmentcategory.show';
+    DepCatHelper.loadDepCatData(depCatTitle)
+        .then(data => {
+            const result = {
+                success: true,
+                data: data
+            };
+            res.render(PugView.getView(pageRoute), {
+                req,
+                pageRoute,
+                result
+            });
         })
-        .end(200);
+        .catch(err => console.error(err));
+};
+
+/**
+ * edit page route
+ */
+DepartmentCategory.edit = async function edit(req, res, next) {
+    const pageRoute = 'departmentcategory.edit';
+    res.render(PugView.getView(pageRoute), {
+        req,
+        pageRoute
+    });
+};
+
+/**
+ * return edit data route
+ */
+DepartmentCategory.editdepCatData = async function editdepCatData(req, res, next) {
+    const title = req.params.depCatData;
+
+    DepCatHelper.loadDepCatData(title)
+        .then(data => {
+            const result = {
+                success: true,
+                data: data
+            };
+            res.status(200)
+                .send(result)
+                .end();
+        })
+        .catch(err => console.error(err));
+};
+
+/**
+ * update data dep cat
+ */
+DepartmentCategory.update = async function update(req, res, next) {
+    let data = {};
+    data = {
+        "title": req.body.title,
+        "user_id": req.body.user_id,
+        "is_active": req.body.is_active
+    };
+    const UserUpdate = DepCatHelper.updateUserData(data)
+        .then(data => {
+            const result = {
+                success: true,
+                data: data
+            };
+            res.status(200)
+                .send(result)
+                .end();
+        })
+        .catch(err => console.error(err));
+};
+
+/**
+ * delete data dep cat
+ */
+DepartmentCategory.destroy = async function destroy(req, res, next) {
+    const data = {
+        "_id": req.body._id
+    };
+
+    const UserDelete = DepCatHelper.deleteDepCatData(data)
+        .then(data => {
+            const result = {
+                success: true,
+                data: data
+            };
+            res.status(200)
+                .send(result)
+                .end();
+        })
+        .catch(err => console.error(err));
+};
+
+/**
+ * Create route return page
+ */
+DepartmentCategory.create = async function create(req, res, next) {
+    const pageRoute = PugView.getView('departmentcategory.create');
+
+    res.render(pageRoute, {
+        req,
+        pageRoute
+    });
+};
+
+/**
+ * store data dep cat
+ */
+DepartmentCategory.store = async function store(req, res, next) {
+
+    const data = {
+        "title": req.body.title,
+        "user_id": req.body.user_id,
+        "is_active": req.body.is_active || false
+    };
+
+    const DepCatInsert = DepCatHelper.insertNewDepCat(data)
+        .then(data => {
+            const result = {
+                success: true,
+                data: data
+            };
+            res.status(200)
+                .send(result)
+                .end();
+        })
+        .catch(err => console.error(err));
 };

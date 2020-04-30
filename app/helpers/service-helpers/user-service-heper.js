@@ -6,13 +6,22 @@ Validator.registerAsync('user_name_available', function (username, attribute, re
     const Mongoose = require('mongoose');
     const Model = Mongoose.model("User");
 
-    Model.findOne({
+    let query = {};
+
+    if (attribute == 'XXX') {
+        query = {
+            name: username
+        };
+    } else {
+        query = {
             name: username,
             _id: {
                 "$ne": attribute
             }
-        }, {
-            _id: 0,
+        };
+    }
+
+    Model.findOne(query, {
             name: 1
         }, {})
         .then(res => {
@@ -23,21 +32,33 @@ Validator.registerAsync('user_name_available', function (username, attribute, re
             }
         })
         .catch(err => {
+            console.log(err)
             passes(false, 'System Failed');
         });
 });
 
 /**********user=> email_available**************** */
 Validator.registerAsync('email_available', function (email, attribute, req, passes) {
+
     const Mongoose = require('mongoose');
     const Model = Mongoose.model("User");
 
-    Model.findOne({
+    let query = {};
+
+    if (attribute == "XXX") {
+        query = {
+            email: email
+        };
+    } else {
+        query = {
             email: email,
             _id: {
                 "$ne": attribute
             }
-        }, {
+        };
+    }
+
+    Model.findOne(query, {
             _id: 0,
             name: 1
         }, {})
@@ -56,7 +77,7 @@ Validator.registerAsync('email_available', function (email, attribute, req, pass
 /**********password available**************** */
 Validator.registerAsync('password_available', function (password, attribute, req, passes) {
 
-    if (attribute == undefined) {
+    if (attribute == "XXX") {
         if (password.length >= 6) {
             passes();
         } else {

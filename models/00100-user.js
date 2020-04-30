@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 /**
  * User model
  */
-function Model() { }
+function Model() {}
 module.exports = Model;
 
 /**
@@ -48,7 +48,8 @@ Model.model = function model() {
             default: false
         },
         'roles': {
-            type: Array
+            type: Array,
+            default: []
         },
         'profile': new mongoose.Schema({
             'first_name': {

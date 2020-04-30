@@ -26,15 +26,25 @@ DepartmentCategory.paginateDepartmentCategory = async function paginateDepartmen
         pageSize: req.params.size || 10
     };
 
-    DepCatHelper.loadAllDepCatData(dataPaginate)
+    let count = 0;
+    DepCatHelper.loadAllCountDepCatData()
         .then(data => {
-            const result = {
-                success: true,
-                data: data
-            };
-            res.status(200)
-                .send(result)
-                .end();
+            count = data;
+
+            DepCatHelper.loadAllDepCatData(dataPaginate)
+                .then(data => {
+                    const result = {
+                        success: true,
+                        data: {
+                            data: data,
+                            count: count
+                        }
+                    };
+                    res.status(200)
+                        .send(result)
+                        .end();
+                })
+                .catch(err => console.error(err));
         })
         .catch(err => console.error(err));
 };

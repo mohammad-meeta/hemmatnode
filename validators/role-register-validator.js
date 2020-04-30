@@ -32,6 +32,7 @@ RoleRegisterValidator.validate = function validate(req, res, next) {
  */
 RoleRegisterValidator.data = function data(req) {
     return {
+        user_id: req.session.auth.userId,
         name: req.body.name,
         permision: req.body.permision
     };
@@ -42,6 +43,7 @@ RoleRegisterValidator.data = function data(req) {
  */
 RoleRegisterValidator.rules = function rules() {
     return {
+        'user_id': 'required',
         'name': 'required|min:3|max:25|user_name_available',
         'permision': 'required|array'
     };
@@ -59,6 +61,7 @@ RoleRegisterValidator.messages = function messages() {
  */
 RoleRegisterValidator.attributes = function attributes() {
     return {
+        user_id: 'user_id',
         name: 'name',
         password: 'permision'
     };

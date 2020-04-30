@@ -31,6 +31,22 @@ RoleHelper.loadAllRoleData = function loadAllRoleData(dataPaginate) {
             .catch(err => reject(err));
     });
 };
+/**
+ * find all role count data result 
+ */
+RoleHelper.loadAllCountRoleData = function loadAllCountRoleData() {
+    const Role = mongoose.model('Role');
+
+    const filterQuery = {};
+
+    return new Promise((resolve, reject) => {
+        Role.countDocuments(filterQuery)
+            .then(res => {
+                resolve(res);
+            })
+            .catch(err => reject(err));
+    });
+};
 
 /**
  * find Role data result 

@@ -39,7 +39,7 @@ Model.model = function model() {
             default: true
         },
         'user_id': {
-            type: String,
+            type: mongoose.Schema.ObjectId,
             required: true
         }
     };

@@ -36,7 +36,7 @@ Model.model = function model() {
             required: true
         },
         'user_id': {
-            type: String,
+            type: mongoose.Schema.ObjectId,
             required: true
         },
         'email': {
@@ -67,7 +67,12 @@ Model.model = function model() {
             'nation_code': {
                 type: String,
                 default: null
+            },
+            'image': {
+                type: mongoose.Schema.ObjectId,
+                default: null
             }
+
         })
     };
 };

@@ -117,7 +117,8 @@ UserController.update = async function update(req, res, next) {
             "profile": {
                 "first_name": req.body.first_name,
                 "last_name": req.body.last_name,
-                "nation_code": req.body.nation_code
+                "nation_code": req.body.nation_code,
+                "image": req.body.image || null
             }
         };
     } else {
@@ -132,7 +133,8 @@ UserController.update = async function update(req, res, next) {
             "profile": {
                 "first_name": req.body.first_name,
                 "last_name": req.body.last_name,
-                "nation_code": req.body.nation_code
+                "nation_code": req.body.nation_code,
+                "image": req.body.image || null
             }
         };
     }
@@ -198,7 +200,8 @@ UserController.store = async function store(req, res, next) {
         "profile": {
             "first_name": req.body.first_name,
             "last_name": req.body.last_name,
-            "nation_code": req.body.nation_code
+            "nation_code": req.body.nation_code,
+            "image": req.body.image || null
         }
     };
 

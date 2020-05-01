@@ -30,7 +30,10 @@
                 list-user(ref="userList", @on-command="onCommand", :list-url="listUrl")
 
             .column(v-show="!modeLoading && modeRegister")
-                register-user(@on-command="onCommand", :register-url="registerUrl", :roles-url="rolesUrl")
+                register-user(@on-command="onCommand",
+                  @on-register="onUserRegister"
+                  :register-url="registerUrl",
+                  :roles-url="rolesUrl")
 
             .column(v-show="!modeLoading && modeEdit")
                 edit-user(ref="userEdit", @on-command="onCommand" :edit-url="editUrl")
@@ -47,136 +50,154 @@ const ListUser = require("VUE-COMPONENTS/user/list-user.vue").default;
 const EditUser = require("VUE-COMPONENTS/user/edit-user.vue").default;
 
 module.exports = {
-  name: "Users",
+    name: "Users",
 
-  components: {
-    Loading,
-    ListUser,
-    RegisterUser,
-    EditUser
-  },
-
-  data: () => ({
-    ENUMS,
-    formModeStack: [],
-    users: []
-  }),
-
-  props: {
-    title: {
-      type: String,
-      default: null
+    components: {
+        Loading,
+        ListUser,
+        RegisterUser,
+        EditUser
     },
 
-    listUrl: {
-      type: String,
-      default: null
-    },
+    data: () => ({
+        ENUMS,
+        formModeStack: [],
+        users: []
+    }),
 
-    rolesUrl: {
-      type: String,
-      default: null
-    },
-
-    registerUrl: {
-      type: String,
-      default: null
-    },
-
-    editUrl: {
-      type: String,
-      default: null
-    }
-  },
-
-  computed: {
-    formMode: state => state.formModeStack[state.formModeStack.length - 1],
-
-    modeLoading: state => state.formMode == ENUMS.FORM_MODE.LOADING,
-    modeList: state => state.formMode == ENUMS.FORM_MODE.LIST,
-    modeRegister: state => state.formMode == ENUMS.FORM_MODE.REGISTER,
-    modeEdit: state => state.formMode == ENUMS.FORM_MODE.EDIT
-  },
-
-  created() {
-    this.init();
-  },
-
-  mounted() {
-    this.changeFormMode(ENUMS.FORM_MODE.LIST);
-    this.$refs.userList.loadUsers();
-  },
-
-  methods: {
-    /**
-     * On commands clicked
-     */
-    onCommand(payload) {
-      let arg = payload.arg || null;
-      const data = payload.data || {};
-      if (null == arg) {
-        arg = payload;
-      }
-      switch (arg) {
-        case ENUMS.COMMAND.NEW:
-          this.changeFormMode(ENUMS.FORM_MODE.REGISTER);
-          break;
-
-        case ENUMS.COMMAND.REGISTER:
-          /* TODO: REGISTER NEW USER */
-          console.log("REGISTER NEW USER", arg);
-          break;
-
-        case ENUMS.COMMAND.EDIT:
-          /* TODO: REGISTER NEW USER */
-          this.$refs.userEdit.loadUserData(data);
-
-          console.log("EDIT USER", arg);
-          this.changeFormMode(ENUMS.FORM_MODE.EDIT);
-          break;
-
-        case ENUMS.COMMAND.CANCEL:
-          this.changeFormMode(null, { pop: true });
-          break;
-      }
-    },
-
-    /**
-     * On Command
-     *
-     * @param      {Object}  arg     The argument
-     */
-    commandClick(arg) {
-      this.onCommand(arg);
-    },
-
-    /**
-     * Init method
-     */
-    init() {
-      this.changeFormMode(ENUMS.FORM_MODE.LOADING);
-    },
-
-    /**
-     * Change form mode
-     */
-    changeFormMode(mode, options) {
-      const opts = Object.assign(
-        {
-          pop: false
+    props: {
+        title: {
+            type: String,
+            default: null
         },
-        options
-      );
 
-      if (opts.pop) {
-        if (this.formModeStack.length > 0) {
-          Vue.delete(this.formModeStack, this.formModeStack.length - 1);
+        listUrl: {
+            type: String,
+            default: null
+        },
+
+        rolesUrl: {
+            type: String,
+            default: null
+        },
+
+        registerUrl: {
+            type: String,
+            default: null
+        },
+
+        editUrl: {
+            type: String,
+            default: null
         }
-      } else {
-        Vue.set(this.formModeStack, this.formModeStack.length, mode);
-      }
+    },
+
+    computed: {
+        formMode: state => state.formModeStack[state.formModeStack.length - 1],
+
+        modeLoading: state => state.formMode == ENUMS.FORM_MODE.LOADING,
+        modeList: state => state.formMode == ENUMS.FORM_MODE.LIST,
+        modeRegister: state => state.formMode == ENUMS.FORM_MODE.REGISTER,
+        modeEdit: state => state.formMode == ENUMS.FORM_MODE.EDIT
+    },
+
+    created() {
+        this.init();
+    },
+
+    mounted() {
+        this.changeFormMode(ENUMS.FORM_MODE.LIST);
+        this.$refs.userList.loadUsers(1);
+    },
+
+    methods: {
+        /**
+         * On Register user
+         */
+        onUserRegister(payload) {
+            this.$refs.userList.addToUserList(payload.data.data);
+            this.changeFormMode(ENUMS.FORM_MODE.LIST);
+
+            //this.$refs.userList.loadUsers(1);
+            // console.log(payload);
+            /*               this.setNotification(
+            ".کاربر با موفقیت ذخیره شد",
+            "is-success"
+        );*/
+        },
+
+        /**
+         * On commands clicked
+         */
+        onCommand(payload) {
+            let arg = payload.arg || null;
+            const data = payload.data || {};
+            if (null == arg) {
+                arg = payload;
+            }
+            switch (arg) {
+                case ENUMS.COMMAND.NEW:
+                    this.changeFormMode(ENUMS.FORM_MODE.REGISTER);
+                    break;
+
+                case ENUMS.COMMAND.REGISTER:
+                    /* TODO: REGISTER NEW USER */
+                    console.log("REGISTER NEW USER", arg);
+                    break;
+
+                case ENUMS.COMMAND.EDIT:
+                    /* TODO: REGISTER NEW USER */
+                    this.$refs.userEdit.loadUserData(data);
+
+                    console.log("EDIT USER", arg);
+                    this.changeFormMode(ENUMS.FORM_MODE.EDIT);
+                    break;
+
+                case ENUMS.COMMAND.CANCEL:
+                    this.changeFormMode(null, { pop: true });
+                    break;
+            }
+        },
+
+        /**
+         * On Command
+         *
+         * @param      {Object}  arg     The argument
+         */
+        commandClick(arg) {
+            this.onCommand(arg);
+        },
+
+        /**
+         * Init method
+         */
+        init() {
+            this.changeFormMode(ENUMS.FORM_MODE.LOADING);
+        },
+
+        /**
+         * Change form mode
+         */
+        changeFormMode(mode, options) {
+            const opts = Object.assign(
+                {
+                    pop: false
+                },
+                options
+            );
+
+            if (opts.pop) {
+                if (this.formModeStack.length > 0) {
+                    Vue.delete(
+                        this.formModeStack,
+                        this.formModeStack.length - 1
+                    );
+                }
+            } else {
+                Vue.set(this.formModeStack, this.formModeStack.length, mode);
+            }
+        }
     }
-  }
 };
 </script>
 

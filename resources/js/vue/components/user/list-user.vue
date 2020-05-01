@@ -30,25 +30,17 @@
                         span.icon.is-small
                             i.material-icons.icon swap_horizontal_circle
                         span فعال/مسدود
-    nav.pagination(role='navigation', aria-label='pagination')
-    a.pagination-previous(title='This is the first page', disabled='') صفحه قبل
-    a.pagination-next صفحه بعد
-    ul.pagination-list
-        li
-            a.pagination-link.is-current(aria-label='Page 1', aria-current='page') 1
-        li
-            a.pagination-link(aria-label='Goto page 2') 2
-        li
-            a.pagination-link(aria-label='Goto page 3') 3
 
-
+    paginate(:page-count='pageCount', :click-handler='paginatorClick', :prev-text="'Prev'", :next-text="'Next'", :container-class="'className'")
 </template>
 
 <script>
 "use strict";
 
 const ENUMS = require("JS-HELPERS/enums");
-const Paginator = require("paginator").default;
+
+const Paginate = require("vuejs-paginate");
+Vue.component("paginate", Paginate);
 module.exports = {
     props: {
         listUrl: {
@@ -60,7 +52,8 @@ module.exports = {
     data: () => ({
         ENUMS,
         users: [],
-        usersCount: 0
+        usersCount: 0,
+        pageCount: 0
     }),
 
     computed: {
@@ -71,11 +64,11 @@ module.exports = {
         /**
          * Load users
          */
-        loadUsers() {
-            const url = this.listUrl;
+        loadUsers(pageId) {
+            let url = this.listUrl.replace("$page$", pageId);
+            url = url.replace("$pageSize$", 50);
             AxiosHelper.send("get", url, "").then(res => {
                 const resData = res.data;
-
                 Vue.set(this, "users", resData.data.data);
                 Vue.set(this, "usersCount", resData.data.count);
 
@@ -103,8 +96,36 @@ module.exports = {
          * Paginator
          */
         paginator() {
-            var paginator = new Paginator(10, 6);
-            var pagination_info = paginator.build(this.usersCount, 50);
+            let pageCount = Math.ceil(this.usersCount / 50);
+            Vue.set(this, "pageCount", pageCount);
+        },
+        /**
+         * paginator click link
+         */
+        paginatorClick(id) {
+            this.loadUsers(id);
+        },
+        /**
+         * add new user data to list data
+         */
+        addToUserList(payload) {
+            const newUserData = {
+                _id: payload._id,
+                name: payload.name,
+                email: payload.email,
+                profile: {
+                    first_name: payload.profile.first_name,
+                    last_name: payload.profile.last_name,
+                    nation_code: payload.profile.nation_code
+                },
+                cellphone: payload.cellphone,
+                is_active: payload.is_active,
+                created_at: payload.created_at,
+            };
+            console.log(newUserData);
+            console.log(this.users[3]);
+
+            this.users.push(newUserData);
         }
     }
 };

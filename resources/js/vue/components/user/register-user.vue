@@ -65,13 +65,14 @@ const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
 module.exports = {
     name: "RegisterUser",
+
     components: {
         Notification
     },
 
     data: () => ({
         ENUMS,
-        roles : [],
+        roles: [],
         userData: {
             name: null,
             password: null,
@@ -101,7 +102,7 @@ module.exports = {
         }
     },
 
-    mounted() {
+    created() {
         this.loadRoles();
     },
 
@@ -131,13 +132,13 @@ module.exports = {
             //let roles = ["superadmin", "admin", "karmand1"];
 
             const url = this.rolesUrl;
-
             AxiosHelper.send("get", url, "").then(res => {
-                const datas = res.data.data;
+                const resData = res.data;
+                const datas = resData.data.data;
                 Vue.set(this, "roles", datas);
             });
 
-//            Vue.set(this.userData, "roles", roles);
+            //            Vue.set(this.userData, "roles", roles);
         },
 
         /**
@@ -174,9 +175,11 @@ module.exports = {
          */
         registerUser() {
             const isValid = this.validate();
+
             if (!isValid) {
                 return;
             }
+
             let userData = {
                 name: this.userData.name,
                 password: this.userData.password,
@@ -190,30 +193,29 @@ module.exports = {
             };
 
             let t = Object.keys(userData.roles)
-                        .filter(key => true == userData.roles[key])
-                        .map(key => key)
+                .filter(key => true == userData.roles[key])
+                .map(key => key);
 
             userData.roles = t;
-            console.log(t);
 
             this.showLoading();
 
             const url = this.registerUrl;
-            console.log(url);
-            console.log(userData);
             AxiosHelper.send("post", url, userData)
                 .then(res => {
                     const data = res.data;
-                    this.setNotification(
-                        ".کاربر با موفقیت ذخیره شد",
-                        "is-success"
-                    );
+                    this.$emit("on-register", {
+                        sender: this,
+                        data
+                    });
                 })
                 .catch(err => {
                     const data = err.response.data;
                     this.setNotification(data, "is-danger");
                 })
                 .then(() => this.hideLoading());
+            //this.changeFormMode(ENUMS.FORM_MODE.LIST);
+            //this.$refs.userList.loadUsers(1);
         },
 
         /**

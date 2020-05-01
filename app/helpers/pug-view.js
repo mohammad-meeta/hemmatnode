@@ -34,6 +34,12 @@ PugView.viewPath = {
     'departmentcategory.show': 'pages/department-category/show.pug',
     'departmentcategory.edit': 'pages/department-category/edit.pug',
 
+    /* Department */
+    'department.index': 'pages/department/index.pug',
+    'department.create': 'pages/department/register.pug',
+    'department.show': 'pages/department/show.pug',
+    'department.edit': 'pages/department/edit.pug',
+
     /* articletype */
     'articletype.index': 'pages/articletype/index.pug',
     'articletype.create': 'pages/articletype/register.pug',

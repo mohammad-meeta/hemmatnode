@@ -5,23 +5,23 @@ const mongoose = require('mongoose');
 /**
  * dep cat controller
  */
-function DepartmentCategoryHelper() {}
-module.exports = DepartmentCategoryHelper;
+function DepartmentHelper() {}
+module.exports = DepartmentHelper;
 
 /**
  * find all dep cat data result 
  */
-DepartmentCategoryHelper.loadAllDepCatData = function loadAllDepCatData(dataPaginate) {
+DepartmentHelper.loadAllDepartmentData = function loadAllDepartmentData(dataPaginate) {
     const page = parseInt(dataPaginate.page)
     const pageSize = parseInt(dataPaginate.pageSize)
     const skip = page > 0 ? ((page - 1) * pageSize) : 0
-    const DepartementCategory = mongoose.model('DepartementCategory');
+    const Departement = mongoose.model('Departement');
 
     const filterQuery = {};
     const projection = {};
 
     return new Promise((resolve, reject) => {
-        DepartementCategory.find(filterQuery, projection, {
+        Departement.find(filterQuery, projection, {
                 sort: {
                     'created_at': -1
                 },
@@ -37,13 +37,13 @@ DepartmentCategoryHelper.loadAllDepCatData = function loadAllDepCatData(dataPagi
 /**
  * find all dep cat count data result 
  */
-DepartmentCategoryHelper.loadAllDepCatCountData = function loadAllDepCatCountData() {
-    const DepartementCategory = mongoose.model('DepartementCategory');
+DepartmentHelper.loadAllDepartmentCountData = function loadAllDepartmentCountData() {
+    const Departement = mongoose.model('Departement');
 
     const filterQuery = {};
 
     return new Promise((resolve, reject) => {
-        DepartementCategory.countDocuments(filterQuery)
+        Departement.countDocuments(filterQuery)
             .then(res => {
                 resolve(res);
             })
@@ -54,8 +54,8 @@ DepartmentCategoryHelper.loadAllDepCatCountData = function loadAllDepCatCountDat
 /**
  * find dep cat data result 
  */
-DepartmentCategoryHelper.loadDepCatData = function loadDepCatData(title) {
-    const DepartementCategory = mongoose.model('DepartementCategory');
+DepartmentHelper.loadDepartmentData = function loadDepartmentData(title) {
+    const Departement = mongoose.model('Departement');
 
     const filterQuery = {
         title: title
@@ -64,7 +64,7 @@ DepartmentCategoryHelper.loadDepCatData = function loadDepCatData(title) {
     const projection = {};
 
     return new Promise((resolve, reject) => {
-        DepartementCategory.findOne(filterQuery, projection)
+        Departement.findOne(filterQuery, projection)
             .then(res => {
                 resolve(res);
             })
@@ -75,13 +75,13 @@ DepartmentCategoryHelper.loadDepCatData = function loadDepCatData(title) {
 /**
  * insert dep cat data  
  */
-DepartmentCategoryHelper.insertNewDepCat = function insertNewDepCat(data) {
+DepartmentHelper.insertNewDepartment = function insertNewDepartment(data) {
 
     return new Promise((resolve, reject) => {
-        const DepartementCategory = mongoose.model('DepartementCategory');
-        const depcat = new DepartementCategory(data)
+        const Departement = mongoose.model('Departement');
+        const Department = new Departement(data)
 
-        depcat.save()
+        Department.save()
             .then(res => {
                 resolve(res);
             })
@@ -92,10 +92,10 @@ DepartmentCategoryHelper.insertNewDepCat = function insertNewDepCat(data) {
 /**
  * update dep cat data  
  */
-DepartmentCategoryHelper.updateDepCatData = function updateDepCatData(data) {
+DepartmentHelper.updateDepartmentData = function updateDepartmentData(data) {
     return new Promise((resolve, reject) => {
-        const DepartementCategory = mongoose.model('DepartementCategory');
-        DepartementCategory.findByIdAndUpdate(data._id, data, {
+        const Departement = mongoose.model('Departement');
+        Departement.findByIdAndUpdate(data._id, data, {
                 useFindAndModify: false
             })
             .then(res => {
@@ -108,11 +108,11 @@ DepartmentCategoryHelper.updateDepCatData = function updateDepCatData(data) {
 /**
  * delete dep cat data  
  */
-DepartmentCategoryHelper.deleteDepCatData = function deleteDepCatData(data) {
+DepartmentHelper.deleteDepartmentData = function deleteDepartmentData(data) {
     return new Promise((resolve, reject) => {
-        const DepartementCategory = mongoose.model('DepartementCategory');
+        const Departement = mongoose.model('Departement');
 
-        DepartementCategory.findOneAndUpdate(data._id, {
+        Departement.findOneAndUpdate(data._id, {
                 is_active: false
             }, {
                 useFindAndModify: false

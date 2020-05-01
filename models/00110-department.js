@@ -25,24 +25,54 @@ Model.setup = function setup() {
  * Get model
  */
 Model.model = function model() {
+    const File = new mongoose.Schema({
+        'file_id': {
+            type: mongoose.Schema.ObjectId,
+            required: true
+        },
+        'deleted_at': {
+            type: Date,
+            default: null
+        }
+    });
+
+    const Regulation = new mongoose.Schema({
+        'title': {
+            type: String,
+            required: true
+        },
+        'body': {
+            type: String
+        },
+        'files': [File]
+    });
+
     return {
         'title': {
             type: String,
             required: true
+        },
+        'description': {
+            type: String
+        },
+        'files': {
+            type: [File]
         },
         'is_active': {
             type: Boolean,
             default: true,
             required: true
         },
-        'category': {
-            type: mongoose.ObjectId,
+        'department_category_id': {
+            type: mongoose.Schema.ObjectId,
             required: true
         },
-        'parent': {
-            type: mongoose.ObjectId,
-            required: false,
-            default: null
+        'regulation': {
+            type: [Regulation]
+        },
+        'user_id': {
+            type: mongoose.Schema.ObjectId,
+            required: true
         }
     };
 };

@@ -24,6 +24,9 @@ UserHelper.loadAllUserData = function loadAllUserData(dataPaginate) {
 
     return new Promise((resolve, reject) => {
         User.find(filterQuery, projection, {
+                sort: {
+                    'created_at': -1
+                },
                 skip: skip,
                 limit: pageSize
             })

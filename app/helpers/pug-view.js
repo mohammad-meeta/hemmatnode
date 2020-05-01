@@ -3,7 +3,7 @@
 /**
  * Pug view helper class
  */
-function PugView() { }
+function PugView() {}
 module.exports = PugView;
 
 /**
@@ -27,6 +27,18 @@ PugView.viewPath = {
     'user.create': 'pages/user/register.pug',
     'user.show': 'pages/user/show.pug',
     'user.edit': 'pages/user/edit.pug',
+
+    /* Department Category */
+    'departmentcategory.index': 'pages/department-category/index.pug',
+    'departmentcategory.create': 'pages/department-category/register.pug',
+    'departmentcategory.show': 'pages/department-category/show.pug',
+    'departmentcategory.edit': 'pages/department-category/edit.pug',
+
+    /* Department */
+    'department.index': 'pages/department/index.pug',
+    'department.create': 'pages/department/register.pug',
+    'department.show': 'pages/department/show.pug',
+    'department.edit': 'pages/department/edit.pug',
 
     /* articletype */
     'articletype.index': 'pages/articletype/index.pug',

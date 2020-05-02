@@ -39,9 +39,9 @@
                     .control
                         input.input(type='text', placeholder='شماره موبایل', v-model='userData.cellphone' required)
                 .field
-                    label.checkbox(v-for='role in roles')
-                        input(type='checkbox', v-model="userData.roles[role]", :value="role")
-                        |   {{ role }}
+                label.checkbox(v-for='(role, roleIndex) in roles')
+                    input(type='checkbox', v-model="userData.roles[role.name]", :value="role.name")
+                    |   {{ role.name }}
                 .field
                     label.checkbox
                         input(type='checkbox', v-model="userData.isActive")
@@ -71,6 +71,7 @@ module.exports = {
 
     data: () => ({
         ENUMS,
+        roles: [],
         userData: {
             _id: null,
             name: null,
@@ -80,10 +81,9 @@ module.exports = {
             lastName: null,
             nationCode: null,
             cellphone: null,
-            roles: [],
+            roles: {},
             isActive: false
         },
-        roles: ["superadmin", "admin", "karmand1"],
         notificationMessage: null,
         notificationType: "is-info",
         showLoadingFlag: false,
@@ -94,7 +94,17 @@ module.exports = {
             type: String,
             default: ""
         },
+
+        rolesUrl: {
+            type: String,
+            default: ""
+        },
+
         userDatas: {}
+    },
+
+    created() {
+        this.loadRoles();
     },
 
     mounted() {
@@ -121,9 +131,25 @@ module.exports = {
                 nationCode: data.profile.nation_code,
                 cellphone: data.cellphone,
                 roles: data.roles,
-                isActive: data.isActive
+                isActive: data.is_active
             };
             Vue.set(this, "userData", temp);
+        },
+
+        /**
+         * load all roles for select roles in form
+         */
+        loadRoles() {
+            //let roles = ["superadmin", "admin", "karmand1"];
+
+            const url = this.rolesUrl;
+            AxiosHelper.send("get", url, "").then(res => {
+                const resData = res.data;
+                const datas = resData.data.data;
+                Vue.set(this, "roles", datas);
+            });
+
+            //            Vue.set(this.userData, "roles", roles);
         },
 
         /**
@@ -192,6 +218,14 @@ module.exports = {
                 roles: this.userData.roles,
                 is_active: this.userData.isActive
             };
+
+            let t = Object.keys(userData.roles)
+                .filter(key => true == userData.roles[key])
+                .map(key => key);
+
+            userData.roles = t;
+
+
             const url = this.editUrl.replace("$id$", userData._id);
             console.log(url);
             AxiosHelper.send("patch", url, userData)

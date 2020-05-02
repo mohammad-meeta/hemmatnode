@@ -38,7 +38,9 @@
                   :roles-url="rolesUrl")
 
             .column(v-show="!modeLoading && modeEdit")
-                edit-user(ref="userEdit", @on-command="onCommand" :edit-url="editUrl")
+                edit-user(ref="userEdit", @on-command="onCommand"
+                :edit-url="editUrl",
+                :roles-url="rolesUrl")
 </template>
 
 <script>

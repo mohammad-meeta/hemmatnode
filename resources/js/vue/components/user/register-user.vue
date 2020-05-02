@@ -50,9 +50,6 @@
                 .control(v-show="! isLoadingMode")
                     a.button.is-link.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
                         |   ثبت نام
-                .control(v-show="! isLoadingMode")
-                    a.button.is-link.is-light.is-rounded(href="/")
-                        |   انصراف
 </template>
 
 <script>

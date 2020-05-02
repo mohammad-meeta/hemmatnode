@@ -31,7 +31,11 @@
                             i.material-icons.icon swap_horizontal_circle
                         span فعال/مسدود
 
-    paginate(:page-count='pageCount', :click-handler='paginatorClick', :prev-text="'Prev'", :next-text="'Next'", :container-class="'className'")
+    paginate(:page-count='pageCount',
+        :click-handler='paginatorClick',
+        :prev-text="'Prev'",
+        :next-text="'Next'",
+        :container-class="'pagination-list'")
 </template>
 
 <script>
@@ -125,7 +129,7 @@ module.exports = {
             console.log(newUserData);
             console.log(this.users[3]);
 
-            this.users.push(newUserData);
+            this.users.unshift(newUserData);
         }
     }
 };

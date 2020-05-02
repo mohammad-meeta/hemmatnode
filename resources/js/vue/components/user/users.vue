@@ -1,6 +1,8 @@
 <template lang="pug">
     .container-parent
         section.hero
+            notification(:notification-type="notificationType", @on-close="closeNotification", v-if="showNotification")
+                span(v-html="notificationMessage")
             .container.page-header
                 .title
                     h1(v-show="modeList") کاربران
@@ -48,6 +50,7 @@ const Loading = require("VUE-COMPONENTS/general/loading.vue").default;
 const RegisterUser = require("VUE-COMPONENTS/user/register-user.vue").default;
 const ListUser = require("VUE-COMPONENTS/user/list-user.vue").default;
 const EditUser = require("VUE-COMPONENTS/user/edit-user.vue").default;
+const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
 module.exports = {
     name: "Users",
@@ -56,13 +59,16 @@ module.exports = {
         Loading,
         ListUser,
         RegisterUser,
-        EditUser
+        EditUser,
+        Notification
     },
 
     data: () => ({
         ENUMS,
         formModeStack: [],
-        users: []
+        users: [],
+        notificationMessage: null,
+        notificationType: "is-info",
     }),
 
     props: {
@@ -98,7 +104,8 @@ module.exports = {
         modeLoading: state => state.formMode == ENUMS.FORM_MODE.LOADING,
         modeList: state => state.formMode == ENUMS.FORM_MODE.LIST,
         modeRegister: state => state.formMode == ENUMS.FORM_MODE.REGISTER,
-        modeEdit: state => state.formMode == ENUMS.FORM_MODE.EDIT
+        modeEdit: state => state.formMode == ENUMS.FORM_MODE.EDIT,
+        showNotification: state => state.notificationMessage != null
     },
 
     created() {
@@ -120,10 +127,10 @@ module.exports = {
 
             //this.$refs.userList.loadUsers(1);
             // console.log(payload);
-            /*               this.setNotification(
-            ".کاربر با موفقیت ذخیره شد",
-            "is-success"
-        );*/
+            this.setNotification(
+                ".کاربر با موفقیت ذخیره شد",
+                "is-success"
+            );
         },
 
         /**
@@ -196,7 +203,22 @@ module.exports = {
             } else {
                 Vue.set(this.formModeStack, this.formModeStack.length, mode);
             }
-        }
+        },
+
+        /**
+         * Set notification
+         */
+        setNotification(message, notificationType = "is-info") {
+            Vue.set(this, "notificationType", notificationType);
+            Vue.set(this, "notificationMessage", message);
+        },
+
+        /**
+         * Close Notification
+         */
+        closeNotification() {
+            this.setNotification(null);
+        },
     }
 };
 </script>

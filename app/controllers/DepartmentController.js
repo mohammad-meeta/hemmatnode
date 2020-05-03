@@ -105,6 +105,8 @@ Department.editDepartmentData = async function editDepartmentData(req, res, next
  */
 Department.update = async function update(req, res, next) {
     let data = {};
+    const files = req.body.files || [];
+
     data = {
         "_id": req.body._id,
         "title": req.body.title,

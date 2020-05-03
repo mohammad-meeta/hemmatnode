@@ -26,10 +26,10 @@
                         span.icon.is-small
                             i.material-icons.icon check_circle
                         span ویرایش
-                    a.button.is-warning.is-rounded.mt-2(href="#", @click.prevent="commandClick(ENUMS.COMMAND.DELETE, user)")
+                    a.button.is-warning.is-rounded.mt-2(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SHOW, user)")
                         span.icon.is-small
                             i.material-icons.icon swap_horizontal_circle
-                        span فعال/مسدود
+                        span مشاهده
 
     paginate(:page-count='pageCount',
         :click-handler='paginatorClick',
@@ -113,6 +113,7 @@ module.exports = {
          * add new user data to list data
          */
         addToUserList(payload) {
+            console.log(payload);
             const newUserData = {
                 _id: payload._id,
                 name: payload.name,
@@ -124,7 +125,7 @@ module.exports = {
                 },
                 cellphone: payload.cellphone,
                 is_active: payload.is_active,
-                created_at: payload.created_at,
+                created_at: payload.created_at
             };
 
             this.users.unshift(newUserData);
@@ -135,19 +136,25 @@ module.exports = {
                 _id: payload._id,
                 name: payload.name,
                 email: payload.email,
-                profile: {
-                    first_name: payload.profile.first_name,
-                    last_name: payload.profile.last_name,
-                    nation_code: payload.profile.nation_code
-                },
+                first_name: payload.first_name,
+                last_name: payload.last_name,
+                nation_code: payload.nation_code,
                 cellphone: payload.cellphone,
                 is_active: payload.is_active,
-                created_at: payload.created_at,
+                created_at: payload.created_at
             };
 
-            console.log(editedUserData);
+            let foundIndex = this.users.findIndex(
+                x => x._id == editedUserData._id
+            );
+            this.users[foundIndex].name= editedUserData.name;
+            this.users[foundIndex].email= editedUserData.email;
+            this.users[foundIndex].profile.first_name= editedUserData.first_name;
+            this.users[foundIndex].profile.last_name= editedUserData.last_name;
+            this.users[foundIndex].profile.nation_code= editedUserData.nation_code;
+            this.users[foundIndex].cellphone= editedUserData.cellphone;
+            this.users[foundIndex].is_active= editedUserData.is_active;
         }
-
     }
 };
 </script>

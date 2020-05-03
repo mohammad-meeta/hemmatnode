@@ -140,7 +140,7 @@ module.exports = {
          * On Update user
          */
         onUserUpdate(payload) {
-            this.$refs.userList.editInUserList(payload.data.data);
+            this.$refs.userList.editInUserList(payload.data);
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
 
             //this.$refs.userList.loadUsers(1);
@@ -173,13 +173,16 @@ module.exports = {
                 case ENUMS.COMMAND.EDIT:
                     /* TODO: REGISTER NEW USER */
                     this.$refs.userEdit.loadUserData(data);
-
-                    console.log("EDIT USER", arg);
                     this.changeFormMode(ENUMS.FORM_MODE.EDIT);
                     break;
 
                 case ENUMS.COMMAND.CANCEL:
                     this.changeFormMode(null, { pop: true });
+                    break;
+
+                case ENUMS.COMMAND.SHOW:
+                    this.$refs.userShow.loadUserData(data);
+                    this.changeFormMode(ENUMS.FORM_MODE.SHOW);
                     break;
             }
         },

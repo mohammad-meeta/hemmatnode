@@ -225,12 +225,11 @@ module.exports = {
                 .map(key => key);
 
             userData.roles = t;
-            console.log(userData);
 
             const url = this.editUrl.replace("$id$", userData._id);
             AxiosHelper.send("patch", url, userData)
                 .then(res => {
-                    const data = res.data;
+                    const data = JSON.parse(res.config.data);
                     this.$emit("on-update", {
                         sender: this,
                         data

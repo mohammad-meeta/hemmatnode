@@ -42,6 +42,9 @@
                 @on-update="onUserUpdate"
                 :edit-url="editUrl",
                 :roles-url="rolesUrl")
+
+            .column(v-show="!modeLoading && modeShow")
+                show-user(ref="userShow", @on-command="onCommand")
 </template>
 
 <script>
@@ -53,6 +56,7 @@ const Loading = require("VUE-COMPONENTS/general/loading.vue").default;
 const RegisterUser = require("VUE-COMPONENTS/user/register-user.vue").default;
 const ListUser = require("VUE-COMPONENTS/user/list-user.vue").default;
 const EditUser = require("VUE-COMPONENTS/user/edit-user.vue").default;
+const ShowUser = require("VUE-COMPONENTS/user/show-user.vue").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
 module.exports = {
@@ -63,6 +67,7 @@ module.exports = {
         ListUser,
         RegisterUser,
         EditUser,
+        ShowUser,
         Notification
     },
 
@@ -108,6 +113,7 @@ module.exports = {
         modeList: state => state.formMode == ENUMS.FORM_MODE.LIST,
         modeRegister: state => state.formMode == ENUMS.FORM_MODE.REGISTER,
         modeEdit: state => state.formMode == ENUMS.FORM_MODE.EDIT,
+        modeShow: state => state.formMode == ENUMS.FORM_MODE.SHOW,
         showNotification: state => state.notificationMessage != null
     },
 

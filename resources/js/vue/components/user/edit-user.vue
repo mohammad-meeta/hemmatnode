@@ -50,9 +50,6 @@
                     .control(v-show="! isLoadingMode")
                         a.button.is-link.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
                             |   ویرایش
-                    .control(v-show="! isLoadingMode")
-                        a.button.is-link.is-light.is-rounded(href="/")
-                            |   انصراف
 </template>
 
 <script>
@@ -133,6 +130,10 @@ module.exports = {
                 roles: data.roles,
                 isActive: data.is_active
             };
+
+            temp.roles = {};
+            data.roles.forEach(role => temp.roles[role] = true);
+
             Vue.set(this, "userData", temp);
         },
 
@@ -224,18 +225,16 @@ module.exports = {
                 .map(key => key);
 
             userData.roles = t;
-
+            console.log(userData);
 
             const url = this.editUrl.replace("$id$", userData._id);
-            console.log(url);
             AxiosHelper.send("patch", url, userData)
                 .then(res => {
                     const data = res.data;
-                    this.setNotification(
-                        ".کاربر با موفقیت ذخیره شد",
-                        "is-success"
-                    );
-                    console.log(data);
+                    this.$emit("on-update", {
+                        sender: this,
+                        data
+                    });
                 })
                 .catch(err => {
                     console.error(err);

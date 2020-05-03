@@ -44,7 +44,7 @@
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.15",
     "material-icons": "^0.3.1",
-    "moment": "^2.24.0",
+    "moment": "2.24.0",
     "moment-jalaali": "^0.9.2",
     "mongoose": "^5.9.10",
     "mongoose-timestamp": "^0.6.0",
@@ -77,5 +77,8 @@
     "sass-loader": "^8.0.2",
     "snyk": "^1.316.0",
     "vue-template-compiler": "^2.6.11"
+  },
+  "resolutions": {
+    "moment": "2.24.0"
   }
 }

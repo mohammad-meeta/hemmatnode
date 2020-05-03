@@ -194,7 +194,7 @@ module.exports = {
                 .map(key => key);
 
             userData.roles = t;
-
+            console.log(userData);
             this.showLoading();
 
             const url = this.registerUrl;

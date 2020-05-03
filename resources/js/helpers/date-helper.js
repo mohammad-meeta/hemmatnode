@@ -3,7 +3,6 @@
 window.moment = require("moment");
 window.momentJalaali = require("moment-jalaali");
 
-
 /**
  * DateHelper
  */

@@ -38,7 +38,10 @@
                   :roles-url="rolesUrl")
 
             .column(v-show="!modeLoading && modeEdit")
-                edit-user(ref="userEdit", @on-command="onCommand" :edit-url="editUrl")
+                edit-user(ref="userEdit", @on-command="onCommand",
+                @on-update="onUserUpdate"
+                :edit-url="editUrl",
+                :roles-url="rolesUrl")
 </template>
 
 <script>
@@ -129,6 +132,21 @@ module.exports = {
             // console.log(payload);
             this.setNotification(
                 ".کاربر با موفقیت ذخیره شد",
+                "is-success"
+            );
+        },
+
+        /**
+         * On Update user
+         */
+        onUserUpdate(payload) {
+            this.$refs.userList.editInUserList(payload.data.data);
+            this.changeFormMode(ENUMS.FORM_MODE.LIST);
+
+            //this.$refs.userList.loadUsers(1);
+            // console.log(payload);
+            this.setNotification(
+                ".کاربر با موفقیت ویرایش شد",
                 "is-success"
             );
         },

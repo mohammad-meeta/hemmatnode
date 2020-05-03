@@ -126,11 +126,28 @@ module.exports = {
                 is_active: payload.is_active,
                 created_at: payload.created_at,
             };
-            console.log(newUserData);
-            console.log(this.users[3]);
 
             this.users.unshift(newUserData);
+        },
+
+        editInUserList(payload) {
+            const editedUserData = {
+                _id: payload._id,
+                name: payload.name,
+                email: payload.email,
+                profile: {
+                    first_name: payload.profile.first_name,
+                    last_name: payload.profile.last_name,
+                    nation_code: payload.profile.nation_code
+                },
+                cellphone: payload.cellphone,
+                is_active: payload.is_active,
+                created_at: payload.created_at,
+            };
+
+            console.log(editedUserData);
         }
+
     }
 };
 </script>

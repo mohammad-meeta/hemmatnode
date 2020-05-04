@@ -18,23 +18,22 @@ Model.setup = function setup() {
     Model.plugins(schema);
     Model.extraFunctions(schema);
 
-    mongoose.model('Department', schema, "departments");
+    mongoose.model('DepartmentRegulation', schema, "department_regulations");
 };
 
 /**
  * Get model
  */
 Model.model = function model() {
-    const File = new mongoose.Schema({
+    const FileD = {
         'file_id': {
-            type: String,
+            type: String
         },
         'deleted_at': {
             type: Date,
             default: null
         }
-    });
-
+    };
     return {
         'title': {
             type: String,
@@ -44,21 +43,21 @@ Model.model = function model() {
             type: String
         },
         'files': {
-            type: [File]
+            type: [FileD]
         },
-        'is_active': {
-            type: Boolean,
-            default: true,
-            required: true
-        },
-        'department_category_id': {
+        'department_id': {
             type: String,
             required: true
         },
         'user_id': {
             type: String,
             required: true
-        }
+        },
+        'is_active': {
+            type: Boolean,
+            default: true,
+            required: true
+        },
     };
 };
 
@@ -80,7 +79,7 @@ Model.plugins = function plugins(schema) {
  * @param      {Object}  schema  The schema
  */
 Model.extraFunctions = function extraFunctions(schema) {
-    schema.statics.newDepartment = Model.newDepartment;
+    schema.statics.newDepartmentRegulation = Model.newDepartmentRegulation;
 
     schema.methods.enable = Model.enable;
     schema.methods.disable = Model.disable;
@@ -89,14 +88,14 @@ Model.extraFunctions = function extraFunctions(schema) {
 /**
  * Insert user function
  */
-Model.newDepartment = function newDepartment(newDepartment) {
-    let result = new this(newDepartment);
+Model.newDepartmentRegulation = function newDepartmentRegulation(newDepartmentRegulation) {
+    let result = new this(newDepartmentRegulation);
 
     return result.save();
 };
 
 /**
- * Enable the department
+ * Enable the DepartmentRegulation
  */
 Model.enable = function enable(callback) {
     this.is_active = true;
@@ -105,7 +104,7 @@ Model.enable = function enable(callback) {
 };
 
 /**
- * Disable the department
+ * Disable the DepartmentRegulation
  */
 Model.disable = function disable(callback) {
     this.is_active = false;

@@ -5,17 +5,17 @@ const mongoose = require('mongoose');
 /**
  * dep cat controller
  */
-function DepartmentHelper() {}
-module.exports = DepartmentHelper;
+function DepartmentRegulationHelper() {}
+module.exports = DepartmentRegulationHelper;
 
 /**
  * find all dep cat data result 
  */
-DepartmentHelper.loadAllDepartmentData = function loadAllDepartmentData(dataPaginate) {
+DepartmentRegulationHelper.loadAllDepartmentRegulationData = function loadAllDepartmentRegulationData(dataPaginate) {
     const page = parseInt(dataPaginate.page)
     const pageSize = parseInt(dataPaginate.pageSize)
     const skip = page > 0 ? ((page - 1) * pageSize) : 0
-    const Department = mongoose.model('Department');
+    const Department = mongoose.model('DepartmentRegulation');
 
     const filterQuery = {};
     const projection = {};
@@ -37,8 +37,8 @@ DepartmentHelper.loadAllDepartmentData = function loadAllDepartmentData(dataPagi
 /**
  * find all dep cat count data result 
  */
-DepartmentHelper.loadAllDepartmentCountData = function loadAllDepartmentCountData() {
-    const Department = mongoose.model('Department');
+DepartmentRegulationHelper.loadAllDepartmentRegulationCountData = function loadAllDepartmentRegulationCountData() {
+    const Department = mongoose.model('DepartmentRegulation');
 
     const filterQuery = {};
 
@@ -54,11 +54,11 @@ DepartmentHelper.loadAllDepartmentCountData = function loadAllDepartmentCountDat
 /**
  * find dep cat data result 
  */
-DepartmentHelper.loadDepartmentData = function loadDepartmentData(title) {
-    const Departement = mongoose.model('Departement');
+DepartmentRegulationHelper.loadDepartmentRegulationData = function loadDepartmentRegulationData(_id) {
+    const Departement = mongoose.model('DepartementRegulation');
 
     const filterQuery = {
-        title: title
+        _id: _id
     };
 
     const projection = {};
@@ -75,13 +75,13 @@ DepartmentHelper.loadDepartmentData = function loadDepartmentData(title) {
 /**
  * insert dep cat data  
  */
-DepartmentHelper.insertNewDepartment = function insertNewDepartment(data) {
+DepartmentRegulationHelper.insertNewDepartmentRegulation = function insertNewDepartmentRegulation(data) {
 
     return new Promise((resolve, reject) => {
-        const Department = mongoose.model('Department');
-        const Department1 = new Department(data)
-
-        Department1.save()
+        const Department = mongoose.model('DepartmentRegulation');
+        // const Department1 = new Department(data)
+        console.log(data)
+        Department.insertMany(data)
             .then(res => {
                 resolve(res);
             })
@@ -92,9 +92,9 @@ DepartmentHelper.insertNewDepartment = function insertNewDepartment(data) {
 /**
  * update dep cat data  
  */
-DepartmentHelper.updateDepartmentData = function updateDepartmentData(data) {
+DepartmentRegulationHelper.updateDepartmentRegulationData = function updateDepartmentRegulationData(data) {
     return new Promise((resolve, reject) => {
-        const Department = mongoose.model('Department');
+        const Department = mongoose.model('DepartmentRegulation');
         Department.findByIdAndUpdate(data._id, data, {
                 useFindAndModify: false
             })
@@ -108,9 +108,9 @@ DepartmentHelper.updateDepartmentData = function updateDepartmentData(data) {
 /**
  * delete dep cat data  
  */
-DepartmentHelper.deleteDepartmentData = function deleteDepartmentData(data) {
+DepartmentRegulationHelper.deleteDepartmentRegulationData = function deleteDepartmentRegulationData(data) {
     return new Promise((resolve, reject) => {
-        const Department = mongoose.model('Department');
+        const Department = mongoose.model('DepartmentRegulation');
 
         Department.findOneAndUpdate(data._id, {
                 is_active: false

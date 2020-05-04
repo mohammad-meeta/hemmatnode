@@ -32,7 +32,7 @@ Model.model = function model() {
             trim: true
         },
         'user_id': {
-            type: mongoose.Types.ObjectId,
+            type: String,
             required: true
         },
         'is_active': {

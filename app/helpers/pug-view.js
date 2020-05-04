@@ -40,6 +40,12 @@ PugView.viewPath = {
     'department.show': 'pages/department/show.pug',
     'department.edit': 'pages/department/edit.pug',
 
+    /* DepartmentRegulation */
+    'department.regulation.index': 'pages/department-regulation/index.pug',
+    'department.regulation.create': 'pages/department-regulation/register.pug',
+    'department.regulation.show': 'pages/department-regulation/show.pug',
+    'department.regulation.edit': 'pages/department-regulation/edit.pug',
+
     /* articletype */
     'articletype.index': 'pages/articletype/index.pug',
     'articletype.create': 'pages/articletype/register.pug',

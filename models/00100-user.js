@@ -36,7 +36,7 @@ Model.model = function model() {
             required: true
         },
         'user_id': {
-            type: mongoose.Schema.ObjectId,
+            type: String,
             required: true
         },
         'email': {

@@ -18,7 +18,7 @@ DepartmentCategoryIndexPage.boot = function () {
  * Init vue
  */
 DepartmentCategoryIndexPage.initVue = function () {
-    const DepartmentCategories = require('VUE-COMPONENTS/department-category/department-category.vue').default;
+    const DepartmentCategories = require('VUE-COMPONENTS/department-category/department-categories.vue').default;
 
     window.v =
         new Vue({

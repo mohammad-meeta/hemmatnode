@@ -53,8 +53,8 @@ const ENUMS = require("JS-HELPERS/enums");
 const Loading = require("VUE-COMPONENTS/general/loading.vue").default;
 const RegisterDepartmentCategory = require("VUE-COMPONENTS/department-category/register-department-category.vue").default;
 const ListDepartmentCategory = require("VUE-COMPONENTS/department-category/list-department-category.vue").default;
-const EditDepartmentCategory = require("VUE-COMPONENTS/department-category/edit-department-category.vue").default;
-const ShowDepartmentCategory = require("VUE-COMPONENTS/department-category/show-department-category.vue").default;
+//const EditDepartmentCategory = require("VUE-COMPONENTS/department-category/edit-department-category.vue").default;
+//const ShowDepartmentCategory = require("VUE-COMPONENTS/department-category/show-department-category.vue").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
 module.exports = {

@@ -14,11 +14,11 @@
                 td {{ departmentCategory.is_active }}
                 td {{ toPersianDate(departmentCategory.created_at) }}
                 td.function-links
-                    a.button.is-primary.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.EDIT, user)")
+                    a.button.is-primary.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.EDIT, departmentCategory)")
                         span.icon.is-small
                             i.material-icons.icon check_circle
                         span ویرایش
-                    a.button.is-warning.is-rounded.mt-2(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SHOW, user)")
+                    a.button.is-warning.is-rounded.mt-2(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SHOW, departmentCategory)")
                         span.icon.is-small
                             i.material-icons.icon swap_horizontal_circle
                         span مشاهده
@@ -47,26 +47,26 @@ module.exports = {
 
     data: () => ({
         ENUMS,
-        users: [],
-        usersCount: 0,
+        departmentCategories: [],
+        departmentCategoriesCount: 0,
         pageCount: 0
     }),
 
     computed: {
-        hasUsers: state => (state.users || []).length
+        hasDepartmentCategories: state => (state.departmentCategories || []).length
     },
 
     methods: {
         /**
-         * Load users
+         * Load departmentCategories
          */
-        loadUsers(pageId) {
+        loadDepartmentCategories(pageId) {
             let url = this.listUrl.replace("$page$", pageId);
             url = url.replace("$pageSize$", 50);
             AxiosHelper.send("get", url, "").then(res => {
                 const resData = res.data;
-                Vue.set(this, "users", resData.data.data);
-                Vue.set(this, "usersCount", resData.data.count);
+                Vue.set(this, "departmentCategories", resData.data.data);
+                Vue.set(this, "departmentCategoriesCount", resData.data.count);
 
                 this.paginator();
             });
@@ -92,60 +92,43 @@ module.exports = {
          * Paginator
          */
         paginator() {
-            let pageCount = Math.ceil(this.usersCount / 50);
+            let pageCount = Math.ceil(this.departmentCategoriesCount / 50);
             Vue.set(this, "pageCount", pageCount);
         },
         /**
          * paginator click link
          */
         paginatorClick(id) {
-            this.loadUsers(id);
+            this.loadDepartmentCategories(id);
         },
         /**
-         * add new user data to list data
+         * add new DepartmentCategory data to list data
          */
-        addToUserList(payload) {
+        addToDepartmentCategoryList(payload) {
             console.log(payload);
-            const newUserData = {
+            const newDepartmentCategoryData = {
                 _id: payload._id,
-                name: payload.name,
-                email: payload.email,
-                profile: {
-                    first_name: payload.profile.first_name,
-                    last_name: payload.profile.last_name,
-                    nation_code: payload.profile.nation_code
-                },
-                cellphone: payload.cellphone,
+                title: payload.title,
                 is_active: payload.is_active,
                 created_at: payload.created_at
             };
 
-            this.users.unshift(newUserData);
+            this.DepartmentCategories.unshift(newDepartmentCategoryData);
         },
 
-        editInUserList(payload) {
-            const editedUserData = {
+        editInDepartmentCategoryList(payload) {
+            const editedDepartmentCategoryData = {
                 _id: payload._id,
-                name: payload.name,
-                email: payload.email,
-                first_name: payload.first_name,
-                last_name: payload.last_name,
-                nation_code: payload.nation_code,
-                cellphone: payload.cellphone,
+                title: payload.title,
                 is_active: payload.is_active,
                 created_at: payload.created_at
             };
 
-            let foundIndex = this.users.findIndex(
-                x => x._id == editedUserData._id
+            let foundIndex = this.DepartmentCategories.findIndex(
+                x => x._id == editedDepartmentCategoryData._id
             );
-            this.users[foundIndex].name= editedUserData.name;
-            this.users[foundIndex].email= editedUserData.email;
-            this.users[foundIndex].profile.first_name= editedUserData.first_name;
-            this.users[foundIndex].profile.last_name= editedUserData.last_name;
-            this.users[foundIndex].profile.nation_code= editedUserData.nation_code;
-            this.users[foundIndex].cellphone= editedUserData.cellphone;
-            this.users[foundIndex].is_active= editedUserData.is_active;
+            this.DepartmentCategories[foundIndex].title= editedDepartmentCategoryData.title;
+            this.DepartmentCategories[foundIndex].is_active= editedDepartmentCategoryData.is_active;
         }
     }
 };

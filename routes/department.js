@@ -1,6 +1,10 @@
 'use strict';
 const validator = use('validators/department-register-validator');
 const Rule = use('core/helpers/rule-helper');
+var multer = require('multer');
+const upload = multer({
+    dest: 'uploads/'
+});
 
 const {
     checkSession
@@ -39,9 +43,10 @@ Router.get('/department/edit', [
     .as('department.edit');
 
 Router.post('/department', [
-        checkSession,
-        Rule.canAsync('user.permision', 'department.store'),
-        validator.validate,
+        upload.array('files'),
+        // checkSession,
+        // Rule.canAsync('user.permision', 'department.store'),
+        // validator.validate,
         'Department@store'
     ])
     .as('department.store');

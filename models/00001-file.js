@@ -26,20 +26,40 @@ Model.setup = function setup() {
 Model.model = function model() {
     return {
         'user_id': {
-            type: mongoose.Schema.ObjectId,
-            required: true
-        },
-        'file_name': {
             type: String,
             required: true
         },
-        'extention': {
-            type: String,
-            required: true
+        "fieldname": {
+            required: true,
+            type: String
         },
-        'original_file_name': {
-            type: String,
-            required: true
+        "originalname": {
+            required: true,
+            type: String
+        },
+        "encoding": {
+            required: true,
+            type: String
+        },
+        "mimetype": {
+            required: true,
+            type: String
+        },
+        "destination": {
+            required: true,
+            type: String
+        },
+        "filename": {
+            required: true,
+            type: String
+        },
+        "path": {
+            required: true,
+            type: String
+        },
+        "size": {
+            required: true,
+            type: Number
         }
     };
 };

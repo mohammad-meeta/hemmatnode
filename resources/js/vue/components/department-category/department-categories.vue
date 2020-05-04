@@ -5,9 +5,9 @@
                 span(v-html="notificationMessage")
             .container.page-header
                 .title
-                    h1(v-show="modeList") کاربران
-                    h1(v-show="modeRegister") ثبت نام کاربر جدید
-                    h1(v-show="modeEdit") ویرایش کاربر
+                    h1(v-show="modeList") دسته بندی های گروه
+                    h1(v-show="modeRegister") ایجاد دسته بندی گروه
+                    h1(v-show="modeEdit") ویرایش دسته بندی گروه
 
         .columns.exposed-form(v-show="!modeLoading")
             .column.is-one-fifth(v-show="modeList")
@@ -15,7 +15,7 @@
                 @click.prevent="commandClick(ENUMS.COMMAND.NEW)")
                     span.icon.is-small
                         i.material-icons.icon check_circle
-                    span ثبت نام
+                    span ایجاد
 
             .column.is-one-fifth(v-show="!modeList")
                 a.button.is-warning.is-rounded(href="#",
@@ -29,22 +29,20 @@
                 loading
 
             .column(v-show="!modeLoading && modeList")
-                list-user(ref="userList", @on-command="onCommand", :list-url="listUrl")
+                list-department-category(ref="departmentCategoryList", @on-command="onCommand", :list-url="listUrl")
 
             .column(v-show="!modeLoading && modeRegister")
-                register-user(@on-command="onCommand",
-                  @on-register="onUserRegister"
-                  :register-url="registerUrl",
-                  :roles-url="rolesUrl")
+                register-department-category(@on-command="onCommand",
+                  @on-register="onDepartmentCategoryRegister"
+                  :register-url="registerUrl")
 
             .column(v-show="!modeLoading && modeEdit")
-                edit-user(ref="userEdit", @on-command="onCommand",
-                @on-update="onUserUpdate"
-                :edit-url="editUrl",
-                :roles-url="rolesUrl")
+                edit-department-category(ref="departmentCategoryEdit", @on-command="onCommand",
+                @on-update="onDepartmentCategoryUpdate"
+                :edit-url="editUrl",)
 
             .column(v-show="!modeLoading && modeShow")
-                show-user(ref="userShow", @on-command="onCommand")
+                show-department-category(ref="departmentCategoryShow", @on-command="onCommand")
 </template>
 
 <script>
@@ -53,28 +51,28 @@
 const Routes = require("JS-CORE/routes");
 const ENUMS = require("JS-HELPERS/enums");
 const Loading = require("VUE-COMPONENTS/general/loading.vue").default;
-const RegisterUser = require("VUE-COMPONENTS/user/register-user.vue").default;
-const ListUser = require("VUE-COMPONENTS/user/list-user.vue").default;
-const EditUser = require("VUE-COMPONENTS/user/edit-user.vue").default;
-const ShowUser = require("VUE-COMPONENTS/user/show-user.vue").default;
+const RegisterDepartmentCategory = require("VUE-COMPONENTS/department-category/register-department-category.vue").default;
+const ListDepartmentCategory = require("VUE-COMPONENTS/department-category/list-department-category.vue").default;
+const EditDepartmentCategory = require("VUE-COMPONENTS/department-category/edit-department-category.vue").default;
+const ShowDepartmentCategory = require("VUE-COMPONENTS/department-category/show-department-category.vue").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
 module.exports = {
-    name: "Users",
+    name: "DepartmentCategories",
 
     components: {
         Loading,
-        ListUser,
-        RegisterUser,
-        EditUser,
-        ShowUser,
+        ListDepartmentCategory,
+        RegisterDepartmentCategory,
+        EditDepartmentCategory,
+        ShowDepartmentCategory,
         Notification
     },
 
     data: () => ({
         ENUMS,
         formModeStack: [],
-        users: [],
+        departmentCategories: [],
         notificationMessage: null,
         notificationType: "is-info",
     }),
@@ -123,36 +121,32 @@ module.exports = {
 
     mounted() {
         this.changeFormMode(ENUMS.FORM_MODE.LIST);
-        //this.$refs.userList.loadUsers(1);
+        //this.$refs.departmentCategoryList.loadDepartmentCategories(1);
     },
 
     methods: {
         /**
-         * On Register user
+         * On Register department category
          */
-        onUserRegister(payload) {
-            this.$refs.userList.addToUserList(payload.data.data);
+        onDepartmentCategoryRegister(payload) {
+            this.$refs.departmentCategoryList.addToDepartmentCategoryList(payload.data.data);
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
 
-            //this.$refs.userList.loadUsers(1);
-            // console.log(payload);
             this.setNotification(
-                ".کاربر با موفقیت ذخیره شد",
+                ".دسته بندی با موفقیت ذخیره شد",
                 "is-success"
             );
         },
 
         /**
-         * On Update user
+         * On Update department category
          */
-        onUserUpdate(payload) {
-            this.$refs.userList.editInUserList(payload.data);
+        onDepartmentCategoryUpdate(payload) {
+            this.$refs.departmentCategoryList.editInDepartmentCategoryList(payload.data);
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
 
-            //this.$refs.userList.loadUsers(1);
-            // console.log(payload);
             this.setNotification(
-                ".کاربر با موفقیت ویرایش شد",
+                ".دسته بندی با موفقیت ویرایش شد",
                 "is-success"
             );
         },
@@ -172,13 +166,13 @@ module.exports = {
                     break;
 
                 case ENUMS.COMMAND.REGISTER:
-                    /* TODO: REGISTER NEW USER */
-                    console.log("REGISTER NEW USER", arg);
+                    /* TODO: REGISTER NEW  */
+                    console.log("REGISTER NEW DepartmentCategory", arg);
                     break;
 
                 case ENUMS.COMMAND.EDIT:
-                    /* TODO: REGISTER NEW USER */
-                    this.$refs.userEdit.loadUserData(data);
+                    /* TODO: REGISTER NEW DepartmentCategory */
+                    this.$refs.departmentCategoryEdit.loadDepartmentCategoryData(data);
                     this.changeFormMode(ENUMS.FORM_MODE.EDIT);
                     break;
 
@@ -187,7 +181,7 @@ module.exports = {
                     break;
 
                 case ENUMS.COMMAND.SHOW:
-                    this.$refs.userShow.loadUserData(data);
+                    this.$refs.departmentCategoryShow.loadDepartmentCategoryData(data);
                     this.changeFormMode(ENUMS.FORM_MODE.SHOW);
                     break;
             }
@@ -246,9 +240,7 @@ module.exports = {
         closeNotification() {
             this.setNotification(null);
         },
-    }
+    },
 };
-</script>
 
-<style scoped>
-</style>
+</script>

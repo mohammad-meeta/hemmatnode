@@ -4,12 +4,13 @@
             .column.is-full(v-show="isLoadingMode")
                 h1 در حال بارگذاری
             .column.is-full(v-show="! isLoadingMode")
-                .field
-                    label.label نام کاربری:
-                    div {{ userData.name }}
-                .field
-                    label.label نام و نام خانوادگی:
-                    div {{ userData.firstName }} {{ userData.lastName }}
+
+                .info-card
+                    .info-card-title {{ userData.name }}
+                    .info-card-details
+                        .info-card-item
+                            .info-card-label نام و نام خانوادگی:
+                            .info-card-value {{ userData.firstName }} {{ userData.lastName }}
 </template>
 <script>
 "use strict";

@@ -121,7 +121,7 @@ module.exports = {
 
     mounted() {
         this.changeFormMode(ENUMS.FORM_MODE.LIST);
-        //this.$refs.departmentCategoryList.loadDepartmentCategories(1);
+        this.$refs.departmentCategoryList.loadDepartmentCategories(1);
     },
 
     methods: {

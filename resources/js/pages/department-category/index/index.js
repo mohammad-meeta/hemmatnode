@@ -37,6 +37,10 @@ DepartmentCategoryIndexPage.initVue = function () {
             methods: {
                 init() {
                     this.loadDepartmentCategories();
+                },
+
+                loadDepartmentCategories() {
+                    //this.$refs.departmentCategories.loadDepartmentCategories();
                 }
             }
         });

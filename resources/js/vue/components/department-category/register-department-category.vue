@@ -37,7 +37,6 @@ module.exports = {
 
     data: () => ({
         ENUMS,
-        roles: [],
         departmentCategoryData: {
             title: null,
             isActive: false
@@ -52,16 +51,11 @@ module.exports = {
         registerUrl: {
             type: String,
             default: ""
-        },
-
-        rolesUrl: {
-            type: String,
-            default: ""
         }
     },
 
     created() {
-        this.loadRoles();
+
     },
 
     computed: {
@@ -131,6 +125,7 @@ module.exports = {
             this.showLoading();
 
             const url = this.registerUrl;
+            console.log(url);
             AxiosHelper.send("post", url, departmentCategoryData)
                 .then(res => {
                     const data = res.data;

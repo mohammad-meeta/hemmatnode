@@ -36,12 +36,12 @@
                   @on-register="onDepartmentCategoryRegister"
                   :register-url="registerUrl")
 
-            .column(v-show="!modeLoading && modeEdit")
+            //.column(v-show="!modeLoading && modeEdit")
                 edit-department-category(ref="departmentCategoryEdit", @on-command="onCommand",
                 @on-update="onDepartmentCategoryUpdate"
                 :edit-url="editUrl",)
 
-            .column(v-show="!modeLoading && modeShow")
+            //.column(v-show="!modeLoading && modeShow")
                 show-department-category(ref="departmentCategoryShow", @on-command="onCommand")
 </template>
 
@@ -64,8 +64,8 @@ module.exports = {
         Loading,
         ListDepartmentCategory,
         RegisterDepartmentCategory,
-        EditDepartmentCategory,
-        ShowDepartmentCategory,
+        //EditDepartmentCategory,
+        //ShowDepartmentCategory,
         Notification
     },
 
@@ -84,11 +84,6 @@ module.exports = {
         },
 
         listUrl: {
-            type: String,
-            default: null
-        },
-
-        rolesUrl: {
             type: String,
             default: null
         },
@@ -121,7 +116,7 @@ module.exports = {
 
     mounted() {
         this.changeFormMode(ENUMS.FORM_MODE.LIST);
-        //this.$refs.departmentCategoryList.loadDepartmentCategories(1);
+        this.$refs.departmentCategoryList.loadDepartmentCategories(1);
     },
 
     methods: {

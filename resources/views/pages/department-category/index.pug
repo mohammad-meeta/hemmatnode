@@ -5,7 +5,7 @@ block title
 
 block content
     .container
-        users(list-url=route('api.departmentcategory', { page: '$page$', size: '$pageSize$' }),
+        department-categories(list-url=route('api.departmentcategory', { page: '$page$', size: '$pageSize$' }),
             register-url=route('departmentcategory.store'),
             edit-url=route('departmentcategoryuser.update', { id :'$id$'})
         )

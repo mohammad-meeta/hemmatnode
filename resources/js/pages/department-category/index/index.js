@@ -46,47 +46,47 @@ DepartmentCategoryIndexPage.initVue = function () {
 DepartmentCategoryIndexPage.boot();
  'use strict';
 
- /**
-  * DeparementCategoryIndexPage class
-  */
- const DepartmentCategoryIndexPage = function () {}
- module.exports = DepartmentCategoryIndexPage;
+//  /**
+//   * DeparementCategoryIndexPage class
+//   */
+//  const DepartmentCategoryIndexPage = function () {}
+//  module.exports = DepartmentCategoryIndexPage;
 
 
- /**
-  * Boot method
-  */
- DepartmentCategoryIndexPage.boot = function () {
-     DepartmentCategoryIndexPage.initVue();
-}
+//  /**
+//   * Boot method
+//   */
+//  DepartmentCategoryIndexPage.boot = function () {
+//      DepartmentCategoryIndexPage.initVue();
+// }
 
- /**
-  * Init vue
-  */
- DepartmentCategoryIndexPage.initVue = function () {
-    const DepartmentCategories = require('VUE-COMPONENTS/department-category/department-category.vue').default;
+//  /**
+//   * Init vue
+//   */
+//  DepartmentCategoryIndexPage.initVue = function () {
+//     const DepartmentCategories = require('VUE-COMPONENTS/department-category/department-category.vue').default;
 
-     window.v =
-        new Vue({
-            el: '#app',
+//      window.v =
+//         new Vue({
+//             el: '#app',
 
-            components: {
-                DepartmentCategories
-            },
+//             components: {
+//                 DepartmentCategories
+//             },
 
-            data: {},
+//             data: {},
 
-            mounted() {
-                this.init();
-            },
+//             mounted() {
+//                 this.init();
+//             },
 
-            methods: {
-                init() {
-                    this.loadDepartmentCategories();
-            }
-        });
- }
+//             methods: {
+//                 init() {
+//                     this.loadDepartmentCategories();
+//             }
+//         });
+//  }
 
- /* Boot */
-DepartmentCategoryIndexPage.boot();
+//  /* Boot */
+// DepartmentCategoryIndexPage.boot();
 

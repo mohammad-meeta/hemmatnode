@@ -1,0 +1,16 @@
+extends ../../layout/app.pug
+
+block title
+    | دسته بندی گروه
+
+block content
+    .container
+        departments(list-url=route('api.department', { page: '1', size: '25' }),
+            register-url=route('department.store'),
+            edit-url=route('department.update', { id :'$id$'})
+        )
+
+block scripts
+    script(defer, src=mix('js/pages/department/index/index.js'))
+
+

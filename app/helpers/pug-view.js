@@ -51,6 +51,12 @@ PugView.viewPath = {
     'articletype.create': 'pages/articletype/register.pug',
     'articletype.show': 'pages/articletype/show.pug',
     'articletype.edit': 'pages/articletype/edit.pug',
+    
+    /* documenttype */
+    'documenttype.index': 'pages/documenttype/index.pug',
+    'documenttype.create': 'pages/documenttype/register.pug',
+    'documenttype.show': 'pages/documenttype/show.pug',
+    'documenttype.edit': 'pages/documenttype/edit.pug',
 
     /* article*/
     'article.index': 'pages/article/index.pug',

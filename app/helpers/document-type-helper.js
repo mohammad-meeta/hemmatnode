@@ -5,23 +5,23 @@ const mongoose = require('mongoose');
 /**
  * dep cat controller
  */
-function DepartmentHelper() {}
-module.exports = DepartmentHelper;
+function DocumentType() {}
+module.exports = DocumentType;
 
 /**
  * find all dep cat data result 
  */
-DepartmentHelper.loadAllDepartmentData = function loadAllDepartmentData(dataPaginate) {
+DocumentType.loadAllDocumentTypeData = function loadAllDocumentTypeData(dataPaginate) {
     const page = parseInt(dataPaginate.page)
     const pageSize = parseInt(dataPaginate.pageSize)
     const skip = page > 0 ? ((page - 1) * pageSize) : 0
-    const Department = mongoose.model('Department');
+    const DocumentType = mongoose.model('DocumentType');
 
     const filterQuery = {};
     const projection = {};
 
     return new Promise((resolve, reject) => {
-        Department.find(filterQuery, projection, {
+        DocumentType.find(filterQuery, projection, {
                 sort: {
                     'created_at': -1
                 },
@@ -37,13 +37,13 @@ DepartmentHelper.loadAllDepartmentData = function loadAllDepartmentData(dataPagi
 /**
  * find all dep cat count data result 
  */
-DepartmentHelper.loadAllDepartmentCountData = function loadAllDepartmentCountData() {
-    const Department = mongoose.model('Department');
+DocumentType.loadAllDocumentTypeCountData = function loadAllDocumentTypeCountData() {
+    const DocumentType = mongoose.model('DocumentType');
 
     const filterQuery = {};
 
     return new Promise((resolve, reject) => {
-        Department.countDocuments(filterQuery)
+        DocumentType.countDocuments(filterQuery)
             .then(res => {
                 resolve(res);
             })
@@ -54,8 +54,8 @@ DepartmentHelper.loadAllDepartmentCountData = function loadAllDepartmentCountDat
 /**
  * find dep cat data result 
  */
-DepartmentHelper.loadDepartmentData = function loadDepartmentData(title) {
-    const Department = mongoose.model('Department');
+DocumentType.loadDocumentTypeData = function loadDocumentTypeData(title) {
+    const DocumentType = mongoose.model('DocumentType');
 
     const filterQuery = {
         title: title
@@ -64,7 +64,7 @@ DepartmentHelper.loadDepartmentData = function loadDepartmentData(title) {
     const projection = {};
 
     return new Promise((resolve, reject) => {
-        Department.findOne(filterQuery, projection)
+        DocumentType.findOne(filterQuery, projection)
             .then(res => {
                 resolve(res);
             })
@@ -75,13 +75,13 @@ DepartmentHelper.loadDepartmentData = function loadDepartmentData(title) {
 /**
  * insert dep cat data  
  */
-DepartmentHelper.insertNewDepartment = function insertNewDepartment(data) {
+DocumentType.insertNewDocumentType = function insertNewDocumentType(data) {
 
     return new Promise((resolve, reject) => {
-        const Department = mongoose.model('Department');
-        const Department1 = new Department(data)
+        const DocumentType = mongoose.model('DocumentType');
+        const DocumentType1 = new DocumentType(data)
 
-        Department1.save()
+        DocumentType1.save()
             .then(res => {
                 resolve(res);
             })
@@ -92,10 +92,10 @@ DepartmentHelper.insertNewDepartment = function insertNewDepartment(data) {
 /**
  * update dep cat data  
  */
-DepartmentHelper.updateDepartmentData = function updateDepartmentData(data) {
+DocumentType.updateDocumentTypeData = function updateDocumentTypeData(data) {
     return new Promise((resolve, reject) => {
-        const Department = mongoose.model('Department');
-        Department.findByIdAndUpdate(data._id, data, {
+        const DocumentType = mongoose.model('DocumentType');
+        DocumentType.findByIdAndUpdate(data._id, data, {
                 useFindAndModify: false
             })
             .then(res => {
@@ -108,11 +108,11 @@ DepartmentHelper.updateDepartmentData = function updateDepartmentData(data) {
 /**
  * delete dep cat data  
  */
-DepartmentHelper.deleteDepartmentData = function deleteDepartmentData(data) {
+DocumentType.deleteDocumentTypeData = function deleteDocumentTypeData(data) {
     return new Promise((resolve, reject) => {
-        const Department = mongoose.model('Department');
+        const DocumentType = mongoose.model('DocumentType');
 
-        Department.findOneAndUpdate(data._id, {
+        DocumentType.findOneAndUpdate(data._id, {
                 is_active: false
             }, {
                 useFindAndModify: false

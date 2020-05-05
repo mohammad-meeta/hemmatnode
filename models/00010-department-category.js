@@ -18,7 +18,7 @@ Model.setup = function setup() {
     Model.plugins(schema);
     Model.extraFunctions(schema);
 
-    mongoose.model('DepartmentCategory', schema);
+    mongoose.model('DepartmentCategory', schema,"department-categories");
 };
 
 /**

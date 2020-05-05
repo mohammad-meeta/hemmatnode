@@ -167,7 +167,7 @@ DepartmentCategory.store = async function store(req, res, next) {
         "is_active": req.body.is_active || false
     };
 
-    const DepCatInsert = DepCatHelper.insertNewDepCat(data)
+    DepCatHelper.insertNewDepCat(data)
         .then(data => {
             const result = {
                 success: true,

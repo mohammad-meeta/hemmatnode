@@ -113,7 +113,7 @@ module.exports = {
                 created_at: payload.created_at
             };
 
-            this.DepartmentCategories.unshift(newDepartmentCategoryData);
+            this.departmentCategories.unshift(newDepartmentCategoryData);
         },
 
         editInDepartmentCategoryList(payload) {
@@ -124,11 +124,11 @@ module.exports = {
                 created_at: payload.created_at
             };
 
-            let foundIndex = this.DepartmentCategories.findIndex(
+            let foundIndex = this.departmentCategories.findIndex(
                 x => x._id == editedDepartmentCategoryData._id
             );
-            this.DepartmentCategories[foundIndex].title= editedDepartmentCategoryData.title;
-            this.DepartmentCategories[foundIndex].is_active= editedDepartmentCategoryData.is_active;
+            this.departmentCategories[foundIndex].title= editedDepartmentCategoryData.title;
+            this.departmentCategories[foundIndex].is_active= editedDepartmentCategoryData.is_active;
         }
     }
 };

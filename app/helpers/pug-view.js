@@ -51,12 +51,18 @@ PugView.viewPath = {
     'articletype.create': 'pages/articletype/register.pug',
     'articletype.show': 'pages/articletype/show.pug',
     'articletype.edit': 'pages/articletype/edit.pug',
-    
+
     /* documenttype */
     'documenttype.index': 'pages/documenttype/index.pug',
     'documenttype.create': 'pages/documenttype/register.pug',
     'documenttype.show': 'pages/documenttype/show.pug',
     'documenttype.edit': 'pages/documenttype/edit.pug',
+
+    /* document */
+    'document.index': 'pages/document/index.pug',
+    'document.create': 'pages/document/register.pug',
+    'document.show': 'pages/document/show.pug',
+    'document.edit': 'pages/document/edit.pug',
 
     /* article*/
     'article.index': 'pages/article/index.pug',

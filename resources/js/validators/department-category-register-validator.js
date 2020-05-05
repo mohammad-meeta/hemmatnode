@@ -26,7 +26,7 @@ DepartmentCategoryValidator.validate = function validate(data) {
 /**
  * Validation edit funciton
  */
-UserRegisterValidator.validateEdit = function validateEdit(data) {
+DepartmentCategoryValidator.validateEdit = function validateEdit(data) {
     const BaseValidator = require('JS-VALIDATORS/base-validator');
 
     const rules = {

@@ -40,7 +40,7 @@ DepartmentCategoryIndexPage.initVue = function () {
                 },
 
                 loadDepartmentCategories() {
-                    this.$refs.departmentCategories.loadDepartmentCategories();
+                    //this.$refs.departmentCategories.loadDepartmentCategories();
                 }
             }
         });

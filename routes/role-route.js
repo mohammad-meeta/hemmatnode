@@ -29,7 +29,7 @@ Router.get('/role/create', [
         Rule.canAsync('user.permision', 'role.create'),
         'Role@create'
     ])
-    .as('user.create');
+    .as('role.create');
 
 Router.get('/role/edit', [
         checkSession,

@@ -26,7 +26,7 @@ Router.get('/api/document-types/:page/:size?', [
         checkSession,
         'DocumentType@paginateDocumentType'
     ])
-    .as('api.department');
+    .as('api.documenttype');
 
 Router.get('/document-type/create', [
         checkSession,

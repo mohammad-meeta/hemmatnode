@@ -18,6 +18,7 @@ Department.index = async function index(req, res, next) {
         pageRoute
     });
 };
+
 /**
  * paginate route
  */

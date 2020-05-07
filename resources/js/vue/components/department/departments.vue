@@ -34,12 +34,14 @@
             .column(v-show="!modeLoading && modeRegister")
                 register-department(@on-command="onCommand",
                   @on-register="onDepartmentRegister"
-                  :register-url="registerUrl")
+                  :register-url="registerUrl",
+                  :department-categories-url="departmentCategoriesUrl")
 
             //.column(v-show="!modeLoading && modeEdit")
                 edit-department(ref="departmentEdit", @on-command="onCommand",
                 @on-update="onDepartmentUpdate"
-                :edit-url="editUrl",)
+                :edit-url="editUrl",
+                :departmentCategories-url="departmentCategoriesUrl")
 
             //.column(v-show="!modeLoading && modeShow")
                 show-department(ref="departmentShow", @on-command="onCommand")
@@ -93,6 +95,11 @@ module.exports = {
             default: null
         },
 
+        departmentCategoriesUrl: {
+            type: String,
+            default: null
+        },
+
         editUrl: {
             type: String,
             default: null
@@ -116,7 +123,7 @@ module.exports = {
 
     mounted() {
         this.changeFormMode(ENUMS.FORM_MODE.LIST);
-        this.$refs.departmentList.loadDepartments(1);
+        //this.$refs.departmentList.loadDepartments(1);
     },
 
     methods: {

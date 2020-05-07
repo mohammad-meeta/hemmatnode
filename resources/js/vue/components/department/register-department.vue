@@ -11,9 +11,28 @@
                 .control
                     input.input(type='text', placeholder='عنوان', autofocus, v-model='departmentData.title' required)
             .field
+                label.label معرفی
+                .control
+                    textarea.textarea(placeholder='معرفی', v-model='departmentData.description')
+
+            .field
+                label.label دسته بندی
+                .control
+                    .select.is-primary
+                        select(v-model="departmentData.departmentCategories")
+                            option(v-for='(departmentCategory, departmentCategoryIndex) in departmentCategories',
+                                :value="departmentCategory._id") {{ departmentCategory.title }}
+
+            .field
+                label.checkbox
+                    input(type='file', @change="setAttachment")
+                    |   ضمیمه
+
+            .field
                 label.checkbox
                     input(type='checkbox', v-model="departmentData.isActive")
                     |   فعال
+
             .field.is-grouped
                 .control(v-show="! isLoadingMode")
                     a.button.is-link.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
@@ -37,25 +56,35 @@ module.exports = {
 
     data: () => ({
         ENUMS,
+        departmentCategories: [],
         departmentData: {
             title: null,
+            description: null,
+            department_category_id: null,
+            files: {},
             isActive: false
         },
 
         notificationMessage: null,
         notificationType: "is-info",
-        showLoadingFlag: false
+        showLoadingFlag: false,
+        files: []
     }),
 
     props: {
         registerUrl: {
             type: String,
             default: ""
+        },
+
+        departmentCategoriesUrl: {
+            type: String,
+            default: ""
         }
     },
 
     created() {
-
+        this.loadDepartmentCategories();
     },
 
     computed: {
@@ -64,6 +93,15 @@ module.exports = {
     },
 
     methods: {
+        /**
+         * Set attachments
+         */
+        setAttachment(sender) {
+            const files = sender.target.files;
+
+            Vue.set(this, "files", files);
+        },
+
         /**
          * On Command
          *
@@ -77,6 +115,18 @@ module.exports = {
             }
         },
 
+        /**
+         * load all departmentCategories for select departmentCategories in form
+         */
+        loadDepartmentCategories() {
+            const url = this.departmentCategoriesUrl;
+
+            AxiosHelper.send("get", url, "").then(res => {
+                const resData = res.data;
+                const datas = resData.data.data;
+                Vue.set(this, "departmentCategories", datas);
+            });
+        },
 
         /**
          * Show Loading
@@ -116,17 +166,22 @@ module.exports = {
             if (!isValid) {
                 return;
             }
-
             let departmentData = {
                 title: this.departmentData.title,
+                description: this.departmentData.description,
+                department_category_id: this.departmentData.departmentCategories,
                 is_active: this.departmentData.isActive
             };
+
+            departmentData.files = this.files[0];
 
             this.showLoading();
 
             const url = this.registerUrl;
-            console.log(url);
-            AxiosHelper.send("post", url, departmentData)
+
+            AxiosHelper.send("post", url, departmentData, {
+                sendAsFormData: true
+            })
                 .then(res => {
                     const data = res.data;
                     this.$emit("on-register", {

@@ -1,11 +1,12 @@
 extends ../../layout/app.pug
 
 block title
-    | دسته بندی گروه
+    | گروه
 
 block content
     .container
-        departments(list-url=route('api.department', { page: '1', size: '25' }),
+        departments(list-url=route('api.department', { page: '$page$', size: '$pageSize$' }),
+            department-categories-url=route('api.departmentcategory', { page: 1, size: 1000 }),
             register-url=route('department.store'),
             edit-url=route('department.update', { id :'$id$'})
         )

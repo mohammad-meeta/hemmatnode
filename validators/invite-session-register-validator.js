@@ -5,30 +5,30 @@ const validator = use('core/helpers/data-validator');
 /**
  * User Login Validator
  */
-function SessionValidator() {}
-module.exports = SessionValidator;
+function InviteSessionValidator() {}
+module.exports = InviteSessionValidator;
 
-SessionValidator.async = true;
+InviteSessionValidator.async = true;
 
 /**
  * Validation funciton
  */
-SessionValidator.lang = function lang() {
+InviteSessionValidator.lang = function lang() {
     return 'fa';
 };
 
 /**
  * Validation funciton
  */
-SessionValidator.validate = function validate(req, res, next) {
+InviteSessionValidator.validate = function validate(req, res, next) {
 
-    validator.validate(SessionValidator, req, res, next);
+    validator.validate(InviteSessionValidator, req, res, next);
 };
 
 /**
  * Data function
  */
-SessionValidator.data = function data(req) {
+InviteSessionValidator.data = function data(req) {
     return {
         user_id: req.session.auth.userId,
         title: req.body.title,
@@ -36,7 +36,6 @@ SessionValidator.data = function data(req) {
         place: req.body.place,
         agenda: req.body.agenda,
         user_list: req.body.user_list,
-        other_user: req.body.other_user,
         date: req.body.date,
         department_id: req.body.department_id
     };
@@ -45,7 +44,7 @@ SessionValidator.data = function data(req) {
 /**
  * Rules function
  */
-SessionValidator.rules = function rules(req) {
+InviteSessionValidator.rules = function rules(req) {
     return {
         'user_id': 'required',
         'title': 'required',
@@ -54,7 +53,6 @@ SessionValidator.rules = function rules(req) {
         'body': 'required',
         'user_list': 'required|array',
         'date': 'required',
-        'other_user': 'array',
         'department_id': 'required'
     };
 };
@@ -62,14 +60,14 @@ SessionValidator.rules = function rules(req) {
 /**
  * Messages function
  */
-SessionValidator.messages = function messages() {
+InviteSessionValidator.messages = function messages() {
     return {};
 };
 
 /**
  * Return captions
  */
-SessionValidator.attributes = function attributes() {
+InviteSessionValidator.attributes = function attributes() {
     return {
         user_id: 'userId',
         title: 'title',
@@ -77,7 +75,6 @@ SessionValidator.attributes = function attributes() {
         agenda: 'agenda',
         place: 'place',
         user_list: 'user_list',
-        other_user: 'other_user',
         date: 'date',
         department_id: 'department_id'
     };

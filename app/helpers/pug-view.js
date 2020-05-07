@@ -40,6 +40,12 @@ PugView.viewPath = {
     'department.show': 'pages/department/show.pug',
     'department.edit': 'pages/department/edit.pug',
 
+    /* Session */
+    'session.index': 'pages/session/index.pug',
+    'session.create': 'pages/session/register.pug',
+    'session.show': 'pages/session/show.pug',
+    'session.edit': 'pages/session/edit.pug',
+
     /* DepartmentRegulation */
     'department.regulation.index': 'pages/department-regulation/index.pug',
     'department.regulation.create': 'pages/department-regulation/register.pug',
@@ -51,12 +57,18 @@ PugView.viewPath = {
     'articletype.create': 'pages/articletype/register.pug',
     'articletype.show': 'pages/articletype/show.pug',
     'articletype.edit': 'pages/articletype/edit.pug',
-    
+
     /* documenttype */
     'documenttype.index': 'pages/documenttype/index.pug',
     'documenttype.create': 'pages/documenttype/register.pug',
     'documenttype.show': 'pages/documenttype/show.pug',
     'documenttype.edit': 'pages/documenttype/edit.pug',
+
+    /* document */
+    'document.index': 'pages/document/index.pug',
+    'document.create': 'pages/document/register.pug',
+    'document.show': 'pages/document/show.pug',
+    'document.edit': 'pages/document/edit.pug',
 
     /* article*/
     'article.index': 'pages/article/index.pug',

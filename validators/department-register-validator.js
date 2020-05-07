@@ -32,7 +32,8 @@ DepartmentValidator.data = function data(req) {
     return {
         user_id: req.session.auth.userId,
         title: req.body.title,
-        department_category_id: req.body.department_category_id
+        body: req.body.body,
+        document_type_id: req.body.document_type_id
     };
 };
 
@@ -43,7 +44,8 @@ DepartmentValidator.rules = function rules(req) {
     return {
         'user_id': 'required',
         'title': 'required',
-        'department_category_id': 'required'
+        'body': 'required',
+        'document_type_id': 'required'
     };
 };
 
@@ -61,6 +63,7 @@ DepartmentValidator.attributes = function attributes() {
     return {
         user_id: 'user_id',
         title: 'title',
-        department_category_id: 'department_category_id'
+        body: 'body',
+        document_type_id: 'document_type_id'
     };
 };

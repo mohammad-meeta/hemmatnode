@@ -1,6 +1,6 @@
 'use strict';
 const PugView = use('app/helpers/pug-view');
-const DepartmentHelper = use('app/helpers/department-helper');
+const DocumentHelper = use('app/helpers/document-helper');
 const FileHelper = use('app/helpers/file-helper');
 /**
  * Dep cat controller
@@ -12,7 +12,7 @@ module.exports = Document;
  * Index route
  */
 Document.index = async function index(req, res, next) {
-    const pageRoute = 'department.index';
+    const pageRoute = 'document.index';
     res.render(PugView.getView(pageRoute), {
         req,
         pageRoute
@@ -28,11 +28,11 @@ Document.paginateDocument = async function paginateDocument(req, res, next) {
     };
 
     let count = 0;
-    DepartmentHelper.loadAllCountDepartmentData()
+    DocumentHelper.loadAllCountDocumentData()
         .then(data => {
             count = data;
 
-            DepartmentHelper.loadAllDepartmentData(dataPaginate)
+            DocumentHelper.loadAllDocumentData(dataPaginate)
                 .then(data => {
                     const result = {
                         success: true,
@@ -54,9 +54,9 @@ Document.paginateDocument = async function paginateDocument(req, res, next) {
  * show route
  */
 Document.show = async function show(req, res, next) {
-    const DepartmentTitle = req.params.departmentData;
-    const pageRoute = 'department.show';
-    DepartmentHelper.loadDepartmentData(DepartmentTitle)
+    const DocumentTitle = req.params.documentData;
+    const pageRoute = 'document.show';
+    DocumentHelper.loadDocumentData(DocumentTitle)
         .then(data => {
             const result = {
                 success: true,
@@ -75,7 +75,7 @@ Document.show = async function show(req, res, next) {
  * edit page route
  */
 Document.edit = async function edit(req, res, next) {
-    const pageRoute = 'department.edit';
+    const pageRoute = 'document.edit';
     res.render(PugView.getView(pageRoute), {
         req,
         pageRoute
@@ -86,9 +86,9 @@ Document.edit = async function edit(req, res, next) {
  * return edit data route
  */
 Document.editDocumentData = async function editDocumentData(req, res, next) {
-    const title = req.params.departmentData;
+    const title = req.params.documentData;
 
-    DepartmentHelper.loadDepartmentData(title)
+    DocumentHelper.loadDocumentData(title)
         .then(data => {
             const result = {
                 success: true,
@@ -123,23 +123,10 @@ Document.update = async function update(req, res, next) {
         "title": req.body.title,
         "user_id": req.session.auth.userId,
         "is_active": req.body.is_active,
-        "department_category_id": req.body.department_category_id,
-        "description": req.body.description || '',
-        "files": fileList,
-        "regulation": req.body.regulation || []
+        "document_type_id": req.body.document_type_id,
+        "body": req.body.body || '',
+        "files": fileList
     };
-
-    // const Department = DepartmentHelper.updateUserData(data)
-    //     .then(data => {
-    //         const result = {
-    //             success: true,
-    //             data: data
-    //         };
-    //         res.status(200)
-    //             .send(result)
-    //             .end();
-    //     })
-    //     .catch(err => console.error(err));
 };
 
 /**
@@ -150,7 +137,7 @@ Document.destroy = async function destroy(req, res, next) {
         "_id": req.body._id
     };
 
-    const UserDelete = DepartmentHelper.deleteDepartmentData(data)
+    DocumentHelper.deleteDocumentData(data)
         .then(data => {
             const result = {
                 success: true,
@@ -167,7 +154,7 @@ Document.destroy = async function destroy(req, res, next) {
  * Create route return page
  */
 Document.create = async function create(req, res, next) {
-    const pageRoute = PugView.getView('department.create');
+    const pageRoute = PugView.getView('document.create');
 
     res.render(pageRoute, {
         req,
@@ -200,12 +187,12 @@ Document.store = async function store(req, res, next) {
         "title": req.body.title,
         "user_id": req.session.auth.userId,
         "is_active": req.body.is_active || false,
-        "department_category_id": req.body.department_category_id,
-        "description": req.body.description || '',
+        "document_type_id": req.body.document_type_id,
+        "body": req.body.body || '',
         "files": fileList || []
     };
 
-    DepartmentHelper.insertNewDepartment(data)
+    DocumentHelper.insertNewDocument(data)
         .then(data => {
             const result = {
                 success: true,

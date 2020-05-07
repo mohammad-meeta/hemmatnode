@@ -1,39 +1,38 @@
 'use strict';
 const PugView = use('app/helpers/pug-view');
-const DepartmentHelper = use('app/helpers/department-helper');
+const SessionHelper = use('app/helpers/session-helper');
 const FileHelper = use('app/helpers/file-helper');
 /**
  * Dep cat controller
  */
-function Department() {}
-module.exports = Department;
+function Session() {}
+module.exports = Session;
 
 /**
  * Index route
  */
-Department.index = async function index(req, res, next) {
-    const pageRoute = 'department.index';
+Session.index = async function index(req, res, next) {
+    const pageRoute = 'session.index';
     res.render(PugView.getView(pageRoute), {
         req,
         pageRoute
     });
 };
-
 /**
  * paginate route
  */
-Department.paginateDepartment = async function paginateDepartment(req, res, next) {
+Session.paginateSession = async function paginateSession(req, res, next) {
     const dataPaginate = {
         page: req.params.page,
         pageSize: req.params.size || 10
     };
 
     let count = 0;
-    DepartmentHelper.loadAllCountDepartmentData()
+    SessionHelper.loadAllCountSessionData()
         .then(data => {
             count = data;
 
-            DepartmentHelper.loadAllDepartmentData(dataPaginate)
+            SessionHelper.loadAllSessionData(dataPaginate)
                 .then(data => {
                     const result = {
                         success: true,
@@ -54,10 +53,10 @@ Department.paginateDepartment = async function paginateDepartment(req, res, next
 /**
  * show route
  */
-Department.show = async function show(req, res, next) {
-    const DepartmentTitle = req.params.departmentData;
-    const pageRoute = 'department.show';
-    DepartmentHelper.loadDepartmentData(DepartmentTitle)
+Session.show = async function show(req, res, next) {
+    const SessionTitle = req.params.sessionData;
+    const pageRoute = 'session.show';
+    SessionHelper.loadSessionData(SessionTitle)
         .then(data => {
             const result = {
                 success: true,
@@ -75,8 +74,8 @@ Department.show = async function show(req, res, next) {
 /**
  * edit page route
  */
-Department.edit = async function edit(req, res, next) {
-    const pageRoute = 'department.edit';
+Session.edit = async function edit(req, res, next) {
+    const pageRoute = 'session.edit';
     res.render(PugView.getView(pageRoute), {
         req,
         pageRoute
@@ -86,10 +85,10 @@ Department.edit = async function edit(req, res, next) {
 /**
  * return edit data route
  */
-Department.editDepartmentData = async function editDepartmentData(req, res, next) {
-    const title = req.params.departmentData;
+Session.editSessionData = async function editSessionData(req, res, next) {
+    const title = req.params.sessionData;
 
-    DepartmentHelper.loadDepartmentData(title)
+    SessionHelper.loadSessionData(title)
         .then(data => {
             const result = {
                 success: true,
@@ -105,7 +104,7 @@ Department.editDepartmentData = async function editDepartmentData(req, res, next
 /**
  * update data dep cat
  */
-Department.update = async function update(req, res, next) {
+Session.update = async function update(req, res, next) {
     let data = {};
     const files = req.body.files || [];
 
@@ -122,15 +121,18 @@ Department.update = async function update(req, res, next) {
     data = {
         "_id": req.body._id,
         "title": req.body.title,
+        "body": req.body.body,
+        "date": req.body.date,
+        "user_list": req.body.user_list,
+        "other_user": req.body.other_user,
         "user_id": req.session.auth.userId,
         "is_active": req.body.is_active,
-        "department_category_id": req.body.department_category_id,
-        "description": req.body.description || '',
-        "files": fileList,
-        "regulation": req.body.regulation || []
+        "document_id": req.body.document_id,
+        "department_id": req.body.department_id,
+        "files": fileList
     };
 
-    DepartmentHelper.updateDepartmentData(data)
+    SessionHelper.updateSessionData(data)
         .then(data => {
             const result = {
                 success: true,
@@ -146,12 +148,12 @@ Department.update = async function update(req, res, next) {
 /**
  * delete data dep cat
  */
-Department.destroy = async function destroy(req, res, next) {
+Session.destroy = async function destroy(req, res, next) {
     const data = {
         "_id": req.body._id
     };
 
-    const UserDelete = DepartmentHelper.deleteDepartmentData(data)
+    SessionHelper.deleteSessionData(data)
         .then(data => {
             const result = {
                 success: true,
@@ -167,8 +169,8 @@ Department.destroy = async function destroy(req, res, next) {
 /**
  * Create route return page
  */
-Department.create = async function create(req, res, next) {
-    const pageRoute = PugView.getView('department.create');
+Session.create = async function create(req, res, next) {
+    const pageRoute = PugView.getView('session.create');
 
     res.render(pageRoute, {
         req,
@@ -179,7 +181,7 @@ Department.create = async function create(req, res, next) {
 /**
  * store data dep cat
  */
-Department.store = async function store(req, res, next) {
+Session.store = async function store(req, res, next) {
 
     const files = req.files || [];
 
@@ -197,16 +199,20 @@ Department.store = async function store(req, res, next) {
         }
     }
 
-    const data = {
+    data = {
         "title": req.body.title,
+        "body": req.body.body,
+        "date": req.body.date,
+        "user_list": req.body.user_list,
+        "other_user": req.body.other_user,
         "user_id": req.session.auth.userId,
-        "is_active": req.body.is_active || false,
-        "department_category_id": req.body.department_category_id,
-        "description": req.body.description || '',
-        "files": fileList || []
+        "is_active": req.body.is_active,
+        "document_id": req.body.document_id,
+        "department_id": req.body.department_id,
+        "files": fileList
     };
 
-    DepartmentHelper.insertNewDepartment(data)
+    SessionHelper.insertNewSession(data)
         .then(data => {
             const result = {
                 success: true,

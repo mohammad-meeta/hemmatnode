@@ -9,19 +9,11 @@
             .field
                 label.label عنوان
                 .control
-                    input.input(type='text', placeholder='عنوان', autofocus, v-model='departmentData.title' required)
+                    input.input(type='text', placeholder='عنوان', autofocus, v-model='departmentRegulationData.title' required)
             .field
-                label.label معرفی
+                label.label توضیحات
                 .control
-                    textarea.textarea(placeholder='معرفی', v-model='departmentData.description')
-
-            .field
-                label.label دسته بندی
-                .control
-                    .select.is-primary
-                        select(v-model="departmentData.departmentCategories")
-                            option(v-for='(departmentCategory, departmentCategoryIndex) in departmentCategories',
-                                :value="departmentCategory._id") {{ departmentCategory.title }}
+                    textarea.textarea(placeholder='معرفی', v-model='departmentRegulationData.description')
 
             .field
                 label.checkbox
@@ -30,15 +22,13 @@
 
             .field
                 label.checkbox
-                    input(type='checkbox', v-model="departmentData.isActive")
+                    input(type='checkbox', v-model="departmentRegulationData.isActive")
                     |   فعال
 
             .field.is-grouped
                 .control(v-show="! isLoadingMode")
                     a.button.is-link.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
                         |   ایجاد
-
-            department-regulation(:register-url="registerUrl", v-show="hasNewRegulation")
 </template>
 
 <script>
@@ -46,25 +36,20 @@
 
 const AxiosHelper = require("JS-HELPERS/axios-helper");
 const ENUMS = require("JS-HELPERS/enums");
-const DepartmentValidator = require("JS-VALIDATORS/department-register-validator");
-const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
-const DepartmentRegulation = require("VUE-COMPONENTS/department/department-regulation.vue").default;
+const DepartmentRegulationValidator = require("JS-VALIDATORS/department-regulation-register-validator");
 
 module.exports = {
-    name: "RegisterDepartment",
+    name: "DepartmentRegulation",
 
     components: {
-        Notification,
-        DepartmentRegulation
+        Notification
     },
-
     data: () => ({
         ENUMS,
-        departmentCategories: [],
-        departmentData: {
+        departmentRegulationData: {
             title: null,
             description: null,
-            department_category_id: null,
+            department_id: null,
             files: {},
             isActive: false
         },
@@ -82,14 +67,10 @@ module.exports = {
             default: ""
         },
 
-        departmentCategoriesUrl: {
-            type: String,
-            default: ""
-        }
     },
 
     created() {
-        this.loadDepartmentCategories();
+
     },
 
     computed: {
@@ -115,23 +96,12 @@ module.exports = {
         commandClick(arg) {
             switch (arg) {
                 case ENUMS.COMMAND.SAVE:
-                    this.registerDepartment();
+                    this.DepartmentRegulation();
                     break;
             }
         },
 
-        /**
-         * load all departmentCategories for select departmentCategories in form
-         */
-        loadDepartmentCategories() {
-            const url = this.departmentCategoriesUrl;
 
-            AxiosHelper.send("get", url, "").then(res => {
-                const resData = res.data;
-                const datas = resData.data.data;
-                Vue.set(this, "departmentCategories", datas);
-            });
-        },
 
         /**
          * Show Loading
@@ -163,28 +133,28 @@ module.exports = {
         },
 
         /**
-         * Register new department
+         * Register new department regulation
          */
-        registerDepartment() {
+        DepartmentRegulation() {
             const isValid = this.validate();
 
             if (!isValid) {
                 return;
             }
-            let departmentData = {
-                title: this.departmentData.title,
-                description: this.departmentData.description,
-                department_category_id: this.departmentData.departmentCategories,
-                is_active: this.departmentData.isActive
+            let departmentRegulationData = {
+                title: this.departmentRegulationData.title,
+                description: this.departmentRegulationData.description,
+                department_id: this.departmentRegulationData.department_id,
+                is_active: this.departmentRegulationData.isActive
             };
 
-            departmentData.files = this.files[0];
+            departmentRegulationData.files = this.files[0];
 
             this.showLoading();
 
             const url = this.registerUrl;
 
-            AxiosHelper.send("post", url, departmentData, {
+            AxiosHelper.send("post", url, departmentRegulationData, {
                 sendAsFormData: true
             })
                 .then(res => {
@@ -205,7 +175,7 @@ module.exports = {
          * Validate new department data
          */
         validate() {
-            const result = DepartmentValidator.validate(this.departmentData);
+            const result = DepartmentRValidator.validate(this.departmentData);
 
             if (result.passes) {
                 this.closeNotification();

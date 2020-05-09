@@ -77,6 +77,7 @@ module.exports = {
         departments: [],
         notificationMessage: null,
         notificationType: "is-info",
+        hasNewRegulation: false
     }),
 
     props: {
@@ -114,7 +115,8 @@ module.exports = {
         modeRegister: state => state.formMode == ENUMS.FORM_MODE.REGISTER,
         modeEdit: state => state.formMode == ENUMS.FORM_MODE.EDIT,
         modeShow: state => state.formMode == ENUMS.FORM_MODE.SHOW,
-        showNotification: state => state.notificationMessage != null
+        showNotification: state => state.notificationMessage != null,
+        showNewRegulation: state => state.hasNewRegulation == false
     },
 
     created() {
@@ -132,12 +134,19 @@ module.exports = {
          */
         onDepartmentRegister(payload) {
             this.$refs.departmentList.addToDepartmentList(payload.data.data);
-            this.changeFormMode(ENUMS.FORM_MODE.LIST);
-
+            console.log()
+            this.newRegulation(payload.data.data);
             this.setNotification(
                 ".گروه با موفقیت ذخیره شد",
                 "is-success"
             );
+        },
+
+        /**
+         * Add a new rgulation form after department save
+         */
+        newRegulation() {
+            Vue.set(this, "hasNewRegulation", true);
         },
 
         /**

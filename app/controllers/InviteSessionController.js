@@ -1,18 +1,18 @@
 'use strict';
 const PugView = use('app/helpers/pug-view');
-const SessionHelper = use('app/helpers/session-helper');
+const InviteSessionHelper = use('app/helpers/invite-session-helper');
 const FileHelper = use('app/helpers/file-helper');
 /**
  * Dep cat controller
  */
-function Session() {}
-module.exports = Session;
+function InviteSession() {}
+module.exports = InviteSession;
 
 /**
  * Index route
  */
-Session.index = async function index(req, res, next) {
-    const pageRoute = 'session.index';
+InviteSession.index = async function index(req, res, next) {
+    const pageRoute = 'invitesession.index';
     res.render(PugView.getView(pageRoute), {
         req,
         pageRoute
@@ -21,18 +21,18 @@ Session.index = async function index(req, res, next) {
 /**
  * paginate route
  */
-Session.paginateSession = async function paginateSession(req, res, next) {
+InviteSession.paginateInviteSession = async function paginateInviteSession(req, res, next) {
     const dataPaginate = {
         page: req.params.page,
         pageSize: req.params.size || 10
     };
 
     let count = 0;
-    SessionHelper.loadAllCountSessionData()
+    InviteSessionHelper.loadAllCountInviteSessionData()
         .then(data => {
             count = data;
 
-            SessionHelper.loadAllSessionData(dataPaginate)
+            InviteSessionHelper.loadAllInviteSessionData(dataPaginate)
                 .then(data => {
                     const result = {
                         success: true,
@@ -53,10 +53,10 @@ Session.paginateSession = async function paginateSession(req, res, next) {
 /**
  * show route
  */
-Session.show = async function show(req, res, next) {
+InviteSession.show = async function show(req, res, next) {
     const SessionTitle = req.params.sessionData;
-    const pageRoute = 'session.show';
-    SessionHelper.loadSessionData(SessionTitle)
+    const pageRoute = 'invitesession.show';
+    InviteSessionHelper.loadInviteSessionData(SessionTitle)
         .then(data => {
             const result = {
                 success: true,
@@ -74,8 +74,8 @@ Session.show = async function show(req, res, next) {
 /**
  * edit page route
  */
-Session.edit = async function edit(req, res, next) {
-    const pageRoute = 'session.edit';
+InviteSession.edit = async function edit(req, res, next) {
+    const pageRoute = 'invitesession.edit';
     res.render(PugView.getView(pageRoute), {
         req,
         pageRoute
@@ -85,10 +85,10 @@ Session.edit = async function edit(req, res, next) {
 /**
  * return edit data route
  */
-Session.editSessionData = async function editSessionData(req, res, next) {
+InviteSession.editInviteSessionData = async function editInviteSessionData(req, res, next) {
     const title = req.params.sessionData;
 
-    SessionHelper.loadSessionData(title)
+    InviteSessionHelper.loadInviteSessionData(title)
         .then(data => {
             const result = {
                 success: true,
@@ -104,7 +104,7 @@ Session.editSessionData = async function editSessionData(req, res, next) {
 /**
  * update data dep cat
  */
-Session.update = async function update(req, res, next) {
+InviteSession.update = async function update(req, res, next) {
     let data = {};
     const files = req.body.files || [];
 
@@ -126,14 +126,13 @@ Session.update = async function update(req, res, next) {
         "place": req.body.place,
         "date": req.body.date,
         "user_list": req.body.user_list,
-        "other_user": req.body.other_user,
         "user_id": req.session.auth.userId,
         "is_active": req.body.is_active,
         "department_id": req.body.department_id,
         "files": fileList
     };
 
-    SessionHelper.updateSessionData(data)
+    InviteSessionHelper.updateInviteSessionData(data)
         .then(data => {
             const result = {
                 success: true,
@@ -149,12 +148,12 @@ Session.update = async function update(req, res, next) {
 /**
  * delete data dep cat
  */
-Session.destroy = async function destroy(req, res, next) {
+InviteSession.destroy = async function destroy(req, res, next) {
     const data = {
         "_id": req.body._id
     };
 
-    SessionHelper.deleteSessionData(data)
+    InviteSessionHelper.deleteInviteSessionData(data)
         .then(data => {
             const result = {
                 success: true,
@@ -170,8 +169,8 @@ Session.destroy = async function destroy(req, res, next) {
 /**
  * Create route return page
  */
-Session.create = async function create(req, res, next) {
-    const pageRoute = PugView.getView('session.create');
+InviteSession.create = async function create(req, res, next) {
+    const pageRoute = PugView.getView('invitesession.create');
 
     res.render(pageRoute, {
         req,
@@ -182,7 +181,7 @@ Session.create = async function create(req, res, next) {
 /**
  * store data dep cat
  */
-Session.store = async function store(req, res, next) {
+InviteSession.store = async function store(req, res, next) {
 
     const files = req.files || [];
 
@@ -207,14 +206,13 @@ Session.store = async function store(req, res, next) {
         "place": req.body.place,
         "date": req.body.date,
         "user_list": req.body.user_list,
-        "other_user": req.body.other_user,
         "user_id": req.session.auth.userId,
         "is_active": req.body.is_active,
         "department_id": req.body.department_id,
         "files": fileList
     };
 
-    SessionHelper.insertNewSession(data)
+    InviteSessionHelper.insertNewInviteSession(data)
         .then(data => {
             const result = {
                 success: true,

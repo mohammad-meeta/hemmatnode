@@ -18,7 +18,7 @@ Model.setup = function setup() {
     Model.plugins(schema);
     Model.extraFunctions(schema);
 
-    mongoose.model('Session', schema, "sessions");
+    mongoose.model('InviteSession', schema, "invite_sessions");
 };
 
 /**

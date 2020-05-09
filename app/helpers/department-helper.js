@@ -37,7 +37,7 @@ DepartmentHelper.loadAllDepartmentData = function loadAllDepartmentData(dataPagi
 /**
  * find all dep cat count data result 
  */
-DepartmentHelper.loadAllDepartmentCountData = function loadAllDepartmentCountData() {
+DepartmentHelper.loadAllCountDepartmentData = function loadAllCountDepartmentData() {
     const Department = mongoose.model('Department');
 
     const filterQuery = {};
@@ -45,6 +45,7 @@ DepartmentHelper.loadAllDepartmentCountData = function loadAllDepartmentCountDat
     return new Promise((resolve, reject) => {
         Department.countDocuments(filterQuery)
             .then(res => {
+
                 resolve(res);
             })
             .catch(err => reject(err));

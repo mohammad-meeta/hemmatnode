@@ -2,6 +2,7 @@
 const PugView = use('app/helpers/pug-view');
 const InviteSessionHelper = use('app/helpers/invite-session-helper');
 const FileHelper = use('app/helpers/file-helper');
+const SMSSender = use('app/helpers/sms-sender-helper')
 /**
  * Dep cat controller
  */
@@ -214,6 +215,7 @@ InviteSession.store = async function store(req, res, next) {
 
     InviteSessionHelper.insertNewInviteSession(data)
         .then(data => {
+            SMSSender.sendSms(data.user_list);
             const result = {
                 success: true,
                 data: data

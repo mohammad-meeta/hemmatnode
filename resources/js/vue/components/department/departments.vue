@@ -32,10 +32,11 @@
                 list-department(ref="departmentList", @on-command="onCommand", :list-url="listUrl")
 
             .column(v-show="!modeLoading && modeRegister")
-                register-department(@on-command="onCommand",
+                register-department(ref="departmentRegister", @on-command="onCommand",
                   @on-register="onDepartmentRegister"
                   :register-url="registerUrl",
-                  :department-categories-url="departmentCategoriesUrl")
+                  :department-categories-url="departmentCategoriesUrl",
+                  :department-regulation-url="departmentRegulationUrl")
 
             //.column(v-show="!modeLoading && modeEdit")
                 edit-department(ref="departmentEdit", @on-command="onCommand",
@@ -53,8 +54,10 @@
 const Routes = require("JS-CORE/routes");
 const ENUMS = require("JS-HELPERS/enums");
 const Loading = require("VUE-COMPONENTS/general/loading.vue").default;
-const RegisterDepartment = require("VUE-COMPONENTS/department/register-department.vue").default;
-const ListDepartment = require("VUE-COMPONENTS/department/list-department.vue").default;
+const RegisterDepartment = require("VUE-COMPONENTS/department/register-department.vue")
+    .default;
+const ListDepartment = require("VUE-COMPONENTS/department/list-department.vue")
+    .default;
 //const EditDepartment = require("VUE-COMPONENTS/department/edit-department.vue").default;
 //const ShowDepartment = require("VUE-COMPONENTS/department/show-department.vue").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
@@ -104,6 +107,11 @@ module.exports = {
         editUrl: {
             type: String,
             default: null
+        },
+
+        departmentRegulationUrl: {
+            type: String,
+            default: null
         }
     },
 
@@ -115,8 +123,7 @@ module.exports = {
         modeRegister: state => state.formMode == ENUMS.FORM_MODE.REGISTER,
         modeEdit: state => state.formMode == ENUMS.FORM_MODE.EDIT,
         modeShow: state => state.formMode == ENUMS.FORM_MODE.SHOW,
-        showNotification: state => state.notificationMessage != null,
-        showNewRegulation: state => state.hasNewRegulation == false
+        showNotification: state => state.notificationMessage != null
     },
 
     created() {
@@ -133,20 +140,20 @@ module.exports = {
          * On Register department
          */
         onDepartmentRegister(payload) {
+            //***update vue list****
             this.$refs.departmentList.addToDepartmentList(payload.data.data);
-            console.log()
-            this.newRegulation(payload.data.data);
-            this.setNotification(
-                ".گروه با موفقیت ذخیره شد",
-                "is-success"
-            );
+            this.newRegulation(payload);
+            this.setNotification(".گروه با موفقیت ذخیره شد", "is-success");
         },
 
         /**
          * Add a new rgulation form after department save
          */
-        newRegulation() {
-            Vue.set(this, "hasNewRegulation", true);
+        newRegulation(payload) {
+            this.$refs.departmentRegister.hasNewRegulation = true;
+            // console.log(this.$refs.departmentRegister.hasNewRegulation);
+            this.$refs.departmentRegister.hasNewRegulationFunc(payload);
+            // Vue.set(this, "hasNewRegulation", true);
         },
 
         /**
@@ -156,10 +163,7 @@ module.exports = {
             this.$refs.departmentList.editInDepartmentList(payload.data);
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
 
-            this.setNotification(
-                ".گروه با موفقیت ویرایش شد",
-                "is-success"
-            );
+            this.setNotification(".گروه با موفقیت ویرایش شد", "is-success");
         },
 
         /**
@@ -250,8 +254,7 @@ module.exports = {
          */
         closeNotification() {
             this.setNotification(null);
-        },
-    },
+        }
+    }
 };
-
 </script>

@@ -38,7 +38,7 @@
                     a.button.is-link.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
                         |   ایجاد
 
-            department-regulation(:register-url="registerUrl", v-show="hasNewRegulation")
+            department-regulation(ref="departmentRegulation",:department-regulation-url="departmentRegulationUrl", v-show="hasNewRegulation")
 </template>
 
 <script>
@@ -48,7 +48,8 @@ const AxiosHelper = require("JS-HELPERS/axios-helper");
 const ENUMS = require("JS-HELPERS/enums");
 const DepartmentValidator = require("JS-VALIDATORS/department-register-validator");
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
-const DepartmentRegulation = require("VUE-COMPONENTS/department/department-regulation.vue").default;
+const DepartmentRegulation = require("VUE-COMPONENTS/department/department-regulation.vue")
+    .default;
 
 module.exports = {
     name: "RegisterDepartment",
@@ -69,11 +70,11 @@ module.exports = {
             isActive: false
         },
 
-        hasNewRegulation: false,
         notificationMessage: null,
         notificationType: "is-info",
         showLoadingFlag: false,
-        files: []
+        files: [],
+        hasNewRegulation: false
     }),
 
     props: {
@@ -85,6 +86,11 @@ module.exports = {
         departmentCategoriesUrl: {
             type: String,
             default: ""
+        },
+
+        departmentRegulationUrl: {
+            type: String,
+            default: ""
         }
     },
 
@@ -94,7 +100,8 @@ module.exports = {
 
     computed: {
         isLoadingMode: state => state.showLoadingFlag == true,
-        showNotification: state => state.notificationMessage != null
+        showNotification: state => state.notificationMessage != null,
+        showNewRegulation: state => state.hasNewRegulation == true
     },
 
     methods: {
@@ -174,7 +181,8 @@ module.exports = {
             let departmentData = {
                 title: this.departmentData.title,
                 description: this.departmentData.description,
-                department_category_id: this.departmentData.departmentCategories,
+                department_category_id: this.departmentData
+                    .departmentCategories,
                 is_active: this.departmentData.isActive
             };
 
@@ -189,10 +197,12 @@ module.exports = {
             })
                 .then(res => {
                     const data = res.data;
-                    this.$emit("on-register", {
-                        sender: this,
-                        data
-                    });
+                    if (data.success) {
+                        this.$emit("on-register", {
+                            sender: this,
+                            data
+                        });
+                    }
                 })
                 .catch(err => {
                     const data = err.response.data;
@@ -200,7 +210,14 @@ module.exports = {
                 })
                 .then(() => this.hideLoading());
         },
-
+        /**
+         * after dave department must be saved regulation
+         */
+        hasNewRegulationFunc(payload) {
+            Vue.set(this, "hasNewRegulation", true);
+            this.$refs.departmentRegulation.setDepartmentId =
+                payload.data.data._id;
+        },
         /**
          * Validate new department data
          */

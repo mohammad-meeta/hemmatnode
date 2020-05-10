@@ -58,20 +58,18 @@ module.exports = {
         notificationMessage: null,
         notificationType: "is-info",
         showLoadingFlag: false,
-        files: []
+        files: [],
+        departmentId: ""
     }),
 
     props: {
-        registerUrl: {
+        departmentRegulationUrl: {
             type: String,
             default: ""
-        },
-
+        }
     },
 
-    created() {
-
-    },
+    created() {},
 
     computed: {
         isLoadingMode: state => state.showLoadingFlag == true,
@@ -100,8 +98,6 @@ module.exports = {
                     break;
             }
         },
-
-
 
         /**
          * Show Loading
@@ -144,7 +140,7 @@ module.exports = {
             let departmentRegulationData = {
                 title: this.departmentRegulationData.title,
                 description: this.departmentRegulationData.description,
-                department_id: this.departmentRegulationData.department_id,
+                department_id: this.departmentId,
                 is_active: this.departmentRegulationData.isActive
             };
 
@@ -152,30 +148,40 @@ module.exports = {
 
             this.showLoading();
 
-            const url = this.registerUrl;
-
-            AxiosHelper.send("post", url, departmentRegulationData, {
-                sendAsFormData: true
-            })
-                .then(res => {
-                    const data = res.data;
-                    this.$emit("on-register", {
-                        sender: this,
-                        data
-                    });
+            const url = this.departmentRegulationUrl;
+            console.log(url);
+            if (this.departmentId != "") {
+                AxiosHelper.send("post", url, departmentRegulationData, {
+                    sendAsFormData: true
                 })
-                .catch(err => {
-                    const data = err.response.data;
-                    this.setNotification(data, "is-danger");
-                })
-                .then(() => this.hideLoading());
+                    .then(res => {
+                        const data = res.data;
+                        this.$emit("on-register", {
+                            sender: this,
+                            data
+                        });
+                    })
+                    .catch(err => {
+                        const data = err.response.data;
+                        this.setNotification(data, "is-danger");
+                    })
+                    .then(() => this.hideLoading());
+            }
         },
 
+        /**
+         * for save regulation set _id from register department
+         */
+        setDepartmentId(data) {
+            console.log("setdepartmentid");
+            console.log(data);
+            Vue.set(this, "departmentId", data);
+        },
         /**
          * Validate new department data
          */
         validate() {
-            const result = DepartmentRValidator.validate(this.departmentData);
+            const result = DepartmentRegulationValidator.validate(this.departmentRegulationData);
 
             if (result.passes) {
                 this.closeNotification();

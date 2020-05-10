@@ -107,7 +107,6 @@ module.exports = {
          * add new Department data to list data
          */
         addToDepartmentList(payload) {
-            console.log(payload);
             const newDepartmentData = {
                 _id: payload._id,
                 title: payload.title,
@@ -129,8 +128,9 @@ module.exports = {
             let foundIndex = this.departments.findIndex(
                 x => x._id == editedDepartmentData._id
             );
-            this.departments[foundIndex].title= editedDepartmentData.title;
-            this.departments[foundIndex].is_active= editedDepartmentData.is_active;
+            this.departments[foundIndex].title = editedDepartmentData.title;
+            this.departments[foundIndex].is_active =
+                editedDepartmentData.is_active;
         }
     }
 };

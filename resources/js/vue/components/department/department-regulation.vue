@@ -133,10 +133,11 @@ module.exports = {
          */
         DepartmentRegulation() {
             const isValid = this.validate();
-
+            console.log("before isvalid")
             if (!isValid) {
                 return;
             }
+            console.log("isvalid");
             let departmentRegulationData = {
                 title: this.departmentRegulationData.title,
                 description: this.departmentRegulationData.description,
@@ -147,9 +148,10 @@ module.exports = {
             departmentRegulationData.files = this.files[0];
 
             this.showLoading();
-
+            console.log(departmentRegulationData)
             const url = this.departmentRegulationUrl;
             console.log(url);
+            console.log(this.departmentId);
             if (this.departmentId != "") {
                 AxiosHelper.send("post", url, departmentRegulationData, {
                     sendAsFormData: true

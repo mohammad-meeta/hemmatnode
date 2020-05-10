@@ -75,6 +75,28 @@ UserHelper.loadUserData = function loadUserData(userName) {
             .catch(err => reject(err));
     });
 };
+/**
+ * find user data result with _id
+ */
+UserHelper.loadUserDataID = function loadUserDataID(id) {
+    const User = mongoose.model('User');
+
+    const filterQuery = {
+        _id: id
+    };
+
+    const projection = {
+        pwd: 0
+    };
+
+    return new Promise((resolve, reject) => {
+        User.findOne(filterQuery, projection)
+            .then(res => {
+                resolve(res);
+            })
+            .catch(err => reject(err));
+    });
+};
 
 /**
  * insert user data  

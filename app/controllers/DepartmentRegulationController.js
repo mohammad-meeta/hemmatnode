@@ -175,7 +175,7 @@ DepartmentRegulation.store = async function store(req, res, next) {
     for (let i = 0; i < files.length; ++i) {
         try {
             const el = files[i];
-            el.user_id = /*req.session.auth.userId*/ "5e91e959db925c5aff835a11";
+            el.user_id = req.session.auth.userId;
 
             const data = await FileHelper.insertFileData(el);
 
@@ -191,13 +191,13 @@ DepartmentRegulation.store = async function store(req, res, next) {
 
     const data = {
         "title": req.body.title,
-        "user_id": /*req.session.auth.userId*/ "5e91e959db925c5aff835a11",
+        "user_id": req.session.auth.userId,
         "is_active": req.body.is_active || false,
         "department_id": req.body.department_id,
         "description": req.body.description || '',
         "files": fileList || []
     };
-
+    console.log(data)
     DepartmentRegulationHelper.insertNewDepartmentRegulation(data)
         .then(data => {
             const result = {

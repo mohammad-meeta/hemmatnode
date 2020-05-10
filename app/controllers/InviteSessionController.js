@@ -200,7 +200,7 @@ InviteSession.store = async function store(req, res, next) {
         }
     }
 
-    data = {
+    const data = {
         "title": req.body.title,
         "body": req.body.body,
         "agenda": req.body.agenda,
@@ -214,11 +214,11 @@ InviteSession.store = async function store(req, res, next) {
     };
 
     InviteSessionHelper.insertNewInviteSession(data)
-        .then(data => {
-            SMSSender.sendSms(data.user_list);
+        .then(dataRes => {
+            SMSSender.sendSms(data);
             const result = {
                 success: true,
-                data: data
+                data: dataRes
             };
             res.status(200)
                 .send(result)

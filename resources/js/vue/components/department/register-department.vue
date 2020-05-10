@@ -215,8 +215,7 @@ module.exports = {
          */
         hasNewRegulationFunc(payload) {
             Vue.set(this, "hasNewRegulation", true);
-            this.$refs.departmentRegulation.setDepartmentId =
-                payload.data.data._id;
+            this.$refs.departmentRegulation.setDepartmentId(payload.data.data._id);
         },
         /**
          * Validate new department data

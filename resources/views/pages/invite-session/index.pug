@@ -1,0 +1,18 @@
+extends ../../layout/app.pug
+
+block title
+    | دعوتنامه
+
+block content
+    .container
+        invite-sessions(list-url=route('api.invitesession', { page: '$page$', size: '$pageSize$' }),
+            departments-url=route('api.department', { page: 1, size: 1000 }),
+            register-url=route('invitesession.store'),
+            edit-url=route('invitesession.update', { id :'$id$'}),
+            users-url=route('api.user', { page: 1, size: 1000 })
+        )
+
+block scripts
+    script(defer, src=mix('js/pages/invite-session/index/index.js'))
+
+

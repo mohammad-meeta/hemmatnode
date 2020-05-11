@@ -1,7 +1,7 @@
 <template lang="pug">
 .container-child
-    h1(v-if="! hasDepartment") هیچ گروهی ایجاد نشده
-    table.table.is-striped.is-hoverable.is-fullwidth(v-if="hasDepartment")
+    h1(v-if="! hasInviteSession") هیچ دعوتنامه جلسه ای ایجاد نشده
+    table.table.is-striped.is-hoverable.is-fullwidth(v-if="hasInviteSession")
         thead
             tr
                 th عنوان
@@ -9,10 +9,10 @@
                 th تاریخ ایجاد
                 th عملیات
         tbody
-            tr(v-for='department in departments', :key='department.id')
-                td {{ department.title }}
-                td {{ department.is_active }}
-                td {{ toPersianDate(department.created_at) }}
+            tr(v-for='inviteSession in inviteSessions', :key='inviteSession.id')
+                td {{ inviteSession.title }}
+                td {{ inviteSession.is_active }}
+                td {{ toPersianDate(inviteSession.created_at) }}
                 td.function-links
                     a.button.is-primary.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.EDIT, department)")
                         span.icon.is-small
@@ -51,28 +51,28 @@ module.exports = {
 
     data: () => ({
         ENUMS,
-        departments: [],
-        departmentsCount: 0,
+        inviteSessions: [],
+        inviteSessionsCount: 0,
         pageCount: 0
     }),
 
     computed: {
-        hasDepartment: state => (state.departments || []).length
+        hasInviteSession: state => (state.inviteSessions || []).length
     },
 
     methods: {
         /**
-         * Load departments
+         * Load inviteSessions
          */
-        loadDepartments(pageId) {
+        loadInviteSessions(pageId) {
             let url = this.listUrl.replace("$page$", pageId);
             url = url.replace("$pageSize$", 50);
 
             console.log(url);
             AxiosHelper.send("get", url, "").then(res => {
                 const resData = res.data;
-                Vue.set(this, "departments", resData.data.data);
-                Vue.set(this, "departmentsCount", resData.data.count);
+                Vue.set(this, "inviteSessions", resData.data.data);
+                Vue.set(this, "inviteSessionsCount", resData.data.count);
 
                 this.paginator();
             });
@@ -98,43 +98,43 @@ module.exports = {
          * Paginator
          */
         paginator() {
-            let pageCount = Math.ceil(this.departmentsCount / 50);
+            let pageCount = Math.ceil(this.inviteSessionsCount / 50);
             Vue.set(this, "pageCount", pageCount);
         },
         /**
          * paginator click link
          */
         paginatorClick(id) {
-            this.loadDepartment(id);
+            this.loadInviteSessions(id);
         },
         /**
-         * add new Department data to list data
+         * add new inviteSessions data to list data
          */
-        addToDepartmentList(payload) {
-            const newDepartmentData = {
+        addToInviteSessionsList(payload) {
+            const newInviteSessionsData = {
                 _id: payload._id,
                 title: payload.title,
                 is_active: payload.is_active,
                 created_at: payload.created_at
             };
 
-            this.departments.unshift(newDepartmentData);
+            this.inviteSessions.unshift(newInviteSessionsData);
         },
 
-        editInDepartmentList(payload) {
-            const editedDepartmentData = {
+        editInInviteSessionsList(payload) {
+            const editedInviteSessionsData = {
                 _id: payload._id,
                 title: payload.title,
                 is_active: payload.is_active,
                 created_at: payload.created_at
             };
 
-            let foundIndex = this.departments.findIndex(
-                x => x._id == editedDepartmentData._id
+            let foundIndex = this.inviteSessions.findIndex(
+                x => x._id == editedInviteSessionsData._id
             );
-            this.departments[foundIndex].title = editedDepartmentData.title;
-            this.departments[foundIndex].is_active =
-                editedDepartmentData.is_active;
+            this.inviteSessions[foundIndex].title = editedInviteSessionsData.title;
+            this.inviteSessions[foundIndex].is_active =
+                editedInviteSessionsData.is_active;
         }
     }
 };

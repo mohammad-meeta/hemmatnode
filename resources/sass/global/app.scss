@@ -635,3 +635,13 @@ h2.item-category {
     font-size: 12px;
     color: #999;
 }
+
+/**
+* checkboxes
+*/
+.multi-checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    height: 250px;
+    overflow-y: scroll;
+}

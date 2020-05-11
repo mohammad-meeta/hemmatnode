@@ -14,6 +14,7 @@ module.exports = InviteSession;
  */
 InviteSession.index = async function index(req, res, next) {
     const pageRoute = 'invitesession.index';
+
     res.render(PugView.getView(pageRoute), {
         req,
         pageRoute

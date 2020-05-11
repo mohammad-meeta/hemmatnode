@@ -81,4 +81,7 @@ PugView.viewPath = {
     'role.create': 'pages/role/register.pug',
     'role.show': 'pages/role/show.pug',
     'role.edit': 'pages/role/edit.pug',
+
+    /* Invite */
+    'invitesession.index': 'pages/invite-session/index.pug',
 };

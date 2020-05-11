@@ -65,7 +65,7 @@
 
 const AxiosHelper = require("JS-HELPERS/axios-helper");
 const ENUMS = require("JS-HELPERS/enums");
-const inviteSessionValidator = require("JS-VALIDATORS/invite-session-register-validator");
+const InviteSessionValidator = require("JS-VALIDATORS/invite-session-register-validator");
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
 

@@ -7,13 +7,13 @@
             h1 در حال بارگذاری
         .form-small(v-show="! isLoadingMode")
             .field
-                label.label عنوان
+                label.label گروه
                 .control
-                    input.input(type='text', placeholder='عنوان', autofocus, v-model='inviteSessionData.title' required)
-            .field
-                label.label توضیحات
-                .control
-                    textarea.textarea(placeholder='توضیحات', v-model='inviteSessionData.body')
+                    .select.is-primary
+                        select(v-model="inviteSessionData.departments")
+                            option(v-for='(department, departmentIndex) in departments',
+                                :value="department._id") {{ department.title }}
+
             .field
                 label.label دستور جلسه
                 .control
@@ -29,25 +29,20 @@
                     date-picker(v-model='inviteSessionData.date' required)
 
             .field
-                label.label گروه
-                .control
-                    .select.is-primary
-                        select(v-model="inviteSessionData.departments")
-                            option(v-for='(department, departmentIndex) in departments',
-                                :value="department._id") {{ department.title }}
-
-            .field
                 label.label حاضرین جلسه
                 .multi-checkboxes
                     label.checkbox.column.is-12(v-for='(user, userIndex) in users')
-                        input(type='checkbox', v-model="inviteSessionData.users[user.name]", :value="user._id")
-                        |   {{ user.name }}
+                        input(type='checkbox', v-model="inviteSessionData.user_list[user._id]", :value="user._id")
+                        |   {{ user.name }} - {{ user.profile.first_name }} {{ user.profile.last_name }}
 
             .field
                 label.checkbox
                     input(type='file', @change="setAttachment")
                     |   ضمیمه
-
+            .field
+                label.label توضیحات
+                .control
+                    textarea.textarea(placeholder='توضیحات', v-model='inviteSessionData.body')
             .field
                 label.checkbox
                     input(type='checkbox', v-model="inviteSessionData.isActive")
@@ -89,7 +84,7 @@ module.exports = {
             date: null,
             department_id: null,
             files: {},
-            users: {},
+            user_list: {},
             isActive: false
         },
 
@@ -97,7 +92,6 @@ module.exports = {
         notificationType: "is-info",
         showLoadingFlag: false,
         files: [],
-        hasNewRegulation: false
     }),
 
     props: {
@@ -124,8 +118,7 @@ module.exports = {
 
     computed: {
         isLoadingMode: state => state.showLoadingFlag == true,
-        showNotification: state => state.notificationMessage != null,
-        showNewRegulation: state => state.hasNewRegulation == true
+        showNotification: state => state.notificationMessage != null
     },
 
     methods: {
@@ -155,7 +148,6 @@ module.exports = {
          * load all departments for select departments in form
          */
         loadDepartments() {
-
             const url = this.departmentsUrl;
             console.log(url);
             AxiosHelper.send("get", url, "").then(res => {
@@ -217,23 +209,23 @@ module.exports = {
                 return;
             }
             let inviteSessionData = {
-                title: this.inviteSessionData.title,
                 body: this.inviteSessionData.body,
                 agenda: this.inviteSessionData.agenda,
                 place: this.inviteSessionData.place,
                 date: this.inviteSessionData.date,
                 department_id: this.inviteSessionData
                     .departments,
-                users: this.inviteSessionData.users,
+                user_list: this.inviteSessionData.user_list,
                 is_active: this.inviteSessionData.isActive
             };
 
             inviteSessionData.files = this.files[0];
-            let t = Object.keys(inviteSessionData.users)
-            .filter(key => true == inviteSessionData.users[key])
+            let t = Object.keys(inviteSessionData.user_list)
+            .filter(key => true == inviteSessionData.user_list[key])
             .map(key => key);
 
-            inviteSessionData.users = t;
+            inviteSessionData.user_list = t;
+            console.log(inviteSessionData);
             this.showLoading();
 
             const url = this.registerUrl;

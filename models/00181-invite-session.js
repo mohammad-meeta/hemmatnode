@@ -36,10 +36,6 @@ Model.model = function model() {
     });
 
     return {
-        'title': {
-            type: String,
-            required: true
-        },
         'user_list': {
             type: Array,
             required: true

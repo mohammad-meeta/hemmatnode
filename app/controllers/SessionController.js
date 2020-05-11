@@ -21,16 +21,15 @@ Session.index = async function index(req, res, next) {
 /**
  * paginate route
  */
-Session.paginateSession = async function paginateSession(req, res, next) {
+InviteSession.paginateInviteSession = function paginateInviteSession(req, res, next) {
     const dataPaginate = {
         page: req.params.page,
         pageSize: req.params.size || 10
     };
 
-    let count = 0;
-    SessionHelper.loadAllCountSessionData()
+    SessionHelper.loadAllSessionCountData()
         .then(data => {
-            count = data;
+            let count = data.data;
 
             SessionHelper.loadAllSessionData(dataPaginate)
                 .then(data => {
@@ -41,13 +40,26 @@ Session.paginateSession = async function paginateSession(req, res, next) {
                             count: count
                         }
                     };
+
                     res.status(200)
                         .send(result)
                         .end();
                 })
-                .catch(err => console.error(err));
+                .catch(err => {
+                    Logger.error(err);
+
+                    res.status(500)
+                        .send(err)
+                        .end();
+                });
         })
-        .catch(err => console.error(err));
+        .catch(err => {
+            Logger.error(err);
+
+            res.status(500)
+                .send(err)
+                .end();
+        });
 };
 
 /**

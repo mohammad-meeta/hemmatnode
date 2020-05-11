@@ -47,7 +47,6 @@ InviteSessionValidator.data = function data(req) {
 InviteSessionValidator.rules = function rules(req) {
     return {
         'user_id': 'required',
-        'title': 'required',
         'place': 'required',
         'agenda': 'required',
         'body': 'required',

@@ -31,7 +31,6 @@ SessionValidator.validate = function validate(req, res, next) {
 SessionValidator.data = function data(req) {
     return {
         user_id: req.session.auth.userId,
-        title: req.body.title,
         body: req.body.body,
         place: req.body.place,
         agenda: req.body.agenda,
@@ -48,7 +47,6 @@ SessionValidator.data = function data(req) {
 SessionValidator.rules = function rules(req) {
     return {
         'user_id': 'required',
-        'title': 'required',
         'place': 'required',
         'agenda': 'required',
         'body': 'required',
@@ -72,7 +70,6 @@ SessionValidator.messages = function messages() {
 SessionValidator.attributes = function attributes() {
     return {
         user_id: 'userId',
-        title: 'title',
         body: 'body',
         agenda: 'agenda',
         place: 'place',

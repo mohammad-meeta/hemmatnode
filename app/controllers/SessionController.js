@@ -132,7 +132,6 @@ Session.update = async function update(req, res, next) {
 
     data = {
         "_id": req.body._id,
-        "title": req.body.title,
         "body": req.body.body,
         "agenda": req.body.agenda,
         "place": req.body.place,
@@ -213,7 +212,6 @@ Session.store = async function store(req, res, next) {
     }
 
     data = {
-        "title": req.body.title,
         "body": req.body.body,
         "agenda": req.body.agenda,
         "place": req.body.place,

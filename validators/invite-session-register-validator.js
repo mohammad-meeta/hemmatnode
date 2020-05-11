@@ -31,7 +31,6 @@ InviteSessionValidator.validate = function validate(req, res, next) {
 InviteSessionValidator.data = function data(req) {
     return {
         user_id: req.session.auth.userId,
-        title: req.body.title,
         body: req.body.body,
         place: req.body.place,
         agenda: req.body.agenda,
@@ -69,7 +68,6 @@ InviteSessionValidator.messages = function messages() {
 InviteSessionValidator.attributes = function attributes() {
     return {
         user_id: 'userId',
-        title: 'title',
         body: 'body',
         agenda: 'agenda',
         place: 'place',

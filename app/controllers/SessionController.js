@@ -21,7 +21,7 @@ Session.index = async function index(req, res, next) {
 /**
  * paginate route
  */
-InviteSession.paginateInviteSession = function paginateInviteSession(req, res, next) {
+Session.paginateSession = function paginateSession(req, res, next) {
     const dataPaginate = {
         page: req.params.page,
         pageSize: req.params.size || 10

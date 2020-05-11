@@ -80,7 +80,6 @@ module.exports = {
         inviteSessions: [],
         notificationMessage: null,
         notificationType: "is-info",
-        hasNewRegulation: false
     }),
 
     props: {
@@ -142,7 +141,6 @@ module.exports = {
         onInviteSessionRegister(payload) {
             //***update vue list****
             this.$refs.inviteSessionList.addToInviteSessionList(payload.data.data);
-            this.newRegulation(payload);
             this.setNotification(".دعوتنامه جلسه با موفقیت ذخیره شد", "is-success");
         },
 

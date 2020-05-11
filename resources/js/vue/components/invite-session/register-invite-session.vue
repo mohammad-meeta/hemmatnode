@@ -219,6 +219,9 @@ module.exports = {
             let inviteSessionData = {
                 title: this.inviteSessionData.title,
                 body: this.inviteSessionData.body,
+                agenda: this.inviteSessionData.agenda,
+                place: this.inviteSessionData.place,
+                date: this.inviteSessionData.date,
                 department_id: this.inviteSessionData
                     .departments,
                 users: this.inviteSessionData.users,

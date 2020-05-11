@@ -110,7 +110,7 @@ module.exports = {
         /**
          * add new inviteSessions data to list data
          */
-        addToInviteSessionsList(payload) {
+        addToInviteSessionList(payload) {
             const newInviteSessionsData = {
                 _id: payload._id,
                 title: payload.title,

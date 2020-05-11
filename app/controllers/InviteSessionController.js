@@ -23,16 +23,15 @@ InviteSession.index = async function index(req, res, next) {
 /**
  * paginate route
  */
-InviteSession.paginateInviteSession = async function paginateInviteSession(req, res, next) {
+InviteSession.paginateInviteSession = function paginateInviteSession(req, res, next) {
     const dataPaginate = {
         page: req.params.page,
         pageSize: req.params.size || 10
     };
 
-    let count = 0;
-    InviteSessionHelper.loadAllCountInviteSessionData()
+    InviteSessionHelper.loadAllInviteSessionCountData()
         .then(data => {
-            count = data;
+            let count = data.data;
 
             InviteSessionHelper.loadAllInviteSessionData(dataPaginate)
                 .then(data => {
@@ -43,13 +42,26 @@ InviteSession.paginateInviteSession = async function paginateInviteSession(req, 
                             count: count
                         }
                     };
+
                     res.status(200)
                         .send(result)
                         .end();
                 })
-                .catch(err => console.error(err));
+                .catch(err => {
+                    Logger.error(err);
+
+                    res.status(500)
+                        .send(err)
+                        .end();
+                });
         })
-        .catch(err => console.error(err));
+        .catch(err => {
+            Logger.error(err);
+
+            res.status(500)
+                .send(err)
+                .end();
+        });
 };
 
 /**

@@ -14,18 +14,14 @@
                 td {{ inviteSession.is_active }}
                 td {{ toPersianDate(inviteSession.created_at) }}
                 td.function-links
-                    a.button.is-primary.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.EDIT, department)")
+                    a.button.is-primary.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.EDIT, invite-session)")
                         span.icon.is-small
                             i.material-icons.icon check_circle
                         span ویرایش
-                    a.button.is-warning.is-rounded.mt-2(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SHOW, department)")
+                    a.button.is-warning.is-rounded.mt-2(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SHOW, invite-session)")
                         span.icon.is-small
                             i.material-icons.icon swap_horizontal_circle
                         span مشاهده
-                    a.button.is-warning.is-rounded.mt-2(href="#", @click.prevent="commandClick(ENUMS.COMMAND.REGULATION, department)")
-                        span.icon.is-small
-                            i.material-icons.icon swap_horizontal_circle
-                        span آئین نامه ها
 
     paginate(:page-count='pageCount',
         :click-handler='paginatorClick',

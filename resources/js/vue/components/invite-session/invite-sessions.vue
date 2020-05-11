@@ -131,7 +131,7 @@ module.exports = {
 
     mounted() {
         this.changeFormMode(ENUMS.FORM_MODE.LIST);
-        //this.$refs.inviteSessionList.loadInviteSessions(1);
+        this.$refs.inviteSessionList.loadInviteSessions(1);
     },
 
     methods: {
@@ -141,6 +141,7 @@ module.exports = {
         onInviteSessionRegister(payload) {
             //***update vue list****
             this.$refs.inviteSessionList.addToInviteSessionList(payload.data.data);
+            this.changeFormMode(ENUMS.FORM_MODE.LIST);
             this.setNotification(".دعوتنامه جلسه با موفقیت ذخیره شد", "is-success");
         },
 

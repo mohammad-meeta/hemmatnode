@@ -22,7 +22,7 @@ Router.get('/invite-session', [
     ])
     .as('invitesession.index');
 
-Router.get('/api/invite-session/:page/:size?', [
+    Router.get('/api/invite-session/:page/:size?', [
         checkSession,
         'InviteSession@paginateInviteSession'
     ])

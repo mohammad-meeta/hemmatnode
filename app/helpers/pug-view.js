@@ -46,6 +46,12 @@ PugView.viewPath = {
     'project.show': 'pages/project/show.pug',
     'project.edit': 'pages/project/edit.pug',
 
+    /* task */
+    'task.index': 'pages/task/index.pug',
+    'task.create': 'pages/task/register.pug',
+    'task.show': 'pages/task/show.pug',
+    'task.edit': 'pages/task/edit.pug',
+
     /* Session */
     'session.index': 'pages/session/index.pug',
     'session.create': 'pages/session/register.pug',

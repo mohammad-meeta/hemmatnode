@@ -134,6 +134,7 @@ Task.update = async function update(req, res, next) {
     data = {
         "_id": req.body._id,
         "title": req.body.title,
+        "execution_rank": req.body.execution_rank,
         "weight": req.body.weight,
         "parent": req.body.parent || null,
         "user_id": req.session.auth.userId,
@@ -212,6 +213,7 @@ Task.store = async function store(req, res, next) {
 
     const data = {
         "title": req.body.title,
+        "execution_rank": req.body.execution_rank,
         "weight": req.body.weight,
         "parent": req.body.parent || null,
         "user_id": req.session.auth.userId,

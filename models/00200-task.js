@@ -100,7 +100,12 @@ Model.model = function model() {
             required: true
         },
         'parent': {
-            type: String
+            type: String,
+            required: true
+        },
+        'execution_rank': {
+            type: String,
+            required: true
         }
     };
 };

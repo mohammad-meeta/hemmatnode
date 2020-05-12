@@ -7,46 +7,30 @@
             h1 در حال بارگذاری
         .form-small(v-show="! isLoadingMode")
             .field
-                label.label گروه
+                label.label عنوان
+                .control
+                    input.input(type='text', placeholder='عنوان', autofocus, v-model='departmentData.title' required)
+            .field
+                label.label معرفی
+                .control
+                    textarea.textarea(placeholder='معرفی', v-model='departmentData.description')
+
+            .field
+                label.label دسته بندی
                 .control
                     .select.is-primary
-                        select(v-model="inviteSessionData.departments")
-                            option(v-for='(department, departmentIndex) in departments',
-                                :value="department._id") {{ department.title }}
-
-            .field
-                label.label دستور جلسه
-                .control
-                    textarea.textarea(placeholder='دستور جلسه', v-model='inviteSessionData.agenda')
-            .field
-                label.label مکان
-                .control
-                    input.input(type='text', placeholder='مکان', v-model='inviteSessionData.place' required)
-
-            .field
-                label.label تاریخ
-                .control
-                    date-picker(v-model='inviteSessionData.date' format="YYYY-MM-DD HH:mm:ss"
-                    display-format=" jDD/jMM/jYYYY HH:mm" type="datetime" required)
-
-            .field
-                label.label حاضرین جلسه
-                .multi-checkboxes
-                    label.checkbox.column.is-12(v-for='(user, userIndex) in users')
-                        input(type='checkbox', v-model="inviteSessionData.user_list[user._id]", :value="user._id")
-                        |   {{ user.name }} - {{ user.profile.first_name }} {{ user.profile.last_name }}
+                        select(v-model="departmentData.departmentCategories")
+                            option(v-for='(departmentCategory, departmentCategoryIndex) in departmentCategories',
+                                :value="departmentCategory._id") {{ departmentCategory.title }}
 
             .field
                 label.checkbox
                     input(type='file', @change="setAttachment")
                     |   ضمیمه
-            .field
-                label.label توضیحات
-                .control
-                    textarea.textarea(placeholder='توضیحات', v-model='inviteSessionData.body')
+
             .field
                 label.checkbox
-                    input(type='checkbox', v-model="inviteSessionData.isActive")
+                    input(type='checkbox', v-model="departmentData.isActive")
                     |   فعال
 
             .field.is-grouped
@@ -54,6 +38,7 @@
                     a.button.is-link.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
                         |   ایجاد
 
+            department-regulation(ref="departmentRegulation",:department-regulation-url="departmentRegulationUrl", v-show="hasNewRegulation")
 </template>
 
 <script>
@@ -61,31 +46,27 @@
 
 const AxiosHelper = require("JS-HELPERS/axios-helper");
 const ENUMS = require("JS-HELPERS/enums");
-const InviteSessionValidator = require("JS-VALIDATORS/invite-session-register-validator");
+const DepartmentValidator = require("JS-VALIDATORS/department-register-validator");
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
-const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
+const DepartmentRegulation = require("VUE-COMPONENTS/department/department-regulation.vue")
+    .default;
 
 module.exports = {
-    name: "RegisterInviteSession",
+    name: "RegisterDepartment",
 
     components: {
         Notification,
-        DatePicker: VuePersianDatetimePicker
+        DepartmentRegulation
     },
 
     data: () => ({
         ENUMS,
-        departments: [],
-        users: [],
-        inviteSessionData: {
+        departmentCategories: [],
+        departmentData: {
             title: null,
-            body: null,
-            agenda: null,
-            place: null,
-            date: null,
-            department_id: null,
+            description: null,
+            department_category_id: null,
             files: {},
-            user_list: {},
             isActive: false
         },
 
@@ -93,6 +74,7 @@ module.exports = {
         notificationType: "is-info",
         showLoadingFlag: false,
         files: [],
+        hasNewRegulation: false
     }),
 
     props: {
@@ -101,25 +83,25 @@ module.exports = {
             default: ""
         },
 
-        departmentsUrl: {
+        departmentCategoriesUrl: {
             type: String,
             default: ""
         },
 
-        usersUrl: {
+        departmentRegulationUrl: {
             type: String,
             default: ""
         }
     },
 
     created() {
-        this.loadDepartments();
-        this.loadUsers();
+        this.loadDepartmentCategories();
     },
 
     computed: {
         isLoadingMode: state => state.showLoadingFlag == true,
-        showNotification: state => state.notificationMessage != null
+        showNotification: state => state.notificationMessage != null,
+        showNewRegulation: state => state.hasNewRegulation == true
     },
 
     methods: {
@@ -140,34 +122,21 @@ module.exports = {
         commandClick(arg) {
             switch (arg) {
                 case ENUMS.COMMAND.SAVE:
-                    this.registerInviteSession();
+                    this.registerDepartment();
                     break;
             }
         },
 
         /**
-         * load all departments for select departments in form
+         * load all departmentCategories for select departmentCategories in form
          */
-        loadDepartments() {
-            const url = this.departmentsUrl;
-            console.log(url);
-            AxiosHelper.send("get", url, "").then(res => {
-                const resData = res.data;
-                const datas = resData.data.data;
-                Vue.set(this, "departments", datas);
-            });
-        },
+        loadDepartmentCategories() {
+            const url = this.departmentCategoriesUrl;
 
-        /**
-         * load all users for select user in form
-         */
-        loadUsers() {
-            const url = this.usersUrl;
-            console.log(url);
             AxiosHelper.send("get", url, "").then(res => {
                 const resData = res.data;
                 const datas = resData.data.data;
-                Vue.set(this, "users", datas);
+                Vue.set(this, "departmentCategories", datas);
             });
         },
 
@@ -201,37 +170,29 @@ module.exports = {
         },
 
         /**
-         * Register new invite session
+         * Register new department
          */
-        registerInviteSession() {
+        registerDepartment() {
             const isValid = this.validate();
 
             if (!isValid) {
                 return;
             }
-            let inviteSessionData = {
-                body: this.inviteSessionData.body,
-                agenda: this.inviteSessionData.agenda,
-                place: this.inviteSessionData.place,
-                date: this.inviteSessionData.date,
-                department_id: this.inviteSessionData
-                    .departments,
-                user_list: this.inviteSessionData.user_list,
-                is_active: this.inviteSessionData.isActive
+            let departmentData = {
+                title: this.departmentData.title,
+                description: this.departmentData.description,
+                department_category_id: this.departmentData
+                    .departmentCategories,
+                is_active: this.departmentData.isActive
             };
 
-            inviteSessionData.files = this.files[0];
-            let t = Object.keys(inviteSessionData.user_list)
-            .filter(key => true == inviteSessionData.user_list[key])
-            .map(key => key);
+            departmentData.files = this.files[0];
 
-            inviteSessionData.user_list = t;
-            console.log(inviteSessionData);
             this.showLoading();
 
             const url = this.registerUrl;
 
-            AxiosHelper.send("post", url, inviteSessionData, {
+            AxiosHelper.send("post", url, departmentData, {
                 sendAsFormData: true
             })
                 .then(res => {
@@ -249,12 +210,18 @@ module.exports = {
                 })
                 .then(() => this.hideLoading());
         },
-
         /**
-         * Validate new invite session data
+         * after dave department must be saved regulation
+         */
+        hasNewRegulationFunc(payload) {
+            Vue.set(this, "hasNewRegulation", true);
+            this.$refs.departmentRegulation.setDepartmentId(payload.data.data._id);
+        },
+        /**
+         * Validate new department data
          */
         validate() {
-            const result = InviteSessionValidator.validate(this.inviteSessionData);
+            const result = DepartmentValidator.validate(this.departmentData);
 
             if (result.passes) {
                 this.closeNotification();

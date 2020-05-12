@@ -26,10 +26,9 @@ DocumentType.paginateDocumentType = async function paginateDocumentType(req, res
         pageSize: req.params.size || 10
     };
 
-    let count = 0;
-    DocumentTypeHelper.loadAllCountDocumentTypeData()
+    DocumentTypeHelper.loadAllDocumentTypeCountData()
         .then(data => {
-            count = data;
+            let count = data.data;
 
             DocumentTypeHelper.loadAllDocumentTypeData(dataPaginate)
                 .then(data => {
@@ -40,13 +39,26 @@ DocumentType.paginateDocumentType = async function paginateDocumentType(req, res
                             count: count
                         }
                     };
+
                     res.status(200)
                         .send(result)
                         .end();
                 })
-                .catch(err => console.error(err));
+                .catch(err => {
+                    Logger.error(err);
+
+                    res.status(500)
+                        .send(err)
+                        .end();
+                });
         })
-        .catch(err => console.error(err));
+        .catch(err => {
+            Logger.error(err);
+
+            res.status(500)
+                .send(err)
+                .end();
+        });
 };
 
 /**

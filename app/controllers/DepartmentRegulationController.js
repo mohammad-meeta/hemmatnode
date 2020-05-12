@@ -27,10 +27,9 @@ DepartmentRegulation.paginateDepartmentRegulation = async function paginateDepar
         pageSize: req.params.size || 10
     };
 
-    let count = 0;
-    DepartmentRegulationHelper.loadAllCountDepartmentRegulationData()
+    DepartmentRegulationHelper.loadAllDepartmentRegulationCountData()
         .then(data => {
-            count = data;
+            let count = data.data;
 
             DepartmentRegulationHelper.loadAllDepartmentRegulationData(dataPaginate)
                 .then(data => {
@@ -41,13 +40,26 @@ DepartmentRegulation.paginateDepartmentRegulation = async function paginateDepar
                             count: count
                         }
                     };
+
                     res.status(200)
                         .send(result)
                         .end();
                 })
-                .catch(err => console.error(err));
+                .catch(err => {
+                    Logger.error(err);
+
+                    res.status(500)
+                        .send(err)
+                        .end();
+                });
         })
-        .catch(err => console.error(err));
+        .catch(err => {
+            Logger.error(err);
+
+            res.status(500)
+                .send(err)
+                .end();
+        });
 };
 
 /**

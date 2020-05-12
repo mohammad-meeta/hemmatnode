@@ -1,36 +1,38 @@
 'use strict';
 const PugView = use('app/helpers/pug-view');
-const DepCatHelper = use('app/helpers/department-category-helper');
+const ProjectHelper = use('app/helpers/project-helper');
+const FileHelper = use('app/helpers/file-helper');
 /**
- * Dep cat controller
+ * project cat controller
  */
-function DepartmentCategory() {}
-module.exports = DepartmentCategory;
+function Project() {}
+module.exports = Project;
 
 /**
  * Index route
  */
-DepartmentCategory.index = async function index(req, res, next) {
-    const pageRoute = 'departmentcategory.index';
+Project.index = async function index(req, res, next) {
+    const pageRoute = 'project.index';
     res.render(PugView.getView(pageRoute), {
         req,
         pageRoute
     });
 };
+
 /**
  * paginate route
  */
-DepartmentCategory.paginateDepartmentCategory = async function paginateDepartmentCategory(req, res, next) {
+Project.paginateProject = async function paginateProject(req, res, next) {
     const dataPaginate = {
         page: req.params.page,
         pageSize: req.params.size || 10
     };
 
-    DepCatHelper.loadAllDepCatCountData()
+    ProjectHelper.loadAllProjectCountData()
         .then(data => {
             let count = data.data;
 
-            DepCatHelper.loadAllDepCatData(dataPaginate)
+            ProjectHelper.loadAllProjectData(dataPaginate)
                 .then(data => {
                     const result = {
                         success: true,
@@ -64,10 +66,10 @@ DepartmentCategory.paginateDepartmentCategory = async function paginateDepartmen
 /**
  * show route
  */
-DepartmentCategory.show = async function show(req, res, next) {
-    const depCatTitle = req.params.depCatData;
-    const pageRoute = 'departmentcategory.show';
-    DepCatHelper.loadDepCatData(depCatTitle)
+Project.show = async function show(req, res, next) {
+    const ProjectTitle = req.params.projectData;
+    const pageRoute = 'project.show';
+    ProjectHelper.loadProjectData(ProjectTitle)
         .then(data => {
             const result = {
                 success: true,
@@ -85,8 +87,8 @@ DepartmentCategory.show = async function show(req, res, next) {
 /**
  * edit page route
  */
-DepartmentCategory.edit = async function edit(req, res, next) {
-    const pageRoute = 'departmentcategory.edit';
+Project.edit = async function edit(req, res, next) {
+    const pageRoute = 'project.edit';
     res.render(PugView.getView(pageRoute), {
         req,
         pageRoute
@@ -96,10 +98,10 @@ DepartmentCategory.edit = async function edit(req, res, next) {
 /**
  * return edit data route
  */
-DepartmentCategory.editdepCatData = async function editdepCatData(req, res, next) {
-    const title = req.params.depCatData;
+Project.editProjectData = async function editProjectData(req, res, next) {
+    const title = req.params.projectData;
 
-    DepCatHelper.loadDepCatData(title)
+    ProjectHelper.loadProjectData(title)
         .then(data => {
             const result = {
                 success: true,
@@ -113,16 +115,35 @@ DepartmentCategory.editdepCatData = async function editdepCatData(req, res, next
 };
 
 /**
- * update data dep cat
+ * update data project cat
  */
-DepartmentCategory.update = async function update(req, res, next) {
+Project.update = async function update(req, res, next) {
     let data = {};
+    const files = req.body.files || [];
+
+    fileList = [];
+    files.forEach(element => {
+        const fileData = element;
+        FileHelper.insertFileData(fileData)
+            .then(data => {
+                console.log(data);
+            })
+            .catch(err => console.error(err));
+    });
+
     data = {
+        "_id": req.body._id,
         "title": req.body.title,
+        "weight": req.body.weight,
+        "parent": req.body.parent || null,
         "user_id": req.session.auth.userId,
-        "is_active": req.body.is_active
+        "is_active": req.body.is_active,
+        "description": req.body.description || '',
+        "files": fileList,
+        "regulation": req.body.regulation || []
     };
-    const UserUpdate = DepCatHelper.updateUserData(data)
+
+    ProjectHelper.updateProjectData(data)
         .then(data => {
             const result = {
                 success: true,
@@ -136,14 +157,14 @@ DepartmentCategory.update = async function update(req, res, next) {
 };
 
 /**
- * delete data dep cat
+ * delete data project cat
  */
-DepartmentCategory.destroy = async function destroy(req, res, next) {
+Project.destroy = async function destroy(req, res, next) {
     const data = {
         "_id": req.body._id
     };
 
-    const UserDelete = DepCatHelper.deleteDepCatData(data)
+    ProjectHelper.deleteProjectData(data)
         .then(data => {
             const result = {
                 success: true,
@@ -159,8 +180,8 @@ DepartmentCategory.destroy = async function destroy(req, res, next) {
 /**
  * Create route return page
  */
-DepartmentCategory.create = async function create(req, res, next) {
-    const pageRoute = PugView.getView('departmentcategory.create');
+Project.create = async function create(req, res, next) {
+    const pageRoute = PugView.getView('project.create');
 
     res.render(pageRoute, {
         req,
@@ -169,17 +190,39 @@ DepartmentCategory.create = async function create(req, res, next) {
 };
 
 /**
- * store data dep cat
+ * store data project cat
  */
-DepartmentCategory.store = async function store(req, res, next) {
+Project.store = async function store(req, res, next) {
+
+    const files = req.files || [];
+
+    let fileList = [];
+
+    for (let i = 0; i < files.length; ++i) {
+        try {
+            const el = files[i];
+            el.user_id = req.session.auth.userId;
+
+            const data = await FileHelper.insertFileData(el);
+            fileList.push(data[0]._id);
+        } catch (err) {
+            Logger.error(err);
+        }
+    }
 
     const data = {
         "title": req.body.title,
+        "weight": req.body.weight,
+        "parent": req.body.parent || null,
         "user_id": req.session.auth.userId,
-        "is_active": req.body.is_active || false
+        "is_active": req.body.is_active,
+        "description": req.body.description || '',
+        "files": fileList,
+        "regulation": req.body.regulation || []
     };
 
-    DepCatHelper.insertNewDepCat(data)
+
+    ProjectHelper.insertNewProject(data)
         .then(data => {
             const result = {
                 success: true,

@@ -26,10 +26,9 @@ RoleController.paginateRoleData = async function paginateRoleData(req, res, next
         pageSize: req.params.size || 10
     };
 
-    let count = 0;
-    RoleHelper.loadAllCountRoleData()
+    RoleHelper.loadAllRoleCountData()
         .then(data => {
-            count = data;
+            let count = data.data;
 
             RoleHelper.loadAllRoleData(dataPaginate)
                 .then(data => {
@@ -40,13 +39,26 @@ RoleController.paginateRoleData = async function paginateRoleData(req, res, next
                             count: count
                         }
                     };
+
                     res.status(200)
                         .send(result)
                         .end();
                 })
-                .catch(err => console.error(err));
+                .catch(err => {
+                    Logger.error(err);
+
+                    res.status(500)
+                        .send(err)
+                        .end();
+                });
         })
-        .catch(err => console.error(err));
+        .catch(err => {
+            Logger.error(err);
+
+            res.status(500)
+                .send(err)
+                .end();
+        });
 };
 
 /**

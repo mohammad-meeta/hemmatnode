@@ -5,9 +5,9 @@
                 span(v-html="notificationMessage")
             .container.page-header
                 .title
-                    h1(v-show="modeList") دعوتنامه جلسه
-                    h1(v-show="modeRegister") ایجاد دعوتنامه جلسه
-                    h1(v-show="modeEdit") ویرایش دعوتنامه جلسه
+                    h1(v-show="modeList") پروژه
+                    h1(v-show="modeRegister") ایجاد پروژه
+                    h1(v-show="modeEdit") ویرایش پروژه
 
         .columns.exposed-form(v-show="!modeLoading")
             .column.is-one-fifth(v-show="modeList")
@@ -29,23 +29,22 @@
                 loading
 
             .column(v-show="!modeLoading && modeList")
-                list-invite-session(ref="inviteSessionList", @on-command="onCommand", :list-url="listUrl")
+                list-project(ref="projectList", @on-command="onCommand", :list-url="listUrl")
 
             .column(v-show="!modeLoading && modeRegister")
-                register-invite-session(ref="inviteSessionRegister", @on-command="onCommand",
-                  @on-register="onInviteSessionRegister"
+                register-project(ref="projectRegister", @on-command="onCommand",
+                  @on-register="onProjectRegister"
                   :register-url="registerUrl",
-                  :departments-url="departmentsUrl",
-                  :users-url="usersUrl")
+                  :project-parents-url="projectParentsUrl")
 
             //.column(v-show="!modeLoading && modeEdit")
-                edit-department(ref="departmentEdit", @on-command="onCommand",
-                @on-update="onInviteSessionUpdate"
+                edit-project(ref="projectEdit", @on-command="onCommand",
+                @on-update="onProjectUpdate"
                 :edit-url="editUrl",
-                :departmentCategories-url="departmentCategoriesUrl")
+                :projectParents-url="projectParentsUrl")
 
-            .column(v-show="!modeLoading && modeShow")
-                show-invite-session(ref="inviteSessionShow", @on-command="onCommand")
+            //.column(v-show="!modeLoading && modeShow")
+                show-project(ref="projectShow", @on-command="onCommand")
 </template>
 
 <script>
@@ -54,32 +53,32 @@
 const Routes = require("JS-CORE/routes");
 const ENUMS = require("JS-HELPERS/enums");
 const Loading = require("VUE-COMPONENTS/general/loading.vue").default;
-const RegisterInviteSession = require("VUE-COMPONENTS/invite-session/register-invite-session.vue")
+const RegisterProject = require("VUE-COMPONENTS/project/register-project.vue")
     .default;
-const ListInviteSession = require("VUE-COMPONENTS/invite-session/list-invite-session.vue")
+const ListProject = require("VUE-COMPONENTS/project/list-project.vue")
     .default;
-//const EditInviteSession = require("VUE-COMPONENTS/invite-session/edit-invite-session.vue").default;
-const ShowInviteSession = require("VUE-COMPONENTS/invite-session/show-invite-session.vue").default;
+//const EditProject = require("VUE-COMPONENTS/project/edit-project.vue").default;
+//const ShowProject = require("VUE-COMPONENTS/project/show-project.vue").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
 module.exports = {
-    name: "InviteSessions",
+    name: "Projects",
 
     components: {
         Loading,
-        ListInviteSession,
-        RegisterInviteSession,
-        //EditInviteSession,
-        ShowInviteSession,
+        ListProject,
+        RegisterProject,
+        //EditProject,
+        //ShowProject,
         Notification
     },
 
     data: () => ({
         ENUMS,
         formModeStack: [],
-        inviteSessions: [],
+        projects: [],
         notificationMessage: null,
-        notificationType: "is-info",
+        notificationType: "is-info"
     }),
 
     props: {
@@ -98,7 +97,7 @@ module.exports = {
             default: null
         },
 
-        departmentsUrl: {
+        projectParentsUrl: {
             type: String,
             default: null
         },
@@ -107,11 +106,6 @@ module.exports = {
             type: String,
             default: null
         },
-
-        usersUrl: {
-            type: String,
-            default: null
-        }
     },
 
     computed: {
@@ -131,28 +125,27 @@ module.exports = {
 
     mounted() {
         this.changeFormMode(ENUMS.FORM_MODE.LIST);
-        this.$refs.inviteSessionList.loadInviteSessions(1);
+        this.$refs.projectList.loadProjects(1);
     },
 
     methods: {
         /**
-         * On Register invite session
+         * On Register project
          */
-        onInviteSessionRegister(payload) {
+        onProjectRegister(payload) {
             //***update vue list****
-            this.$refs.inviteSessionList.addToInviteSessionList(payload.data.data);
-            this.changeFormMode(ENUMS.FORM_MODE.LIST);
-            this.setNotification(".دعوتنامه جلسه با موفقیت ذخیره شد", "is-success");
+            this.$refs.projectList.addToProjectList(payload.data.data);
+            this.setNotification(".پروژه با موفقیت ذخیره شد", "is-success");
         },
 
         /**
-         * On Update invite session
+         * On Update project
          */
-        onInviteSessionUpdate(payload) {
-            this.$refs.inviteSessionList.editInInviteSessionList(payload.data);
+        onProjectUpdate(payload) {
+            this.$refs.projectList.editInProjectList(payload.data);
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
 
-            this.setNotification(".دعوتنامه جلسه با موفقیت ویرایش شد", "is-success");
+            this.setNotification(".پروژه با موفقیت ویرایش شد", "is-success");
         },
 
         /**
@@ -171,12 +164,12 @@ module.exports = {
 
                 case ENUMS.COMMAND.REGISTER:
                     /* TODO: REGISTER NEW  */
-                    console.log("REGISTER NEW InviteSession", arg);
+                    console.log("REGISTER NEW Project", arg);
                     break;
 
                 case ENUMS.COMMAND.EDIT:
-                    /* TODO: REGISTER NEW InviteSession */
-                    this.$refs.inviteSessionEdit.loadInviteSessionData(data);
+                    /* TODO: REGISTER NEW Project */
+                    this.$refs.projectEdit.loadProjectData(data);
                     this.changeFormMode(ENUMS.FORM_MODE.EDIT);
                     break;
 
@@ -185,7 +178,7 @@ module.exports = {
                     break;
 
                 case ENUMS.COMMAND.SHOW:
-                    this.$refs.inviteSessionShow.loadInviteSessionData(data);
+                    this.$refs.projectShow.loadProjectData(data);
                     this.changeFormMode(ENUMS.FORM_MODE.SHOW);
                     break;
             }

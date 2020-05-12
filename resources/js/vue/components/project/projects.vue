@@ -35,13 +35,13 @@
                 register-project(ref="projectRegister", @on-command="onCommand",
                   @on-register="onProjectRegister"
                   :register-url="registerUrl",
-                  :project-parents-url="projectParentsUrl")
+                  :parents-url="parentsUrl")
 
             //.column(v-show="!modeLoading && modeEdit")
                 edit-project(ref="projectEdit", @on-command="onCommand",
                 @on-update="onProjectUpdate"
                 :edit-url="editUrl",
-                :projectParents-url="projectParentsUrl")
+                :parents-url="parentsUrl")
 
             //.column(v-show="!modeLoading && modeShow")
                 show-project(ref="projectShow", @on-command="onCommand")
@@ -97,7 +97,7 @@ module.exports = {
             default: null
         },
 
-        projectParentsUrl: {
+        parentsUrl: {
             type: String,
             default: null
         },

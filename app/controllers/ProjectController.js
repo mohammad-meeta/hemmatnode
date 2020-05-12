@@ -28,7 +28,7 @@ Project.paginateProject = async function paginateProject(req, res, next) {
         pageSize: req.params.size || 10
     };
 
-    ProjectHelper.loadAllProjectCountData()
+    ProjectHelper.loadAllCountProjectData()
         .then(data => {
             let count = data.data;
 

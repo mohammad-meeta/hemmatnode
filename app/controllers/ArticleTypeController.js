@@ -26,17 +26,40 @@ ArticleTypeController.paginateArticleTypeData = async function paginateArticleTy
         pageSize: req.params.size || 10
     };
 
-    ArticleTypeHelper.loadAllArticleTypeData(dataPaginate)
-        .then(data => {
-            const result = {
-                success: true,
-                data: data
-            };
-            res.status(200)
-                .send(result)
-                .end();
-        })
-        .catch(err => console.error(err));
+    ArticleTypeHelper.loadAllArticleTypeCountData()
+    .then(data => {
+        let count = data.data;
+
+        ArticleTypeHelper.loadAllArticleTypeData(dataPaginate)
+            .then(data => {
+                const result = {
+                    success: true,
+                    data: {
+                        data: data,
+                        count: count
+                    }
+                };
+
+                res.status(200)
+                    .send(result)
+                    .end();
+            })
+            .catch(err => {
+                Logger.error(err);
+
+                res.status(500)
+                    .send(err)
+                    .end();
+            });
+    })
+    .catch(err => {
+        Logger.error(err);
+
+        res.status(500)
+            .send(err)
+            .end();
+    });
+
 };
 
 

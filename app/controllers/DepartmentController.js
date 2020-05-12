@@ -151,7 +151,7 @@ Department.destroy = async function destroy(req, res, next) {
         "_id": req.body._id
     };
 
-    const UserDelete = DepartmentHelper.deleteDepartmentData(data)
+    DepartmentHelper.deleteDepartmentData(data)
         .then(data => {
             const result = {
                 success: true,

@@ -40,6 +40,12 @@ PugView.viewPath = {
     'department.show': 'pages/department/show.pug',
     'department.edit': 'pages/department/edit.pug',
 
+    /* project */
+    'project.index': 'pages/project/index.pug',
+    'project.create': 'pages/project/register.pug',
+    'project.show': 'pages/project/show.pug',
+    'project.edit': 'pages/project/edit.pug',
+
     /* Session */
     'session.index': 'pages/session/index.pug',
     'session.create': 'pages/session/register.pug',

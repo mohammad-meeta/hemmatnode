@@ -9,19 +9,22 @@
             .field
                 label.label عنوان
                 .control
-                    input.input(type='text', placeholder='عنوان', autofocus, v-model='departmentData.title' required)
+                    input.input(type='text', placeholder='عنوان', autofocus, v-model='projectData.title' required)
             .field
-                label.label معرفی
+                label.label توضیحات
                 .control
-                    textarea.textarea(placeholder='معرفی', v-model='departmentData.description')
-
+                    textarea.textarea(placeholder='توضیحات', v-model='projectData.description')
             .field
-                label.label دسته بندی
+                label.label وزن
+                .control
+                    input.input(type='text', placeholder='وزن', autofocus, v-model='projectData.title' required)
+            .field
+                label.label پروژه مرتبط
                 .control
                     .select.is-primary
-                        select(v-model="departmentData.departmentCategories")
-                            option(v-for='(departmentCategory, departmentCategoryIndex) in departmentCategories',
-                                :value="departmentCategory._id") {{ departmentCategory.title }}
+                        select(v-model="projectData.parents")
+                            option(v-for='(parent, parentIndex) in parents',
+                                :value="parent._id") {{ parent.title }}
 
             .field
                 label.checkbox
@@ -30,7 +33,7 @@
 
             .field
                 label.checkbox
-                    input(type='checkbox', v-model="departmentData.isActive")
+                    input(type='checkbox', v-model="projectData.isActive")
                     |   فعال
 
             .field.is-grouped
@@ -38,7 +41,6 @@
                     a.button.is-link.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
                         |   ایجاد
 
-            department-regulation(ref="departmentRegulation",:department-regulation-url="departmentRegulationUrl", v-show="hasNewRegulation")
 </template>
 
 <script>
@@ -46,26 +48,24 @@
 
 const AxiosHelper = require("JS-HELPERS/axios-helper");
 const ENUMS = require("JS-HELPERS/enums");
-const DepartmentValidator = require("JS-VALIDATORS/department-register-validator");
+const ProjectValidator = require("JS-VALIDATORS/project-register-validator");
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
-const DepartmentRegulation = require("VUE-COMPONENTS/department/department-regulation.vue")
-    .default;
 
 module.exports = {
-    name: "RegisterDepartment",
+    name: "RegisterProject",
 
     components: {
-        Notification,
-        DepartmentRegulation
+        Notification
     },
 
     data: () => ({
         ENUMS,
-        departmentCategories: [],
-        departmentData: {
+        parents: [],
+        projectData: {
             title: null,
             description: null,
-            department_category_id: null,
+            weight: null,
+            parent_id: null,
             files: {},
             isActive: false
         },
@@ -74,7 +74,6 @@ module.exports = {
         notificationType: "is-info",
         showLoadingFlag: false,
         files: [],
-        hasNewRegulation: false
     }),
 
     props: {
@@ -83,25 +82,19 @@ module.exports = {
             default: ""
         },
 
-        departmentCategoriesUrl: {
-            type: String,
-            default: ""
-        },
-
-        departmentRegulationUrl: {
+        parentsUrl: {
             type: String,
             default: ""
         }
     },
 
     created() {
-        this.loadDepartmentCategories();
+        this.loadParents();
     },
 
     computed: {
         isLoadingMode: state => state.showLoadingFlag == true,
-        showNotification: state => state.notificationMessage != null,
-        showNewRegulation: state => state.hasNewRegulation == true
+        showNotification: state => state.notificationMessage != null
     },
 
     methods: {
@@ -122,21 +115,21 @@ module.exports = {
         commandClick(arg) {
             switch (arg) {
                 case ENUMS.COMMAND.SAVE:
-                    this.registerDepartment();
+                    this.registerProject();
                     break;
             }
         },
 
         /**
-         * load all departmentCategories for select departmentCategories in form
+         * load all parents for select parents in form
          */
-        loadDepartmentCategories() {
-            const url = this.departmentCategoriesUrl;
+        loadParents() {
+            const url = this.parentsUrl;
 
             AxiosHelper.send("get", url, "").then(res => {
                 const resData = res.data;
                 const datas = resData.data.data;
-                Vue.set(this, "departmentCategories", datas);
+                Vue.set(this, "parents", datas);
             });
         },
 
@@ -170,29 +163,29 @@ module.exports = {
         },
 
         /**
-         * Register new department
+         * Register new project
          */
-        registerDepartment() {
+        registerProject() {
             const isValid = this.validate();
 
             if (!isValid) {
                 return;
             }
-            let departmentData = {
-                title: this.departmentData.title,
-                description: this.departmentData.description,
-                department_category_id: this.departmentData
-                    .departmentCategories,
-                is_active: this.departmentData.isActive
+            let projectData = {
+                title: this.projectData.title,
+                description: this.projectData.description,
+                project_parent_id: this.projectData
+                    .parents,
+                is_active: this.projectData.isActive
             };
 
-            departmentData.files = this.files[0];
+            projectData.files = this.files[0];
 
             this.showLoading();
 
             const url = this.registerUrl;
 
-            AxiosHelper.send("post", url, departmentData, {
+            AxiosHelper.send("post", url, projectData, {
                 sendAsFormData: true
             })
                 .then(res => {
@@ -210,18 +203,12 @@ module.exports = {
                 })
                 .then(() => this.hideLoading());
         },
+
         /**
-         * after dave department must be saved regulation
-         */
-        hasNewRegulationFunc(payload) {
-            Vue.set(this, "hasNewRegulation", true);
-            this.$refs.departmentRegulation.setDepartmentId(payload.data.data._id);
-        },
-        /**
-         * Validate new department data
+         * Validate new project data
          */
         validate() {
-            const result = DepartmentValidator.validate(this.departmentData);
+            const result = ProjectValidator.validate(this.projectData);
 
             if (result.passes) {
                 this.closeNotification();

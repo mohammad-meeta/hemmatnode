@@ -17,7 +17,7 @@
             .field
                 label.label وزن
                 .control
-                    input.input(type='text', placeholder='وزن', autofocus, v-model='projectData.title' required)
+                    input.input(type='text', placeholder='وزن', autofocus, v-model='projectData.weight' required)
             .field
                 label.label پروژه مرتبط
                 .control
@@ -65,7 +65,7 @@ module.exports = {
             title: null,
             description: null,
             weight: null,
-            parent_id: null,
+            parent: null,
             files: {},
             isActive: false
         },
@@ -174,8 +174,8 @@ module.exports = {
             let projectData = {
                 title: this.projectData.title,
                 description: this.projectData.description,
-                project_parent_id: this.projectData
-                    .parents,
+                weight: this.projectData.weight,
+                parent: this.projectData.parent,
                 is_active: this.projectData.isActive
             };
 

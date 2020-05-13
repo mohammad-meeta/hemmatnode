@@ -9,31 +9,66 @@
             .field
                 label.label عنوان
                 .control
-                    input.input(type='text', placeholder='عنوان', autofocus, v-model='projectData.title' required)
+                    input.input(type='text', placeholder='عنوان', autofocus, v-model='taskData.title' required)
             .field
                 label.label توضیحات
                 .control
-                    textarea.textarea(placeholder='توضیحات', v-model='projectData.description')
+                    textarea.textarea(placeholder='توضیحات', v-model='taskData.description')
             .field
                 label.label وزن
                 .control
-                    input.input(type='text', placeholder='وزن', autofocus, v-model='projectData.weight' required)
+                    input.input(type='text', placeholder='وزن', autofocus, v-model='taskData.weight' required)
             .field
                 label.label پروژه مرتبط
                 .control
                     .select.is-primary
-                        select(v-model="projectData.parents")
+                        select(v-model="taskData.parents")
                             option(v-for='(parent, parentIndex) in parents',
                                 :value="parent._id") {{ parent.title }}
+            .field
+                label.label تاریخ آغاز
+                .control
+                    date-picker(v-model='taskData.started_at' format="YYYY-MM-DD HH:mm:ss"
+                    display-format=" jDD/jMM/jYYYY HH:mm" type="datetime" required)
+            .field
+                label.label تاریخ پایان
+                .control
+                    date-picker(v-model='taskData.finished_at' format="YYYY-MM-DD HH:mm:ss"
+                    display-format=" jDD/jMM/jYYYY HH:mm" type="datetime" required)
+            .field
+                label.label تاریخ خاتمه یافته
+                .control
+                    date-picker(v-model='taskData.done_at' format="YYYY-MM-DD HH:mm:ss"
+                    display-format=" jDD/jMM/jYYYY HH:mm" type="datetime" required)
 
+            .field
+                label.label مجری
+                .multi-checkboxes
+                    label.checkbox.column.is-12(v-for='(user, userIndex) in users')
+                        input(type='checkbox', v-model="taskData.executed_by[user._id]", :value="user._id")
+                        |   {{ user.name }} - {{ user.profile.first_name }} {{ user.profile.last_name }}
             .field
                 label.checkbox
                     input(type='file', @change="setAttachment")
                     |   ضمیمه
-
             .field
                 label.checkbox
-                    input(type='checkbox', v-model="projectData.isActive")
+                    input(type='checkbox', v-model="taskData.status.in_progress")
+                    |   در حال انجام
+                label.checkbox
+                    input(type='checkbox', v-model="taskData.status.done")
+                    |   انجام شده
+                label.checkbox
+                    input(type='checkbox', v-model="taskData.status.nodone")
+                    |   انجام نشده
+
+            .field
+                label.label امتیاز اجرا
+                .control
+                    input.input(type='text', placeholder='امتیاز', autofocus, v-model='taskData.execution_rank' required)
+            .field
+                label.checkbox
+                    input(type='checkbox', v-model="taskData.isActive")
                     |   فعال
 
             .field.is-grouped
@@ -48,32 +83,37 @@
 
 const AxiosHelper = require("JS-HELPERS/axios-helper");
 const ENUMS = require("JS-HELPERS/enums");
-const ProjectValidator = require("JS-VALIDATORS/project-register-validator");
+const TaskValidator = require("JS-VALIDATORS/task-register-validator");
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
+const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
 
 module.exports = {
-    name: "RegisterProject",
+    name: "RegisterTask",
 
     components: {
-        Notification
+        Notification,
+        DatePicker: VuePersianDatetimePicker
     },
 
     data: () => ({
         ENUMS,
         parents: [],
-        projectData: {
+        users: [],
+        taskData: {
             title: null,
             description: null,
             weight: null,
             parent: null,
             files: {},
-            isActive: false
+            isActive: false,
+            status: {},
+            user_list: {}
         },
 
         notificationMessage: null,
         notificationType: "is-info",
         showLoadingFlag: false,
-        files: [],
+        files: []
     }),
 
     props: {
@@ -85,11 +125,17 @@ module.exports = {
         parentsUrl: {
             type: String,
             default: ""
+        },
+
+        usersUrl: {
+            type: String,
+            default: ""
         }
     },
 
     created() {
         this.loadParents();
+        this.loadUsers();
     },
 
     computed: {
@@ -115,7 +161,7 @@ module.exports = {
         commandClick(arg) {
             switch (arg) {
                 case ENUMS.COMMAND.SAVE:
-                    this.registerProject();
+                    this.registerTask();
                     break;
             }
         },
@@ -126,10 +172,25 @@ module.exports = {
         loadParents() {
             const url = this.parentsUrl;
             console.log(url);
-            AxiosHelper.send("get", url, "").then(res => {
+            AxiosHelper.send("get", url, {}).then(res => {
+                console.log(res)
                 const resData = res.data;
                 const datas = resData.data.data;
                 Vue.set(this, "parents", datas);
+            });
+        },
+
+        /**
+         * load all users for select user in form
+         */
+        loadUsers() {
+            const url = this.usersUrl;
+            console.log(url)
+            AxiosHelper.send("get", url, {}).then(res => {
+                console.log(res)
+                const resData = res.data;
+                const datas = resData.data.data;
+                Vue.set(this, "users", datas);
             });
         },
 
@@ -163,29 +224,29 @@ module.exports = {
         },
 
         /**
-         * Register new project
+         * Register new task
          */
-        registerProject() {
+        registerTask() {
             const isValid = this.validate();
 
             if (!isValid) {
                 return;
             }
-            let projectData = {
-                title: this.projectData.title,
-                description: this.projectData.description,
-                weight: this.projectData.weight,
-                parent: this.projectData.parents,
-                is_active: this.projectData.isActive
+            let taskData = {
+                title: this.taskData.title,
+                description: this.taskData.description,
+                weight: this.taskData.weight,
+                parent: this.taskData.parents,
+                is_active: this.taskData.isActive
             };
-            console.log(projectData);
-            projectData.files = this.files[0];
+            console.log(taskData);
+            taskData.files = this.files[0];
 
             this.showLoading();
 
             const url = this.registerUrl;
 
-            AxiosHelper.send("post", url, projectData, {
+            AxiosHelper.send("post", url, taskData, {
                 sendAsFormData: true
             })
                 .then(res => {
@@ -205,10 +266,10 @@ module.exports = {
         },
 
         /**
-         * Validate new project data
+         * Validate new task data
          */
         validate() {
-            const result = ProjectValidator.validate(this.projectData);
+            const result = TaskValidator.validate(this.taskData);
 
             if (result.passes) {
                 this.closeNotification();

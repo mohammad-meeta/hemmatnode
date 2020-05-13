@@ -5,9 +5,9 @@
                 span(v-html="notificationMessage")
             .container.page-header
                 .title
-                    h1(v-show="modeList") پروژه
-                    h1(v-show="modeRegister") ایجاد پروژه
-                    h1(v-show="modeEdit") ویرایش پروژه
+                    h1(v-show="modeList") فعالیت
+                    h1(v-show="modeRegister") ایجاد فعالیت
+                    h1(v-show="modeEdit") ویرایش فعالیت
 
         .columns.exposed-form(v-show="!modeLoading")
             .column.is-one-fifth(v-show="modeList")
@@ -29,22 +29,22 @@
                 loading
 
             .column(v-show="!modeLoading && modeList")
-                list-project(ref="projectList", @on-command="onCommand", :list-url="listUrl")
+                list-task(ref="taskList", @on-command="onCommand", :list-url="listUrl")
 
             .column(v-show="!modeLoading && modeRegister")
-                register-project(ref="projectRegister", @on-command="onCommand",
-                  @on-register="onProjectRegister"
+                register-task(ref="taskRegister", @on-command="onCommand",
+                  @on-register="onTaskRegister"
                   :register-url="registerUrl",
                   :parents-url="parentsUrl")
 
             //.column(v-show="!modeLoading && modeEdit")
-                edit-project(ref="projectEdit", @on-command="onCommand",
-                @on-update="onProjectUpdate"
+                edit-task(ref="taskEdit", @on-command="onCommand",
+                @on-update="onTaskUpdate"
                 :edit-url="editUrl",
                 :parents-url="parentsUrl")
 
             //.column(v-show="!modeLoading && modeShow")
-                show-project(ref="projectShow", @on-command="onCommand")
+                show-task(ref="taskShow", @on-command="onCommand")
 </template>
 
 <script>
@@ -53,30 +53,30 @@
 const Routes = require("JS-CORE/routes");
 const ENUMS = require("JS-HELPERS/enums");
 const Loading = require("VUE-COMPONENTS/general/loading.vue").default;
-const RegisterProject = require("VUE-COMPONENTS/project/register-project.vue")
+const RegisterTask = require("VUE-COMPONENTS/task/register-task.vue")
     .default;
-const ListProject = require("VUE-COMPONENTS/project/list-project.vue")
+const ListTask = require("VUE-COMPONENTS/task/list-task.vue")
     .default;
-//const EditProject = require("VUE-COMPONENTS/project/edit-project.vue").default;
-//const ShowProject = require("VUE-COMPONENTS/project/show-project.vue").default;
+//const EditTask = require("VUE-COMPONENTS/task/edit-task.vue").default;
+//const ShowTask = require("VUE-COMPONENTS/task/show-task.vue").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
 module.exports = {
-    name: "Projects",
+    name: "Tasks",
 
     components: {
         Loading,
-        ListProject,
-        RegisterProject,
-        //EditProject,
-        //ShowProject,
+        ListTask,
+        RegisterTask,
+        //EditTask,
+        //ShowTask,
         Notification
     },
 
     data: () => ({
         ENUMS,
         formModeStack: [],
-        projects: [],
+        tasks: [],
         notificationMessage: null,
         notificationType: "is-info"
     }),
@@ -125,28 +125,28 @@ module.exports = {
 
     mounted() {
         this.changeFormMode(ENUMS.FORM_MODE.LIST);
-        this.$refs.projectList.loadProjects(1);
+        this.$refs.taskList.loadTasks(1);
     },
 
     methods: {
         /**
-         * On Register project
+         * On Register task
          */
-        onProjectRegister(payload) {
+        onTaskRegister(payload) {
             //***update vue list****
-            this.$refs.projectList.addToProjectList(payload.data.data);
+            this.$refs.taskList.addToTaskList(payload.data.data);
             this.changeFormMode(ENUMS.FORM_MODE.LIST)
-            this.setNotification(".پروژه با موفقیت ذخیره شد", "is-success");
+            this.setNotification(".فعالیت با موفقیت ذخیره شد", "is-success");
         },
 
         /**
-         * On Update project
+         * On Update task
          */
-        onProjectUpdate(payload) {
-            this.$refs.projectList.editInProjectList(payload.data);
+        onTaskUpdate(payload) {
+            this.$refs.taskList.editInTaskList(payload.data);
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
 
-            this.setNotification(".پروژه با موفقیت ویرایش شد", "is-success");
+            this.setNotification(".فعالیت با موفقیت ویرایش شد", "is-success");
         },
 
         /**
@@ -165,12 +165,12 @@ module.exports = {
 
                 case ENUMS.COMMAND.REGISTER:
                     /* TODO: REGISTER NEW  */
-                    console.log("REGISTER NEW Project", arg);
+                    console.log("REGISTER NEW Task", arg);
                     break;
 
                 case ENUMS.COMMAND.EDIT:
-                    /* TODO: REGISTER NEW Project */
-                    this.$refs.projectEdit.loadProjectData(data);
+                    /* TODO: REGISTER NEW Task */
+                    this.$refs.taskEdit.loadTaskData(data);
                     this.changeFormMode(ENUMS.FORM_MODE.EDIT);
                     break;
 
@@ -179,7 +179,7 @@ module.exports = {
                     break;
 
                 case ENUMS.COMMAND.SHOW:
-                    this.$refs.projectShow.loadProjectData(data);
+                    this.$refs.taskShow.loadTaskData(data);
                     this.changeFormMode(ENUMS.FORM_MODE.SHOW);
                     break;
             }

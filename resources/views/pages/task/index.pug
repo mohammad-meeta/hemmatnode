@@ -1,17 +1,18 @@
 extends ../../layout/app.pug
 
 block title
-    | پروژه
+    | فعالیت
 
 block content
     .container
-        projects(list-url=route('api.project', { page: '$page$', size: '$pageSize$' }),
-            parents-url=route('api.project', { page: 1, size: 1000 }),
-            register-url=route('project.store'),
-            edit-url=route('project.update', { id :'$id$'})
+        tasks(list-url=route('api.task', { page: '$page$', size: '$pageSize$' }),
+            parents-url=route('api.task', { page: 1, size: 1000 }),
+            register-url=route('task.store'),
+            edit-url=route('task.update', { id :'$id$'}),
+            users-url=route('api.user', { page: 1, size: 1000 })
         )
 
 block scripts
-    script(defer, src=mix('js/pages/project/index/index.js'))
+    script(defer, src=mix('js/pages/task/index/index.js'))
 
 

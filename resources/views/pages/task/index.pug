@@ -1,0 +1,17 @@
+extends ../../layout/app.pug
+
+block title
+    | پروژه
+
+block content
+    .container
+        projects(list-url=route('api.project', { page: '$page$', size: '$pageSize$' }),
+            parents-url=route('api.project', { page: 1, size: 1000 }),
+            register-url=route('project.store'),
+            edit-url=route('project.update', { id :'$id$'})
+        )
+
+block scripts
+    script(defer, src=mix('js/pages/project/index/index.js'))
+
+

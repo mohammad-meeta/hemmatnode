@@ -70,6 +70,7 @@ mix.js('resources/js/core/kernel.js', `${output}/js/core`)
     .js('resources/js/pages/department/index/index.js', `${output}/js/pages/department/index`)
     .js('resources/js/pages/invite-session/index/index.js', `${output}/js/pages/invite-session/index`)
     .js('resources/js/pages/project/index/index.js', `${output}/js/pages/project/index`)
+    .js('resources/js/pages/task/index/index.js', `${output}/js/pages/task/index`)
 
     .js('resources/js/pages/auth/login/index.js', `${output}/js/pages/auth/login`)
     .js('resources/js/pages/user/index/index.js', `${output}/js/pages/user/index`);

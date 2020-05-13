@@ -26,7 +26,7 @@ RoleController.paginateRoleData = async function paginateRoleData(req, res, next
         pageSize: req.params.size || 10
     };
 
-    RoleHelper.loadAllRoleCountData()
+    RoleHelper.loadAllCountRoleData()
         .then(data => {
             let count = data.data;
 

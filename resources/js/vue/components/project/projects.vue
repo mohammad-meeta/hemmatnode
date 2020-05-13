@@ -135,6 +135,7 @@ module.exports = {
         onProjectRegister(payload) {
             //***update vue list****
             this.$refs.projectList.addToProjectList(payload.data.data);
+            this.changeFormMode(ENUMS.FORM_MODE.LIST)
             this.setNotification(".پروژه با موفقیت ذخیره شد", "is-success");
         },
 

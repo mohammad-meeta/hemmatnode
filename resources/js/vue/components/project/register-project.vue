@@ -125,7 +125,7 @@ module.exports = {
          */
         loadParents() {
             const url = this.parentsUrl;
-
+            console.log(url);
             AxiosHelper.send("get", url, "").then(res => {
                 const resData = res.data;
                 const datas = resData.data.data;
@@ -175,10 +175,10 @@ module.exports = {
                 title: this.projectData.title,
                 description: this.projectData.description,
                 weight: this.projectData.weight,
-                parent: this.projectData.parent,
+                parent: this.projectData.parents,
                 is_active: this.projectData.isActive
             };
-
+            console.log(projectData);
             projectData.files = this.files[0];
 
             this.showLoading();

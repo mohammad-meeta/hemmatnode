@@ -22,10 +22,6 @@
                         span.icon.is-small
                             i.material-icons.icon swap_horizontal_circle
                         span مشاهده
-                    a.button.is-warning.is-rounded.mt-2(href="#", @click.prevent="commandClick(ENUMS.COMMAND.REGULATION, project)")
-                        span.icon.is-small
-                            i.material-icons.icon swap_horizontal_circle
-                        span آئین نامه ها
 
     paginate(:page-count='pageCount',
         :click-handler='paginatorClick',
@@ -68,7 +64,6 @@ module.exports = {
             let url = this.listUrl.replace("$page$", pageId);
             url = url.replace("$pageSize$", 50);
 
-            console.log(url);
             AxiosHelper.send("get", url, "").then(res => {
                 const resData = res.data;
                 Vue.set(this, "projects", resData.data.data);

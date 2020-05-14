@@ -17,7 +17,7 @@ const {
 
 Router.get('/invite-session', [
         checkSession,
-        // Rule.canAsync('user.permision', 'invitesession.index'),
+        Rule.canAsync('user.permision', 'invitesession.index'),
         'InviteSession@index'
     ])
     .as('invitesession.index');

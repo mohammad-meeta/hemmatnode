@@ -44,9 +44,9 @@ Router.get('/department/regulation/edit', [
 
 Router.post('/department/regulation', [
         upload.array('files'),
-        // checkSession,
-        // Rule.canAsync('user.permision', 'departmentregulation.store'),
-        // validator.validate,
+        checkSession,
+        Rule.canAsync('user.permision', 'departmentregulation.store'),
+        validator.validate,
         'DepartmentRegulation@store'
     ])
     .as('department.regulation.store');

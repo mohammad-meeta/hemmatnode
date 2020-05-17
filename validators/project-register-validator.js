@@ -31,7 +31,6 @@ ProjectValidator.validate = function validate(req, res, next) {
 ProjectValidator.data = function data(req) {
     return {
         user_id: req.session.auth.userId,
-        weight: req.body.weight,
         title: req.body.title,
     };
 };
@@ -43,7 +42,6 @@ ProjectValidator.rules = function rules(req) {
     return {
         'user_id': 'required',
         'title': 'required',
-        'description': 'required',
     };
 };
 
@@ -60,7 +58,6 @@ ProjectValidator.messages = function messages() {
 ProjectValidator.attributes = function attributes() {
     return {
         user_id: 'user_id',
-        description: 'description',
         title: 'title',
     };
 };

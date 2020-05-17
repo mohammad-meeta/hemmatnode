@@ -38,7 +38,7 @@ ProgramHelper.loadAllProgramData = function loadAllProgramData(dataPaginate) {
 /**
  * find all dep cat count data result 
  */
-ProgramHelper.loadAllCountProgramData = function loadAllCountProgramData() {
+ProgramHelper.loadAllProgramCountData = function loadAllProgramCountData() {
     const Program = mongoose.model('Program');
 
     const filterQuery = {};

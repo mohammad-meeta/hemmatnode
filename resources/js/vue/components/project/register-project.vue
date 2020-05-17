@@ -73,6 +73,11 @@
                     .control
                         input.input(type='text', placeholder='به ارتقای کدام شاخص اثر کمک می کند؟', autofocus, v-model='projectData.help_ipmrove_index' required)
             .field
+                label.label
+                    |   سایرفواید پروژه درحیطه
+                .control
+                    textarea.textarea(placeholder='سایرفواید پروژه درحیطه', v-model='projectData.other_benefit')
+            .field
                 label.label محصول نهایی
                     .control
                         input.input(type='text', placeholder='محصول نهایی', autofocus, v-model='projectData.final_product' required)
@@ -87,26 +92,23 @@
                 .control
                     textarea.textarea(placeholder='کاربست نتایج', v-model='projectData.result_apply')
             .field
-                label.label وزن
+                label.label
+                    |   نظرات ناظر طرح
                 .control
-                    input.input(type='text', placeholder='وزن', autofocus, v-model='projectData.weight' required)
+                    textarea.textarea(placeholder='نظرات ناظر طرح', v-model='projectData.refree')
             .field
-                label.label پروژه مرتبط
+                label.label
+                    |   نظرات کمیته پایش
                 .control
-                    .select.is-primary
-                        select(v-model="projectData.parents")
-                            option(v-for='(parent, parentIndex) in parents',
-                                :value="parent._id") {{ parent.title }}
+                    textarea.textarea(placeholder='نظرات کمیته پایش', v-model='projectData.monitoring_comment')
             .field
                 label.checkbox
                     input(type='file', @change="setAttachment")
                     |   ضمیمه
-
             .field
                 label.checkbox
                     input(type='checkbox', v-model="projectData.isActive")
                     |   فعال
-
             .field.is-grouped
                 .control(v-show="! isLoadingMode")
                     a.button.is-link.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
@@ -131,12 +133,12 @@ module.exports = {
 
     data: () => ({
         ENUMS,
-        parents: [],
+        programs: [],
         projectData: {
             title: null,
             description: null,
             weight: null,
-            parent: null,
+            program: null,
             files: {},
             isActive: false
         },
@@ -153,14 +155,14 @@ module.exports = {
             default: ""
         },
 
-        parentsUrl: {
+        programsUrl: {
             type: String,
             default: ""
         }
     },
 
     created() {
-        this.loadParents();
+        this.loadPrograms();
     },
 
     computed: {
@@ -192,15 +194,15 @@ module.exports = {
         },
 
         /**
-         * load all parents for select parents in form
+         * load all programs for select programs in form
          */
-        loadParents() {
-            const url = this.parentsUrl;
+        loadPrograms() {
+            const url = this.programsUrl;
             console.log(url);
             AxiosHelper.send("get", url, "").then(res => {
                 const resData = res.data;
                 const datas = resData.data.data;
-                Vue.set(this, "parents", datas);
+                Vue.set(this, "programs", datas);
             });
         },
 
@@ -246,7 +248,7 @@ module.exports = {
                 title: this.projectData.title,
                 description: this.projectData.description,
                 weight: this.projectData.weight,
-                parent: this.projectData.parents,
+                program: this.projectData.programs,
                 is_active: this.projectData.isActive
             };
             console.log(projectData);

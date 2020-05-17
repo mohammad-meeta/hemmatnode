@@ -26,7 +26,7 @@ DepartmentCategory.paginateDepartmentCategory = async function paginateDepartmen
         pageSize: req.params.size || 10
     };
 
-    DepCatHelper.loadAllDepCatCountData()
+    DepCatHelper.loadAllCountDepCatData()
         .then(data => {
             let count = data.data;
 

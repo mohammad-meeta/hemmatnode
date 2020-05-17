@@ -40,8 +40,63 @@ Model.model = function model() {
             type: String,
             required: true
         },
+        'program_id': {
+            type: String,
+            required: true
+        },
+        'target': {
+            type: String,
+        },
+        'same_effects_index': {
+            type: String,
+        },
+        'organ_moderator': {
+            type: String,
+        },
+        'project_moderator': {
+            type: String,
+        },
+        'consoultant': {
+            type: String,
+        },
+        'supervisor': {
+            type: String,
+        },
+        'committee_leadership': {
+            type: String,
+        },
+        'coworker': {
+            type: String,
+        },
         'description': {
-            type: String
+            type: String,
+        },
+        'intervention_review': {
+            type: String,
+        },
+        'pervious_action_relation': {
+            type: String,
+        },
+        'target_corresponding': {
+            type: String,
+        },
+        'help_ipmrove_index': {
+            type: String,
+        },
+        'final_product': {
+            type: String,
+        },
+        'standards': {
+            type: String,
+        },
+        'result_apply': {
+            type: String,
+        },
+        'refree': {
+            type: String,
+        },
+        'monitoring_comment': {
+            type: String,
         },
         'files': {
             type: [File]
@@ -49,18 +104,10 @@ Model.model = function model() {
         'is_active': {
             type: Boolean,
             default: true,
-            required: true
         },
         'user_id': {
             type: String,
             required: true
-        },
-        'weight': {
-            type: Number,
-            required: true
-        },
-        'parent': {
-            type: String
         }
     };
 };

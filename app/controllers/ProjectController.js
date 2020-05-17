@@ -134,13 +134,28 @@ Project.update = async function update(req, res, next) {
     data = {
         "_id": req.body._id,
         "title": req.body.title,
-        "weight": req.body.weight,
-        "parent": req.body.parent || null,
+        "program_id": req.body.program_id || null,
         "user_id": req.session.auth.userId,
         "is_active": req.body.is_active,
+        "target": req.body.target || '',
+        "same_effects_index": req.body.same_effects_index || '',
+        "organ_moderator": req.body.organ_moderator || '',
+        "project_moderator": req.body.project_moderator || '',
+        "consoultant": req.body.consoultant || '',
+        "supervisor": req.body.supervisor || '',
+        "committee_leadership": req.body.committee_leadership || '',
+        "coworker": req.body.coworker || '',
         "description": req.body.description || '',
-        "files": fileList,
-        "regulation": req.body.regulation || []
+        "intervention_review": req.body.intervention_review || '',
+        "pervious_action_relation": req.body.pervious_action_relation || '',
+        "target_corresponding": req.body.target_corresponding || '',
+        "help_ipmrove_index": req.body.help_ipmrove_index || '',
+        "final_product": req.body.final_product || '',
+        "standards": req.body.standards || '',
+        "result_apply": req.body.result_apply || '',
+        "refree": req.body.refree || '',
+        "monitoring_comment": req.body.monitoring_comment || '',
+        "files": fileList
     };
 
     ProjectHelper.updateProjectData(data)
@@ -210,17 +225,32 @@ Project.store = async function store(req, res, next) {
         }
     }
 
-    const data = {
+    data = {
+        "_id": req.body._id,
         "title": req.body.title,
-        "weight": req.body.weight,
-        "parent": req.body.parent || null,
+        "program_id": req.body.program_id || null,
         "user_id": req.session.auth.userId,
         "is_active": req.body.is_active,
+        "target": req.body.target || '',
+        "same_effects_index": req.body.same_effects_index || '',
+        "organ_moderator": req.body.organ_moderator || '',
+        "project_moderator": req.body.project_moderator || '',
+        "consoultant": req.body.consoultant || '',
+        "supervisor": req.body.supervisor || '',
+        "committee_leadership": req.body.committee_leadership || '',
+        "coworker": req.body.coworker || '',
         "description": req.body.description || '',
-        "files": fileList,
-        "regulation": req.body.regulation || []
+        "intervention_review": req.body.intervention_review || '',
+        "pervious_action_relation": req.body.pervious_action_relation || '',
+        "target_corresponding": req.body.target_corresponding || '',
+        "help_ipmrove_index": req.body.help_ipmrove_index || '',
+        "final_product": req.body.final_product || '',
+        "standards": req.body.standards || '',
+        "result_apply": req.body.result_apply || '',
+        "refree": req.body.refree || '',
+        "monitoring_comment": req.body.monitoring_comment || '',
+        "files": fileList
     };
-
 
     ProjectHelper.insertNewProject(data)
         .then(data => {

@@ -17,7 +17,7 @@ const {
 
 Router.get('/invite-session', [
         checkSession,
-        // Rule.canAsync('user.permision', 'invitesession.index'),
+        Rule.canAsync('user.permision', 'invitesession.index'),
         'InviteSession@index'
     ])
     .as('invitesession.index');
@@ -44,9 +44,9 @@ Router.get('/invite-session/edit', [
 
 Router.post('/invite-session', [
         upload.array('files'),
-        // checkSession,
-        // Rule.canAsync('user.permision', 'invitesession.store'),
-        // validator.validate,
+        checkSession,
+        Rule.canAsync('user.permision', 'invitesession.store'),
+        validator.validate,
         'InviteSession@store'
     ])
     .as('invitesession.store');

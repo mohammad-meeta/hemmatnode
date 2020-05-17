@@ -89,6 +89,9 @@ Model.model = function model() {
         'standards': {
             type: String,
         },
+        'other_benefit': {
+            type: String,
+        },
         'result_apply': {
             type: String,
         },

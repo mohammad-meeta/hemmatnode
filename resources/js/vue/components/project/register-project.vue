@@ -16,7 +16,7 @@
                     .select.is-primary
                         select(v-model="projectData.programs")
                             option(v-for='(program, programIndex) in programs',
-                                :value="program._id") {{ program.title }}
+                                :value="program._id") {{ program.name }}
             .field
                 label.label هدف برنامه
                 .control
@@ -136,9 +136,26 @@ module.exports = {
         programs: [],
         projectData: {
             title: null,
+            program_id: null,
+            target: null,
+            same_effects_index: null,
+            organ_moderator: null,
+            project_moderator: null,
+            consoultant: null,
+            supervisor: null,
+            committee_leadership: null,
+            coworker: null,
             description: null,
-            weight: null,
-            program: null,
+            intervention_review: null,
+            pervious_action_relation: null,
+            target_corresponding: null,
+            help_ipmrove_index: null,
+            final_product: null,
+            standards: null,
+            other_benefit: null,
+            result_apply: null,
+            refree: null,
+            monitoring_comment: null,
             files: {},
             isActive: false
         },
@@ -244,13 +261,7 @@ module.exports = {
             if (!isValid) {
                 return;
             }
-            let projectData = {
-                title: this.projectData.title,
-                description: this.projectData.description,
-                weight: this.projectData.weight,
-                program: this.projectData.programs,
-                is_active: this.projectData.isActive
-            };
+            let projectData = this.projectData;
             console.log(projectData);
             projectData.files = this.files[0];
 

@@ -43,7 +43,7 @@
                 :edit-url="editUrl",
                 :programs-url="programsUrl")
 
-            //.column(v-show="!modeLoading && modeShow")
+            .column(v-show="!modeLoading && modeShow")
                 show-project(ref="projectShow", @on-command="onCommand")
 </template>
 
@@ -58,7 +58,7 @@ const RegisterProject = require("VUE-COMPONENTS/project/register-project.vue")
 const ListProject = require("VUE-COMPONENTS/project/list-project.vue")
     .default;
 //const EditProject = require("VUE-COMPONENTS/project/edit-project.vue").default;
-//const ShowProject = require("VUE-COMPONENTS/project/show-project.vue").default;
+const ShowProject = require("VUE-COMPONENTS/project/show-project.vue").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
 module.exports = {
@@ -69,7 +69,7 @@ module.exports = {
         ListProject,
         RegisterProject,
         //EditProject,
-        //ShowProject,
+        ShowProject,
         Notification
     },
 

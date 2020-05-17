@@ -63,7 +63,29 @@
                 label.label
                     | ارتباط پروژه با اقدامات قبلی سازمان یا سازمان های دیگر در پرداختن به این مسئله-تکمیل کننده،نقض کننده،جدید بودن
                 .control
-                    textarea.textarea(placeholder='ارتباط پروژه با اقدامات قبلی سازمان یا سازمان های دیگر در پرداختن به این مسئله-تکمیل کننده،نقض کننده،جدیدبودن', v-model='projectData.intervention_review')
+                    textarea.textarea(placeholder='ارتباط پروژه با اقدامات قبلی سازمان یا سازمان های دیگر در پرداختن به این مسئله-تکمیل کننده،نقض کننده،جدیدبودن', v-model='projectData.pervious_action_relation')
+            .field
+                label.checkbox
+                    input(type='checkbox', v-model="projectData.target_corresponding")
+                    |   تناظر با اهداف راهبردی و اسناد بالادستی سازمان؟
+            .field
+                label.label به ارتقای کدام شاخص اثر کمک می کند؟
+                    .control
+                        input.input(type='text', placeholder='به ارتقای کدام شاخص اثر کمک می کند؟', autofocus, v-model='projectData.help_ipmrove_index' required)
+            .field
+                label.label محصول نهایی
+                    .control
+                        input.input(type='text', placeholder='محصول نهایی', autofocus, v-model='projectData.final_product' required)
+            .field
+                label.label
+                    |   استانداردها و الزامات
+                .control
+                    textarea.textarea(placeholder='استانداردها و الزامات', v-model='projectData.standards')
+            .field
+                label.label
+                    |   کاربست نتایج
+                .control
+                    textarea.textarea(placeholder='کاربست نتایج', v-model='projectData.result_apply')
             .field
                 label.label وزن
                 .control

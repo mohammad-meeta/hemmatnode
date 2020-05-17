@@ -24,19 +24,46 @@
             .field
                 label.label شاخص های اثر متناظر
                 .control
-                    textarea.textarea(placeholder='شاخص های اثر متناظر', v-model='projectData.description')
+                    textarea.textarea(placeholder='شاخص های اثر متناظر', v-model='projectData.same_effects_index')
             .field
                 label.label مجری سازمانی
                 .control
                     input.input(type='text', placeholder='مجری سازمانی', autofocus, v-model='projectData.organ_moderator' required)
-                                .field
-            label.label مجری پروژه (پیمانکار)
-                .control
-                    input.input(type='text', placeholder='مجری پروژه (پیمانکار)', autofocus, v-model='projectData.project_moderator' required)
             .field
-                label.label توضیحات
+                label.label
+                    | مجری پروژه - پیمانکار
+                    .control
+                        input.input(type='text', placeholder='مجری پروژه - پیمانکار', autofocus, v-model='projectData.project_moderator' required)
+            .field
+                label.label مشاورین
+                    .control
+                        input.input(type='text', placeholder='مشاورین', autofocus, v-model='projectData.consoultant' required)
+            .field
+                label.label ناظر پروژه
+                    .control
+                        input.input(type='text', placeholder='ناظر پروژه', autofocus, v-model='projectData.supervisor' required)
+            .field
+                label.label کمیته راهبردی طرح
                 .control
-                    textarea.textarea(placeholder='توضیحات', v-model='projectData.description')
+                    textarea.textarea(placeholder='کمیته راهبردی طرح', v-model='projectData.committee_leadership')
+            .field
+                label.label همکاران اصلی پروژه
+                    .control
+                        input.input(type='text', placeholder='همکاران اصلی پروژه', autofocus, v-model='projectData.coworker' required)
+            .field
+                label.label
+                    | تعریف مسئله -نیاز اصلی
+                .control
+                    textarea.textarea(placeholder='تعریف مسئله -نیاز اصلی', v-model='projectData.description')
+            .field
+                label.label مروری برمداخلات و خدمات بهبوددهنده وضعیت درتجربیات جهانی و ملی
+                .control
+                    textarea.textarea(placeholder='مروری برمداخلات و خدمات بهبوددهنده وضعیت در تجربیات جهانی و ملی', v-model='projectData.intervention_review')
+            .field
+                label.label
+                    | ارتباط پروژه با اقدامات قبلی سازمان یا سازمان های دیگر در پرداختن به این مسئله-تکمیل کننده،نقض کننده،جدید بودن
+                .control
+                    textarea.textarea(placeholder='ارتباط پروژه با اقدامات قبلی سازمان یا سازمان های دیگر در پرداختن به این مسئله-تکمیل کننده،نقض کننده،جدیدبودن', v-model='projectData.intervention_review')
             .field
                 label.label وزن
                 .control
@@ -48,7 +75,6 @@
                         select(v-model="projectData.parents")
                             option(v-for='(parent, parentIndex) in parents',
                                 :value="parent._id") {{ parent.title }}
-
             .field
                 label.checkbox
                     input(type='file', @change="setAttachment")

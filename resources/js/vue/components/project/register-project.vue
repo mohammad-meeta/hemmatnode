@@ -14,7 +14,7 @@
                 label.label برنامه متناظر
                 .control
                     .select.is-primary
-                        select(v-model="projectData.programs")
+                        select(v-model="projectData.program_id")
                             option(v-for='(program, programIndex) in programs',
                                 :value="program._id") {{ program.name }}
             .field
@@ -261,7 +261,9 @@ module.exports = {
             if (!isValid) {
                 return;
             }
+            console.log("this.projectData");
             let projectData = this.projectData;
+
             console.log(projectData);
             projectData.files = this.files[0];
 

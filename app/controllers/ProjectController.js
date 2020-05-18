@@ -226,7 +226,7 @@ Project.store = async function store(req, res, next) {
         }
     }
 
-    data = {
+    const data = {
         "_id": req.body._id,
         "title": req.body.title,
         "program_id": req.body.program_id || null,

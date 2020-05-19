@@ -210,7 +210,7 @@ Result.store = async function store(req, res, next) {
         }
     }
 
-    data = {
+    const data = {
         "result": req.body.result,
         "project_id": req.body.project_id,
         "user_id": req.session.auth.userId,

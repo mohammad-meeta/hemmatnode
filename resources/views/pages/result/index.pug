@@ -1,0 +1,17 @@
+extends ../../layout/app.pug
+
+block title
+    | برآمد
+
+block content
+    .container
+        results(list-url=route('api.result', { page: '$page$', size: '$pageSize$' }),
+            projects-url=route('api.project', { page: 1, size: 1000 }),
+            register-url=route('result.store'),
+            edit-url=route('result.update', { id :'$id$'})
+        )
+
+block scripts
+    script(defer, src=mix('js/pages/result/index/index.js'))
+
+

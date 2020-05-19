@@ -13,10 +13,6 @@
                             h3 {{ inviteSessionData.agenda }}
                         .print-form-number
                             span شماره مدرک
-
-
-
-
 </template>
 <script>
 "use strict";

@@ -34,7 +34,8 @@
             .column(v-show="!modeLoading && modeRegister")
                 register-department-category(@on-command="onCommand",
                   @on-register="onDepartmentCategoryRegister"
-                  :register-url="registerUrl")
+                  :register-url="registerUrl"
+                  :sections-url="sectionsUrl")
 
             //.column(v-show="!modeLoading && modeEdit")
                 edit-department-category(ref="departmentCategoryEdit", @on-command="onCommand",
@@ -94,6 +95,11 @@ module.exports = {
         },
 
         editUrl: {
+            type: String,
+            default: null
+        },
+
+        sectionsUrl: {
             type: String,
             default: null
         }

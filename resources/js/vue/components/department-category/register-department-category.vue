@@ -11,6 +11,13 @@
                 .control
                     input.input(type='text', placeholder='عنوان', autofocus, v-model='departmentCategoryData.title' required)
             .field
+                label.label بخش
+                .control
+                    .select.is-primary
+                        select(v-model="departmentCategoryData.sections")
+                            option(v-for='(section, sectionIndex) in sections',
+                                :value="section._id") {{ section.title }}
+            .field
                 label.checkbox
                     input(type='checkbox', v-model="departmentCategoryData.isActive")
                     |   فعال
@@ -37,6 +44,7 @@ module.exports = {
 
     data: () => ({
         ENUMS,
+        sections: [],
         departmentCategoryData: {
             title: null,
             isActive: false
@@ -51,11 +59,16 @@ module.exports = {
         registerUrl: {
             type: String,
             default: ""
-        }
+        },
+
+        sectionsUrl: {
+            type: String,
+            default: ""
+        },
     },
 
     created() {
-
+        this.loadSections();
     },
 
     computed: {
@@ -75,6 +88,19 @@ module.exports = {
                     this.registerDepartmentCategory();
                     break;
             }
+        },
+
+        /**
+         * load all sections for select sections in form
+         */
+        loadSections() {
+            const url = this.sectionsUrl;
+            console.log(url)
+            AxiosHelper.send("get", url, "").then(res => {
+                const resData = res.data;
+                const datas = resData.data.data;
+                Vue.set(this, "sections", datas);
+            });
         },
 
 
@@ -119,6 +145,8 @@ module.exports = {
 
             let departmentCategoryData = {
                 title: this.departmentCategoryData.title,
+                section_id: this.departmentCategoryData
+                    .sections,
                 is_active: this.departmentCategoryData.isActive
             };
 

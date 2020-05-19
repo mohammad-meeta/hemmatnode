@@ -7,7 +7,8 @@ block content
     .container
         department-categories(list-url=route('api.departmentcategory', { page: '$page$', size: '$pageSize$' }),
             register-url=route('departmentcategory.store'),
-            edit-url=route('departmentcategory.update', { id :'$id$'})
+            edit-url=route('departmentcategory.update', { id :'$id$'}),
+            sections-url=route('api.section', { page: 1, size: 1000 }),
         )
 
 block scripts

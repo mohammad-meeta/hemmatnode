@@ -18,6 +18,9 @@ PugView.viewPath = {
     /* Home */
     'home.index': 'pages/home/index.pug',
     'home.about': 'pages/home/about.pug',
+    'home.internalsection': 'pages/home/internalsection.pug',
+    'home.externalsection': 'pages/home/externalsection.pug',
+    'home.peopleparticipation': 'pages/home/peopleparticipation.pug',
 
     /* Auth */
     'auth.login': 'pages/auth/login.pug',

@@ -31,3 +31,39 @@ HomeController.about = async function about(req, res, next) {
         pageRoute
     });
 };
+
+/**
+ * internal section route
+ */
+HomeController.InternalSection = async function InternalSection(req, res, next) {
+    const pageRoute = PugView.getView('home.internalsection');
+
+    res.render(pageRoute, {
+        req,
+        pageRoute
+    });
+};
+
+/**
+ * exgternal section route
+ */
+HomeController.ExternalSection = async function ExternalSection(req, res, next) {
+    const pageRoute = PugView.getView('home.externalsection');
+
+    res.render(pageRoute, {
+        req,
+        pageRoute
+    });
+};
+
+/**
+ * People Participation route
+ */
+HomeController.PeopleParticipation = async function PeopleParticipation(req, res, next) {
+    const pageRoute = PugView.getView('home.peopleparticipation');
+
+    res.render(pageRoute, {
+        req,
+        pageRoute
+    });
+};

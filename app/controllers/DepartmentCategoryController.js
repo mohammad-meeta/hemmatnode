@@ -119,6 +119,7 @@ DepartmentCategory.update = async function update(req, res, next) {
     let data = {};
     data = {
         "title": req.body.title,
+        "section_id": req.body.section_id,
         "user_id": req.session.auth.userId,
         "is_active": req.body.is_active
     };
@@ -174,6 +175,7 @@ DepartmentCategory.create = async function create(req, res, next) {
 DepartmentCategory.store = async function store(req, res, next) {
 
     const data = {
+        "section_id": req.body.section_id,
         "title": req.body.title,
         "user_id": req.session.auth.userId,
         "is_active": req.body.is_active || false

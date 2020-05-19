@@ -35,6 +35,10 @@ Model.model = function model() {
             type: String,
             required: true
         },
+        'section_id': {
+            type: String,
+            required: true
+        },
         'is_active': {
             type: Boolean,
             default: true

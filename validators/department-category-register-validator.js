@@ -31,7 +31,8 @@ DepartmentCategoryValidator.validate = function validate(req, res, next) {
 DepartmentCategoryValidator.data = function data(req) {
     return {
         user_id: req.session.auth.userId,
-        title: req.body.title
+        title: req.body.title,
+        section_id: req.body.section_id
     };
 };
 
@@ -41,6 +42,7 @@ DepartmentCategoryValidator.data = function data(req) {
 DepartmentCategoryValidator.rules = function rules(req) {
     return {
         'user_id': 'required',
+        'section_id': 'required',
         'title': 'required'
     };
 };
@@ -58,6 +60,7 @@ DepartmentCategoryValidator.messages = function messages() {
 DepartmentCategoryValidator.attributes = function attributes() {
     return {
         user_id: 'user_id',
+        user_id: 'section_id',
         title: 'title'
     };
 };

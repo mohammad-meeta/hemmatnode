@@ -3,6 +3,7 @@
         section.hero
             notification(:notification-type="notificationType", @on-close="closeNotification", v-if="showNotification")
                 span(v-html="notificationMessage")
+
             .container.page-header
                 .title
                     h1 هماهنگی درون بخشی
@@ -15,13 +16,17 @@
                         .control
                             a.button.is-primary.is-rounded(href="/result") برآمدها
             .container
-                .columns
-                    .column.is-8
-                        .intro-card.p-3(v-for='internalSection in internalSections', :key='internalSection.id')
-                            .intro-card-head {{ internalSection.title }}
-                    .column
-                        .intro-card.p-3(v-for='dep in department', :key='dep.id')
-                            .intro-card-head {{ dep.title }}
+
+                article.panel.is-primary
+                    p.panel-heading(v-for='internalSection in internalSections', :key='internalSection.id')
+                           | {{ internalSection.title }}
+                    a.panel-block.is-active(v-for='dep in department', :key='dep.id')
+                        span.panel-icon
+                        i.fas.fa-book(aria-hidden='true')
+                            | {{ dep.title }}
+                    //- .column
+                    //-     .intro-card.p-3(v-for='dep in department', :key='dep.id')
+                    //-         .intro-card-head {{ dep.title }}
 </template>
 
 <script>

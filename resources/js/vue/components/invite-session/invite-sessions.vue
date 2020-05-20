@@ -5,7 +5,7 @@
                 span(v-html="notificationMessage")
             .container.page-header
                 .title
-                    h1(v-show="modeList") دعوتنامه جلسه
+                    h1(v-show="modeList") جلسات
                     h1(v-show="modeRegister") ایجاد دعوتنامه جلسه
                     h1(v-show="modeEdit") ویرایش دعوتنامه جلسه
 

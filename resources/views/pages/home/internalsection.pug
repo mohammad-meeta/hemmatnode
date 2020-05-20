@@ -1,3 +1,9 @@
+extends ../../layout/app.pug
 
-.conatiner
-    h2 jjjjjjjjjjjjjjjjj
+block title
+    | هماهنگی درون بخشی
+block content
+        internal-sections(department-categories-url=route('api.departmentcategory', { page: '$page$', size: '$pageSize$' })
+            )
+block scripts
+    script(defer, src=mix('js/pages/home/internal-section/index.js'))

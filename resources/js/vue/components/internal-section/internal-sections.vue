@@ -24,9 +24,6 @@
                         span.panel-icon
                         i.fas.fa-book(aria-hidden='true')
                             | {{ dep.title }}
-                    //- .column
-                    //-     .intro-card.p-3(v-for='dep in department', :key='dep.id')
-                    //-         .intro-card-head {{ dep.title }}
 </template>
 
 <script>

@@ -11,13 +11,15 @@ module.exports = DepartmentCategoryHelper;
 /**
  * find all dep cat data result 
  */
-DepartmentCategoryHelper.loadAllDepCatData = function loadAllDepCatData(dataPaginate) {
+DepartmentCategoryHelper.loadAllDepCatData = function loadAllDepCatData(dataPaginate, section) {
     const page = parseInt(dataPaginate.page)
     const pageSize = parseInt(dataPaginate.pageSize)
     const skip = page > 0 ? ((page - 1) * pageSize) : 0
     const DepartmentCategory = mongoose.model('DepartmentCategory');
 
-    const filterQuery = {};
+    const filterQuery = {
+        section_id: section
+    };
     const projection = {};
 
     return new Promise((resolve, reject) => {
@@ -37,10 +39,12 @@ DepartmentCategoryHelper.loadAllDepCatData = function loadAllDepCatData(dataPagi
 /**
  * find all dep cat count data result 
  */
-DepartmentCategoryHelper.loadAllCountDepCatData = function loadAllCountDepCatData() {
+DepartmentCategoryHelper.loadAllCountDepCatData = function loadAllCountDepCatData(section) {
     const DepartmentCategory = mongoose.model('DepartmentCategory');
 
-    const filterQuery = {};
+    const filterQuery = {
+        section_id: section
+    };
 
     return new Promise((resolve, reject) => {
         DepartmentCategory.countDocuments(filterQuery)

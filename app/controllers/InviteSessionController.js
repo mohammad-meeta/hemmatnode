@@ -28,12 +28,13 @@ InviteSession.paginateInviteSession = function paginateInviteSession(req, res, n
         page: req.params.page,
         pageSize: req.params.size || 10
     };
+    const group = req.params.group;
 
-    InviteSessionHelper.loadAllInviteSessionCountData()
+    InviteSessionHelper.loadAllInviteSessionCountData(group)
         .then(data => {
             let count = data.data;
 
-            InviteSessionHelper.loadAllInviteSessionData(dataPaginate)
+            InviteSessionHelper.loadAllInviteSessionData(dataPaginate, group)
                 .then(data => {
                     const result = {
                         success: true,

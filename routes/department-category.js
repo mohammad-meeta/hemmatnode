@@ -19,7 +19,7 @@ Router.get('/department-category', [
     .as('departmentcategory.index');
 
 
-Router.get('/api/department-categories/:page/:size?', [
+Router.get('/api/department-categories/:section/:page/:size?', [
         checkSession,
         'DepartmentCategory@paginateDepartmentCategory'
     ])

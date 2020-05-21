@@ -11,13 +11,15 @@ module.exports = ProjecttHelper;
 /**
  * find all project cat data result 
  */
-ProjecttHelper.loadAllProjectData = function loadAllProjectData(dataPaginate) {
+ProjecttHelper.loadAllProjectData = function loadAllProjectData(dataPaginate, group) {
     const page = parseInt(dataPaginate.page)
     const pageSize = parseInt(dataPaginate.pageSize)
     const skip = page > 0 ? ((page - 1) * pageSize) : 0
     const Project = mongoose.model('Project');
 
-    const filterQuery = {};
+    const filterQuery = {
+        organ_modelator: group
+    };
     const projection = {};
 
     return new Promise((resolve, reject) => {
@@ -37,10 +39,12 @@ ProjecttHelper.loadAllProjectData = function loadAllProjectData(dataPaginate) {
 /**
  * find all project cat count data result 
  */
-ProjecttHelper.loadAllCountProjectData = function loadAllCountProjectData() {
+ProjecttHelper.loadAllCountProjectData = function loadAllCountProjectData(group) {
     const Project = mongoose.model('Project');
 
-    const filterQuery = {};
+    const filterQuery = {
+        organ_modelator: group
+    };
 
     return new Promise((resolve, reject) => {
         Project.countDocuments(filterQuery)

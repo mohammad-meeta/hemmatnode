@@ -63,7 +63,6 @@ mix.copyDirectory('resources/images', `${output}/images`)
 /* JS */
 mix.js('resources/js/core/kernel.js', `${output}/js/core`)
     .js('resources/js/global/app.js', `${output}/js/global`)
-    .js('resources/js/helpers/main.js', `${output}/js/helpers`)
     .js('resources/js/pages/factory.js', `${output}/js/pages`)
 
     .js('resources/js/pages/department-category/index/index.js', `${output}/js/pages/department-category/index`)

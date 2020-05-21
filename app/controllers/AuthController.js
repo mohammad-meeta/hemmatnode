@@ -67,12 +67,14 @@ AuthController.attempt = function attempt(req, res, next) {
                 success: false,
                 data: null
             };
+
             /* If username & password are correct */
             if (null != data) {
-
                 if (user != null) {
+
                     req.session.auth = {
                         userName: data.name,
+                        profile: data.profile,
                         userId: data._id
                     };
 

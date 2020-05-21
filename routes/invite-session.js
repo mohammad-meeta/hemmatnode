@@ -1,7 +1,7 @@
 'use strict';
 const validator = use('validators/invite-session-register-validator');
 const Rule = use('core/helpers/rule-helper');
-var multer = require('multer');
+const multer = require('multer');
 const upload = multer({
     dest: 'uploads/'
 });
@@ -22,7 +22,7 @@ Router.get('/invite-session', [
     ])
     .as('invitesession.index');
 
-    Router.get('/api/invite-session/:page/:size?', [
+Router.get('/api/invite-session/:page/:size?', [
         checkSession,
         'InviteSession@paginateInviteSession'
     ])

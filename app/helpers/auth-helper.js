@@ -1,4 +1,3 @@
-
 'use strict';
 
 const mongoose = require('mongoose');
@@ -6,11 +5,11 @@ const mongoose = require('mongoose');
 /**
  * Algorithm controller
  */
-function AuthHelper() { }
+function AuthHelper() {}
 module.exports = AuthHelper;
 
 /**
- * find user data for login 
+ * find user data for login
  */
 AuthHelper.loadUserData = function loadUserData(userData) {
     const name = userData.name;
@@ -26,8 +25,10 @@ AuthHelper.loadUserData = function loadUserData(userData) {
 
     const projection = {
         name: 1,
-        pwd: 1
+        pwd: 1,
+        profile: 1
     };
+
     return new Promise((resolve, reject) => {
         User.findOne(filterQuery, projection, {})
             .then(res => {
@@ -43,8 +44,7 @@ AuthHelper.loadUserData = function loadUserData(userData) {
 AuthHelper.checkSession = function checkSession(req, res, next) {
     if (req.session.auth) {
         next();
-    }
-    else {
+    } else {
         res.redirect(route('auth.login'));
     }
 };

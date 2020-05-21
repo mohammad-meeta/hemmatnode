@@ -1,5 +1,5 @@
 'use strict';
-const PasswordGenerator = require('generate-password');
+
 const PugView = use('app/helpers/pug-view');
 const UserHelper = use('app/helpers/user-helper');
 /**
@@ -13,6 +13,7 @@ module.exports = UserController;
  */
 UserController.index = async function index(req, res, next) {
     const pageRoute = 'user.index';
+
     res.render(PugView.getView(pageRoute), {
         req,
         pageRoute
@@ -56,6 +57,7 @@ UserController.paginateUserData = async function paginateUserData(req, res, next
 UserController.show = async function show(req, res, next) {
     const userName = req.params.userData;
     const pageRoute = 'user.show';
+
     UserHelper.loadUserData(userName)
         .then(data => {
             const result = {

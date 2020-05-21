@@ -36,18 +36,20 @@ nav.navbar.navbar-expand-md
                 // Right Side Of Navbar
                 ul.navbar-nav.mr-2
                     // Authentication Links
+                    if (null == req.session.auth)
                         li.nav-item
                             a.nav-link(href="/") ورود
                         li.nav-item
                             a.nav-link(href="/") ثبت نام
-                    .dropdown
-                        .dropdown-trigger
-                            button.button(aria-haspopup='true', aria-controls='dropdown-menu')
-                                span محمد محمدی
-                                span.icon.is-small
-                                    i.fa.fa-chevron-down(aria-hidden='true')
-                        #dropdown-menu.dropdown-menu(role='menu')
-                            .dropdown-content
-                                a.dropdown-item(href='#') خروج
+                    else
+                        .dropdown
+                            .dropdown-trigger
+                                button.button(aria-haspopup='true', aria-controls='dropdown-menu')
+                                    span= JSON.stringify(req.session.auth)
+                                    span.icon.is-small
+                                        i.fa.fa-chevron-down(aria-hidden='true')
+                            #dropdown-menu.dropdown-menu(role='menu')
+                                .dropdown-content
+                                    a.dropdown-item(href='#') خروج
         a.navbar-brand(href="/")
             img(src=asset('images/logo.png'))

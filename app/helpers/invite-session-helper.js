@@ -11,13 +11,15 @@ module.exports = InviteSessiontHelper;
 /**
  * find all dep cat data result 
  */
-InviteSessiontHelper.loadAllInviteSessionData = function loadAllInviteSessionData(dataPaginate) {
+InviteSessiontHelper.loadAllInviteSessionData = function loadAllInviteSessionData(dataPaginate, group) {
     const page = parseInt(dataPaginate.page)
     const pageSize = parseInt(dataPaginate.pageSize)
     const skip = page > 0 ? ((page - 1) * pageSize) : 0
     const InviteSession = mongoose.model('InviteSession');
 
-    const filterQuery = {};
+    const filterQuery = {
+        department_id: group
+    };
     const projection = {};
 
     return new Promise((resolve, reject) => {
@@ -37,10 +39,12 @@ InviteSessiontHelper.loadAllInviteSessionData = function loadAllInviteSessionDat
 /**
  * find all dep cat count data result 
  */
-InviteSessiontHelper.loadAllInviteSessionCountData = function loadAllInviteSessionCountData() {
+InviteSessiontHelper.loadAllInviteSessionCountData = function loadAllInviteSessionCountData(group) {
     const InviteSession = mongoose.model('InviteSession');
 
-    const filterQuery = {};
+    const filterQuery = {
+        department_id: group
+    };
 
     return new Promise((resolve, reject) => {
         InviteSession.countDocuments(filterQuery)

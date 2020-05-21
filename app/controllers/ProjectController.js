@@ -27,12 +27,12 @@ Project.paginateProject = async function paginateProject(req, res, next) {
         page: req.params.page,
         pageSize: req.params.size || 10
     };
-
-    ProjectHelper.loadAllCountProjectData()
+    const group = req.params.group;
+    ProjectHelper.loadAllCountProjectData(group)
         .then(data => {
             let count = data.data;
 
-            ProjectHelper.loadAllProjectData(dataPaginate)
+            ProjectHelper.loadAllProjectData(dataPaginate, group)
                 .then(data => {
                     const result = {
                         success: true,
@@ -139,7 +139,7 @@ Project.update = async function update(req, res, next) {
         "is_active": req.body.is_active,
         "target": req.body.target || '',
         "same_effects_index": req.body.same_effects_index || '',
-        "organ_moderator": req.body.organ_moderator || '',
+        "organ_moderator": req.body.organ_moderator,
         "project_moderator": req.body.project_moderator || '',
         "consoultant": req.body.consoultant || '',
         "supervisor": req.body.supervisor || '',
@@ -234,7 +234,7 @@ Project.store = async function store(req, res, next) {
         "is_active": req.body.is_active,
         "target": req.body.target || '',
         "same_effects_index": req.body.same_effects_index || '',
-        "organ_moderator": req.body.organ_moderator || '',
+        "organ_moderator": req.body.organ_moderator,
         "project_moderator": req.body.project_moderator || '',
         "consoultant": req.body.consoultant || '',
         "supervisor": req.body.supervisor || '',

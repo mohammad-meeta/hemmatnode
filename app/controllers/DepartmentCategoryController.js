@@ -25,12 +25,13 @@ DepartmentCategory.paginateDepartmentCategory = async function paginateDepartmen
         page: req.params.page,
         pageSize: req.params.size || 10
     };
+    const section = req.params.section;
 
-    DepCatHelper.loadAllCountDepCatData()
+    DepCatHelper.loadAllCountDepCatData(section)
         .then(data => {
             let count = data.data;
 
-            DepCatHelper.loadAllDepCatData(dataPaginate)
+            DepCatHelper.loadAllDepCatData(dataPaginate, section)
                 .then(data => {
                     const result = {
                         success: true,

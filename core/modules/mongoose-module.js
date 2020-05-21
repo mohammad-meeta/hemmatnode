@@ -1,5 +1,8 @@
 'use strict';
 
+const mongoose = require('mongoose');
+const databaseConfig = use('config', 'database');
+
 /**
  * Mongoose module
  */
@@ -10,8 +13,6 @@ module.exports = MongooseModule;
  * Setup function
  */
 MongooseModule.setup = function setup(server) {
-    const mongoose = require('mongoose');
-    const databaseConfig = use('config', 'database');
     const config = databaseConfig.connections[databaseConfig.default];
 
     /* Connect to mongoose */
@@ -31,8 +32,6 @@ MongooseModule.setup = function setup(server) {
     mongoose.connection.on('error', err => {
         Logger.error('Connection to mongodb failed!');
         Logger.error(err);
-        console.log(err)
-        process.exit(1);
     });
 
     /* Try to connect */

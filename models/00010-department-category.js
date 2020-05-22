@@ -18,13 +18,14 @@ Model.setup = function setup() {
     Model.plugins(schema);
     Model.extraFunctions(schema);
 
-    mongoose.model('DepartmentCategory', schema,"department-categories");
+    mongoose.model('DepartmentCategory', schema, "department-categories");
 };
 
 /**
  * Get model
  */
 Model.model = function model() {
+    const ObjectId = mongoose.Schema.ObjectId;
     return {
         'title': {
             type: String,
@@ -32,11 +33,11 @@ Model.model = function model() {
             trim: true
         },
         'user_id': {
-            type: String,
+            type: ObjectId,
             required: true
         },
         'section_id': {
-            type: String,
+            type: ObjectId,
             required: true
         },
         'is_active': {

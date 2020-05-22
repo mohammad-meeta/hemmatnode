@@ -25,6 +25,8 @@ Model.setup = function setup() {
  * Get model
  */
 Model.model = function model() {
+    const ObjectId = mongoose.Schema.ObjectId;
+
     const FileD = {
         'file_id': {
             type: String
@@ -34,6 +36,7 @@ Model.model = function model() {
             default: null
         }
     };
+
     return {
         'title': {
             type: String,
@@ -46,11 +49,11 @@ Model.model = function model() {
             type: [FileD]
         },
         'department_id': {
-            type: String,
+            type: ObjectId,
             required: true
         },
         'user_id': {
-            type: String,
+            type: ObjectId,
             required: true
         },
         'is_active': {

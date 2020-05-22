@@ -25,6 +25,7 @@ Model.setup = function setup() {
  * Get model
  */
 Model.model = function model() {
+
     return {
         'method': {
             type: String,

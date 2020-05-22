@@ -11,6 +11,12 @@ Router.get('/auth/login', [
     ])
     .as('auth.login');
 
+Router.get('/auth/logout', [
+        global.csrf,
+        'Auth@logout'
+    ])
+    .as('auth.logout');
+
 Router.post('/auth/login', [
         global.csrf,
         validator.validate,

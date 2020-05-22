@@ -26,6 +26,20 @@ AuthController.login = function login(req, res, next) {
 };
 
 /**
+ * logout function
+ */
+AuthController.logout = function logout(req, res, next) {
+    delete req.session.auth;
+
+    const pageRoute = PugView.getView('auth.login');
+
+    res.render(pageRoute, {
+        req,
+        pageRoute
+    });
+};
+
+/**
  * load profile function
  */
 AuthController.profile = function profile(req, res, next) {

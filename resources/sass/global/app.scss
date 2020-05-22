@@ -403,6 +403,9 @@ nav input:checked~#overlay .menu-links {
     text-decoration: underline;
 }
 
+#dropdown-toggler.show #dropdown-menu {
+    display: block;
+}
 /*=============menu*/
 
 /*===============front page top*/

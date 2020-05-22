@@ -24,11 +24,11 @@ nav.navbar.navbar-expand-md
             .nav-user-container-icon.columns.is-centered
                 img(src=asset('images/user.svg'))
             button.navbar-toggler(type='button',
-                                data-toggle='collapse',
-                                data-target='#navbarSupportedContent',
-                                aria-controls='navbarSupportedContent',
-                                aria-expanded='false',
-                                aria-label="Toggle navigation")
+                data-toggle='collapse',
+                data-target='#navbarSupportedContent',
+                aria-controls='navbarSupportedContent',
+                aria-expanded='false',
+                aria-label="Toggle navigation")
                 span.navbar-toggler-icon
             #navbarSupportedContent.collapse.navbar-collapse
                 // Left Side Of Navbar
@@ -44,7 +44,7 @@ nav.navbar.navbar-expand-md
                     else
                         .dropdown
                             .dropdown-trigger
-                                button.button(aria-haspopup='true', aria-controls='dropdown-menu')
+                                button.button(aria-haspopup='true' aria-controls='dropdown-menu')
                                     span= req.session.auth.profile.first_name + " " + req.session.auth.profile.last_name
                                     span.icon.is-small
                                         i.fa.fa-chevron-down(aria-hidden='true')

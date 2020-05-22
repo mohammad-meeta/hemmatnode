@@ -25,6 +25,7 @@ Model.setup = function setup() {
  * Get model
  */
 Model.model = function model() {
+    const ObjectId = mongoose.Schema.ObjectId;
     return {
         'name': {
             type: String,
@@ -36,7 +37,7 @@ Model.model = function model() {
             required: true
         },
         'user_id': {
-            type: String,
+            type: ObjectId,
             required: true
         },
         'email': {
@@ -69,7 +70,7 @@ Model.model = function model() {
                 default: null
             },
             'image': {
-                type: mongoose.Schema.ObjectId,
+                type: ObjectId,
                 default: null
             }
 

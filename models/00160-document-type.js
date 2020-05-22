@@ -25,6 +25,8 @@ Model.setup = function setup() {
  * Get model
  */
 Model.model = function model() {
+    const ObjectId = mongoose.Schema.ObjectId;
+
     return {
         'title': {
             type: String,
@@ -43,7 +45,7 @@ Model.model = function model() {
             default: false
         },
         'user_id': {
-            type: String,
+            type: ObjectId,
             required: true
         }
     };

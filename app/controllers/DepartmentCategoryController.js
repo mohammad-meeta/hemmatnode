@@ -25,13 +25,12 @@ DepartmentCategory.paginateDepartmentCategory = async function paginateDepartmen
         page: req.params.page,
         pageSize: req.params.size || 10
     };
-    const section = req.params.section;
 
-    DepCatHelper.loadAllCountDepCatData(section)
+    DepCatHelper.loadAllCountDepCatData()
         .then(data => {
             let count = data.data;
 
-            DepCatHelper.loadAllDepCatData(dataPaginate, section)
+            DepCatHelper.loadAllDepCatData(dataPaginate)
                 .then(data => {
                     const result = {
                         success: true,
@@ -52,6 +51,33 @@ DepartmentCategory.paginateDepartmentCategory = async function paginateDepartmen
                         .send(err)
                         .end();
                 });
+        })
+        .catch(err => {
+            Logger.error(err);
+
+            res.status(500)
+                .send(err)
+                .end();
+        });
+};
+/**
+ * departmentCategory And Department route
+ */
+DepartmentCategory.departmentCategoryAndDepartment = async function departmentCategoryAndDepartment(req, res, next) {
+    const section = req.params.section;
+
+    DepCatHelper.loadAllDepCatDataAndDepartment(section)
+        .then(data => {
+            const result = {
+                success: true,
+                data: {
+                    data: data
+                }
+            };
+
+            res.status(200)
+                .send(result)
+                .end();
         })
         .catch(err => {
             Logger.error(err);

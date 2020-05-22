@@ -25,9 +25,11 @@ Model.setup = function setup() {
  * Get model
  */
 Model.model = function model() {
+    const ObjectId = mongoose.Schema.ObjectId;
+
     const File = new mongoose.Schema({
         'file_id': {
-            type: String,
+            type: ObjectId,
         },
         'deleted_at': {
             type: Date,
@@ -41,7 +43,7 @@ Model.model = function model() {
             required: true
         },
         'program_id': {
-            type: String,
+            type: ObjectId,
             required: true
         },
         'target': {
@@ -109,7 +111,7 @@ Model.model = function model() {
             default: true,
         },
         'user_id': {
-            type: String,
+            type: ObjectId,
             required: true
         }
     };

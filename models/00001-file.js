@@ -26,7 +26,7 @@ Model.setup = function setup() {
 Model.model = function model() {
     return {
         'user_id': {
-            type: String,
+            type: mongoose.Schema.ObjectId,
             required: true
         },
         "fieldname": {

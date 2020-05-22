@@ -18,7 +18,7 @@ Model.setup = function setup() {
     Model.plugins(schema);
     Model.extraFunctions(schema);
 
-    mongoose.model('DepartmentRegulation', schema, "department_regulations");
+    mongoose.model('Group', schema, "groups");
 };
 
 /**
@@ -26,41 +26,19 @@ Model.setup = function setup() {
  */
 Model.model = function model() {
     const ObjectId = mongoose.Schema.ObjectId;
-
-    const FileD = {
-        'file_id': {
-            type: String
-        },
-        'deleted_at': {
-            type: Date,
-            default: null
-        }
-    };
-
     return {
         'title': {
             type: String,
             required: true
         },
-        'description': {
-            type: String
-        },
-        'files': {
-            type: [FileD]
-        },
-        'department_id': {
+        'group_id': {
             type: ObjectId,
             required: true
         },
         'user_id': {
             type: ObjectId,
             required: true
-        },
-        'is_active': {
-            type: Boolean,
-            default: true,
-            required: true
-        },
+        }
     };
 };
 
@@ -82,7 +60,7 @@ Model.plugins = function plugins(schema) {
  * @param      {Object}  schema  The schema
  */
 Model.extraFunctions = function extraFunctions(schema) {
-    schema.statics.newDepartmentRegulation = Model.newDepartmentRegulation;
+    schema.statics.newGroup = Model.newGroup;
 
     schema.methods.enable = Model.enable;
     schema.methods.disable = Model.disable;
@@ -91,14 +69,14 @@ Model.extraFunctions = function extraFunctions(schema) {
 /**
  * Insert user function
  */
-Model.newDepartmentRegulation = function newDepartmentRegulation(newDepartmentRegulation) {
-    let result = new this(newDepartmentRegulation);
+Model.newGroup = function newGroup(newGroup) {
+    let result = new this(newGroup);
 
     return result.save();
 };
 
 /**
- * Enable the DepartmentRegulation
+ * Enable the group
  */
 Model.enable = function enable(callback) {
     this.is_active = true;
@@ -107,7 +85,7 @@ Model.enable = function enable(callback) {
 };
 
 /**
- * Disable the DepartmentRegulation
+ * Disable the group
  */
 Model.disable = function disable(callback) {
     this.is_active = false;

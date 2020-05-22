@@ -4,8 +4,7 @@ block title
     | هماهنگی درون بخشی
 block content
     internal-sections(
-        department-categories-url=route('api.departmentcategory', {section:'5ebbc3aa0d98290e93f7ef6c', page: '$page$', size: '$pageSize$' })
-        department-url=route('api.department', { page: '$page$', size: '$pageSize$' })
+        department-categories-url=route('api.departmentcategory.department', {section:'5ebbc3aa0d98290e93f7ef6c' })
         )
 block scripts
     script(defer, src=mix('js/pages/home/internal-section/index.js'))

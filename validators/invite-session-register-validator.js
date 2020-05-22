@@ -49,7 +49,7 @@ InviteSessionValidator.rules = function rules(req) {
         'place': 'required',
         'agenda': 'required',
         'body': 'required',
-        'user_list': 'required|array',
+        'user_list': 'required',
         'date': 'required',
         'department_id': 'required'
     };

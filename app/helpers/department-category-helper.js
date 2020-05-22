@@ -11,15 +11,13 @@ module.exports = DepartmentCategoryHelper;
 /**
  * find all dep cat data result 
  */
-DepartmentCategoryHelper.loadAllDepCatData = function loadAllDepCatData(dataPaginate, section) {
+DepartmentCategoryHelper.loadAllDepCatData = function loadAllDepCatData(dataPaginate) {
     const page = parseInt(dataPaginate.page)
     const pageSize = parseInt(dataPaginate.pageSize)
     const skip = page > 0 ? ((page - 1) * pageSize) : 0
     const DepartmentCategory = mongoose.model('DepartmentCategory');
 
-    const filterQuery = {
-        section_id: section
-    };
+    const filterQuery = {};
     const projection = {};
 
     return new Promise((resolve, reject) => {
@@ -37,13 +35,43 @@ DepartmentCategoryHelper.loadAllDepCatData = function loadAllDepCatData(dataPagi
     });
 };
 /**
+ * find all dep cat data  and department result 
+ */
+DepartmentCategoryHelper.loadAllDepCatDataAndDepartment = function loadAllDepCatDataAndDepartment(section) {
+
+    const DepartmentCategory = mongoose.model('DepartmentCategory');
+    const ObjectId = require('mongoose').Types.ObjectId;
+    const pipeline = [{
+            "$match": {
+                "section_id": new ObjectId(section)
+            }
+        },
+        {
+            "$lookup": {
+                "from": "departments",
+                "localField": "_id",
+                "foreignField": "department_category_id",
+                "as": "department"
+            }
+        }
+    ];
+
+    return new Promise((resolve, reject) => {
+        DepartmentCategory.aggregate(pipeline)
+            .then(res => {
+                resolve(res);
+            })
+            .catch(err => reject(err));
+    });
+};
+/**
  * find all dep cat count data result 
  */
-DepartmentCategoryHelper.loadAllCountDepCatData = function loadAllCountDepCatData(section) {
+DepartmentCategoryHelper.loadAllCountDepCatData = function loadAllCountDepCatData() {
     const DepartmentCategory = mongoose.model('DepartmentCategory');
 
     const filterQuery = {
-        section_id: section
+
     };
 
     return new Promise((resolve, reject) => {

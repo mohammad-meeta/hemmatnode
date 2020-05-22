@@ -196,7 +196,7 @@ InviteSession.create = async function create(req, res, next) {
  * store data dep cat
  */
 InviteSession.store = async function store(req, res, next) {
-
+    
     const files = req.files || [];
 
     let fileList = [];

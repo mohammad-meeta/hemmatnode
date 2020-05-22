@@ -33,7 +33,6 @@ SMSSenderHelper.sendSms = async function sendSms(allData) {
     const ghasedak = new Ghasedak("4e9e879ec79b09ce07d8f7adaff6097db8e5a1fe2b2a4347dd337186066adad2");
     for (let index = 0; index < profiles.length; index++) {
         const element = profiles[index];
-        console.log(element)
         const msg = "جناب " + element.name + ' ' + element.family + ' شما به جلسه در تاریخ و محل ' + date + ' ' + place + 'دعوت شده اید';
         ghasedak.send({
             message: msg,

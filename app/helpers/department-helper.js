@@ -74,7 +74,7 @@ DepartmentHelper.loadDepartmentData = function loadDepartmentData(title) {
 };
 
 /**
- * insert dep cat data  
+ * insert dep data  
  */
 DepartmentHelper.insertNewDepartment = function insertNewDepartment(data) {
 
@@ -84,7 +84,22 @@ DepartmentHelper.insertNewDepartment = function insertNewDepartment(data) {
 
         Department1.save()
             .then(res => {
-                resolve(res);
+                if (null != res._id) {
+                    const data = {
+                        title: res.title,
+                        group_id: res._id,
+                        user_id: res.user_id
+                    };
+                    const Group = mongoose.model('Group');
+                    const Group1 = new Group(data)
+
+                    Group1.save()
+                        .then(res => {
+                            resolve(res);
+                        })
+                        .catch(err => reject(err))
+                }
+
             })
             .catch(err => reject(err));
     });

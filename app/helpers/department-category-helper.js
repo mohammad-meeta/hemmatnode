@@ -40,10 +40,10 @@ DepartmentCategoryHelper.loadAllDepCatData = function loadAllDepCatData(dataPagi
 DepartmentCategoryHelper.loadAllDepCatDataAndDepartment = function loadAllDepCatDataAndDepartment(section) {
 
     const DepartmentCategory = mongoose.model('DepartmentCategory');
-
+    const ObjectId = require('mongoose').Types.ObjectId;
     const pipeline = [{
             "$match": {
-                "section_id": section
+                "section_id": new ObjectId(section)
             }
         },
         {

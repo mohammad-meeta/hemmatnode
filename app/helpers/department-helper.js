@@ -55,11 +55,11 @@ DepartmentHelper.loadAllCountDepartmentData = function loadAllCountDepartmentDat
 /**
  * find dep cat data result 
  */
-DepartmentHelper.loadDepartmentData = function loadDepartmentData(title) {
+DepartmentHelper.loadDepartmentData = function loadDepartmentData(id) {
     const Department = mongoose.model('Department');
 
     const filterQuery = {
-        title: title
+        _id: id
     };
 
     const projection = {};

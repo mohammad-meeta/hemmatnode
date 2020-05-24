@@ -55,9 +55,9 @@ Department.paginateDepartment = async function paginateDepartment(req, res, next
  * show route
  */
 Department.show = async function show(req, res, next) {
-    const DepartmentTitle = req.params.departmentData;
+    const DepartmentId = req.params.departmentData;
     const pageRoute = 'department.show';
-    DepartmentHelper.loadDepartmentData(DepartmentTitle)
+    DepartmentHelper.loadDepartmentData(DepartmentId)
         .then(data => {
             const result = {
                 success: true,

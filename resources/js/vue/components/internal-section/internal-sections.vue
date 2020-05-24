@@ -23,7 +23,7 @@
                         a.panel-block.is-active(v-for='dep in departmentCategory.department', :key='dep.id')
                             span.panel-icon
                             i.fas.fa-book(aria-hidden='true')
-                                | {{ dep.title }}
+                                a( href=route("api.department", { id :'$id$'}) {{ dep.title }}
 </template>
 
 <script>

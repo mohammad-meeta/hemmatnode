@@ -44,7 +44,7 @@
                 :edit-url="editUrl",
                 :departmentCategories-url="departmentCategoriesUrl")
 
-            //.column(v-show="!modeLoading && modeShow")
+            .column(v-show="!modeLoading && modeShow")
                 show-department(ref="departmentShow", @on-command="onCommand")
 </template>
 
@@ -59,7 +59,7 @@ const RegisterDepartment = require("VUE-COMPONENTS/department/register-departmen
 const ListDepartment = require("VUE-COMPONENTS/department/list-department.vue")
     .default;
 //const EditDepartment = require("VUE-COMPONENTS/department/edit-department.vue").default;
-//const ShowDepartment = require("VUE-COMPONENTS/department/show-department.vue").default;
+const ShowDepartment = require("VUE-COMPONENTS/department/show-department.vue").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
 module.exports = {
@@ -70,7 +70,7 @@ module.exports = {
         ListDepartment,
         RegisterDepartment,
         //EditDepartment,
-        //ShowDepartment,
+        ShowDepartment,
         Notification
     },
 

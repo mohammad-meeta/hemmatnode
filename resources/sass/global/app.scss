@@ -119,6 +119,11 @@ table td {
     margin-right: calc(-0.5em - 1px);
 }
 
+/*.button .icon:last-child:not(:first-child) {
+    margin-left: 0.25em;
+    margin-right: 0.25em;
+}*/
+
 .control {
 	text-align: right;
 }
@@ -234,10 +239,11 @@ nav {
 .nav-user-container {
     background: #fff;
     border-radius: 50px;
-    width: 240px;
     height: 50px;
     float: right;
     margin-right: 85px;
+    min-width: 240px;
+    padding-left: 10px;
 }
 
 .nav-user-container a {
@@ -405,6 +411,10 @@ nav input:checked~#overlay .menu-links {
 
 #dropdown-toggler.show #dropdown-menu {
     display: block;
+}
+
+.navbarSupportedContent .button {
+    border: none;
 }
 /*=============menu*/
 
@@ -592,6 +602,16 @@ h2.item-category {
 }
 
 /*=====================asnad rahbordi age*/
+
+/*=====================multi text form*/
+.form-itemsbox {
+    background: #fff;
+    box-shadow: 0px 2px 18px #0000001A;
+    color: #3E4D61;
+    margin-bottom: 10px;
+    padding: 10px 15px;
+}
+/*=====================multi text form*/
 
 /*=========================hamahangi daroon bakhshi*/
 .intro-card {

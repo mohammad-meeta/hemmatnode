@@ -20,7 +20,7 @@ nav.navbar.navbar-expand-md
                 a(href='/') دیده بانی سلامت استان
                 a(href='/') رویدادها
                 a(href='/') مرکز اسناد راهبردی
-        .nav-user-container.is-flex
+        .nav-user-container.is-flex.dropdown.drp#dropdown-toggler
             .nav-user-container-icon.columns.is-centered
                 img(src=asset('images/user.svg'))
             .navbarSupportedContent.collapse.navbar-collapse
@@ -35,15 +35,14 @@ nav.navbar.navbar-expand-md
                         li.nav-item
                             a.nav-link(href="/auth/login") ثبت نام
                     else
-                        .dropdown.drp#dropdown-toggler
-                            button.button.drp(aria-haspopup='true',
-                                    aria-controls='dropdown-menu',
-                                    onclick='window.dropdownToggle()')
-                                span.drp= req.session.auth.profile.first_name + " " + req.session.auth.profile.last_name
-                                span.drp.icon.is-small
-                                    i.drp.fa.fa-chevron-down(aria-hidden='true')
-                            #dropdown-menu.dropdown-menu(role='menu')
-                                .dropdown-content
-                                    a.dropdown-item(href='/auth/login') خروج
+                        button.button.drp(aria-haspopup='true',
+                                aria-controls='dropdown-menu',
+                                onclick='window.dropdownToggle()')
+                            span.drp= req.session.auth.profile.first_name + " " + req.session.auth.profile.last_name
+                            span.drp.icon.is-small
+                                i.drp.fa.fa-chevron-down(aria-hidden='true')
+                        #dropdown-menu.dropdown-menu(role='menu')
+                            .dropdown-content
+                                a.dropdown-item(href='/auth/logout') خروج
         a.navbar-brand(href="/")
             img(src=asset('images/logo.png'))

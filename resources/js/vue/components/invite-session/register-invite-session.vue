@@ -19,6 +19,8 @@
                 .control
                     textarea.textarea(placeholder='دستور جلسه', v-model='inviteSessionData.agenda')
             .field
+                multi-text(v-model='values')
+            .field
                 label.label مکان
                 .control
                     input.input(type='text', placeholder='مکان', v-model='inviteSessionData.place' required)
@@ -64,19 +66,24 @@ const ENUMS = require("JS-HELPERS/enums");
 const InviteSessionValidator = require("JS-VALIDATORS/invite-session-register-validator");
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
+const MultiText = require("VUE-COMPONENTS/general/multi-text.vue").default;
 
 module.exports = {
     name: "RegisterInviteSession",
 
     components: {
         Notification,
-        DatePicker: VuePersianDatetimePicker
+        DatePicker: VuePersianDatetimePicker,
+        MultiText
     },
 
     data: () => ({
         ENUMS,
         departments: [],
         users: [],
+        values:
+            [{title: 'تلاوت قرآن و معنی', duration: '5', provider: 'عضو هیات رئیسه'},
+            {title: 'گزارش کشیک نوروزی سال 1398', duration: '20', provider: 'عضو هیات رئیسه'}],
         inviteSessionData: {
             title: null,
             body: null,

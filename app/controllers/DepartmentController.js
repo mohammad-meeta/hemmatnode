@@ -55,21 +55,29 @@ Department.paginateDepartment = async function paginateDepartment(req, res, next
  * show route
  */
 Department.show = async function show(req, res, next) {
-    const DepartmentId = req.params.departmentData;
+    const departmentId = req.params.department;
     const pageRoute = 'department.show';
-    DepartmentHelper.loadDepartmentData(DepartmentId)
-        .then(data => {
-            const result = {
-                success: true,
-                data: data
-            };
-            res.render(PugView.getView(pageRoute), {
-                req,
-                pageRoute,
-                result
-            });
-        })
-        .catch(err => console.error(err));
+
+    res.render(PugView.getView(pageRoute), {
+        req,
+        pageRoute,
+        departmentId
+    });
+
+    // DepartmentHelper.loadDepartmentData(departmentId)
+    //     .then(data => {
+    //         const result = {
+    //             success: true,
+    //             data: data
+    //         };
+
+    //         res.render(PugView.getView(pageRoute), {
+    //             req,
+    //             pageRoute,
+    //             result
+    //         });
+    //     })
+    //     .catch(err => console.error(err));
 };
 
 /**
@@ -77,6 +85,7 @@ Department.show = async function show(req, res, next) {
  */
 Department.edit = async function edit(req, res, next) {
     const pageRoute = 'department.edit';
+
     res.render(PugView.getView(pageRoute), {
         req,
         pageRoute

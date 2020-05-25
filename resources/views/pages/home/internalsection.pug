@@ -5,6 +5,7 @@ block title
 block content
     internal-sections(
         department-categories-url=route('api.departmentcategory.department', {section:'5ebbc3aa0d98290e93f7ef6c' })
-        )
+        department-link-url=route('department.show', {department : '$id$' })
+    )
 block scripts
     script(defer, src=mix('js/pages/home/internal-section/index.js'))

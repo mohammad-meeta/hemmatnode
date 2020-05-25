@@ -16,14 +16,13 @@
                         .control
                             a.button.is-primary.is-rounded(href="/result") برآمدها
             .container
-
                 article.panel.is-link
-                    p.panel-heading(v-for='departmentCategory in departmentCategories', :key='departmentCategory.id')
+                    .panel-heading(v-for='departmentCategory in departmentCategories', :key='departmentCategory.id')
                         | {{ departmentCategory.title }}
-                        a.panel-block.is-active(v-for='dep in departmentCategory.department', :key='dep.id')
-                            span.panel-icon
-                            i.fas.fa-book(aria-hidden='true')
-                                a( href=route("api.department", { id :'$id$'}) {{ dep.title }}
+                        .panel-block.is-active(v-for='dep in departmentCategory.department', :key='dep._id')
+                            a(:href="getUrl(dep._id)") {{ dep.title }}
+
+
 </template>
 
 <script>
@@ -58,6 +57,11 @@ module.exports = {
             default: null
         },
 
+        departmentLinkUrl: {
+            type: String,
+            default: null
+        },
+
         departmentCategoriesUrl: {
             type: String,
             default: null
@@ -82,6 +86,15 @@ module.exports = {
     },
 
     methods: {
+        /**
+         * Get url
+         */
+        getUrl(id) {
+            const url = this.departmentLinkUrl.replace(/\$id\$/g, id);
+
+            return url;
+        },
+
         /**
          * Load departmentCategories
          */

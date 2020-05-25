@@ -1,0 +1,12 @@
+extends ../../layout/app.pug
+
+block title
+    | title
+
+block content
+    pre= departmentId
+    show-department(ref="departmentShow", load-url=route("department.show", { department: '$id$'}),
+                 department-id=departmentId)
+
+block scripts
+    script(defer src=mix("js/pages/department/show/index.js"))

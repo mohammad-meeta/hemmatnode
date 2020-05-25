@@ -35,14 +35,22 @@ module.exports = {
             files: {},
             isActive: false
         },
+
         showLoadingFlag: false
     }),
+
     props: {
-        programsUrl: {
+        loadUrl: {
             type: String,
-            default: ""
+            default: null
+        },
+
+        departmentId: {
+            type: String,
+            default: null
         }
     },
+
     computed: {
         isLoadingMode: state => state.showLoadingFlag == true,
         showNotification: state => state.notificationMessage != null
@@ -52,16 +60,21 @@ module.exports = {
         /**
          * Load specific department
          */
-        loadDepartmentData(data) {
-            const temp = {
-                _id: data._id,
-            title: data.title,
-            department_category_id: data.depatment_category_id,
-            files: {},
-                isActive: data.is_active
-            };
-            console.log(temp);
-            Vue.set(this, "departmentData", temp);
+        loadDepartmentData(id) {
+            id = id || this.departmentId;
+            const url = this.loadUrl.replace(/\$department\$/g, id);
+
+            AxiosHelper.send("get", url)
+                .then(res => {
+                    const data = res.data;
+
+                    console.log(data)
+                    // Vue.set(this, "departmentData", data.data);
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert("Error");
+                });
         },
 
         /**
@@ -76,8 +89,7 @@ module.exports = {
          */
         hideLoading() {
             Vue.set(this, "showLoadingFlag", false);
-        },
-
+        }
     }
 };
 </script>

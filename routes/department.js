@@ -63,7 +63,7 @@ Router.get('/api/department/:department', [
         Rule.canAsync('user.permision', 'api.department.show'),
         'Department@loadData'
     ])
-    .as('department.show');
+    .as('api.department.show');
 
 Router.get('/api/department/:department/edit', [
         checkSession,

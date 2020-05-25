@@ -92,7 +92,6 @@ Department.loadData = async function loadData(req, res, next) {
                 success: true,
                 data: {
                     data: data,
-                    count: count
                 }
             };
             res.status(200)

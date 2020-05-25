@@ -63,13 +63,13 @@ module.exports = {
         loadDepartmentData(id) {
             id = id || this.departmentId;
             const url = this.loadUrl.replace(/\$department\$/g, id);
-
+            console.log(url);
             AxiosHelper.send("get", url)
                 .then(res => {
                     const data = res.data;
 
                     console.log(data)
-                    // Vue.set(this, "departmentData", data.data);
+                    Vue.set(this, "departmentData", data.data || {});
                 })
                 .catch(err => {
                     console.error(err);

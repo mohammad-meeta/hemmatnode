@@ -59,7 +59,8 @@ const RegisterDepartment = require("VUE-COMPONENTS/department/register-departmen
 const ListDepartment = require("VUE-COMPONENTS/department/list-department.vue")
     .default;
 //const EditDepartment = require("VUE-COMPONENTS/department/edit-department.vue").default;
-const ShowDepartment = require("VUE-COMPONENTS/department/show-department.vue").default;
+const ShowDepartment = require("VUE-COMPONENTS/department/show-department.vue")
+    .default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
 module.exports = {
@@ -110,6 +111,11 @@ module.exports = {
         },
 
         departmentRegulationUrl: {
+            type: String,
+            default: null
+        },
+
+        loadUrl: {
             type: String,
             default: null
         }
@@ -196,7 +202,8 @@ module.exports = {
                     break;
 
                 case ENUMS.COMMAND.SHOW:
-                    this.$refs.departmentShow.loadDepartmentData(data);
+                    this.$refs.departmentShow.loadUrl = this.loadUrl;
+                    this.$refs.departmentShow.loadDepartmentData(data._id);
                     this.changeFormMode(ENUMS.FORM_MODE.SHOW);
                     break;
             }

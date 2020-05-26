@@ -127,6 +127,10 @@ table td {
 .control {
 	text-align: right;
 }
+
+input {
+    max-width: 100%;
+}
 /*======================= bulma RTL*/
 
 main {
@@ -271,6 +275,10 @@ nav {
     margin: -20px auto 30px auto;
     padding: 5px 0px 5px 0px;
     border-bottom: 1px solid #7B7F8229;
+    width: 100%;
+}
+
+.container.main-content {
     width: 100%;
 }
 
@@ -610,6 +618,11 @@ h2.item-category {
     color: #3E4D61;
     margin-bottom: 10px;
     padding: 10px 15px;
+    min-height: 85px;
+}
+
+.form-itemsbox .columns {
+    align-items: end;
 }
 /*=====================multi text form*/
 
@@ -630,6 +643,13 @@ h2.item-category {
 
 .intro-card a {
     color: #3E4D61;
+}
+
+.intro-cards {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    width: 100%;
 }
 
 .front-page-link-box-small {

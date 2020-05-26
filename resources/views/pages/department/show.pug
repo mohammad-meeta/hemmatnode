@@ -4,8 +4,7 @@ block title
     | title
 
 block content
-    pre= departmentId
-    show-department(ref="departmentShow", load-url=route("api.department.show", { department: '$department$'}),
+    show-department(ref="departmentShow", show-load-url=route("api.department.show", { department: '$department$'}),
                  department-id=departmentId)
 
 block scripts

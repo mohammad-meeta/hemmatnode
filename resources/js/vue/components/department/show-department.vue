@@ -1,22 +1,32 @@
 <template lang="pug">
     .container
-        .columns.is-vcentered
-            .column.is-full(v-show="isLoadingMode")
-                h1 در حال بارگذاری
-            .column.is-full(v-show="! isLoadingMode")
-
-                .info-card
-                    .info-card-title {{ departmentData.title }}
-                    .info-card-details
-                        .info-card-item
-                            .info-card-label نام پروژه:
-                            .info-card-value {{ departmentData.title }}
-                        .info-card-item
-                            .info-card-label برنامه:
-                            .info-card-value {{ departmentData.department_category_id }}
-                        .info-card-item
-                            .info-card-label معرفی:
-                            .info-card-value {{ departmentData.description }}
+        .column.is-full(v-show="isLoadingMode")
+            h1 در حال بارگذاری
+        .column.is-full(v-show="! isLoadingMode")
+            .container.page-header
+                .hero-dashboard
+                    .field.is-grouped
+                        .control
+                            a.button.is-primary.is-rounded(href="/invite-session") جلسات
+                        .control
+                            a.button.is-primary.is-rounded(href="/project") پروژه ها
+                        .control
+                            a.button.is-primary.is-rounded(href="/result") برآمدها
+                        .control
+                            a.button.is-primary.is-rounded(href="/approv") مصوبات
+                        .control
+                            a.button.is-primary.is-rounded(href="/regulation") آئین نامه ها
+                        .control
+                            a.button.is-primary.is-rounded(href="/memorandum") تفاهم نامه ها
+            .info-card
+                .info-card-title {{ departmentData.title }}
+                .info-card-details
+                    .info-card-item
+                        .info-card-label نام پروژه:
+                        .info-card-value {{ departmentData.title }}
+                    .info-card-item
+                        .info-card-label معرفی:
+                        .info-card-value {{ departmentData.description }}
 </template>
 <script>
 "use strict";
@@ -30,6 +40,7 @@ module.exports = {
         ENUMS,
         departmentData: {
             _id: null,
+            loadUrl: null,
             title: null,
             department_category_id: null,
             files: {},
@@ -40,12 +51,11 @@ module.exports = {
     }),
 
     props: {
-        loadUrl: {
+        departmentId: {
             type: String,
             default: null
         },
-
-        departmentId: {
+        showLoadUrl: {
             type: String,
             default: null
         }
@@ -62,14 +72,13 @@ module.exports = {
          */
         loadDepartmentData(id) {
             id = id || this.departmentId;
-            const url = this.loadUrl.replace(/\$department\$/g, id);
+            let url = this.loadUrl || this.showLoadUrl;
+            url = url.replace(/\$department\$/g, id);
             console.log(url);
             AxiosHelper.send("get", url)
                 .then(res => {
-                    const data = res.data;
-
-                    console.log(data)
-                    Vue.set(this, "departmentData", data.data || {});
+                    const data = res.data.data.data;
+                    Vue.set(this, "departmentData", data || {});
                 })
                 .catch(err => {
                     console.error(err);

@@ -7,20 +7,14 @@
             .container.page-header
                 .title
                     h1 هماهنگی درون بخشی
-                .hero-dashboard
-                    .field.is-grouped
-                        .control
-                            a.button.is-primary.is-rounded(href="/invite-session") جلسات
-                        .control
-                            a.button.is-primary.is-rounded(href="/project") پروژه ها
-                        .control
-                            a.button.is-primary.is-rounded(href="/result") برآمدها
-            .container
-                article.panel.is-link
-                    .panel-heading(v-for='departmentCategory in departmentCategories', :key='departmentCategory.id')
-                        | {{ departmentCategory.title }}
-                        .panel-block.is-active(v-for='dep in departmentCategory.department', :key='dep._id')
-                            a(:href="getUrl(dep._id)") {{ dep.title }}
+            .container.main-content
+                .intro-cards.columns
+                    .column.is-4(v-for='departmentCategory in departmentCategories', :key='departmentCategory.id')
+                        .intro-card
+                            .intro-card-head
+                                h2 {{ departmentCategory.title }}
+                            .panel-block.is-active(v-for='dep in departmentCategory.department', :key='dep._id')
+                                a(:href="getUrl(dep._id)") {{ dep.title }}
 
 
 </template>

@@ -11,11 +11,9 @@ block content
         .columns.is-vcentered
             .column.is-5
                 login(ref="loginComponent", login-url=route('auth.attempt'), home-page-url=route('home.index'))
-            .column.is-6.is-offset-1.has-text-centered
-                h1.title.is-2
-                    | Welcome
-                h2.subtitle.is-4
-                    | Please login to your account
+            .column.is-6.is-offset-1.has-text-centered.sitename
+                h1 همکاری بین بخشی و مشارکت مردم در سلامت استان
+                h2 سامانه همت
 
 block scripts
     script(defer, src=mix('js/pages/auth/login/index.js'))

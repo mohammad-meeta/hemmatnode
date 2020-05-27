@@ -13,13 +13,8 @@
                         select(v-model="inviteSessionData.departments")
                             option(v-for='(department, departmentIndex) in departments',
                                 :value="department._id") {{ department.title }}
-
             .field
-                label.label دستور جلسه
-                .control
-                    textarea.textarea(placeholder='دستور جلسه', v-model='inviteSessionData.agenda')
-            .field
-                multi-text(v-model='values')
+                multi-text(v-model='inviteSessionData.agenda')
             .field
                 label.label مکان
                 .control
@@ -81,13 +76,12 @@ module.exports = {
         ENUMS,
         departments: [],
         users: [],
-        values:
-            [{title: 'تلاوت قرآن و معنی', duration: '5', provider: 'عضو هیات رئیسه'},
-            {title: 'گزارش کشیک نوروزی سال 1398', duration: '20', provider: 'عضو هیات رئیسه'}],
         inviteSessionData: {
             title: null,
             body: null,
-            agenda: null,
+            agenda:
+                [{title: 'تلاوت قرآن و معنی', duration: '5', provider: 'عضو هیات رئیسه'},
+                {title: 'گزارش کشیک نوروزی سال 1398', duration: '20', provider: 'عضو هیات رئیسه'}],
             place: null,
             date: null,
             department_id: null,
@@ -103,6 +97,11 @@ module.exports = {
     }),
 
     props: {
+        departmentId: {
+            type: String,
+            default: null
+        },
+
         registerUrl: {
             type: String,
             default: ""
@@ -122,6 +121,10 @@ module.exports = {
     created() {
         this.loadDepartments();
         this.loadUsers();
+    },
+
+    mounted() {
+        Vue.set(this.inviteSessionData, 'departments', this.departmentId);
     },
 
     computed: {
@@ -218,7 +221,7 @@ module.exports = {
             }
             let inviteSessionData = {
                 body: this.inviteSessionData.body,
-                agenda: this.inviteSessionData.agenda,
+                agenda: JSON.stringify(this.inviteSessionData.agenda),
                 place: this.inviteSessionData.place,
                 date: this.inviteSessionData.date,
                 department_id: this.inviteSessionData

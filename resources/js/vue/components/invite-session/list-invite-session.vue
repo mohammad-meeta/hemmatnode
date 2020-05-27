@@ -4,13 +4,13 @@
     table.table.is-striped.is-hoverable.is-fullwidth(v-if="hasInviteSession")
         thead
             tr
-                th موضوع جلسه
+                th دستور جلسه
                 th وضعیت
                 th تاریخ ایجاد
                 th عملیات
         tbody
             tr(v-for='inviteSession in inviteSessions', :key='inviteSession.id')
-                td {{ inviteSession.agenda }}
+                td(v-html="getTitles(inviteSession.extra)")
                 td {{ inviteSession.is_active }}
                 td {{ toPersianDate(inviteSession.created_at) }}
                 td.function-links
@@ -46,6 +46,7 @@ module.exports = {
     },
 
     data: () => ({
+        departmentData: null,
         ENUMS,
         inviteSessions: [],
         inviteSessionsCount: 0,
@@ -58,18 +59,57 @@ module.exports = {
 
     methods: {
         /**
+         * Create titles
+         */
+        getTitles(extra) {
+            let res = extra.map(x => x.title).join("<br/>");
+
+            return res;
+        },
+
+        /**
          * Load inviteSessions
          */
         loadInviteSessions(pageId) {
-            let url = this.listUrl.replace("$page$", pageId);
-            url = url.replace("$pageSize$", 50);
+            let url = this.listUrl
+                .replace("$page$", pageId)
+                .replace("$pageSize$", 50);
             AxiosHelper.send("get", url, "").then(res => {
                 const resData = res.data;
-                Vue.set(this, "inviteSessions", resData.data.data);
-                Vue.set(this, "inviteSessionsCount", resData.data.count);
+                const inviteData = resData.data.data;
+
+                inviteData.forEach(x => {
+                    try {
+                        x.extra = JSON.parse(x.agenda);
+                    } catch (ex) {
+                        x.extra = [];
+                    }
+                });
+
+                Vue.set(this, "inviteSessions", inviteData);
+                Vue.set(this, "inviteSessionsCount", inviteData.count);
 
                 this.paginator();
             });
+        },
+
+        /**
+         * Load specific department
+         */
+        loadDepartmentData(departmentId) {
+            id = id || this.departmentId;
+            let url = this.loadUrl || this.showLoadUrl;
+            url = url.replace(/\$department\$/g, id);
+            console.log(url);
+            AxiosHelper.send("get", url)
+                .then(res => {
+                    const data = res.data.data.data;
+                    Vue.set(this, "departmentData", data || {});
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert("Error");
+                });
         },
 
         /**
@@ -126,7 +166,8 @@ module.exports = {
             let foundIndex = this.inviteSessions.findIndex(
                 x => x._id == editedInviteSessionsData._id
             );
-            this.inviteSessions[foundIndex].agenda = editedInviteSessionsData.agenda;
+            this.inviteSessions[foundIndex].agenda =
+                editedInviteSessionsData.agenda;
             this.inviteSessions[foundIndex].is_active =
                 editedInviteSessionsData.is_active;
         }

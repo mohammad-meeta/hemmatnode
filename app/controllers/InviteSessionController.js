@@ -17,7 +17,8 @@ InviteSession.index = async function index(req, res, next) {
 
     res.render(PugView.getView(pageRoute), {
         req,
-        pageRoute
+        pageRoute,
+        departmentId: req.params.department
     });
 };
 /**
@@ -196,7 +197,7 @@ InviteSession.create = async function create(req, res, next) {
  * store data dep cat
  */
 InviteSession.store = async function store(req, res, next) {
-    
+
     const files = req.files || [];
 
     let fileList = [];

@@ -1,18 +1,21 @@
 <template lang="pug">
     .container
-        .columns.is-vcentered
+        .columns
             .column.is-full(v-show="isLoadingMode")
                 h1 در حال بارگذاری
             .column.is-full(v-show="! isLoadingMode")
                 .print-form
-                    .print-form-head
-                        .print-form-logo
+                    .print-form-head.columns
+                        .column.is-3.print-form-logo
                             img(src='/images/logo.png')
-                        .print-form-title
+                        .column.is-6.print-form-title
                             h2 فرم صورتجلسه
-                            h3 {{ inviteSessionData.agenda }}
-                        .print-form-number
+                        .column.is-3.print-form-number
                             span شماره مدرک
+                    .print-form-body
+                        .print-form-agenda.columns
+                            .column.is-6.print-form-title
+                                h3 {{ inviteSessionData.agenda }}
 </template>
 <script>
 "use strict";

@@ -1,7 +1,9 @@
 <template lang="pug">
     .container-parent
         section.hero
-            notification(:notification-type="notificationType", @on-close="closeNotification", v-if="showNotification")
+            notification(:notification-type="notificationType",
+                        @on-close="closeNotification",
+                        v-if="showNotification")
                 span(v-html="notificationMessage")
             .container.page-header
                 .title
@@ -29,14 +31,18 @@
                 loading
 
             .column(v-show="!modeLoading && modeList")
-                list-invite-session(ref="inviteSessionList", @on-command="onCommand", :list-url="listUrl")
+                list-invite-session(ref="inviteSessionList",
+                    @on-command="onCommand",
+                    :list-url="listUrl")
 
             .column(v-show="!modeLoading && modeRegister")
-                register-invite-session(ref="inviteSessionRegister", @on-command="onCommand",
-                  @on-register="onInviteSessionRegister"
-                  :register-url="registerUrl",
-                  :departments-url="departmentsUrl",
-                  :users-url="usersUrl")
+                register-invite-session(ref="inviteSessionRegister",
+                    :department-id="departmentId"
+                    @on-command="onCommand",
+                    @on-register="onInviteSessionRegister"
+                    :register-url="registerUrl",
+                    :departments-url="departmentsUrl",
+                    :users-url="usersUrl")
 
             //.column(v-show="!modeLoading && modeEdit")
                 edit-department(ref="departmentEdit", @on-command="onCommand",
@@ -83,6 +89,11 @@ module.exports = {
     }),
 
     props: {
+        departmentId: {
+            type: String,
+            default: null
+        },
+
         title: {
             type: String,
             default: null

@@ -1,7 +1,8 @@
 <template lang="pug">
     .container-parent
         section.hero
-            notification(:notification-type="notificationType", @on-close="closeNotification", v-if="showNotification")
+            notification(:notification-type="notificationType",
+                         @on-close="closeNotification", v-if="showNotification")
                 span(v-html="notificationMessage")
 
             .container.page-header
@@ -9,7 +10,8 @@
                     h1 هماهنگی درون بخشی
             .container.main-content
                 .intro-cards.columns
-                    .column.is-4(v-for='departmentCategory in departmentCategories', :key='departmentCategory.id')
+                    .column.is-4(v-for='departmentCategory in departmentCategories',
+                                 :key='departmentCategory.id')
                         .intro-card
                             .intro-card-head
                                 h2 {{ departmentCategory.title }}

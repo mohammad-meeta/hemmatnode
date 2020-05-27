@@ -7,7 +7,7 @@
                 .hero-dashboard
                     .field.is-grouped
                         .control
-                            a.button.is-primary.is-rounded(href="/invite-session") جلسات
+                            a.button.is-primary.is-rounded(:href="inviteSessionUrl") جلسات
                         .control
                             a.button.is-primary.is-rounded(href="/project") پروژه ها
                         .control
@@ -55,6 +55,12 @@ module.exports = {
             type: String,
             default: null
         },
+
+        inviteSessionUrl: {
+            type: String,
+            default: null
+        },
+
         showLoadUrl: {
             type: String,
             default: null

@@ -2,19 +2,19 @@
     .column
         form.box.action
             .field
-                label.label Username
+                label.label نام کاربری
                 .control.has-icons-left
                     input.input(type="email", placeholder="e.g. Amisen", required, v-model="userData.name")
                     span.icon.is-small.is-left
                         i.material-icons account_circle
             .field
-                label.label Password
+                label.label گذرواژه
                 .control.has-icons-left
                     input.input(type="password", placeholder="*******", required, v-model="userData.password")
                     span.icon.is-small.is-left
                         i.material-icons vpn_key
             .field
-                button.button.is-success.is-medium(@click.prevent="login") Login
+                button.button.is-success.is-medium(@click.prevent="login") ورود
         notification(:notification-type="notificationType", @on-close="closeNotification", v-if="showNotification")
             span(v-html="notificationMessage")
 </template>

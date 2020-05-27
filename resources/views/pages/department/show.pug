@@ -4,8 +4,10 @@ block title
     | title
 
 block content
-    show-department(ref="departmentShow", show-load-url=route("api.department.show", { department: '$department$'}),
-                 department-id=departmentId)
+    show-department(ref="departmentShow",
+                show-load-url=route("api.department.show", { department: '$department$'}),
+                invite-session-url=route("invitesession.index", { department: departmentId}),
+                department-id=departmentId)
 
 block scripts
     script(defer src=mix("js/pages/department/show/index.js"))

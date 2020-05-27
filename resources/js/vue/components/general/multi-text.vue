@@ -45,19 +45,15 @@ module.exports = {
     methods: {
         setValue() {
             var v = Array.from(this.value);
-            console.debug(JSON.stringify(this.value));
-            console.debug(JSON.stringify(v));
             this.values = v;
         },
 
         updateValue: function() {
-            console.debug(JSON.stringify(this.values));
             this.$emit('input', this.values);
         },
 
         deleteValue: function(index) {
             this.values.splice(index, 1);
-            console.debug(JSON.stringify(this.values));
             this.$emit('input', this.values);
         },
 

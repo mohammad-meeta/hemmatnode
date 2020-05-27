@@ -15,14 +15,14 @@ const {
     clearAuth
 } = use('core/helpers/auth-helper');
 
-Router.get('/invite-session', [
+Router.get('/invite-session/:department?', [
         checkSession,
         Rule.canAsync('user.permision', 'invitesession.index'),
         'InviteSession@index'
     ])
     .as('invitesession.index');
 
-Router.get('/api/invite-session/:page/:size?', [
+Router.get('/api/invite-session/:group/:page/:size?/', [
         checkSession,
         'InviteSession@paginateInviteSession'
     ])
@@ -42,7 +42,7 @@ Router.get('/invite-session/edit', [
     ])
     .as('invitesession.edit');
 
-Router.post('/invite-session', [
+Router.post('/invite-session/:department?', [
         upload.array('files'),
         checkSession,
         Rule.canAsync('user.permision', 'invitesession.store'),

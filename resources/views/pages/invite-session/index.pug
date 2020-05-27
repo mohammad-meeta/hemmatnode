@@ -5,11 +5,12 @@ block title
 
 block content
     .container
-        invite-sessions(list-url=route('api.invitesession', { page: '$page$', size: '$pageSize$' }),
+        invite-sessions(list-url=route('api.invitesession', { page: '$page$', size: '$pageSize$', group: departmentId }),
             departments-url=route('api.department', { page: 1, size: 1000 }),
-            register-url=route('invitesession.store'),
+            register-url=route('invitesession.store', { department: departmentId }),
             edit-url=route('invitesession.update', { id :'$id$'}),
-            users-url=route('api.user', { page: 1, size: 1000 })
+            users-url=route('api.user', { page: 1, size: 1000 }),
+            department-id=departmentId
         )
 
 block scripts

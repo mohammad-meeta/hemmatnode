@@ -12,24 +12,43 @@ module.exports = InviteSessiontHelper;
  * find all dep cat data result 
  */
 InviteSessiontHelper.loadAllInviteSessionData = function loadAllInviteSessionData(dataPaginate, group) {
-    const page = parseInt(dataPaginate.page)
-    const pageSize = parseInt(dataPaginate.pageSize)
-    const skip = page > 0 ? ((page - 1) * pageSize) : 0
+    const page = parseInt(dataPaginate.page);
+    const pageSize = parseInt(dataPaginate.pageSize);
+    const skip = page > 0 ? ((page - 1) * pageSize) : 0;
+    const ObjectId = require('mongoose').Types.ObjectId;
     const InviteSession = mongoose.model('InviteSession');
 
-    const filterQuery = {
-        department_id: group
-    };
-    const projection = {};
+    const pipeline = [{
+            "$match": {
+                "department_id": new ObjectId(group)
+            }
+        },
+        {
+            "$lookup": {
+                "from": "departments",
+                "localField": "department_id",
+                "foreignField": "_id",
+                "as": "dep"
+            }
+        },
+        {
+            "$unwind": "$dep"
+        },
+        {
+            "$sort": {
+                "created_at": -1
+            }
+        },
+        {
+            "$skip": skip
+        },
+        {
+            "$limit": pageSize
+        }
+    ];
 
     return new Promise((resolve, reject) => {
-        InviteSession.find(filterQuery, projection, {
-                sort: {
-                    'created_at': -1
-                },
-                skip: skip,
-                limit: pageSize
-            })
+        InviteSession.aggregate(pipeline)
             .then(res => {
                 resolve(res);
             })

@@ -7,7 +7,7 @@
 
             .container.page-header
                 .title
-                    h1 هماهنگی درون بخشی
+                    h1 مشارکت مردمی
             .container.main-content
                 .intro-cards.columns
                     .column.is-4(v-for='departmentCategory in departmentCategories',

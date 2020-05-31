@@ -12,14 +12,15 @@ module.exports = InviteSessiontHelper;
  * find all dep cat data result 
  */
 InviteSessiontHelper.loadAllInviteSessionData = function loadAllInviteSessionData(dataPaginate, group) {
-    const page = parseInt(dataPaginate.page)
-    const pageSize = parseInt(dataPaginate.pageSize)
-    const skip = page > 0 ? ((page - 1) * pageSize) : 0
+    const page = parseInt(dataPaginate.page);
+    const pageSize = parseInt(dataPaginate.pageSize);
+    const skip = page > 0 ? ((page - 1) * pageSize) : 0;
+    const ObjectId = require('mongoose').Types.ObjectId;
     const InviteSession = mongoose.model('InviteSession');
 
     const pipeline = [{
             "$match": {
-                "department_id": ObjectId("5ec77841b76fe0377dedf7b3")
+                "department_id": new ObjectId(group)
             }
         },
         {

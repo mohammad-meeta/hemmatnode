@@ -17,19 +17,37 @@ InviteSessiontHelper.loadAllInviteSessionData = function loadAllInviteSessionDat
     const skip = page > 0 ? ((page - 1) * pageSize) : 0
     const InviteSession = mongoose.model('InviteSession');
 
-    const filterQuery = {
-        department_id: group
-    };
-    const projection = {};
+    const pipeline = [{
+            "$match": {
+                "department_id": ObjectId("5ec77841b76fe0377dedf7b3")
+            }
+        },
+        {
+            "$lookup": {
+                "from": "departments",
+                "localField": "department_id",
+                "foreignField": "_id",
+                "as": "dep"
+            }
+        },
+        {
+            "$unwind": "$dep"
+        },
+        {
+            "$sort": {
+                "created_at": -1
+            }
+        },
+        {
+            "$skip": skip
+        },
+        {
+            "$limit": pageSize
+        }
+    ];
 
     return new Promise((resolve, reject) => {
-        InviteSession.find(filterQuery, projection, {
-                sort: {
-                    'created_at': -1
-                },
-                skip: skip,
-                limit: pageSize
-            })
+        InviteSession.aggregate(pipeline)
             .then(res => {
                 resolve(res);
             })

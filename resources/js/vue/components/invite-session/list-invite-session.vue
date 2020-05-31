@@ -42,7 +42,12 @@ module.exports = {
         listUrl: {
             type: String,
             default: ""
-        }
+        },
+
+        departmentId: {
+            type: String,
+            default: ""
+        },
     },
 
     data: () => ({
@@ -72,8 +77,9 @@ module.exports = {
          */
         loadInviteSessions(pageId) {
             let url = this.listUrl
-                .replace("$page$", pageId)
-                .replace("$pageSize$", 50);
+                .replace(/\$page\$/g, pageId)
+                .replace(/\$pageSize\$/g, 50);
+
             AxiosHelper.send("get", url, "").then(res => {
                 const resData = res.data;
                 const inviteData = resData.data.data;
@@ -91,25 +97,6 @@ module.exports = {
 
                 this.paginator();
             });
-        },
-
-        /**
-         * Load specific department
-         */
-        loadDepartmentData(departmentId) {
-            id = id || this.departmentId;
-            let url = this.loadUrl || this.showLoadUrl;
-            url = url.replace(/\$department\$/g, id);
-            console.log(url);
-            AxiosHelper.send("get", url)
-                .then(res => {
-                    const data = res.data.data.data;
-                    Vue.set(this, "departmentData", data || {});
-                })
-                .catch(err => {
-                    console.error(err);
-                    alert("Error");
-                });
         },
 
         /**

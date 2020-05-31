@@ -33,6 +33,7 @@
             .column(v-show="!modeLoading && modeList")
                 list-invite-session(ref="inviteSessionList",
                     @on-command="onCommand",
+                    :department-id="departmentId",
                     :list-url="listUrl")
 
             .column(v-show="!modeLoading && modeRegister")
@@ -65,7 +66,8 @@ const RegisterInviteSession = require("VUE-COMPONENTS/invite-session/register-in
 const ListInviteSession = require("VUE-COMPONENTS/invite-session/list-invite-session.vue")
     .default;
 //const EditInviteSession = require("VUE-COMPONENTS/invite-session/edit-invite-session.vue").default;
-const ShowInviteSession = require("VUE-COMPONENTS/invite-session/show-invite-session.vue").default;
+const ShowInviteSession = require("VUE-COMPONENTS/invite-session/show-invite-session.vue")
+    .default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
 module.exports = {
@@ -85,7 +87,7 @@ module.exports = {
         formModeStack: [],
         inviteSessions: [],
         notificationMessage: null,
-        notificationType: "is-info",
+        notificationType: "is-info"
     }),
 
     props: {
@@ -151,9 +153,14 @@ module.exports = {
          */
         onInviteSessionRegister(payload) {
             //***update vue list****
-            this.$refs.inviteSessionList.addToInviteSessionList(payload.data.data);
+            this.$refs.inviteSessionList.addToInviteSessionList(
+                payload.data.data
+            );
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
-            this.setNotification(".دعوتنامه جلسه با موفقیت ذخیره شد", "is-success");
+            this.setNotification(
+                ".دعوتنامه جلسه با موفقیت ذخیره شد",
+                "is-success"
+            );
         },
 
         /**
@@ -163,7 +170,10 @@ module.exports = {
             this.$refs.inviteSessionList.editInInviteSessionList(payload.data);
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
 
-            this.setNotification(".دعوتنامه جلسه با موفقیت ویرایش شد", "is-success");
+            this.setNotification(
+                ".دعوتنامه جلسه با موفقیت ویرایش شد",
+                "is-success"
+            );
         },
 
         /**

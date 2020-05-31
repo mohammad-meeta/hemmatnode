@@ -7,7 +7,7 @@
             h1 در حال بارگذاری
         .form-small(v-show="! isLoadingMode")
             .field
-                label.label گروه
+                label.label
                 .control
                     .select.is-primary
                         select(v-model="inviteSessionData.departments")

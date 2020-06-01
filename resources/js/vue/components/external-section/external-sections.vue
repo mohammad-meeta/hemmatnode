@@ -7,7 +7,7 @@
 
             .container.page-header
                 .title
-                    h1 مشارکت مردمی
+                    h1 همکاری برون بخشی
             .container.main-content
                 .intro-cards.columns
                     .column.is-4(v-for='departmentCategory in departmentCategories',
@@ -31,7 +31,7 @@ const Loading = require("VUE-COMPONENTS/general/loading.vue").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
 module.exports = {
-    name: "PeopleParticipation",
+    name: "ExternalSection",
 
     components: {
         Loading,

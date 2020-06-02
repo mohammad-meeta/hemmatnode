@@ -10,40 +10,38 @@
                 label.label
                 .control
                     .select.is-primary
-                        select(v-model="inviteSessionData.departments")
+                        select(v-model="memorandumData.departments")
                             option(v-for='(department, departmentIndex) in departments',
                                 :value="department._id") {{ department.title }}
             .field
-                multi-text(v-model='inviteSessionData.agenda')
-            .field
-                label.label مکان
+                label.label عنوان
                 .control
-                    input.input(type='text', placeholder='مکان', v-model='inviteSessionData.place' required)
+                    input.input(type='text', placeholder='عنوان', v-model='memorandumData.title' required)
 
             .field
                 label.label تاریخ
                 .control
-                    date-picker(v-model='inviteSessionData.date' format="YYYY-MM-DD HH:mm:ss"
-                    display-format=" jDD/jMM/jYYYY HH:mm" type="datetime" required)
+                    date-picker(v-model='memorandumData.date' format="YYYY-MM-DD HH:mm:ss"
+                    display-format="jYYYY" type="datetime" required)
 
             .field
-                label.label حاضرین جلسه
-                .multi-checkboxes
-                    label.checkbox.column.is-12(v-for='(user, userIndex) in users')
-                        input(type='checkbox', v-model="inviteSessionData.user_list[user._id]", :value="user._id")
-                        |   {{ user.name }} - {{ user.profile.first_name }} {{ user.profile.last_name }}
+                label.label مقدمه و اهداف تفاهم نامه
+                .control
+                    textarea.textarea(placeholder='مقدمه', v-model='memorandumData.body')
+
+            .field
+                label.label شرایط اجرای تفاهم نامه
+                .control
+                    textarea.textarea(placeholder='شرایط اجرای تفاهم نامه', v-model='memorandumData.conditions')
 
             .field
                 label.checkbox
                     input(type='file', @change="setAttachment")
                     |   ضمیمه
-            .field
-                label.label توضیحات
-                .control
-                    textarea.textarea(placeholder='توضیحات', v-model='inviteSessionData.body')
+
             .field
                 label.checkbox
-                    input(type='checkbox', v-model="inviteSessionData.isActive")
+                    input(type='checkbox', v-model="memorandumData.isActive")
                     |   فعال
 
             .field.is-grouped
@@ -58,13 +56,13 @@
 
 const AxiosHelper = require("JS-HELPERS/axios-helper");
 const ENUMS = require("JS-HELPERS/enums");
-const InviteSessionValidator = require("JS-VALIDATORS/invite-session-register-validator");
+const MemorandumValidator = require("JS-VALIDATORS/memorandum-register-validator");
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
 const MultiText = require("VUE-COMPONENTS/general/multi-text.vue").default;
 
 module.exports = {
-    name: "RegisterInviteSession",
+    name: "RegisterMemorandum",
 
     components: {
         Notification,
@@ -76,10 +74,10 @@ module.exports = {
         ENUMS,
         departments: [],
         users: [],
-        inviteSessionData: {
+        memorandumData: {
             title: null,
             body: null,
-            place: null,
+            conditions: null,
             date: null,
             department_id: null,
             files: {},
@@ -121,7 +119,7 @@ module.exports = {
     },
 
     mounted() {
-        Vue.set(this.inviteSessionData, 'departments', this.departmentId);
+        Vue.set(this.memorandumData, 'departments', this.departmentId);
     },
 
     computed: {
@@ -147,7 +145,7 @@ module.exports = {
         commandClick(arg) {
             switch (arg) {
                 case ENUMS.COMMAND.SAVE:
-                    this.registerInviteSession();
+                    this.registerMemorandum();
                     break;
             }
         },
@@ -208,37 +206,31 @@ module.exports = {
         },
 
         /**
-         * Register new invite session
+         * Register new memorandum
          */
-        registerInviteSession() {
+        registerMemorandum() {
             const isValid = this.validate();
 
             if (!isValid) {
                 return;
             }
-            let inviteSessionData = {
-                body: this.inviteSessionData.body,
-                agenda: JSON.stringify(this.inviteSessionData.agenda),
-                place: this.inviteSessionData.place,
-                date: this.inviteSessionData.date,
-                department_id: this.inviteSessionData
+            let memorandumData = {
+                title: this.memorandumData.title,
+                body: this.memorandumData.body,
+                body: this.memorandumData.conditions,
+                date: this.memorandumData.date,
+                department_id: this.memorandumData
                     .departments,
-                user_list: this.inviteSessionData.user_list,
-                is_active: this.inviteSessionData.isActive
+                is_active: this.memorandumData.isActive
             };
 
-            inviteSessionData.files = this.files[0];
-            let t = Object.keys(inviteSessionData.user_list)
-            .filter(key => true == inviteSessionData.user_list[key])
-            .map(key => key);
+            memorandumData.files = this.files[0];
 
-            inviteSessionData.user_list = t;
-            console.log(inviteSessionData);
             this.showLoading();
 
             const url = this.registerUrl;
 
-            AxiosHelper.send("post", url, inviteSessionData, {
+            AxiosHelper.send("post", url, memorandumData, {
                 sendAsFormData: true
             })
                 .then(res => {
@@ -258,10 +250,10 @@ module.exports = {
         },
 
         /**
-         * Validate new invite session data
+         * Validate new memorandum data
          */
         validate() {
-            const result = InviteSessionValidator.validate(this.inviteSessionData);
+            const result = MemorandumValidator.validate(this.memorandumData);
 
             if (result.passes) {
                 this.closeNotification();

@@ -105,4 +105,7 @@ PugView.viewPath = {
 
     /* Invite */
     'invitesession.index': 'pages/invite-session/index.pug',
+
+    /* memorandum */
+    'memorandum.index': 'pages/memorandum/index.pug',
 };

@@ -1,0 +1,19 @@
+extends ../../layout/app.pug
+
+block title
+    | تفاهم نامه ها
+
+block content
+    .container
+        memorandums(list-url=route('api.memorandum', { page: '$page$', size: '$pageSize$', group: departmentId }),
+            departments-url=route('api.department', { page: 1, size: 1000 }),
+            register-url=route('memorandum.store', { department: departmentId }),
+            edit-url=route('memorandum.update', { id :'$id$'}),
+            users-url=route('api.user', { page: 1, size: 1000 }),
+            department-id=departmentId
+        )
+
+block scripts
+    script(defer, src=mix('js/pages/memorandum/index/index.js'))
+
+

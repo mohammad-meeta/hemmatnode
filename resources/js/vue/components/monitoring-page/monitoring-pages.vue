@@ -7,14 +7,16 @@
 
             .container.page-header
                 .title
-                    h1 رویدادها
+                    h1 دیده بانی سلامت
             .container.main-content
-                .info-card
-                    .info-card-title {{ title }}
-                    .info-card-details
-                        .info-card-item
-                            .info-card-value {{ description }}
-
+                .intro-cards.columns
+                    .column.is-4(v-for='eventCategory in eventCategories',
+                                 :key='eventCategory.id')
+                        .intro-card
+                            .intro-card-head
+                                h2 {{ eventCategory.title }}
+                            .panel-block.is-active(v-for='doc in eventCategory.event', :key='doc._id')
+                                a(:href="doc.file") {{ doc.title }}
 
 
 </template>
@@ -29,7 +31,7 @@ const Loading = require("VUE-COMPONENTS/general/loading.vue").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
 module.exports = {
-    name: "EventList",
+    name: "MonitoringPage",
 
     components: {
         Loading,
@@ -39,11 +41,40 @@ module.exports = {
     data: () => ({
         ENUMS,
         formModeStack: [],
-        title: "انعقاد تفاهم نامه های سال 1398 با دستگاههای اجرایی استان",
-        description: "تفاهم نامه پروژه های سلامت محور سال 1398 با دستگاههای اجرایی منعقد می گردد",
+        eventCategories: [
+            {
+                id: 1,
+                title: "داشبورد سلامت استان",
+                event: [
+                    {
+                    id: 1,
+                    title: "داشبورد سلامت استان قزوین سال 97",
+                    file: "/images/storage/dashboard-salamat98.pdf"
+                    }
+                ]
+            },
+            {
+                id: 2,
+                title: "دیده بانی سلامت",
+                event: [
+                    {
+                        id: 2,
+                        title: "شاخص های دیده بانی سلامت دانشگاه علوم پزشکی قزوین سال 98",
+                        file: "/images/storage/Dideban98.xlsx"
+                    }
+                ]
+            }
+        ],
         notificationMessage: null,
         notificationType: "is-info"
     }),
+
+    props: {
+        title: {
+            type: String,
+            default: null
+        }
+    },
 
     computed: {
         formMode: state => state.formModeStack[state.formModeStack.length - 1],

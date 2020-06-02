@@ -33,3 +33,21 @@ Router.get('/external-section', [
         'Home@ExternalSection'
     ])
     .as('home.externalsection');
+
+Router.get('/document-list', [
+        checkSession,
+        'Home@DocumentList'
+    ])
+    .as('home.documentlist');
+
+Router.get('/event-list', [
+        checkSession,
+        'Home@EventList'
+    ])
+    .as('home.eventlist');
+
+Router.get('/monitoring-page', [
+        checkSession,
+        'Home@MonitoringPage'
+    ])
+    .as('home.monitoringpage');

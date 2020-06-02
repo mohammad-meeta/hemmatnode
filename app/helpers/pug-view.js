@@ -111,4 +111,7 @@ PugView.viewPath = {
 
     /* memorandum */
     'memorandum.index': 'pages/memorandum/index.pug',
+    'memorandum.create': 'pages/memorandum/register.pug',
+    'memorandum.show': 'pages/memorandum/show.pug',
+    'memorandum.edit': 'pages/memorandum/edit.pug',
 };

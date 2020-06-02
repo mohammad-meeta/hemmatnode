@@ -67,3 +67,37 @@ HomeController.PeopleParticipation = async function PeopleParticipation(req, res
         pageRoute
     });
 };
+
+/**
+ * People document route
+ */
+HomeController.DocumentList = async function DocumentList(req, res, next) {
+    const pageRoute = PugView.getView('home.documentlist');
+
+    res.render(pageRoute, {
+        req,
+        pageRoute
+    });
+};
+/**
+ * People event route
+ */
+HomeController.EventList = async function EventList(req, res, next) {
+    const pageRoute = PugView.getView('home.eventlist');
+
+    res.render(pageRoute, {
+        req,
+        pageRoute
+    });
+};
+/**
+ * People MonitoringPage route
+ */
+HomeController.MonitoringPage = async function MonitoringPage(req, res, next) {
+    const pageRoute = PugView.getView('home.monitoringpage');
+
+    res.render(pageRoute, {
+        req,
+        pageRoute
+    });
+};

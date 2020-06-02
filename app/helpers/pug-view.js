@@ -21,6 +21,9 @@ PugView.viewPath = {
     'home.internalsection': 'pages/home/internalsection.pug',
     'home.externalsection': 'pages/home/externalsection.pug',
     'home.peopleparticipation': 'pages/home/peopleparticipation.pug',
+    'home.documentlist': 'pages/home/documentlist.pug',
+    'home.home.eventlist': 'pages/home/eventlist.pug',
+    'home.home.monitoringpage': 'pages/home/monitoringpage.pug',
 
     /* Auth */
     'auth.login': 'pages/auth/login.pug',

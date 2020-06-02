@@ -10,12 +10,12 @@
                     h1 اسناد راهبردی
             .container.main-content
                 .intro-cards.columns
-                    .column.is-4(v-for='documentCategory in documentCategories',
-                                 :key='documentCategory.id')
+                    .column.is-4(v-for='eventCategory in eventCategories',
+                                 :key='eventCategory.id')
                         .intro-card
                             .intro-card-head
-                                h2 {{ documentCategory.title }}
-                            .panel-block.is-active(v-for='doc in documentCategory.document', :key='doc._id')
+                                h2 {{ eventCategory.title }}
+                            .panel-block.is-active(v-for='doc in eventCategory.event', :key='doc._id')
                                 a(:href="doc.file") {{ doc.title }}
 
 
@@ -31,7 +31,7 @@ const Loading = require("VUE-COMPONENTS/general/loading.vue").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
 module.exports = {
-    name: "DocumentList",
+    name: "EventList",
 
     components: {
         Loading,
@@ -41,11 +41,11 @@ module.exports = {
     data: () => ({
         ENUMS,
         formModeStack: [],
-        documentCategories: [
+        eventCategories: [
             {
                 id: 1,
                 title: "اسناد مربوط به کارگروه سلامت و امنیت غذایی",
-                document: [
+                event: [
                     {
                     id: 1,
                     title: "اولین صورتجلسه کارگروه سلامت و امنیت غذایی استان",
@@ -61,7 +61,7 @@ module.exports = {
             {
                 id: 2,
                 title: "شیوه نامه های کارگروه سلامت و امنیت غذایی",
-                document: [
+                event: [
                     {
                         id: 2,
                         title: "شیوه نامه تشکیل شورای پیام گزاران دستگاههای اجرایی",

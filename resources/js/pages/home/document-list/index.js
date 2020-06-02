@@ -18,7 +18,7 @@ DocumentListIndexPage.boot = function () {
  * Init vue
  */
 DocumentListIndexPage.initVue = function () {
-    const DocumentLists = require('VUE-COMPONENTS/internal-section/internal-sections.vue').default;
+    const DocumentLists = require('VUE-COMPONENTS/document-list/document-lists.vue').default;
 
     window.v =
         new Vue({

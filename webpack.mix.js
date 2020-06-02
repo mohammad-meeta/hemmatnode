@@ -78,7 +78,11 @@ mix.js('resources/js/core/kernel.js', `${output}/js/core`)
     .js('resources/js/pages/task/index/index.js', `${output}/js/pages/task/index`)
 
     .js('resources/js/pages/auth/login/index.js', `${output}/js/pages/auth/login`)
-    .js('resources/js/pages/user/index/index.js', `${output}/js/pages/user/index`);
+    .js('resources/js/pages/user/index/index.js', `${output}/js/pages/user/index`)
+    .js('resources/js/pages/home/event-list/index.js', `${output}/js/pages/home/event-list`)
+    .js('resources/js/pages/home/monitoring-page/index.js', `${output}/js/pages/home/monitoring-page`)
+    .js('resources/js/pages/home/document-list/index.js', `${output}/js/pages/home/document-list`);
+
 
 /* SASS */
 mix.sass('resources/sass/core/kernel.scss', `${output}/css/core`)

@@ -1,31 +1,31 @@
 'use strict';
 
 /**
- * DocumentIndexPage class
+ * InternalSectionIndexPage class
  */
-const DocumentIndexPage = function () {}
-module.exports = DocumentIndexPage;
+const InternalSectionIndexPage = function () {}
+module.exports = InternalSectionIndexPage;
 
 
 /**
  * Boot method
  */
-DocumentIndexPage.boot = function () {
-    DocumentIndexPage.initVue();
+InternalSectionIndexPage.boot = function () {
+    InternalSectionIndexPage.initVue();
 }
 
 /**
  * Init vue
  */
-DocumentIndexPage.initVue = function () {
-    const Documents = require('VUE-COMPONENTS/internal-section/internal-sections.vue').default;
+InternalSectionIndexPage.initVue = function () {
+    const InternalSections = require('VUE-COMPONENTS/internal-section/internal-sections.vue').default;
 
     window.v =
         new Vue({
             el: '#app',
 
             components: {
-                Documents
+                InternalSections
             },
 
             data: {},
@@ -36,15 +36,15 @@ DocumentIndexPage.initVue = function () {
 
             methods: {
                 init() {
-                    this.loadDocuments();
+                    this.loadInternalSections();
                 },
 
-                loadDocuments() {
-                    //this.$refs.DocumentCategories.loadDocuments();
+                loadInternalSections() {
+                    //this.$refs.InternalSectionCategories.loadInternalSections();
                 }
             }
         });
 }
 
 /* Boot */
-DocumentIndexPage.boot();
+InternalSectionIndexPage.boot();

@@ -30,6 +30,9 @@
                     textarea.textarea(placeholder='مقدمه', v-model='memorandumData.body')
 
             .field
+                multi-text-project(v-model='memorandumData.project')
+
+            .field
                 label.label شرایط اجرای تفاهم نامه
                 .control
                     textarea.textarea(placeholder='شرایط اجرای تفاهم نامه', v-model='memorandumData.conditions')
@@ -59,7 +62,7 @@ const ENUMS = require("JS-HELPERS/enums");
 const MemorandumValidator = require("JS-VALIDATORS/memorandum-register-validator");
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
-const MultiText = require("VUE-COMPONENTS/general/multi-text.vue").default;
+const MultiTextProject = require("VUE-COMPONENTS/memorandum/multi-text-project.vue").default;
 
 module.exports = {
     name: "RegisterMemorandum",
@@ -67,7 +70,7 @@ module.exports = {
     components: {
         Notification,
         DatePicker: VuePersianDatetimePicker,
-        MultiText
+        MultiTextProject
     },
 
     data: () => ({
@@ -77,6 +80,9 @@ module.exports = {
         memorandumData: {
             title: null,
             body: null,
+            project: [{title: 'تلاوت قرآن و معنی', duration: '5', provider: 'عضو هیات رئیسه'},
+                {title: 'گزارش کشیک نوروزی سال 1398', duration: '20', provider: 'عضو هیات رئیسه'}],
+
             conditions: null,
             date: null,
             department_id: null,
@@ -210,26 +216,26 @@ module.exports = {
          */
         registerMemorandum() {
             const isValid = this.validate();
-
             if (!isValid) {
                 return;
             }
             let memorandumData = {
                 title: this.memorandumData.title,
+                project: JSON.stringify(this.memorandumData.project),
                 body: this.memorandumData.body,
-                body: this.memorandumData.conditions,
+                conditions: this.memorandumData.conditions,
                 date: this.memorandumData.date,
                 department_id: this.memorandumData
                     .departments,
                 is_active: this.memorandumData.isActive
             };
-
+            console.log(memorandumData);
             memorandumData.files = this.files[0];
 
             this.showLoading();
 
             const url = this.registerUrl;
-
+            console.log(url);
             AxiosHelper.send("post", url, memorandumData, {
                 sendAsFormData: true
             })

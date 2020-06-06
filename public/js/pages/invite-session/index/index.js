@@ -748,6 +748,15 @@ module.exports = {
       inviteSessionData: {
         title: null,
         body: null,
+        agenda: [{
+          title: 'تلاوت قرآن و معنی',
+          duration: '5',
+          provider: 'عضو هیات رئیسه'
+        }, {
+          title: 'گزارش کشیک نوروزی سال 1398',
+          duration: '20',
+          provider: 'عضو هیات رئیسه'
+        }],
         place: null,
         date: null,
         department_id: null,

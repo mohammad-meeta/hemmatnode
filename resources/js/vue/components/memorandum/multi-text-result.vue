@@ -8,7 +8,7 @@
                         .control
                             input.input(type='text', v-model='item.title', @input='updateValue')
                 .column.is-2
-                    a.button.is-danger(href='#', @click='deleteValue(index)')
+                    a.button.is-danger(href='#', @click.prevent='deleteValue(index)')
                         i.fa.fa-times
         a.button.is-success(href='#', @click.prevent='addValue')
             i.fa.fa-plus

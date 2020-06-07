@@ -86,225 +86,6 @@
 /************************************************************************/
 /******/ ({
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/vue/components/department/department-regulation.vue?vue&type=script&lang=js&":
-/*!***********************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/vue/components/department/department-regulation.vue?vue&type=script&lang=js& ***!
-  \***********************************************************************************************************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-var AxiosHelper = __webpack_require__(/*! JS-HELPERS/axios-helper */ "./resources/js/helpers/axios-helper.js");
-
-var ENUMS = __webpack_require__(/*! JS-HELPERS/enums */ "./resources/js/helpers/enums.js");
-
-var DepartmentRegulationValidator = __webpack_require__(/*! JS-VALIDATORS/department-regulation-register-validator */ "./resources/js/validators/department-regulation-register-validator.js");
-
-module.exports = {
-  name: "DepartmentRegulation",
-  components: {
-    Notification: Notification
-  },
-  data: function data() {
-    return {
-      ENUMS: ENUMS,
-      departmentRegulationData: {
-        title: null,
-        description: null,
-        department_id: null,
-        files: {},
-        isActive: false
-      },
-      hasNewRegulation: false,
-      notificationMessage: null,
-      notificationType: "is-info",
-      showLoadingFlag: false,
-      files: [],
-      departmentId: ""
-    };
-  },
-  props: {
-    departmentRegulationUrl: {
-      type: String,
-      "default": ""
-    }
-  },
-  created: function created() {},
-  computed: {
-    isLoadingMode: function isLoadingMode(state) {
-      return state.showLoadingFlag == true;
-    },
-    showNotification: function showNotification(state) {
-      return state.notificationMessage != null;
-    }
-  },
-  methods: {
-    /**
-     * Set attachments
-     */
-    setAttachment: function setAttachment(sender) {
-      var files = sender.target.files;
-      Vue.set(this, "files", files);
-    },
-
-    /**
-     * On Command
-     *
-     * @param      {Object}  arg     The argument
-     */
-    commandClick: function commandClick(arg) {
-      switch (arg) {
-        case ENUMS.COMMAND.SAVE:
-          this.DepartmentRegulation();
-          break;
-      }
-    },
-
-    /**
-     * Show Loading
-     */
-    showLoading: function showLoading() {
-      Vue.set(this, "showLoadingFlag", true);
-    },
-
-    /**
-     * HideLoading
-     */
-    hideLoading: function hideLoading() {
-      Vue.set(this, "showLoadingFlag", false);
-    },
-
-    /**
-     * Set notification
-     */
-    setNotification: function setNotification(message) {
-      var notificationType = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "is-info";
-      Vue.set(this, "notificationType", notificationType);
-      Vue.set(this, "notificationMessage", message);
-    },
-
-    /**
-     * Close Notification
-     */
-    closeNotification: function closeNotification() {
-      this.setNotification(null);
-    },
-
-    /**
-     * Register new department regulation
-     */
-    DepartmentRegulation: function DepartmentRegulation() {
-      var _this = this;
-
-      var isValid = this.validate();
-      console.log("before isvalid");
-
-      if (!isValid) {
-        return;
-      }
-
-      console.log("isvalid");
-      var departmentRegulationData = {
-        title: this.departmentRegulationData.title,
-        description: this.departmentRegulationData.description,
-        department_id: this.departmentId,
-        is_active: this.departmentRegulationData.isActive
-      };
-      departmentRegulationData.files = this.files[0];
-      this.showLoading();
-      console.log(departmentRegulationData);
-      var url = this.departmentRegulationUrl;
-      console.log(url);
-      console.log(this.departmentId);
-
-      if (this.departmentId != "") {
-        AxiosHelper.send("post", url, departmentRegulationData, {
-          sendAsFormData: true
-        }).then(function (res) {
-          var data = res.data;
-
-          _this.$emit("on-register", {
-            sender: _this,
-            data: data
-          });
-        })["catch"](function (err) {
-          var data = err.response.data;
-
-          _this.setNotification(data, "is-danger");
-        }).then(function () {
-          return _this.hideLoading();
-        });
-      }
-    },
-
-    /**
-     * for save regulation set _id from register department
-     */
-    setDepartmentId: function setDepartmentId(data) {
-      console.log("setdepartmentid");
-      console.log(data);
-      Vue.set(this, "departmentId", data);
-    },
-
-    /**
-     * Validate new department data
-     */
-    validate: function validate() {
-      var result = DepartmentRegulationValidator.validate(this.departmentRegulationData);
-
-      if (result.passes) {
-        this.closeNotification();
-        return true;
-      }
-
-      var errors = result.validator.errors.all();
-      var error = Object.keys(errors).map(function (key) {
-        return errors[key].join("\n");
-      }).join("</br>");
-      console.log(error);
-      this.setNotification(error, "is-danger");
-      return false;
-    }
-  }
-};
-
-/***/ }),
-
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/vue/components/department/departments.vue?vue&type=script&lang=js&":
 /*!*************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/vue/components/department/departments.vue?vue&type=script&lang=js& ***!
@@ -313,7 +94,6 @@ module.exports = {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-//
 //
 //
 //
@@ -396,8 +176,7 @@ module.exports = {
       formModeStack: [],
       departments: [],
       notificationMessage: null,
-      notificationType: "is-info",
-      hasNewRegulation: false
+      notificationType: "is-info"
     };
   },
   props: {
@@ -418,10 +197,6 @@ module.exports = {
       "default": null
     },
     editUrl: {
-      type: String,
-      "default": null
-    },
-    departmentRegulationUrl: {
       type: String,
       "default": null
     },
@@ -467,17 +242,7 @@ module.exports = {
     onDepartmentRegister: function onDepartmentRegister(payload) {
       //***update vue list****
       this.$refs.departmentList.addToDepartmentList(payload.data.data);
-      this.newRegulation(payload);
       this.setNotification(".گروه با موفقیت ذخیره شد", "is-success");
-    },
-
-    /**
-     * Add a new rgulation form after department save
-     */
-    newRegulation: function newRegulation(payload) {
-      this.$refs.departmentRegister.hasNewRegulation = true; // console.log(this.$refs.departmentRegister.hasNewRegulation);
-
-      this.$refs.departmentRegister.hasNewRegulationFunc(payload); // Vue.set(this, "hasNewRegulation", true);
     },
 
     /**
@@ -798,13 +563,10 @@ var DepartmentValidator = __webpack_require__(/*! JS-VALIDATORS/department-regis
 
 var Notification = __webpack_require__(/*! VUE-COMPONENTS/general/notification.vue */ "./resources/js/vue/components/general/notification.vue")["default"];
 
-var DepartmentRegulation = __webpack_require__(/*! VUE-COMPONENTS/department/department-regulation.vue */ "./resources/js/vue/components/department/department-regulation.vue")["default"];
-
 module.exports = {
   name: "RegisterDepartment",
   components: {
-    Notification: Notification,
-    DepartmentRegulation: DepartmentRegulation
+    Notification: Notification
   },
   data: function data() {
     return {
@@ -7857,236 +7619,6 @@ module.exports = Validator;
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/pug-plain-loader/index.js!./node_modules/vue-loader/lib/index.js?!./resources/js/vue/components/department/department-regulation.vue?vue&type=template&id=dc07826c&scoped=true&lang=pug&":
-/*!********************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/vue/components/department/department-regulation.vue?vue&type=template&id=dc07826c&scoped=true&lang=pug& ***!
-  \********************************************************************************************************************************************************************************************************************************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "container-child" },
-    [
-      _vm.showNotification
-        ? _c(
-            "notification",
-            {
-              attrs: { "notification-type": _vm.notificationType },
-              on: { "on-close": _vm.closeNotification }
-            },
-            [
-              _c("span", {
-                domProps: { innerHTML: _vm._s(_vm.notificationMessage) }
-              })
-            ]
-          )
-        : _vm._e(),
-      _c(
-        "div",
-        {
-          directives: [
-            {
-              name: "show",
-              rawName: "v-show",
-              value: _vm.isLoadingMode,
-              expression: "isLoadingMode"
-            }
-          ],
-          staticClass: "column is-full"
-        },
-        [_c("h1", [_vm._v("در حال بارگذاری")])]
-      ),
-      _c(
-        "div",
-        {
-          directives: [
-            {
-              name: "show",
-              rawName: "v-show",
-              value: !_vm.isLoadingMode,
-              expression: "! isLoadingMode"
-            }
-          ],
-          staticClass: "form-small"
-        },
-        [
-          _c("div", { staticClass: "field" }, [
-            _c("label", { staticClass: "label" }, [_vm._v("عنوان")]),
-            _c("div", { staticClass: "control" }, [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.departmentRegulationData.title,
-                    expression: "departmentRegulationData.title"
-                  }
-                ],
-                staticClass: "input",
-                attrs: {
-                  type: "text",
-                  placeholder: "عنوان",
-                  autofocus: "",
-                  required: ""
-                },
-                domProps: { value: _vm.departmentRegulationData.title },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(
-                      _vm.departmentRegulationData,
-                      "title",
-                      $event.target.value
-                    )
-                  }
-                }
-              })
-            ])
-          ]),
-          _c("div", { staticClass: "field" }, [
-            _c("label", { staticClass: "label" }, [_vm._v("توضیحات")]),
-            _c("div", { staticClass: "control" }, [
-              _c("textarea", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.departmentRegulationData.description,
-                    expression: "departmentRegulationData.description"
-                  }
-                ],
-                staticClass: "textarea",
-                attrs: { placeholder: "معرفی" },
-                domProps: { value: _vm.departmentRegulationData.description },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(
-                      _vm.departmentRegulationData,
-                      "description",
-                      $event.target.value
-                    )
-                  }
-                }
-              })
-            ])
-          ]),
-          _c("div", { staticClass: "field" }, [
-            _c("label", { staticClass: "checkbox" }, [
-              _c("input", {
-                attrs: { type: "file" },
-                on: { change: _vm.setAttachment }
-              }),
-              _vm._v("  ضمیمه")
-            ])
-          ]),
-          _c("div", { staticClass: "field" }, [
-            _c("label", { staticClass: "checkbox" }, [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.departmentRegulationData.isActive,
-                    expression: "departmentRegulationData.isActive"
-                  }
-                ],
-                attrs: { type: "checkbox" },
-                domProps: {
-                  checked: Array.isArray(_vm.departmentRegulationData.isActive)
-                    ? _vm._i(_vm.departmentRegulationData.isActive, null) > -1
-                    : _vm.departmentRegulationData.isActive
-                },
-                on: {
-                  change: function($event) {
-                    var $$a = _vm.departmentRegulationData.isActive,
-                      $$el = $event.target,
-                      $$c = $$el.checked ? true : false
-                    if (Array.isArray($$a)) {
-                      var $$v = null,
-                        $$i = _vm._i($$a, $$v)
-                      if ($$el.checked) {
-                        $$i < 0 &&
-                          _vm.$set(
-                            _vm.departmentRegulationData,
-                            "isActive",
-                            $$a.concat([$$v])
-                          )
-                      } else {
-                        $$i > -1 &&
-                          _vm.$set(
-                            _vm.departmentRegulationData,
-                            "isActive",
-                            $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                          )
-                      }
-                    } else {
-                      _vm.$set(_vm.departmentRegulationData, "isActive", $$c)
-                    }
-                  }
-                }
-              }),
-              _vm._v("  فعال")
-            ])
-          ]),
-          _c("div", { staticClass: "field is-grouped" }, [
-            _c(
-              "div",
-              {
-                directives: [
-                  {
-                    name: "show",
-                    rawName: "v-show",
-                    value: !_vm.isLoadingMode,
-                    expression: "! isLoadingMode"
-                  }
-                ],
-                staticClass: "control"
-              },
-              [
-                _c(
-                  "a",
-                  {
-                    staticClass: "button is-link is-rounded",
-                    attrs: { href: "#" },
-                    on: {
-                      click: function($event) {
-                        $event.preventDefault()
-                        return _vm.commandClick(_vm.ENUMS.COMMAND.SAVE)
-                      }
-                    }
-                  },
-                  [_vm._v("  ایجاد")]
-                )
-              ]
-            )
-          ])
-        ]
-      )
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-
-
-
-/***/ }),
-
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/pug-plain-loader/index.js!./node_modules/vue-loader/lib/index.js?!./resources/js/vue/components/department/departments.vue?vue&type=template&id=863d2134&lang=pug&":
 /*!**********************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/vue/components/department/departments.vue?vue&type=template&id=863d2134&lang=pug& ***!
@@ -8290,8 +7822,7 @@ var render = function() {
             ref: "departmentRegister",
             attrs: {
               "register-url": _vm.registerUrl,
-              "department-categories-url": _vm.departmentCategoriesUrl,
-              "department-regulation-url": _vm.departmentRegulationUrl
+              "department-categories-url": _vm.departmentCategoriesUrl
             },
             on: {
               "on-command": _vm.onCommand,
@@ -8770,21 +8301,8 @@ var render = function() {
                 )
               ]
             )
-          ]),
-          _c("department-regulation", {
-            directives: [
-              {
-                name: "show",
-                rawName: "v-show",
-                value: _vm.hasNewRegulation,
-                expression: "hasNewRegulation"
-              }
-            ],
-            ref: "departmentRegulation",
-            attrs: { "department-regulation-url": _vm.departmentRegulationUrl }
-          })
-        ],
-        1
+          ])
+        ]
       )
     ],
     1
@@ -9580,62 +9098,6 @@ DepartmentValidator.validateEdit = function validateEdit(data) {
 
 /***/ }),
 
-/***/ "./resources/js/validators/department-regulation-register-validator.js":
-/*!*****************************************************************************!*\
-  !*** ./resources/js/validators/department-regulation-register-validator.js ***!
-  \*****************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-/**
- * Department Regulation Register Validator
- */
-
-function DepartmentRegulationValidator() {}
-
-module.exports = DepartmentRegulationValidator;
-/**
- * Validation funciton
- */
-
-DepartmentRegulationValidator.validate = function validate(data) {
-  var BaseValidator = __webpack_require__(/*! JS-VALIDATORS/base-validator */ "./resources/js/validators/base-validator.js");
-
-  var rules = {
-    title: 'required|min:3|max:255'
-  };
-  var options = {
-    lang: "fa",
-    attributes: {
-      title: 'عنوان'
-    }
-  };
-  return BaseValidator.validate(data, rules, options);
-};
-/**
- * Validation edit funciton
- */
-
-
-DepartmentRegulationValidator.validateEdit = function validateEdit(data) {
-  var BaseValidator = __webpack_require__(/*! JS-VALIDATORS/base-validator */ "./resources/js/validators/base-validator.js");
-
-  var rules = {
-    title: 'required|min:3|max:255'
-  };
-  var options = {
-    lang: "fa",
-    attributes: {
-      title: 'عنوان'
-    }
-  };
-  return BaseValidator.validate(data, rules, options);
-};
-
-/***/ }),
-
 /***/ "./resources/js/validators/rules/custom-rules.js":
 /*!*******************************************************!*\
   !*** ./resources/js/validators/rules/custom-rules.js ***!
@@ -9654,78 +9116,6 @@ Validator.register('cellphone', function (value, requirement, attribute) {
 Validator.register('nationCode', function (value, requirement, attribute) {
   return ('' + value).toString().match(/^\d{10}/);
 }, 'کد ملی را 10 رقم و به صورت دقیق وارد نمایید.');
-
-/***/ }),
-
-/***/ "./resources/js/vue/components/department/department-regulation.vue":
-/*!**************************************************************************!*\
-  !*** ./resources/js/vue/components/department/department-regulation.vue ***!
-  \**************************************************************************/
-/*! no static exports found */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _department_regulation_vue_vue_type_template_id_dc07826c_scoped_true_lang_pug___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./department-regulation.vue?vue&type=template&id=dc07826c&scoped=true&lang=pug& */ "./resources/js/vue/components/department/department-regulation.vue?vue&type=template&id=dc07826c&scoped=true&lang=pug&");
-/* harmony import */ var _department_regulation_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./department-regulation.vue?vue&type=script&lang=js& */ "./resources/js/vue/components/department/department-regulation.vue?vue&type=script&lang=js&");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _department_regulation_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _department_regulation_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
-
-
-
-
-
-/* normalize component */
-
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _department_regulation_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _department_regulation_vue_vue_type_template_id_dc07826c_scoped_true_lang_pug___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _department_regulation_vue_vue_type_template_id_dc07826c_scoped_true_lang_pug___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
-  false,
-  null,
-  "dc07826c",
-  null
-  
-)
-
-/* hot reload */
-if (false) { var api; }
-component.options.__file = "resources/js/vue/components/department/department-regulation.vue"
-/* harmony default export */ __webpack_exports__["default"] = (component.exports);
-
-/***/ }),
-
-/***/ "./resources/js/vue/components/department/department-regulation.vue?vue&type=script&lang=js&":
-/*!***************************************************************************************************!*\
-  !*** ./resources/js/vue/components/department/department-regulation.vue?vue&type=script&lang=js& ***!
-  \***************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_department_regulation_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./department-regulation.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/vue/components/department/department-regulation.vue?vue&type=script&lang=js&");
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_department_regulation_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_department_regulation_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_department_regulation_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_department_regulation_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
- /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_department_regulation_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0___default.a); 
-
-/***/ }),
-
-/***/ "./resources/js/vue/components/department/department-regulation.vue?vue&type=template&id=dc07826c&scoped=true&lang=pug&":
-/*!******************************************************************************************************************************!*\
-  !*** ./resources/js/vue/components/department/department-regulation.vue?vue&type=template&id=dc07826c&scoped=true&lang=pug& ***!
-  \******************************************************************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_pug_plain_loader_index_js_node_modules_vue_loader_lib_index_js_vue_loader_options_department_regulation_vue_vue_type_template_id_dc07826c_scoped_true_lang_pug___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/pug-plain-loader!../../../../../node_modules/vue-loader/lib??vue-loader-options!./department-regulation.vue?vue&type=template&id=dc07826c&scoped=true&lang=pug& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/pug-plain-loader/index.js!./node_modules/vue-loader/lib/index.js?!./resources/js/vue/components/department/department-regulation.vue?vue&type=template&id=dc07826c&scoped=true&lang=pug&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_pug_plain_loader_index_js_node_modules_vue_loader_lib_index_js_vue_loader_options_department_regulation_vue_vue_type_template_id_dc07826c_scoped_true_lang_pug___WEBPACK_IMPORTED_MODULE_0__["render"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_pug_plain_loader_index_js_node_modules_vue_loader_lib_index_js_vue_loader_options_department_regulation_vue_vue_type_template_id_dc07826c_scoped_true_lang_pug___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
-
-
 
 /***/ }),
 

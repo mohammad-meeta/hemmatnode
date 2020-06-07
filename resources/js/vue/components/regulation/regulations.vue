@@ -1,13 +1,15 @@
 <template lang="pug">
     .container-parent
         section.hero
-            notification(:notification-type="notificationType", @on-close="closeNotification", v-if="showNotification")
+            notification(:notification-type="notificationType",
+                        @on-close="closeNotification",
+                        v-if="showNotification")
                 span(v-html="notificationMessage")
             .container.page-header
                 .title
-                    h1(v-show="modeList") گروه
-                    h1(v-show="modeRegister") ایجاد گروه
-                    h1(v-show="modeEdit") ویرایش گروه
+                    h1(v-show="modeList") آیین نامه ها
+                    h1(v-show="modeRegister") ایجاد آیین نامه
+                    h1(v-show="modeEdit") ویرایش آیین نامه
 
         .columns.exposed-form(v-show="!modeLoading")
             .column.is-one-fifth(v-show="modeList")
@@ -29,22 +31,28 @@
                 loading
 
             .column(v-show="!modeLoading && modeList")
-                list-department(ref="departmentList", @on-command="onCommand", :list-url="listUrl")
+                list-regulation(ref="regulationList",
+                    @on-command="onCommand",
+                    :department-id="departmentId",
+                    :list-url="listUrl")
 
             .column(v-show="!modeLoading && modeRegister")
-                register-department(ref="departmentRegister", @on-command="onCommand",
-                  @on-register="onDepartmentRegister"
-                  :register-url="registerUrl",
-                  :department-categories-url="departmentCategoriesUrl")
+                register-regulation(ref="regulationRegister",
+                    :department-id="departmentId"
+                    @on-command="onCommand",
+                    @on-register="onRegulationRegister"
+                    :register-url="registerUrl",
+                    :departments-url="departmentsUrl",
+                    :users-url="usersUrl")
 
             //.column(v-show="!modeLoading && modeEdit")
                 edit-department(ref="departmentEdit", @on-command="onCommand",
-                @on-update="onDepartmentUpdate"
+                @on-update="onRegulationUpdate"
                 :edit-url="editUrl",
                 :departmentCategories-url="departmentCategoriesUrl")
 
             .column(v-show="!modeLoading && modeShow")
-                show-department(ref="departmentShow", @on-command="onCommand")
+                show-regulation(ref="regulationShow", @on-command="onCommand")
 </template>
 
 <script>
@@ -53,36 +61,41 @@
 const Routes = require("JS-CORE/routes");
 const ENUMS = require("JS-HELPERS/enums");
 const Loading = require("VUE-COMPONENTS/general/loading.vue").default;
-const RegisterDepartment = require("VUE-COMPONENTS/department/register-department.vue")
+const RegisterRegulation = require("VUE-COMPONENTS/regulation/register-regulation.vue")
     .default;
-const ListDepartment = require("VUE-COMPONENTS/department/list-department.vue")
+const ListRegulation = require("VUE-COMPONENTS/regulation/list-regulation.vue")
     .default;
-//const EditDepartment = require("VUE-COMPONENTS/department/edit-department.vue").default;
-const ShowDepartment = require("VUE-COMPONENTS/department/show-department.vue")
+//const EditRegulation = require("VUE-COMPONENTS/regulation/edit-regulation.vue").default;
+const ShowRegulation = require("VUE-COMPONENTS/regulation/show-regulation.vue")
     .default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
 module.exports = {
-    name: "Departments",
+    name: "Regulations",
 
     components: {
         Loading,
-        ListDepartment,
-        RegisterDepartment,
-        //EditDepartment,
-        ShowDepartment,
+        ListRegulation,
+        RegisterRegulation,
+        //EditRegulation,
+        ShowRegulation,
         Notification
     },
 
     data: () => ({
         ENUMS,
         formModeStack: [],
-        departments: [],
+        regulations: [],
         notificationMessage: null,
         notificationType: "is-info"
     }),
 
     props: {
+        departmentId: {
+            type: String,
+            default: null
+        },
+
         title: {
             type: String,
             default: null
@@ -98,7 +111,7 @@ module.exports = {
             default: null
         },
 
-        departmentCategoriesUrl: {
+        departmentsUrl: {
             type: String,
             default: null
         },
@@ -108,7 +121,7 @@ module.exports = {
             default: null
         },
 
-        loadUrl: {
+        usersUrl: {
             type: String,
             default: null
         }
@@ -131,27 +144,36 @@ module.exports = {
 
     mounted() {
         this.changeFormMode(ENUMS.FORM_MODE.LIST);
-        this.$refs.departmentList.loadDepartments(1);
+        this.$refs.regulationList.loadRegulations(1);
     },
 
     methods: {
         /**
-         * On Register department
+         * On Register regulation
          */
-        onDepartmentRegister(payload) {
+        onRegulationRegister(payload) {
             //***update vue list****
-            this.$refs.departmentList.addToDepartmentList(payload.data.data);
-            this.setNotification(".گروه با موفقیت ذخیره شد", "is-success");
+            this.$refs.regulationList.addToRegulationList(
+                payload.data.data
+            );
+            this.changeFormMode(ENUMS.FORM_MODE.LIST);
+            this.setNotification(
+                ".آیین نامه با موفقیت ذخیره شد",
+                "is-success"
+            );
         },
 
         /**
-         * On Update department
+         * On Update regulation
          */
-        onDepartmentUpdate(payload) {
-            this.$refs.departmentList.editInDepartmentList(payload.data);
+        onRegulationUpdate(payload) {
+            this.$refs.regulationList.editInRegulationList(payload.data);
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
 
-            this.setNotification(".گروه با موفقیت ویرایش شد", "is-success");
+            this.setNotification(
+                ".آیین نامه با موفقیت ویرایش شد",
+                "is-success"
+            );
         },
 
         /**
@@ -170,12 +192,12 @@ module.exports = {
 
                 case ENUMS.COMMAND.REGISTER:
                     /* TODO: REGISTER NEW  */
-                    console.log("REGISTER NEW Department", arg);
+                    console.log("REGISTER NEW Regulation", arg);
                     break;
 
                 case ENUMS.COMMAND.EDIT:
-                    /* TODO: REGISTER NEW Department */
-                    this.$refs.departmentEdit.loadDepartmentData(data);
+                    /* TODO: REGISTER NEW Regulation */
+                    this.$refs.regulationEdit.loadRegulationData(data);
                     this.changeFormMode(ENUMS.FORM_MODE.EDIT);
                     break;
 
@@ -184,8 +206,7 @@ module.exports = {
                     break;
 
                 case ENUMS.COMMAND.SHOW:
-                    this.$refs.departmentShow.loadUrl = this.loadUrl;
-                    this.$refs.departmentShow.loadDepartmentData(data._id);
+                    this.$refs.regulationShow.loadRegulationData(data);
                     this.changeFormMode(ENUMS.FORM_MODE.SHOW);
                     break;
             }

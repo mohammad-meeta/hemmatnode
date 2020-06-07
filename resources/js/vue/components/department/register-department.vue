@@ -38,7 +38,7 @@
                     a.button.is-link.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
                         |   ایجاد
 
-            department-regulation(ref="departmentRegulation",:department-regulation-url="departmentRegulationUrl", v-show="hasNewRegulation")
+
 </template>
 
 <script>
@@ -48,15 +48,12 @@ const AxiosHelper = require("JS-HELPERS/axios-helper");
 const ENUMS = require("JS-HELPERS/enums");
 const DepartmentValidator = require("JS-VALIDATORS/department-register-validator");
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
-const DepartmentRegulation = require("VUE-COMPONENTS/department/department-regulation.vue")
-    .default;
 
 module.exports = {
     name: "RegisterDepartment",
 
     components: {
-        Notification,
-        DepartmentRegulation
+        Notification
     },
 
     data: () => ({

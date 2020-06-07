@@ -628,7 +628,8 @@ module.exports = {
     return {
       values: {
         result: []
-      }
+      },
+      maxResultFlag: false
     };
   },
   props: {
@@ -636,6 +637,11 @@ module.exports = {
   },
   created: function created() {
     this.setValue();
+  },
+  computed: {
+    isMaxResult: function isMaxResult(state) {
+      return state.maxResultFlag == true;
+    }
   },
   methods: {
     setValue: function setValue() {
@@ -652,6 +658,18 @@ module.exports = {
     addValue: function addValue() {
       this.values.push({});
       this.$emit('input', this.values);
+      console.log(this.values.length);
+
+      if (this.values.length >= 4) {
+        this.maxResult();
+      }
+    },
+
+    /**
+     * max result
+     */
+    maxResult: function maxResult() {
+      Vue.set(this, "maxResultFlag", true);
     }
   }
 };
@@ -782,6 +800,7 @@ module.exports = {
 //
 //
 //
+//
 
 
 var AxiosHelper = __webpack_require__(/*! JS-HELPERS/axios-helper */ "./resources/js/helpers/axios-helper.js");
@@ -811,15 +830,7 @@ module.exports = {
       memorandumData: {
         title: null,
         body: null,
-        project: [{
-          title: 'تلاوت قرآن و معنی',
-          duration: '5',
-          provider: 'عضو هیات رئیسه'
-        }, {
-          title: 'گزارش کشیک نوروزی سال 1398',
-          duration: '20',
-          provider: 'عضو هیات رئیسه'
-        }],
+        project: [],
         conditions: null,
         date: null,
         department_id: null,
@@ -26252,6 +26263,7 @@ var render = function() {
                   attrs: { href: "#" },
                   on: {
                     click: function($event) {
+                      $event.preventDefault()
                       return _vm.deleteValue(index)
                     }
                   }
@@ -26283,6 +26295,14 @@ var render = function() {
       _c(
         "a",
         {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: !_vm.isMaxResult,
+              expression: "! isMaxResult"
+            }
+          ],
           staticClass: "button is-success",
           attrs: { href: "#" },
           on: {
@@ -26366,6 +26386,7 @@ var render = function() {
                   attrs: { href: "#" },
                   on: {
                     click: function($event) {
+                      $event.preventDefault()
                       return _vm.deleteValue(index)
                     }
                   }
@@ -26592,22 +26613,25 @@ var render = function() {
               })
             ])
           ]),
-          _c(
-            "div",
-            { staticClass: "field" },
-            [
-              _c("multi-text-project", {
-                model: {
-                  value: _vm.memorandumData.project,
-                  callback: function($$v) {
-                    _vm.$set(_vm.memorandumData, "project", $$v)
-                  },
-                  expression: "memorandumData.project"
-                }
-              })
-            ],
-            1
-          ),
+          _c("fieldset", [
+            _c("legend", [_vm._v("پروژه ها")]),
+            _c(
+              "div",
+              { staticClass: "field" },
+              [
+                _c("multi-text-project", {
+                  model: {
+                    value: _vm.memorandumData.project,
+                    callback: function($$v) {
+                      _vm.$set(_vm.memorandumData, "project", $$v)
+                    },
+                    expression: "memorandumData.project"
+                  }
+                })
+              ],
+              1
+            )
+          ]),
           _c("div", { staticClass: "field" }, [
             _c("label", { staticClass: "label" }, [
               _vm._v("شرایط اجرای تفاهم نامه")

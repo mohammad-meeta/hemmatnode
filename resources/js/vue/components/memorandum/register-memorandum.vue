@@ -28,9 +28,10 @@
                 label.label مقدمه و اهداف تفاهم نامه
                 .control
                     textarea.textarea(placeholder='مقدمه', v-model='memorandumData.body')
-
-            .field
-                multi-text-project(v-model='memorandumData.project')
+            fieldset
+                legend پروژه ها
+                .field
+                    multi-text-project(v-model='memorandumData.project')
 
             .field
                 label.label شرایط اجرای تفاهم نامه
@@ -80,9 +81,7 @@ module.exports = {
         memorandumData: {
             title: null,
             body: null,
-            project: [{title: 'تلاوت قرآن و معنی', duration: '5', provider: 'عضو هیات رئیسه'},
-                {title: 'گزارش کشیک نوروزی سال 1398', duration: '20', provider: 'عضو هیات رئیسه'}],
-
+            project: [],
             conditions: null,
             date: null,
             department_id: null,

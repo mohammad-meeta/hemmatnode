@@ -7,28 +7,34 @@
             h1 در حال بارگذاری
         .form-small(v-show="! isLoadingMode")
             .field
+                label.label
+                .control
+                    .select.is-primary
+                        select(v-model="regulationData.departments")
+                            option(v-for='(department, departmentIndex) in departments',
+                                :value="department._id") {{ department.title }}
+            .field
                 label.label عنوان
                 .control
-                    input.input(type='text', placeholder='عنوان', autofocus, v-model='departmentRegulationData.title' required)
+                    input.input(type='text', placeholder='عنوان', v-model='regulationData.title' required)
             .field
                 label.label توضیحات
                 .control
-                    textarea.textarea(placeholder='معرفی', v-model='departmentRegulationData.description')
-
+                    textarea.textarea(placeholder='توضیحات', v-model='regulationData.body')
             .field
                 label.checkbox
                     input(type='file', @change="setAttachment")
                     |   ضمیمه
-
             .field
                 label.checkbox
-                    input(type='checkbox', v-model="departmentRegulationData.isActive")
+                    input(type='checkbox', v-model="regulationData.isActive")
                     |   فعال
 
             .field.is-grouped
                 .control(v-show="! isLoadingMode")
                     a.button.is-link.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
                         |   ایجاد
+
 </template>
 
 <script>
@@ -36,40 +42,63 @@
 
 const AxiosHelper = require("JS-HELPERS/axios-helper");
 const ENUMS = require("JS-HELPERS/enums");
-const DepartmentRegulationValidator = require("JS-VALIDATORS/department-regulation-register-validator");
+const RegulationValidator = require("JS-VALIDATORS/regulation-register-validator");
+const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
 module.exports = {
-    name: "DepartmentRegulation",
+    name: "RegisterRegulation",
 
     components: {
         Notification
     },
+
     data: () => ({
         ENUMS,
-        departmentRegulationData: {
+        departments: [],
+        regulationData: {
             title: null,
-            description: null,
+            body: null,
             department_id: null,
             files: {},
             isActive: false
         },
 
-        hasNewRegulation: false,
         notificationMessage: null,
         notificationType: "is-info",
         showLoadingFlag: false,
         files: [],
-        departmentId: ""
     }),
 
     props: {
-        departmentRegulationUrl: {
+        departmentId: {
+            type: String,
+            default: null
+        },
+
+        registerUrl: {
+            type: String,
+            default: ""
+        },
+
+        departmentsUrl: {
+            type: String,
+            default: ""
+        },
+
+        usersUrl: {
             type: String,
             default: ""
         }
     },
 
-    created() {},
+    created() {
+        this.loadDepartments();
+        this.loadUsers();
+    },
+
+    mounted() {
+        Vue.set(this.regulationData, 'departments', this.departmentId);
+    },
 
     computed: {
         isLoadingMode: state => state.showLoadingFlag == true,
@@ -94,9 +123,35 @@ module.exports = {
         commandClick(arg) {
             switch (arg) {
                 case ENUMS.COMMAND.SAVE:
-                    this.DepartmentRegulation();
+                    this.registerRegulation();
                     break;
             }
+        },
+
+        /**
+         * load all departments for select departments in form
+         */
+        loadDepartments() {
+            const url = this.departmentsUrl;
+            console.log(url);
+            AxiosHelper.send("get", url, "").then(res => {
+                const resData = res.data;
+                const datas = resData.data.data;
+                Vue.set(this, "departments", datas);
+            });
+        },
+
+        /**
+         * load all users for select user in form
+         */
+        loadUsers() {
+            const url = this.usersUrl;
+            console.log(url);
+            AxiosHelper.send("get", url, "").then(res => {
+                const resData = res.data;
+                const datas = resData.data.data;
+                Vue.set(this, "users", datas);
+            });
         },
 
         /**
@@ -129,61 +184,60 @@ module.exports = {
         },
 
         /**
-         * Register new department regulation
+         * Register new regulation
          */
-        DepartmentRegulation() {
+        registerRegulation() {
             const isValid = this.validate();
-            console.log("before isvalid")
+
             if (!isValid) {
                 return;
             }
-            console.log("isvalid");
-            let departmentRegulationData = {
-                title: this.departmentRegulationData.title,
-                description: this.departmentRegulationData.description,
-                department_id: this.departmentId,
-                is_active: this.departmentRegulationData.isActive
+            let regulationData = {
+                body: this.regulationData.body,
+                agenda: JSON.stringify(this.regulationData.agenda),
+                place: this.regulationData.place,
+                date: this.regulationData.date,
+                department_id: this.regulationData
+                    .departments,
+                user_list: this.regulationData.user_list,
+                is_active: this.regulationData.isActive
             };
 
-            departmentRegulationData.files = this.files[0];
+            regulationData.files = this.files[0];
+            let t = Object.keys(regulationData.user_list)
+            .filter(key => true == regulationData.user_list[key])
+            .map(key => key);
 
+            regulationData.user_list = t;
+            console.log(regulationData);
             this.showLoading();
-            console.log(departmentRegulationData)
-            const url = this.departmentRegulationUrl;
-            console.log(url);
-            console.log(this.departmentId);
-            if (this.departmentId != "") {
-                AxiosHelper.send("post", url, departmentRegulationData, {
-                    sendAsFormData: true
-                })
-                    .then(res => {
-                        const data = res.data;
+
+            const url = this.registerUrl;
+
+            AxiosHelper.send("post", url, regulationData, {
+                sendAsFormData: true
+            })
+                .then(res => {
+                    const data = res.data;
+                    if (data.success) {
                         this.$emit("on-register", {
                             sender: this,
                             data
                         });
-                    })
-                    .catch(err => {
-                        const data = err.response.data;
-                        this.setNotification(data, "is-danger");
-                    })
-                    .then(() => this.hideLoading());
-            }
+                    }
+                })
+                .catch(err => {
+                    const data = err.response.data;
+                    this.setNotification(data, "is-danger");
+                })
+                .then(() => this.hideLoading());
         },
 
         /**
-         * for save regulation set _id from register department
-         */
-        setDepartmentId(data) {
-            console.log("setdepartmentid");
-            console.log(data);
-            Vue.set(this, "departmentId", data);
-        },
-        /**
-         * Validate new department data
+         * Validate new regulation data
          */
         validate() {
-            const result = DepartmentRegulationValidator.validate(this.departmentRegulationData);
+            const result = RegulationValidator.validate(this.regulationData);
 
             if (result.passes) {
                 this.closeNotification();

@@ -635,23 +635,29 @@ module.exports = {
     value: null
   },
   created: function created() {
-    this.setValue();
+    this.init();
   },
   methods: {
-    setValue: function setValue() {
+    init: function init() {
       var v = Array.from(this.value);
-      this.values = v;
+      v.forEach(function (x) {
+        return x.result = [];
+      });
+      Vue.set(this, "values", v);
     },
     updateValue: function updateValue() {
-      this.$emit('input', this.values);
+      this.$emit("input", this.values);
     },
     deleteValue: function deleteValue(index) {
-      this.values.splice(index, 1);
-      this.$emit('input', this.values);
+      Vue["delete"](this.values, index); // this.values.splice(index, 1);
+
+      this.$emit("input", this.values);
     },
     addValue: function addValue() {
-      this.values.push({});
-      this.$emit('input', this.values);
+      this.values.push({
+        result: []
+      });
+      this.$emit("input", this.values);
     }
   }
 };
@@ -811,15 +817,7 @@ module.exports = {
       memorandumData: {
         title: null,
         body: null,
-        project: [{
-          title: 'تلاوت قرآن و معنی',
-          duration: '5',
-          provider: 'عضو هیات رئیسه'
-        }, {
-          title: 'گزارش کشیک نوروزی سال 1398',
-          duration: '20',
-          provider: 'عضو هیات رئیسه'
-        }],
+        project: [],
         conditions: null,
         date: null,
         department_id: null,
@@ -856,7 +854,7 @@ module.exports = {
     this.loadUsers();
   },
   mounted: function mounted() {
-    Vue.set(this.memorandumData, 'departments', this.departmentId);
+    Vue.set(this.memorandumData, "departments", this.departmentId);
   },
   computed: {
     isLoadingMode: function isLoadingMode(state) {
@@ -26266,11 +26264,11 @@ var render = function() {
                 [
                   _c("multi-text-result", {
                     model: {
-                      value: item.result || {},
+                      value: item.result,
                       callback: function($$v) {
-                        _vm.$set(item, "result || {}", $$v)
+                        _vm.$set(item, "result", $$v)
                       },
-                      expression: "item.result || {}"
+                      expression: "item.result"
                     }
                   })
                 ],
@@ -28871,7 +28869,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/memorandum/index/index.js */"./resources/js/pages/memorandum/index/index.js");
+module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/pages/memorandum/index/index.js */"./resources/js/pages/memorandum/index/index.js");
 
 
 /***/ })

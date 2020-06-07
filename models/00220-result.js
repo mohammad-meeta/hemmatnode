@@ -38,22 +38,18 @@ Model.model = function model() {
     return {
         'result': {
             type: String,
-            required: true
         },
         'project_id': {
             type: String,
-            required: true
         },
         'standard': {
             type: String,
         },
         'cast': {
             type: Number,
-            required: true
         },
         'deadline': {
             type: Date,
-            required: true
         },
         'files': {
             type: [File]
@@ -64,7 +60,6 @@ Model.model = function model() {
         },
         'user_id': {
             type: String,
-            required: true
         }
     };
 };

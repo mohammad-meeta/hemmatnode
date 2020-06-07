@@ -62,7 +62,8 @@ const ENUMS = require("JS-HELPERS/enums");
 const MemorandumValidator = require("JS-VALIDATORS/memorandum-register-validator");
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
-const MultiTextProject = require("VUE-COMPONENTS/memorandum/multi-text-project.vue").default;
+const MultiTextProject = require("VUE-COMPONENTS/memorandum/multi-text-project.vue")
+    .default;
 
 module.exports = {
     name: "RegisterMemorandum",
@@ -80,8 +81,7 @@ module.exports = {
         memorandumData: {
             title: null,
             body: null,
-            project: [{title: 'تلاوت قرآن و معنی', duration: '5', provider: 'عضو هیات رئیسه'},
-                {title: 'گزارش کشیک نوروزی سال 1398', duration: '20', provider: 'عضو هیات رئیسه'}],
+            project: [],
 
             conditions: null,
             date: null,
@@ -94,7 +94,7 @@ module.exports = {
         notificationMessage: null,
         notificationType: "is-info",
         showLoadingFlag: false,
-        files: [],
+        files: []
     }),
 
     props: {
@@ -125,7 +125,7 @@ module.exports = {
     },
 
     mounted() {
-        Vue.set(this.memorandumData, 'departments', this.departmentId);
+        Vue.set(this.memorandumData, "departments", this.departmentId);
     },
 
     computed: {
@@ -225,8 +225,7 @@ module.exports = {
                 body: this.memorandumData.body,
                 conditions: this.memorandumData.conditions,
                 date: this.memorandumData.date,
-                department_id: this.memorandumData
-                    .departments,
+                department_id: this.memorandumData.departments,
                 is_active: this.memorandumData.isActive
             };
             console.log(memorandumData);

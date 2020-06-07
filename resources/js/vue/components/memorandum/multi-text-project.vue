@@ -22,7 +22,7 @@
                         i.fa.fa-times
                 .column.is-12
                     .field
-                        multi-text-result(v-model='item.result || {}')
+                        multi-text-result(v-model='item.result')
         a.button.is-success(href='#', @click.prevent='addValue')
             i.fa.fa-plus
 </template>
@@ -30,7 +30,8 @@
 <script>
 "use strict";
 
-const MultiTextResult = require("VUE-COMPONENTS/memorandum/multi-text-result.vue").default;
+const MultiTextResult = require("VUE-COMPONENTS/memorandum/multi-text-result.vue")
+    .default;
 
 module.exports = {
     name: "MultiTextProject",
@@ -43,7 +44,6 @@ module.exports = {
         values: {
             result: []
         }
-
     }),
 
     props: {
@@ -51,31 +51,36 @@ module.exports = {
     },
 
     created() {
-        this.setValue();
+        this.init();
     },
 
     methods: {
-        setValue() {
+        init() {
             let v = Array.from(this.value);
-            this.values = v;
+
+            v.forEach(x => (x.result = []));
+
+            Vue.set(this, "values", v);
         },
 
         updateValue: function() {
-            this.$emit('input', this.values);
+            this.$emit("input", this.values);
         },
 
         deleteValue: function(index) {
-            this.values.splice(index, 1);
-            this.$emit('input', this.values);
+            Vue.delete(this.values, index);
+            // this.values.splice(index, 1);
+            this.$emit("input", this.values);
         },
 
         addValue: function() {
-            this.values.push({});
-            this.$emit('input', this.values);
+            this.values.push({
+                result: []
+            });
+            this.$emit("input", this.values);
         }
-    },
+    }
 };
-
 </script>
 
 <style scoped>

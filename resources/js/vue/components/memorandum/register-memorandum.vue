@@ -19,9 +19,9 @@
                     input.input(type='text', placeholder='عنوان', v-model='memorandumData.title' required)
 
             .field
-                label.label تاریخ
+                label.label سال
                 .control
-                    date-picker(v-model='memorandumData.date' format="YYYY-MM-DD HH:mm:ss"
+                    date-picker(v-model='memorandumData.date' format="YYYY"
                     display-format="jYYYY" type="datetime" required)
 
             .field
@@ -63,7 +63,8 @@ const ENUMS = require("JS-HELPERS/enums");
 const MemorandumValidator = require("JS-VALIDATORS/memorandum-register-validator");
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
-const MultiTextProject = require("VUE-COMPONENTS/memorandum/multi-text-project.vue").default;
+const MultiTextProject = require("VUE-COMPONENTS/memorandum/multi-text-project.vue")
+    .default;
 
 module.exports = {
     name: "RegisterMemorandum",
@@ -93,7 +94,7 @@ module.exports = {
         notificationMessage: null,
         notificationType: "is-info",
         showLoadingFlag: false,
-        files: [],
+        files: []
     }),
 
     props: {
@@ -124,7 +125,7 @@ module.exports = {
     },
 
     mounted() {
-        Vue.set(this.memorandumData, 'departments', this.departmentId);
+        Vue.set(this.memorandumData, "departments", this.departmentId);
     },
 
     computed: {
@@ -224,8 +225,7 @@ module.exports = {
                 body: this.memorandumData.body,
                 conditions: this.memorandumData.conditions,
                 date: this.memorandumData.date,
-                department_id: this.memorandumData
-                    .departments,
+                department_id: this.memorandumData.departments,
                 is_active: this.memorandumData.isActive
             };
             console.log(memorandumData);

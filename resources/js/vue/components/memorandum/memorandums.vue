@@ -182,9 +182,52 @@ module.exports = {
         onCommand(payload) {
             let arg = payload.arg || null;
             const data = payload.data || {};
+
+            data.projects = [
+                {
+                title: "پروژه یک",
+                budget: "500",
+                supply: "استانی",
+                results: [
+                    {
+                        title: "برآمد یک"
+                    },
+                    {
+                        title: "برآمد دو"
+                    },
+                    {
+                        title: "برآمد سه"
+                    },
+                    {
+                        title: "برآمد چهار"
+                    },
+                ]
+            },
+            {
+                title: "پروژه دو",
+                budget: "700",
+                supply: "استانی",
+                results: [
+                    {
+                        title: "برآمد یک"
+                    },
+                    {
+                        title: "برآمد دو"
+                    },
+                    {
+                        title: "برآمد سه"
+                    },
+                    {
+                        title: "برآمد چهار"
+                    },
+                ]
+            }
+            ];
+
             if (null == arg) {
                 arg = payload;
             }
+
             switch (arg) {
                 case ENUMS.COMMAND.NEW:
                     this.changeFormMode(ENUMS.FORM_MODE.REGISTER);

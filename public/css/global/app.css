@@ -3757,6 +3757,7 @@ h2.item-category {
   box-shadow: 0px 5px 7px #3E4D6124;
   padding: 15px;
   border-radius: 5px;
+  margin: 15px;
 }
 
 .info-card-title {
@@ -3772,6 +3773,23 @@ h2.item-category {
 .info-card-label {
   font-size: 12px;
   color: #999;
+}
+
+.info-card-box {
+  background: #fff;
+  box-shadow: 0px 5px 7px #3E4D6124;
+  border-top: 4px solid #09BDBD;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+.page-data-container {
+  background: #fff;
+  box-shadow: 0px 5px 7px #3E4D6124;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 35px;
 }
 
 /**

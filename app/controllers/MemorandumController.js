@@ -1,8 +1,9 @@
 'use strict';
 const PugView = use('app/helpers/pug-view');
-const MemorandumHelper = use('app/helpers/invite-session-helper');
+const MemorandumHelper = use('app/helpers/memorandum-helper');
 const FileHelper = use('app/helpers/file-helper');
-const SMSSender = use('app/helpers/sms-sender-helper')
+const ProjectHelper = use('app/helpers/project-helper')
+const ResultHelper = use('app/helpers/result-helper')
 /**
  * Dep cat controller
  */
@@ -137,10 +138,9 @@ Memorandum.update = async function update(req, res, next) {
     data = {
         "_id": req.body._id,
         "body": req.body.body,
-        "agenda": req.body.agenda,
-        "place": req.body.place,
+        "title": req.body.title,
         "date": req.body.date,
-        "user_list": req.body.user_list,
+        "conditions": req.body.conditions,
         "user_id": req.session.auth.userId,
         "is_active": req.body.is_active,
         "department_id": req.body.department_id,
@@ -215,20 +215,54 @@ Memorandum.store = async function store(req, res, next) {
     }
 
     const data = {
+        "title": req.body.title,
         "body": req.body.body,
-        "agenda": req.body.agenda,
-        "place": req.body.place,
         "date": req.body.date,
-        "user_list": req.body.user_list,
+        "conditions": req.body.conditions,
         "user_id": req.session.auth.userId,
-        "is_active": req.body.is_active,
+        "is_active": req.body.is_active || true,
         "department_id": req.body.department_id,
         "files": fileList
     };
 
+    const project = JSON.parse(req.body.project);
+
     MemorandumHelper.insertNewMemorandum(data)
         .then(dataRes => {
-            SMSSender.sendSms(data);
+
+            project.forEach(element => {
+
+                const proje = {
+                    "title": element.title,
+                    "budget": element.budget,
+                    "supply": element.supply,
+                    "department_id": data.department_id,
+                    "memorandum_id": dataRes._id,
+                    "user_id": req.session.auth.userId,
+                };
+                const result = element.result;
+
+                ProjectHelper.insertNewProject(proje)
+                    .then(prDataRes => {
+
+                        result.forEach(resElement => {
+                            const resData = {
+                                "result": resElement.title,
+                                "project_id": prDataRes._id,
+                                "user_id": req.session.auth.userId,
+                            };
+
+                            ResultHelper.insertNewResult(resData)
+                                .then(resDataRes => {
+                                    console.log("ok");
+                                })
+                                .catch(err => console.error(err));
+                        });
+
+                    })
+                    .catch(err => console.error(err));
+            });
+
             const result = {
                 success: true,
                 data: dataRes

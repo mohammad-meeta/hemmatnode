@@ -491,6 +491,33 @@ module.exports = {
     onCommand: function onCommand(payload) {
       var arg = payload.arg || null;
       var data = payload.data || {};
+      data.projects = [{
+        title: "پروژه یک",
+        budget: "500",
+        supply: "استانی",
+        results: [{
+          title: "برآمد یک"
+        }, {
+          title: "برآمد دو"
+        }, {
+          title: "برآمد سه"
+        }, {
+          title: "برآمد چهار"
+        }]
+      }, {
+        title: "پروژه دو",
+        budget: "700",
+        supply: "استانی",
+        results: [{
+          title: "برآمد یک"
+        }, {
+          title: "برآمد دو"
+        }, {
+          title: "برآمد سه"
+        }, {
+          title: "برآمد چهار"
+        }]
+      }];
 
       if (null == arg) {
         arg = payload;
@@ -615,6 +642,8 @@ module.exports = {
 //
 //
 //
+//
+//
 
 
 var MultiTextResult = __webpack_require__(/*! VUE-COMPONENTS/memorandum/multi-text-result.vue */ "./resources/js/vue/components/memorandum/multi-text-result.vue")["default"];
@@ -628,48 +657,35 @@ module.exports = {
     return {
       values: {
         result: []
-      },
-      maxResultFlag: false
+      }
     };
   },
   props: {
     value: null
   },
   created: function created() {
-    this.setValue();
-  },
-  computed: {
-    isMaxResult: function isMaxResult(state) {
-      return state.maxResultFlag == true;
-    }
+    this.init();
   },
   methods: {
-    setValue: function setValue() {
+    init: function init() {
       var v = Array.from(this.value);
-      this.values = v;
+      v.forEach(function (x) {
+        return x.result = [];
+      });
+      Vue.set(this, "values", v);
     },
     updateValue: function updateValue() {
-      this.$emit('input', this.values);
+      this.$emit("input", this.values);
     },
     deleteValue: function deleteValue(index) {
-      this.values.splice(index, 1);
-      this.$emit('input', this.values);
+      Vue["delete"](this.values, index);
+      this.$emit("input", this.values);
     },
     addValue: function addValue() {
-      this.values.push({});
+      this.values.push({
+        result: []
+      });
       this.$emit('input', this.values);
-      console.log(this.values.length);
-
-      if (this.values.length >= 4) {
-        this.maxResult();
-      }
-    },
-
-    /**
-     * max result
-     */
-    maxResult: function maxResult() {
-      Vue.set(this, "maxResultFlag", true);
     }
   }
 };
@@ -706,7 +722,8 @@ module.exports = {
   name: "MultiTextResult",
   data: function data() {
     return {
-      values: null
+      values: null,
+      maxResultFlag: false
     };
   },
   props: {
@@ -714,6 +731,11 @@ module.exports = {
   },
   created: function created() {
     this.setValue();
+  },
+  computed: {
+    isMaxResult: function isMaxResult(state) {
+      return state.maxResultFlag == true;
+    }
   },
   methods: {
     setValue: function setValue() {
@@ -726,10 +748,23 @@ module.exports = {
     deleteValue: function deleteValue(index) {
       this.values.splice(index, 1);
       this.$emit('input', this.values);
+      this.maxResult();
     },
     addValue: function addValue() {
       this.values.push({});
       this.$emit('input', this.values);
+      this.maxResult();
+    },
+
+    /**
+     * max result
+     */
+    maxResult: function maxResult() {
+      if (this.values.length >= 4) {
+        Vue.set(this, "maxResultFlag", true);
+      } else {
+        Vue.set(this, "maxResultFlag", false);
+      }
     }
   }
 };
@@ -867,7 +902,7 @@ module.exports = {
     this.loadUsers();
   },
   mounted: function mounted() {
-    Vue.set(this.memorandumData, 'departments', this.departmentId);
+    Vue.set(this.memorandumData, "departments", this.departmentId);
   },
   computed: {
     isLoadingMode: function isLoadingMode(state) {
@@ -1045,6 +1080,32 @@ module.exports = {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 var ENUMS = __webpack_require__(/*! JS-HELPERS/enums */ "./resources/js/helpers/enums.js");
@@ -1056,6 +1117,7 @@ module.exports = {
       ENUMS: ENUMS,
       memorandumData: {
         _id: null,
+        title: null,
         body: null,
         conditions: null,
         date: null,
@@ -1081,14 +1143,23 @@ module.exports = {
     loadMemorandumData: function loadMemorandumData(data) {
       var temp = {
         _id: data._id,
+        title: data.title,
         body: data.body,
         conditions: data.conditions,
         date: data.date,
         department_id: data.department_id,
         files: data.files,
+        projects: data.projects,
         isActive: data.is_active
       };
       Vue.set(this, "memorandumData", temp);
+    },
+
+    /**
+     * To Persian Date
+     */
+    toPersianDate: function toPersianDate(date, format, value) {
+      return DateHelper.toPersianDate(date, format, value);
     },
 
     /**
@@ -26164,7 +26235,7 @@ var render = function() {
           _c("div", { staticClass: "columns is-multiline" }, [
             _c("div", { staticClass: "column is-4" }, [
               _c("div", { staticClass: "field" }, [
-                _c("label", { staticClass: "label" }, [_vm._v("عنوان")]),
+                _c("label", { staticClass: "label" }, [_vm._v("عنوان پروژه")]),
                 _c("div", { staticClass: "control" }, [
                   _c("input", {
                     directives: [
@@ -26272,22 +26343,25 @@ var render = function() {
               )
             ]),
             _c("div", { staticClass: "column is-12" }, [
-              _c(
-                "div",
-                { staticClass: "field" },
-                [
-                  _c("multi-text-result", {
-                    model: {
-                      value: item.result || {},
-                      callback: function($$v) {
-                        _vm.$set(item, "result || {}", $$v)
-                      },
-                      expression: "item.result || {}"
-                    }
-                  })
-                ],
-                1
-              )
+              _c("fieldset", [
+                _c("legend", [_vm._v("برآمدها")]),
+                _c(
+                  "div",
+                  { staticClass: "field" },
+                  [
+                    _c("multi-text-result", {
+                      model: {
+                        value: item.result || {},
+                        callback: function($$v) {
+                          _vm.$set(item, "result || {}", $$v)
+                        },
+                        expression: "item.result || {}"
+                      }
+                    })
+                  ],
+                  1
+                )
+              ])
             ])
           ])
         ])
@@ -26295,14 +26369,6 @@ var render = function() {
       _c(
         "a",
         {
-          directives: [
-            {
-              name: "show",
-              rawName: "v-show",
-              value: !_vm.isMaxResult,
-              expression: "! isMaxResult"
-            }
-          ],
           staticClass: "button is-success",
           attrs: { href: "#" },
           on: {
@@ -26349,7 +26415,7 @@ var render = function() {
           _c("div", { staticClass: "columns" }, [
             _c("div", { staticClass: "column is-10" }, [
               _c("div", { staticClass: "field" }, [
-                _c("label", { staticClass: "label" }, [_vm._v("عنوان")]),
+                _c("label", { staticClass: "label" }, [_vm._v("عنوان برآمد")]),
                 _c("div", { staticClass: "control" }, [
                   _c("input", {
                     directives: [
@@ -26400,6 +26466,14 @@ var render = function() {
       _c(
         "a",
         {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: !_vm.isMaxResult,
+              expression: "! isMaxResult"
+            }
+          ],
           staticClass: "button is-success",
           attrs: { href: "#" },
           on: {
@@ -26561,14 +26635,14 @@ var render = function() {
             ])
           ]),
           _c("div", { staticClass: "field" }, [
-            _c("label", { staticClass: "label" }, [_vm._v("تاریخ")]),
+            _c("label", { staticClass: "label" }, [_vm._v("سال")]),
             _c(
               "div",
               { staticClass: "control" },
               [
                 _c("date-picker", {
                   attrs: {
-                    format: "YYYY-MM-DD HH:mm:ss",
+                    format: "YYYY",
                     "display-format": "jYYYY",
                     type: "datetime",
                     required: ""
@@ -26783,38 +26857,116 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container" }, [
-    _c("div", { staticClass: "columns" }, [
-      _c(
-        "div",
-        {
-          directives: [
-            {
-              name: "show",
-              rawName: "v-show",
-              value: _vm.isLoadingMode,
-              expression: "isLoadingMode"
-            }
-          ],
-          staticClass: "column is-full"
-        },
-        [_c("h1", [_vm._v("در حال بارگذاری")])]
-      ),
-      _c(
-        "div",
-        {
-          directives: [
-            {
-              name: "show",
-              rawName: "v-show",
-              value: !_vm.isLoadingMode,
-              expression: "! isLoadingMode"
-            }
-          ],
-          staticClass: "column is-full"
-        },
-        [_c("h2", [_vm._v(_vm._s(_vm.memorandumData.title))])]
-      )
-    ])
+    _c(
+      "div",
+      {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.isLoadingMode,
+            expression: "isLoadingMode"
+          }
+        ],
+        staticClass: "column is-full"
+      },
+      [_c("h1", [_vm._v("در حال بارگذاری")])]
+    ),
+    _c(
+      "div",
+      {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: !_vm.isLoadingMode,
+            expression: "! isLoadingMode"
+          }
+        ],
+        staticClass: "page-data-container"
+      },
+      [
+        _c("div", { staticClass: "columns is-multiline" }, [
+          _c("div", { staticClass: "column is-full" }, [
+            _c("h1", [_vm._v(_vm._s(_vm.memorandumData.title))])
+          ]),
+          _c("div", { staticClass: "column is-full" }, [
+            _c("label", [_vm._v("مقدمه و اهداف تفاهمنامه")]),
+            _c("p", [_vm._v(_vm._s(_vm.memorandumData.body))])
+          ]),
+          _c("div", { staticClass: "column is-full" }, [
+            _c("label", [_vm._v("دوره زمانی")]),
+            _c("p", [
+              _vm._v(
+                _vm._s(
+                  _vm.toPersianDate(_vm.memorandumData.date, "jYYYY", "fa")
+                )
+              )
+            ])
+          ])
+        ])
+      ]
+    ),
+    _c(
+      "div",
+      {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: !_vm.isLoadingMode,
+            expression: "! isLoadingMode"
+          }
+        ],
+        staticClass: "columns is-multiline"
+      },
+      [
+        _vm._l(_vm.memorandumData.projects, function(project) {
+          return _c(
+            "div",
+            { staticClass: "info-card column is-4" },
+            [
+              _c("div", { staticClass: "info-card-title" }, [
+                _c("a", { attrs: { href: "#" } }, [
+                  _vm._v(_vm._s(project.title))
+                ])
+              ]),
+              _c("div", { staticClass: "info-card-details" }, [
+                _c("div", { staticClass: "info-card-item" }, [
+                  _c("div", { staticClass: "info-card-label" }, [
+                    _vm._v("بودجه:")
+                  ]),
+                  _c("div", { staticClass: "info-card-value" }, [
+                    _vm._v(_vm._s(project.budget))
+                  ])
+                ]),
+                _c("div", { staticClass: "info-card-item" }, [
+                  _c("div", { staticClass: "info-card-label" }, [
+                    _vm._v("محل تامین:")
+                  ]),
+                  _c("div", { staticClass: "info-card-value" }, [
+                    _vm._v(_vm._s(project.supply))
+                  ])
+                ])
+              ]),
+              _vm._l(project.results, function(result) {
+                return _c("div", { staticClass: "info-card-box" }, [
+                  _c("a", { attrs: { href: "#" } }, [
+                    _vm._v(_vm._s(result.title))
+                  ])
+                ])
+              })
+            ],
+            2
+          )
+        }),
+        _c("div", { staticClass: "column is-full" }, [
+          _c("label", [_vm._v("شرایط")]),
+          _c("h2", [_vm._v(_vm._s(_vm.memorandumData.conditions))])
+        ])
+      ],
+      2
+    )
   ])
 }
 var staticRenderFns = []

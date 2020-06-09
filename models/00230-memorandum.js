@@ -18,7 +18,7 @@ Model.setup = function setup() {
     Model.plugins(schema);
     Model.extraFunctions(schema);
 
-    mongoose.model('Project', schema, "projects");
+    mongoose.model('Memorandum', schema, "memorandum");
 };
 
 /**
@@ -42,77 +42,17 @@ Model.model = function model() {
             type: String,
             required: true
         },
-        'supply': {
+        'date': {
+            type: Date,
+            required: true
+        },
+        'body': {
             type: String,
+            required: true
         },
-        'budget': {
+        'conditions': {
             type: String,
-        },
-        'program_id': {
-            type: ObjectId,
-        },
-        'memorandum_id': {
-            type: ObjectId,
-        },
-        'department_id': {
-            type: ObjectId,
-        },
-        'target': {
-            type: String,
-        },
-        'same_effects_index': {
-            type: String,
-        },
-        'organ_moderator': {
-            type: String,
-        },
-        'project_moderator': {
-            type: String,
-        },
-        'consoultant': {
-            type: String,
-        },
-        'supervisor': {
-            type: String,
-        },
-        'committee_leadership': {
-            type: String,
-        },
-        'coworker': {
-            type: String,
-        },
-        'description': {
-            type: String,
-        },
-        'intervention_review': {
-            type: String,
-        },
-        'pervious_action_relation': {
-            type: String,
-        },
-        'target_corresponding': {
-            type: String,
-        },
-        'help_ipmrove_index': {
-            type: String,
-        },
-        'final_product': {
-            type: String,
-        },
-        'standards': {
-            type: String,
-        },
-        'other_benefit': {
-            type: String,
-        },
-        'result_apply': {
-            type: String,
-        },
-        'refree': {
-            type: String,
-        },
-        'monitoring_comment': {
-            type: String,
+            required: true
         },
         'files': {
             type: [File]
@@ -120,6 +60,11 @@ Model.model = function model() {
         'is_active': {
             type: Boolean,
             default: true,
+            required: true
+        },
+        'department_id': {
+            type: ObjectId,
+            required: true
         },
         'user_id': {
             type: ObjectId,
@@ -146,7 +91,7 @@ Model.plugins = function plugins(schema) {
  * @param      {Object}  schema  The schema
  */
 Model.extraFunctions = function extraFunctions(schema) {
-    schema.statics.newProject = Model.newProject;
+    schema.statics.newMemorandum = Model.newMemorandum;
 
     schema.methods.enable = Model.enable;
     schema.methods.disable = Model.disable;
@@ -155,14 +100,14 @@ Model.extraFunctions = function extraFunctions(schema) {
 /**
  * Insert user function
  */
-Model.newProject = function newProject(newProject) {
-    let result = new this(newProject);
+Model.newMemorandum = function newMemorandum(newMemorandum) {
+    let result = new this(newMemorandum);
 
     return result.save();
 };
 
 /**
- * Enable the Project
+ * Enable the department
  */
 Model.enable = function enable(callback) {
     this.is_active = true;
@@ -171,7 +116,7 @@ Model.enable = function enable(callback) {
 };
 
 /**
- * Disable the Project
+ * Disable the department
  */
 Model.disable = function disable(callback) {
     this.is_active = false;

@@ -9,7 +9,7 @@
                         .control
                             a.button.is-primary.is-rounded(:href="inviteSessionUrl") جلسات
                         .control
-                            a.button.is-primary.is-rounded(href="/memorandum") تفاهم نامه ها
+                            a.button.is-primary.is-rounded(:href="memorandumUrl") تفاهم نامه ها
                         .control
                             a.button.is-primary.is-rounded(href="/project") پروژه ها
                         .control
@@ -59,6 +59,11 @@ module.exports = {
         },
 
         inviteSessionUrl: {
+            type: String,
+            default: null
+        },
+
+        memorandumUrl: {
             type: String,
             default: null
         },

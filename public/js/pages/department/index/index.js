@@ -822,6 +822,10 @@ module.exports = {
       type: String,
       "default": null
     },
+    memorandumUrl: {
+      type: String,
+      "default": null
+    },
     showLoadUrl: {
       type: String,
       "default": null
@@ -8373,12 +8377,21 @@ var render = function() {
                   [_vm._v("جلسات")]
                 )
               ]),
+              _c("div", { staticClass: "control" }, [
+                _c(
+                  "a",
+                  {
+                    staticClass: "button is-primary is-rounded",
+                    attrs: { href: _vm.memorandumUrl }
+                  },
+                  [_vm._v("تفاهم نامه ها")]
+                )
+              ]),
               _vm._m(0),
               _vm._m(1),
               _vm._m(2),
               _vm._m(3),
-              _vm._m(4),
-              _vm._m(5)
+              _vm._m(4)
             ])
           ])
         ]),
@@ -8408,21 +8421,6 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "control" }, [
-      _c(
-        "a",
-        {
-          staticClass: "button is-primary is-rounded",
-          attrs: { href: "/memorandum" }
-        },
-        [_vm._v("تفاهم نامه ها")]
-      )
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement

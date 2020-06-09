@@ -4,7 +4,7 @@
             .columns.is-multiline
                 .column.is-4
                     .field
-                        label.label عنوان
+                        label.label عنوان پروژه
                         .control
                             input.input(type='text', v-model='item.title', @input='updateValue')
                 .column.is-2
@@ -21,16 +21,19 @@
                     a.button.is-danger(href='#', @click.prevent='deleteValue(index)')
                         i.fa.fa-times
                 .column.is-12
-                    .field
-                        multi-text-result(v-model='item.result || {}')
-        a.button.is-success(href='#', @click.prevent='addValue' v-show="! isMaxResult")
+                    fieldset
+                        legend برآمدها
+                        .field
+                            multi-text-result(v-model='item.result || {}')
+        a.button.is-success(href='#', @click.prevent='addValue')
             i.fa.fa-plus
 </template>
 
 <script>
 "use strict";
 
-const MultiTextResult = require("VUE-COMPONENTS/memorandum/multi-text-result.vue").default;
+const MultiTextResult = require("VUE-COMPONENTS/memorandum/multi-text-result.vue")
+    .default;
 
 module.exports = {
     name: "MultiTextProject",
@@ -42,9 +45,7 @@ module.exports = {
     data: () => ({
         values: {
             result: []
-        },
-        maxResultFlag: false
-
+        }
     }),
 
     props: {
@@ -52,46 +53,35 @@ module.exports = {
     },
 
     created() {
-        this.setValue();
-    },
-
-    computed: {
-        isMaxResult:  state => state.maxResultFlag == true
+        this.init();
     },
 
     methods: {
-        setValue() {
+        init() {
             let v = Array.from(this.value);
-            this.values = v;
+
+            v.forEach(x => (x.result = []));
+
+            Vue.set(this, "values", v);
         },
 
         updateValue: function() {
-            this.$emit('input', this.values);
+            this.$emit("input", this.values);
         },
 
         deleteValue: function(index) {
-            this.values.splice(index, 1);
-            this.$emit('input', this.values);
+            Vue.delete(this.values, index);
+            this.$emit("input", this.values);
         },
 
         addValue: function() {
-            this.values.push({});
+            this.values.push({
+                result: []
+            });
             this.$emit('input', this.values);
-            console.log(this.values.length);
-            if(this.values.length >= 4) {
-                this.maxResult();
-            }
         },
-
-        /**
-         * max result
-         */
-        maxResult() {
-            Vue.set(this, "maxResultFlag", true);
-        },
-    },
+    }
 };
-
 </script>
 
 <style scoped>

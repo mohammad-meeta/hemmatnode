@@ -4,12 +4,14 @@
     table.table.is-striped.is-hoverable.is-fullwidth(v-if="hasInviteSession")
         thead
             tr
+                th موضوع جلسه
                 th دستور جلسه
                 th وضعیت
                 th تاریخ ایجاد
                 th عملیات
         tbody
             tr(v-for='inviteSession in inviteSessions', :key='inviteSession.id')
+                td {{ inviteSession.dep.title }}
                 td(v-html="getTitles(inviteSession.extra)")
                 td {{ inviteSession.is_active }}
                 td {{ toPersianDate(inviteSession.created_at) }}

@@ -11,7 +11,7 @@
                     p {{ memorandumData.body }}
                 .column.is-full
                     label دوره زمانی
-                    p {{ toPersianDate(memorandumData.date,'jYYYY', 'fa') }}
+                    p {{ toPersianDate(memorandumData.date, 'jYYYY', 'fa') }}
         .columns.is-multiline(v-show="! isLoadingMode")
             .info-card.column.is-4(v-for="project in memorandumData.projects")
                 .info-card-title

@@ -1,7 +1,7 @@
 {
     "/js/core/kernel.js": "/js/core/kernel.js?id=a6888e94afca8ca50320",
     "/css/core/kernel.css": "/css/core/kernel.css?id=3c859d90c3ebc80cf130",
-    "/css/global/app.css": "/css/global/app.css?id=ac1fe6727e4398a9fa44",
+    "/css/global/app.css": "/css/global/app.css?id=3d2641bc92fcfec12408",
     "/css/pages/home/index.css": "/css/pages/home/index.css?id=ca0c00bb4a7f5ca6c314",
     "/css/pages/auth/login.css": "/css/pages/auth/login.css?id=d41d8cd98f00b204e980",
     "/js/global/app.js": "/js/global/app.js?id=3ce0b5c2e444ceeb1e35",
@@ -16,7 +16,7 @@
     "/js/pages/home/internal-section/index.js": "/js/pages/home/internal-section/index.js?id=6fcd1a738925119f4020",
     "/js/pages/home/monitoring-page/index.js": "/js/pages/home/monitoring-page/index.js?id=519cfb1e5f5b0d08f42c",
     "/js/pages/home/people-participation/index.js": "/js/pages/home/people-participation/index.js?id=7263de866bfa20f7b22c",
-    "/js/pages/invite-session/index/index.js": "/js/pages/invite-session/index/index.js?id=42cd677236272bb16c38",
+    "/js/pages/invite-session/index/index.js": "/js/pages/invite-session/index/index.js?id=dba0462ae4cd8dd1c22a",
     "/js/pages/memorandum/index/index.js": "/js/pages/memorandum/index/index.js?id=c15734a7f4ed2e4c55cc",
     "/js/pages/project/index/index.js": "/js/pages/project/index/index.js?id=6b7dce20069b53719f98",
     "/js/pages/regulation/index/index.js": "/js/pages/regulation/index/index.js?id=82df0e4aa187e38f0a18",

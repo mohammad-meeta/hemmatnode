@@ -5,17 +5,42 @@
                 h1 در حال بارگذاری
             .column.is-full(v-show="! isLoadingMode")
                 .print-form
-                    .print-form-head.columns
+                    .print-form-top.columns
                         .column.is-3.print-form-logo
                             img(src='/images/logo.png')
                         .column.is-6.print-form-title
-                            h2 فرم صورتجلسه
+                            span به نام خداوند جان و خرد
                         .column.is-3.print-form-number
-                            span شماره مدرک
+                            span کد فرم: 13FO20/00
+                    .print-form-head
+                        table.table
+                            thead
+                                tr
+                                    th موضوع جلسه
+                                    th تاریخ
+                                    th ساعت
+                                    th مکان
+                            tbody
+                                tr
+                                    td {{ inviteSessionData.dep }}
+                                    td {{ toPersianDate(inviteSessionData.date, 'jYYYY', 'fa') }}
+                                    td {{ toPersianDate(inviteSessionData.date, 'HH:MM', 'fa') }}
+                                    td {{ (inviteSessionData.place) }}
+
                     .print-form-body
-                        .print-form-agenda.columns
-                            .column.is-6.print-form-title
-                                h3 {{ inviteSessionData.agenda }}
+                        h3 دستور جلسه:
+                        table.table
+                            thead
+                                tr
+                                    th دستور جلسه
+                                    th زمان (دقیقه)
+                                    th ارائه دهنده
+                            tbody
+                                tr(v-for="agenda in inviteSessionData.agenda")
+                                    td {{ agenda.title }}
+                                    td {{ agenda.duration }}
+                                    td {{ agenda.provider }}
+
 </template>
 <script>
 "use strict";
@@ -29,6 +54,7 @@ module.exports = {
         ENUMS,
         inviteSessionData: {
             _id: null,
+            dep: null,
             body: null,
             agenda: null,
             place: null,
@@ -53,6 +79,7 @@ module.exports = {
         loadInviteSessionData(data) {
             const temp = {
                 _id: data._id,
+                dep: data.dep.title,
                 body: data.body,
                 agenda: data.agenda,
                 place: data.place,
@@ -63,7 +90,21 @@ module.exports = {
                 user_list: data.user_list,
                 isActive: data.is_active
             };
+
+            try {
+                temp.agenda = JSON.parse(data.agenda);
+            } catch (ex) {
+                temp.agenda = [];
+            }
+
             Vue.set(this, "inviteSessionData", temp);
+        },
+
+        /**
+         * To Persian Date
+         */
+        toPersianDate(date, format, value) {
+            return DateHelper.toPersianDate(date, format, value);
         },
 
         /**

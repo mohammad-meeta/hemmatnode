@@ -525,6 +525,8 @@ module.exports = {
 //
 //
 //
+//
+//
 
 
 var ENUMS = __webpack_require__(/*! JS-HELPERS/enums */ "./resources/js/helpers/enums.js");
@@ -987,6 +989,31 @@ module.exports = {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 var ENUMS = __webpack_require__(/*! JS-HELPERS/enums */ "./resources/js/helpers/enums.js");
@@ -998,6 +1025,7 @@ module.exports = {
       ENUMS: ENUMS,
       inviteSessionData: {
         _id: null,
+        dep: null,
         body: null,
         agenda: null,
         place: null,
@@ -1025,6 +1053,7 @@ module.exports = {
     loadInviteSessionData: function loadInviteSessionData(data) {
       var temp = {
         _id: data._id,
+        dep: data.dep.title,
         body: data.body,
         agenda: data.agenda,
         place: data.place,
@@ -1035,7 +1064,21 @@ module.exports = {
         user_list: data.user_list,
         isActive: data.is_active
       };
+
+      try {
+        temp.agenda = JSON.parse(data.agenda);
+      } catch (ex) {
+        temp.agenda = [];
+      }
+
       Vue.set(this, "inviteSessionData", temp);
+    },
+
+    /**
+     * To Persian Date
+     */
+    toPersianDate: function toPersianDate(date, format, value) {
+      return DateHelper.toPersianDate(date, format, value);
     },
 
     /**
@@ -26145,6 +26188,7 @@ var render = function() {
                 "tbody",
                 _vm._l(_vm.inviteSessions, function(inviteSession) {
                   return _c("tr", { key: inviteSession.id }, [
+                    _c("td", [_vm._v(_vm._s(inviteSession.dep.title))]),
                     _c("td", {
                       domProps: {
                         innerHTML: _vm._s(_vm.getTitles(inviteSession.extra))
@@ -26219,6 +26263,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", [
+        _c("th", [_vm._v("موضوع جلسه")]),
         _c("th", [_vm._v("دستور جلسه")]),
         _c("th", [_vm._v("وضعیت")]),
         _c("th", [_vm._v("تاریخ ایجاد")]),
@@ -26685,11 +26730,54 @@ var render = function() {
         [
           _c("div", { staticClass: "print-form" }, [
             _vm._m(0),
-            _c("div", { staticClass: "print-form-body" }, [
-              _c("div", { staticClass: "print-form-agenda columns" }, [
-                _c("div", { staticClass: "column is-6 print-form-title" }, [
-                  _c("h3", [_vm._v(_vm._s(_vm.inviteSessionData.agenda))])
+            _c("div", { staticClass: "print-form-head" }, [
+              _c("table", { staticClass: "table" }, [
+                _vm._m(1),
+                _c("tbody", [
+                  _c("tr", [
+                    _c("td", [_vm._v(_vm._s(_vm.inviteSessionData.dep))]),
+                    _c("td", [
+                      _vm._v(
+                        _vm._s(
+                          _vm.toPersianDate(
+                            _vm.inviteSessionData.date,
+                            "jYYYY",
+                            "fa"
+                          )
+                        )
+                      )
+                    ]),
+                    _c("td", [
+                      _vm._v(
+                        _vm._s(
+                          _vm.toPersianDate(
+                            _vm.inviteSessionData.date,
+                            "HH:MM",
+                            "fa"
+                          )
+                        )
+                      )
+                    ]),
+                    _c("td", [_vm._v(_vm._s(_vm.inviteSessionData.place))])
+                  ])
                 ])
+              ])
+            ]),
+            _c("div", { staticClass: "print-form-body" }, [
+              _c("h3", [_vm._v("دستور جلسه:")]),
+              _c("table", { staticClass: "table" }, [
+                _vm._m(2),
+                _c(
+                  "tbody",
+                  _vm._l(_vm.inviteSessionData.agenda, function(agenda) {
+                    return _c("tr", [
+                      _c("td", [_vm._v(_vm._s(agenda.title))]),
+                      _c("td", [_vm._v(_vm._s(agenda.duration))]),
+                      _c("td", [_vm._v(_vm._s(agenda.provider))])
+                    ])
+                  }),
+                  0
+                )
               ])
             ])
           ])
@@ -26703,15 +26791,40 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "print-form-head columns" }, [
+    return _c("div", { staticClass: "print-form-top columns" }, [
       _c("div", { staticClass: "column is-3 print-form-logo" }, [
         _c("img", { attrs: { src: "/images/logo.png" } })
       ]),
       _c("div", { staticClass: "column is-6 print-form-title" }, [
-        _c("h2", [_vm._v("فرم صورتجلسه")])
+        _c("span", [_vm._v("به نام خداوند جان و خرد")])
       ]),
       _c("div", { staticClass: "column is-3 print-form-number" }, [
-        _c("span", [_vm._v("شماره مدرک")])
+        _c("span", [_vm._v("کد فرم: 13FO20/00")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("موضوع جلسه")]),
+        _c("th", [_vm._v("تاریخ")]),
+        _c("th", [_vm._v("ساعت")]),
+        _c("th", [_vm._v("مکان")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("دستور جلسه")]),
+        _c("th", [_vm._v("زمان (دقیقه)")]),
+        _c("th", [_vm._v("ارائه دهنده")])
       ])
     ])
   }

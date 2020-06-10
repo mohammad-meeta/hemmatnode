@@ -3807,7 +3807,8 @@ h2.item-category {
 * Session
 **/
 
-.print-form-head {
-  border: 2px solid #000;
+.print-form-logo {
+  width: 95px;
+  height: auto;
 }
 

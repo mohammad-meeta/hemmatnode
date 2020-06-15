@@ -9,7 +9,7 @@
                 .title
                     h1(v-show="modeList") جلسات
                     h1(v-show="modeRegister") ایجاد دعوتنامه جلسه
-                    h1(v-show="modeEdit") ویرایش دعوتنامه جلسه
+                    h1(v-show="modeEdit") ویرایش جلسه
 
         .columns.exposed-form(v-show="!modeLoading")
             .column.is-one-fifth(v-show="modeList")
@@ -45,11 +45,12 @@
                     :departments-url="departmentsUrl",
                     :users-url="usersUrl")
 
-            //.column(v-show="!modeLoading && modeEdit")
-                edit-department(ref="departmentEdit", @on-command="onCommand",
+            .column(v-show="!modeLoading && modeEdit")
+                edit-invite-session(ref="inviteSessionEdit", @on-command="onCommand",
                 @on-update="onInviteSessionUpdate"
                 :edit-url="editUrl",
-                :departmentCategories-url="departmentCategoriesUrl")
+                :departments-url="departmentsUrl",
+                :users-url="usersUrl")
 
             .column(v-show="!modeLoading && modeShow")
                 show-invite-session(ref="inviteSessionShow", @on-command="onCommand")
@@ -65,7 +66,7 @@ const RegisterInviteSession = require("VUE-COMPONENTS/invite-session/register-in
     .default;
 const ListInviteSession = require("VUE-COMPONENTS/invite-session/list-invite-session.vue")
     .default;
-//const EditInviteSession = require("VUE-COMPONENTS/invite-session/edit-invite-session.vue").default;
+const EditInviteSession = require("VUE-COMPONENTS/invite-session/edit-invite-session.vue").default;
 const ShowInviteSession = require("VUE-COMPONENTS/invite-session/show-invite-session.vue")
     .default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
@@ -77,7 +78,7 @@ module.exports = {
         Loading,
         ListInviteSession,
         RegisterInviteSession,
-        //EditInviteSession,
+        EditInviteSession,
         ShowInviteSession,
         Notification
     },
@@ -196,7 +197,7 @@ module.exports = {
                     break;
 
                 case ENUMS.COMMAND.EDIT:
-                    /* TODO: REGISTER NEW InviteSession */
+                    /* TODO: Edit InviteSession */
                     this.$refs.inviteSessionEdit.loadInviteSessionData(data);
                     this.changeFormMode(ENUMS.FORM_MODE.EDIT);
                     break;

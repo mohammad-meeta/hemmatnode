@@ -650,14 +650,9 @@ var MultiTextResult = __webpack_require__(/*! VUE-COMPONENTS/memorandum/multi-te
 
 module.exports = {
   name: "MultiTextProject",
-  components: {
-    MultiTextResult: MultiTextResult
-  },
   data: function data() {
     return {
-      values: {
-        result: []
-      }
+      values: null
     };
   },
   props: {
@@ -669,9 +664,6 @@ module.exports = {
   methods: {
     init: function init() {
       var v = Array.from(this.value);
-      v.forEach(function (x) {
-        return x.result = [];
-      });
       Vue.set(this, "values", v);
     },
     updateValue: function updateValue() {

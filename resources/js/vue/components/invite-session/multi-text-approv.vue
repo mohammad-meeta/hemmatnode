@@ -2,29 +2,24 @@
     .multi-text#multi-text-template
         .form-itemsbox(v-for='(item, index) in values')
             .columns.is-multiline
-                .column.is-4
+                .column.is-12
                     .field
-                        label.label عنوان پروژه
+                        label.label عنوان مصوبه
                         .control
-                            input.input(type='text', v-model='item.title', @input='updateValue')
+                            input.textarea(placeholder='عنوان مصوبه', v-model='item.title', @input='updateValue')
                 .column.is-2
                     .field
-                        label.label بودجه
+                        label.label مسئول پیگیری
                         .control
-                            input.input(type='number', v-model='item.budget', @input='updateValue')
+                            input.input(type='text', v-model='item.responsible', @input='updateValue')
                 .column.is-4
                     .field
-                        label.label محل تامین
+                        label.label زمان پیگیری
                         .control
-                            input.input(type='text', v-model='item.supply', @input='updateValue')
+                            input.input(type='text', v-model='item.time', @input='updateValue')
                 .column.is-2
                     a.button.is-danger(href='#', @click.prevent='deleteValue(index)')
                         i.fa.fa-times
-                .column.is-12
-                    fieldset
-                        legend برآمدها
-                        .field
-                            multi-text-result(v-model='item.result || {}')
         a.button.is-success(href='#', @click.prevent='addValue')
             i.fa.fa-plus
 </template>
@@ -32,14 +27,13 @@
 <script>
 "use strict";
 
-const MultiTextResult = require("VUE-COMPONENTS/memorandum/multi-text-result.vue")
-    .default;
-
 module.exports = {
-    name: "MultiTextProject",
+    name: "MultiTextApprov",
 
     data: () => ({
-        values: null
+        values: {
+            result: []
+        }
     }),
 
     props: {
@@ -53,6 +47,7 @@ module.exports = {
     methods: {
         init() {
             let v = Array.from(this.value);
+
             Vue.set(this, "values", v);
         },
 

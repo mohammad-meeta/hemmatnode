@@ -6,14 +6,17 @@
             .column.is-full(v-show="! isLoadingMode")
                 .print-form
                     .print-form-top.columns
-                        .column.is-3.print-form-logo
-                            img(src='/images/logo.png')
-                        .column.is-6.print-form-title
+                        .column.is-3
+                            .print-form-logo
+                                img(src='/images/logo.png')
+                        .column.is-6.print-form-title.text-center
                             span به نام خداوند جان و خرد
                         .column.is-3.print-form-number
-                            span کد فرم: 13FO20/00
+                            div
+                                b رونق تولید
+                            div کد فرم: 13FO20/00
                     .print-form-head
-                        table.table
+                        table.table.is-fullwidth.is-bordered.text-center
                             thead
                                 tr
                                     th موضوع جلسه
@@ -28,8 +31,8 @@
                                     td {{ (inviteSessionData.place) }}
 
                     .print-form-body
-                        h3 دستور جلسه:
-                        table.table
+                        label دستور جلسه:
+                        table.table.is-fullwidth.is-bordered.text-center
                             thead
                                 tr
                                     th دستور جلسه
@@ -40,6 +43,10 @@
                                     td {{ agenda.title }}
                                     td {{ agenda.duration }}
                                     td {{ agenda.provider }}
+                    .print-form-body
+                        label توضیحات:
+                        .is-fullwidth {{ inviteSessionData.body }}
+
 
 </template>
 <script>

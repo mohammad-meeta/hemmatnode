@@ -616,6 +616,12 @@ module.exports = {
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 var Routes = __webpack_require__(/*! JS-CORE/routes */ "./resources/js/core/routes.js");
@@ -26823,7 +26829,7 @@ var render = function() {
                   }
                 ]
               },
-              [_vm._v("ویرایش جلسه")]
+              [_vm._v("ویرایش صورتجلسه")]
             )
           ])
         ])
@@ -26870,7 +26876,37 @@ var render = function() {
                   }
                 }
               },
-              [_vm._m(0), _c("span", [_vm._v("ایجاد")])]
+              [_vm._m(0), _c("span", [_vm._v("ایجاد دعوتنامه")])]
+            )
+          ]
+        ),
+        _c(
+          "div",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: _vm.modeList,
+                expression: "modeList"
+              }
+            ],
+            staticClass: "column is-one-fifth"
+          },
+          [
+            _c(
+              "a",
+              {
+                staticClass: "button is-primary is-rounded",
+                attrs: { href: "#" },
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    return _vm.commandClick(_vm.ENUMS.COMMAND.NEW)
+                  }
+                }
+              },
+              [_vm._m(1), _c("span", [_vm._v("ایجاد صورتجلسه")])]
             )
           ]
         ),
@@ -26900,7 +26936,7 @@ var render = function() {
                   }
                 }
               },
-              [_vm._m(1), _c("span", [_vm._v("بازگشت")])]
+              [_vm._m(2), _c("span", [_vm._v("بازگشت")])]
             )
           ]
         )
@@ -27019,6 +27055,14 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "icon is-small" }, [
+      _c("i", { staticClass: "material-icons icon" }, [_vm._v("check_circle")])
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement

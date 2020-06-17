@@ -9,7 +9,7 @@
                 .title
                     h1(v-show="modeList") جلسات
                     h1(v-show="modeRegister") ایجاد دعوتنامه جلسه
-                    h1(v-show="modeEdit") ویرایش جلسه
+                    h1(v-show="modeEdit") ویرایش صورتجلسه
 
         .columns.exposed-form(v-show="!modeLoading")
             .column.is-one-fifth(v-show="modeList")
@@ -17,8 +17,14 @@
                 @click.prevent="commandClick(ENUMS.COMMAND.NEW)")
                     span.icon.is-small
                         i.material-icons.icon check_circle
-                    span ایجاد
-
+                    span ایجاد دعوتنامه
+            .column.is-one-fifth(v-show="modeList")
+                a.button.is-primary.is-rounded(href="#",
+                @click.prevent="commandClick(ENUMS.COMMAND.NEW)")
+                    span.icon.is-small
+                        i.material-icons.icon check_circle
+                    span ایجاد صورتجلسه
+            // todo be soorate kamel sooratjalaseh ijad shavad
             .column.is-one-fifth(v-show="!modeList")
                 a.button.is-warning.is-rounded(href="#",
                 @click.prevent="commandClick(ENUMS.COMMAND.CANCEL)")

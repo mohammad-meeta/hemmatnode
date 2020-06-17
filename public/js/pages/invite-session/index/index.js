@@ -211,6 +211,345 @@ module.exports = {
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/vue/components/invite-session/edit-invite-session.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/vue/components/invite-session/edit-invite-session.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+var AxiosHelper = __webpack_require__(/*! JS-HELPERS/axios-helper */ "./resources/js/helpers/axios-helper.js");
+
+var ENUMS = __webpack_require__(/*! JS-HELPERS/enums */ "./resources/js/helpers/enums.js");
+
+var InviteSessionValidator = __webpack_require__(/*! JS-VALIDATORS/invite-session-register-validator */ "./resources/js/validators/invite-session-register-validator.js");
+
+var Notification = __webpack_require__(/*! VUE-COMPONENTS/general/notification.vue */ "./resources/js/vue/components/general/notification.vue")["default"];
+
+var VuePersianDatetimePicker = __webpack_require__(/*! vue-persian-datetime-picker */ "./node_modules/vue-persian-datetime-picker/dist/vue-persian-datetime-picker.js")["default"];
+
+var MultiText = __webpack_require__(/*! VUE-COMPONENTS/general/multi-text.vue */ "./resources/js/vue/components/general/multi-text.vue")["default"];
+
+var MultiTextApprov = __webpack_require__(/*! VUE-COMPONENTS/invite-session/multi-text-approv.vue */ "./resources/js/vue/components/invite-session/multi-text-approv.vue")["default"];
+
+module.exports = {
+  name: "EditInviteSession",
+  components: {
+    Notification: Notification,
+    DatePicker: VuePersianDatetimePicker,
+    MultiText: MultiText,
+    MultiTextApprov: MultiTextApprov
+  },
+  data: function data() {
+    return {
+      ENUMS: ENUMS,
+      departments: [],
+      users: [],
+      inviteSessionData: {
+        title: null,
+        body: null,
+        agenda: [],
+        place: null,
+        date: null,
+        department_id: null,
+        files: {},
+        user_list: {},
+        isActive: false,
+        intro: null,
+        approv: []
+      },
+      notificationMessage: null,
+      notificationType: "is-info",
+      showLoadingFlag: false
+    };
+  },
+  props: {
+    editUrl: {
+      type: String,
+      "default": ""
+    },
+    departmentId: {
+      type: String,
+      "default": null
+    },
+    departmentsUrl: {
+      type: String,
+      "default": ""
+    },
+    usersUrl: {
+      type: String,
+      "default": ""
+    },
+    inviteSessionDatas: {}
+  },
+  created: function created() {
+    this.loadDepartments();
+    this.loadUsers();
+  },
+  mounted: function mounted() {},
+  computed: {
+    isLoadingMode: function isLoadingMode(state) {
+      return state.showLoadingFlag == true;
+    },
+    showNotification: function showNotification(state) {
+      return state.notificationMessage != null;
+    }
+  },
+  methods: {
+    /**
+     * Set attachments
+     */
+    setAttachment: function setAttachment(sender) {
+      var files = sender.target.files;
+      Vue.set(this, "files", files);
+    },
+
+    /**
+     * Load specific user
+     */
+    loadInviteSessionData: function loadInviteSessionData(data) {
+      var temp = {
+        _id: data._id,
+        dep: data.dep.title,
+        body: data.body,
+        agenda: data.agenda,
+        place: data.place,
+        date: data.date,
+        department_id: data.department_id,
+        files: data.files,
+        roles: data.roles,
+        user_list: data.user_list,
+        isActive: data.is_active
+      };
+
+      try {
+        temp.agenda = JSON.parse(data.agenda);
+      } catch (ex) {
+        temp.agenda = [];
+      }
+
+      Vue.set(this, "inviteSessionData", temp);
+    },
+
+    /**
+     * To Persian Date
+     */
+    toPersianDate: function toPersianDate(date, format, value) {
+      return DateHelper.toPersianDate(date, format, value);
+    },
+
+    /**
+     * On Command
+     *
+     * @param      {Object}  arg     The argument
+     */
+    commandClick: function commandClick(arg) {
+      switch (arg) {
+        case ENUMS.COMMAND.SAVE:
+          this.editUser();
+          break;
+      }
+    },
+
+    /**
+     * Show Loading
+     */
+    showLoading: function showLoading() {
+      Vue.set(this, "showLoadingFlag", true);
+    },
+
+    /**
+     * HideLoading
+     */
+    hideLoading: function hideLoading() {
+      Vue.set(this, "showLoadingFlag", false);
+    },
+
+    /**
+     * Set notification
+     */
+    setNotification: function setNotification(message) {
+      var notificationType = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "is-info";
+      Vue.set(this, "notificationType", notificationType);
+      Vue.set(this, "notificationMessage", message);
+    },
+
+    /**
+     * Close Notification
+     */
+    closeNotification: function closeNotification() {
+      this.setNotification(null);
+    },
+
+    /**
+     * load all departments for select departments in form
+     */
+    loadDepartments: function loadDepartments() {
+      var _this = this;
+
+      var url = this.departmentsUrl;
+      console.log(url);
+      AxiosHelper.send("get", url, "").then(function (res) {
+        var resData = res.data;
+        var datas = resData.data.data;
+        Vue.set(_this, "departments", datas);
+      });
+    },
+
+    /**
+     * load all users for select user in form
+     */
+    loadUsers: function loadUsers() {
+      var _this2 = this;
+
+      var url = this.usersUrl;
+      console.log(url);
+      AxiosHelper.send("get", url, "").then(function (res) {
+        var resData = res.data;
+        var datas = resData.data.data;
+        Vue.set(_this2, "users", datas);
+      });
+    },
+
+    /**
+     * Edit invite session
+     */
+    EditInviteSession: function EditInviteSession() {
+      var _this3 = this;
+
+      var isValid = this.validate();
+
+      if (!isValid) {
+        return;
+      }
+
+      this.showLoading();
+      var inviteSessionData = {
+        _id: this.inviteSessionData._id,
+        body: this.inviteSessionData.body,
+        agenda: JSON.stringify(this.inviteSessionData.agenda),
+        place: this.inviteSessionData.place,
+        date: this.inviteSessionData.date,
+        department_id: this.inviteSessionData.departments,
+        user_list: this.inviteSessionData.user_list,
+        is_active: this.inviteSessionData.isActive
+      };
+      inviteSessionData.files = this.files[0];
+      var t = Object.keys(inviteSessionData.user_list).filter(function (key) {
+        return true == inviteSessionData.user_list[key];
+      }).map(function (key) {
+        return key;
+      });
+      inviteSessionData.user_list = t;
+      console.log(inviteSessionData);
+      this.showLoading();
+      var url = this.editUrl.replace("$id$", inviteSessionData._id);
+      AxiosHelper.send("patch", url, inviteSessionData).then(function (res) {
+        var data = JSON.parse(res.config.data);
+
+        _this3.$emit("on-update", {
+          sender: _this3,
+          data: data
+        });
+      })["catch"](function (err) {
+        console.error(err);
+
+        _this3.setNotification(".خطا در ذخیره جلسه", "is-danger");
+      }).then(function () {
+        return _this3.hideLoading();
+      });
+    },
+
+    /**
+     * Validate invite session data
+     */
+    validate: function validate() {
+      var result = InviteSessionValidator.validateEdit(this.inviteSessionData);
+
+      if (result.passes) {
+        this.closeNotification();
+        return true;
+      }
+
+      var errors = result.validator.errors.all();
+      var error = Object.keys(errors).map(function (key) {
+        return errors[key].join("\n");
+      }).join("</br>");
+      console.log(error);
+      this.setNotification(error, "is-danger");
+      return false;
+    }
+  }
+};
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/vue/components/invite-session/invite-sessions.vue?vue&type=script&lang=js&":
 /*!*********************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/vue/components/invite-session/invite-sessions.vue?vue&type=script&lang=js& ***!
@@ -219,6 +558,13 @@ module.exports = {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -286,8 +632,9 @@ var Loading = __webpack_require__(/*! VUE-COMPONENTS/general/loading.vue */ "./r
 
 var RegisterInviteSession = __webpack_require__(/*! VUE-COMPONENTS/invite-session/register-invite-session.vue */ "./resources/js/vue/components/invite-session/register-invite-session.vue")["default"];
 
-var ListInviteSession = __webpack_require__(/*! VUE-COMPONENTS/invite-session/list-invite-session.vue */ "./resources/js/vue/components/invite-session/list-invite-session.vue")["default"]; //const EditInviteSession = require("VUE-COMPONENTS/invite-session/edit-invite-session.vue").default;
+var ListInviteSession = __webpack_require__(/*! VUE-COMPONENTS/invite-session/list-invite-session.vue */ "./resources/js/vue/components/invite-session/list-invite-session.vue")["default"];
 
+var EditInviteSession = __webpack_require__(/*! VUE-COMPONENTS/invite-session/edit-invite-session.vue */ "./resources/js/vue/components/invite-session/edit-invite-session.vue")["default"];
 
 var ShowInviteSession = __webpack_require__(/*! VUE-COMPONENTS/invite-session/show-invite-session.vue */ "./resources/js/vue/components/invite-session/show-invite-session.vue")["default"];
 
@@ -299,7 +646,7 @@ module.exports = {
     Loading: Loading,
     ListInviteSession: ListInviteSession,
     RegisterInviteSession: RegisterInviteSession,
-    //EditInviteSession,
+    EditInviteSession: EditInviteSession,
     ShowInviteSession: ShowInviteSession,
     Notification: Notification
   },
@@ -414,7 +761,7 @@ module.exports = {
           break;
 
         case ENUMS.COMMAND.EDIT:
-          /* TODO: REGISTER NEW InviteSession */
+          /* TODO: Edit InviteSession */
           this.$refs.inviteSessionEdit.loadInviteSessionData(data);
           this.changeFormMode(ENUMS.FORM_MODE.EDIT);
           break;
@@ -493,6 +840,8 @@ module.exports = {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+//
+//
 //
 //
 //
@@ -650,6 +999,80 @@ module.exports = {
       });
       this.inviteSessions[foundIndex].agenda = editedInviteSessionsData.agenda;
       this.inviteSessions[foundIndex].is_active = editedInviteSessionsData.is_active;
+    }
+  }
+};
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/vue/components/invite-session/multi-text-approv.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/vue/components/invite-session/multi-text-approv.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+module.exports = {
+  name: "MultiTextApprov",
+  data: function data() {
+    return {
+      values: {
+        result: []
+      }
+    };
+  },
+  props: {
+    value: null
+  },
+  created: function created() {
+    this.init();
+  },
+  methods: {
+    init: function init() {
+      var v = Array.from(this.value);
+      Vue.set(this, "values", v);
+    },
+    updateValue: function updateValue() {
+      this.$emit("input", this.values);
+    },
+    deleteValue: function deleteValue(index) {
+      Vue["delete"](this.values, index);
+      this.$emit("input", this.values);
+    },
+    addValue: function addValue() {
+      this.values.push({
+        result: []
+      });
+      this.$emit('input', this.values);
     }
   }
 };
@@ -987,6 +1410,38 @@ module.exports = {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 var ENUMS = __webpack_require__(/*! JS-HELPERS/enums */ "./resources/js/helpers/enums.js");
@@ -998,6 +1453,7 @@ module.exports = {
       ENUMS: ENUMS,
       inviteSessionData: {
         _id: null,
+        dep: null,
         body: null,
         agenda: null,
         place: null,
@@ -1025,6 +1481,7 @@ module.exports = {
     loadInviteSessionData: function loadInviteSessionData(data) {
       var temp = {
         _id: data._id,
+        dep: data.dep.title,
         body: data.body,
         agenda: data.agenda,
         place: data.place,
@@ -1035,7 +1492,21 @@ module.exports = {
         user_list: data.user_list,
         isActive: data.is_active
       };
+
+      try {
+        temp.agenda = JSON.parse(data.agenda);
+      } catch (ex) {
+        temp.agenda = [];
+      }
+
       Vue.set(this, "inviteSessionData", temp);
+    },
+
+    /**
+     * To Persian Date
+     */
+    toPersianDate: function toPersianDate(date, format, value) {
+      return DateHelper.toPersianDate(date, format, value);
     },
 
     /**
@@ -25847,6 +26318,441 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/pug-plain-loader/index.js!./node_modules/vue-loader/lib/index.js?!./resources/js/vue/components/invite-session/edit-invite-session.vue?vue&type=template&id=0c2f9a7a&scoped=true&lang=pug&":
+/*!**********************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/vue/components/invite-session/edit-invite-session.vue?vue&type=template&id=0c2f9a7a&scoped=true&lang=pug& ***!
+  \**********************************************************************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "container-child" },
+    [
+      _vm.showNotification
+        ? _c(
+            "notification",
+            {
+              attrs: { "notification-type": _vm.notificationType },
+              on: { "on-close": _vm.closeNotification }
+            },
+            [
+              _c("span", {
+                domProps: { innerHTML: _vm._s(_vm.notificationMessage) }
+              })
+            ]
+          )
+        : _vm._e(),
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.isLoadingMode,
+              expression: "isLoadingMode"
+            }
+          ],
+          staticClass: "column is-full"
+        },
+        [_c("h1", [_vm._v("در حال بارگذاری")])]
+      ),
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: !_vm.isLoadingMode,
+              expression: "! isLoadingMode"
+            }
+          ],
+          staticClass: "form-small"
+        },
+        [
+          _c("div", { staticClass: "field" }, [
+            _c("label", { staticClass: "label" }),
+            _c("div", { staticClass: "control" }, [
+              _c("div", { staticClass: "select is-primary" }, [
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.inviteSessionData.departments,
+                        expression: "inviteSessionData.departments"
+                      }
+                    ],
+                    on: {
+                      change: function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.$set(
+                          _vm.inviteSessionData,
+                          "departments",
+                          $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        )
+                      }
+                    }
+                  },
+                  _vm._l(_vm.departments, function(
+                    department,
+                    departmentIndex
+                  ) {
+                    return _c(
+                      "option",
+                      { domProps: { value: department._id } },
+                      [_vm._v(_vm._s(department.title))]
+                    )
+                  }),
+                  0
+                )
+              ])
+            ])
+          ]),
+          _c(
+            "div",
+            { staticClass: "field" },
+            [
+              _c("multi-text", {
+                model: {
+                  value: _vm.inviteSessionData.agenda,
+                  callback: function($$v) {
+                    _vm.$set(_vm.inviteSessionData, "agenda", $$v)
+                  },
+                  expression: "inviteSessionData.agenda"
+                }
+              })
+            ],
+            1
+          ),
+          _c("div", { staticClass: "field" }, [
+            _c("label", { staticClass: "label" }, [_vm._v("مکان")]),
+            _c("div", { staticClass: "control" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.inviteSessionData.place,
+                    expression: "inviteSessionData.place"
+                  }
+                ],
+                staticClass: "input",
+                attrs: { type: "text", placeholder: "مکان", required: "" },
+                domProps: { value: _vm.inviteSessionData.place },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(
+                      _vm.inviteSessionData,
+                      "place",
+                      $event.target.value
+                    )
+                  }
+                }
+              })
+            ])
+          ]),
+          _c("div", { staticClass: "field" }, [
+            _c("label", { staticClass: "label" }, [_vm._v("تاریخ")]),
+            _c(
+              "div",
+              { staticClass: "control" },
+              [
+                _c("date-picker", {
+                  attrs: {
+                    format: "YYYY-MM-DD HH:mm:ss",
+                    "display-format": " jDD/jMM/jYYYY HH:mm",
+                    type: "datetime",
+                    required: ""
+                  },
+                  model: {
+                    value: _vm.inviteSessionData.date,
+                    callback: function($$v) {
+                      _vm.$set(_vm.inviteSessionData, "date", $$v)
+                    },
+                    expression: "inviteSessionData.date"
+                  }
+                })
+              ],
+              1
+            )
+          ]),
+          _c("div", { staticClass: "field" }, [
+            _c("label", { staticClass: "label" }, [_vm._v("حاضرین جلسه")]),
+            _c(
+              "div",
+              { staticClass: "multi-checkboxes" },
+              _vm._l(_vm.users, function(user, userIndex) {
+                return _c("label", { staticClass: "checkbox column is-12" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.inviteSessionData.user_list[user._id],
+                        expression: "inviteSessionData.user_list[user._id]"
+                      }
+                    ],
+                    attrs: { type: "checkbox" },
+                    domProps: {
+                      value: user._id,
+                      checked: Array.isArray(
+                        _vm.inviteSessionData.user_list[user._id]
+                      )
+                        ? _vm._i(
+                            _vm.inviteSessionData.user_list[user._id],
+                            user._id
+                          ) > -1
+                        : _vm.inviteSessionData.user_list[user._id]
+                    },
+                    on: {
+                      change: function($event) {
+                        var $$a = _vm.inviteSessionData.user_list[user._id],
+                          $$el = $event.target,
+                          $$c = $$el.checked ? true : false
+                        if (Array.isArray($$a)) {
+                          var $$v = user._id,
+                            $$i = _vm._i($$a, $$v)
+                          if ($$el.checked) {
+                            $$i < 0 &&
+                              _vm.$set(
+                                _vm.inviteSessionData.user_list,
+                                user._id,
+                                $$a.concat([$$v])
+                              )
+                          } else {
+                            $$i > -1 &&
+                              _vm.$set(
+                                _vm.inviteSessionData.user_list,
+                                user._id,
+                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                              )
+                          }
+                        } else {
+                          _vm.$set(
+                            _vm.inviteSessionData.user_list,
+                            user._id,
+                            $$c
+                          )
+                        }
+                      }
+                    }
+                  }),
+                  _vm._v(
+                    "  " +
+                      _vm._s(user.name) +
+                      " - " +
+                      _vm._s(user.profile.first_name) +
+                      " " +
+                      _vm._s(user.profile.last_name)
+                  )
+                ])
+              }),
+              0
+            )
+          ]),
+          _c("div", { staticClass: "field" }, [
+            _c("label", { staticClass: "checkbox" }, [
+              _c("input", {
+                attrs: { type: "file" },
+                on: { change: _vm.setAttachment }
+              }),
+              _vm._v("  ضمیمه")
+            ])
+          ]),
+          _c("div", { staticClass: "field" }, [
+            _c("label", { staticClass: "label" }, [_vm._v("توضیحات")]),
+            _c("div", { staticClass: "control" }, [
+              _c("textarea", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.inviteSessionData.body,
+                    expression: "inviteSessionData.body"
+                  }
+                ],
+                staticClass: "textarea",
+                attrs: { placeholder: "توضیحات" },
+                domProps: { value: _vm.inviteSessionData.body },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.inviteSessionData, "body", $event.target.value)
+                  }
+                }
+              })
+            ])
+          ]),
+          _c("div", { staticClass: "field" }, [
+            _c("label", { staticClass: "checkbox" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.inviteSessionData.isActive,
+                    expression: "inviteSessionData.isActive"
+                  }
+                ],
+                attrs: { type: "checkbox" },
+                domProps: {
+                  checked: Array.isArray(_vm.inviteSessionData.isActive)
+                    ? _vm._i(_vm.inviteSessionData.isActive, null) > -1
+                    : _vm.inviteSessionData.isActive
+                },
+                on: {
+                  change: function($event) {
+                    var $$a = _vm.inviteSessionData.isActive,
+                      $$el = $event.target,
+                      $$c = $$el.checked ? true : false
+                    if (Array.isArray($$a)) {
+                      var $$v = null,
+                        $$i = _vm._i($$a, $$v)
+                      if ($$el.checked) {
+                        $$i < 0 &&
+                          _vm.$set(
+                            _vm.inviteSessionData,
+                            "isActive",
+                            $$a.concat([$$v])
+                          )
+                      } else {
+                        $$i > -1 &&
+                          _vm.$set(
+                            _vm.inviteSessionData,
+                            "isActive",
+                            $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                          )
+                      }
+                    } else {
+                      _vm.$set(_vm.inviteSessionData, "isActive", $$c)
+                    }
+                  }
+                }
+              }),
+              _vm._v("  فعال")
+            ])
+          ]),
+          _c("div", { staticClass: "field" }, [
+            _c("label", { staticClass: "label" }, [_vm._v("مقدمه")]),
+            _c("div", { staticClass: "control" }, [
+              _c("textarea", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.inviteSessionData.intro,
+                    expression: "inviteSessionData.intro"
+                  }
+                ],
+                staticClass: "textarea",
+                attrs: { placeholder: "مقدمه" },
+                domProps: { value: _vm.inviteSessionData.intro },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(
+                      _vm.inviteSessionData,
+                      "intro",
+                      $event.target.value
+                    )
+                  }
+                }
+              })
+            ])
+          ]),
+          _c("fieldset", [
+            _c("legend", [_vm._v("مصوبات")]),
+            _c(
+              "div",
+              { staticClass: "field" },
+              [
+                _c("multi-text-approv", {
+                  model: {
+                    value: _vm.inviteSessionData.approv,
+                    callback: function($$v) {
+                      _vm.$set(_vm.inviteSessionData, "approv", $$v)
+                    },
+                    expression: "inviteSessionData.approv"
+                  }
+                })
+              ],
+              1
+            ),
+            _c("div", { staticClass: "field is-grouped" }, [
+              _c(
+                "div",
+                {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: !_vm.isLoadingMode,
+                      expression: "! isLoadingMode"
+                    }
+                  ],
+                  staticClass: "control"
+                },
+                [
+                  _c(
+                    "a",
+                    {
+                      staticClass: "button is-link is-rounded",
+                      attrs: { href: "#" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.commandClick(_vm.ENUMS.COMMAND.SAVE)
+                        }
+                      }
+                    },
+                    [_vm._v("  ویرایش")]
+                  )
+                ]
+              )
+            ])
+          ])
+        ]
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/pug-plain-loader/index.js!./node_modules/vue-loader/lib/index.js?!./resources/js/vue/components/invite-session/invite-sessions.vue?vue&type=template&id=c7ec4834&lang=pug&":
 /*!******************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/vue/components/invite-session/invite-sessions.vue?vue&type=template&id=c7ec4834&lang=pug& ***!
@@ -25923,7 +26829,7 @@ var render = function() {
                   }
                 ]
               },
-              [_vm._v("ویرایش دعوتنامه جلسه")]
+              [_vm._v("ویرایش صورتجلسه")]
             )
           ])
         ])
@@ -25970,7 +26876,37 @@ var render = function() {
                   }
                 }
               },
-              [_vm._m(0), _c("span", [_vm._v("ایجاد")])]
+              [_vm._m(0), _c("span", [_vm._v("ایجاد دعوتنامه")])]
+            )
+          ]
+        ),
+        _c(
+          "div",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: _vm.modeList,
+                expression: "modeList"
+              }
+            ],
+            staticClass: "column is-one-fifth"
+          },
+          [
+            _c(
+              "a",
+              {
+                staticClass: "button is-primary is-rounded",
+                attrs: { href: "#" },
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    return _vm.commandClick(_vm.ENUMS.COMMAND.NEW)
+                  }
+                }
+              },
+              [_vm._m(1), _c("span", [_vm._v("ایجاد صورتجلسه")])]
             )
           ]
         ),
@@ -26000,7 +26936,7 @@ var render = function() {
                   }
                 }
               },
-              [_vm._m(1), _c("span", [_vm._v("بازگشت")])]
+              [_vm._m(2), _c("span", [_vm._v("بازگشت")])]
             )
           ]
         )
@@ -26072,6 +27008,35 @@ var render = function() {
             {
               name: "show",
               rawName: "v-show",
+              value: !_vm.modeLoading && _vm.modeEdit,
+              expression: "!modeLoading && modeEdit"
+            }
+          ],
+          staticClass: "column"
+        },
+        [
+          _c("edit-invite-session", {
+            ref: "inviteSessionEdit",
+            attrs: {
+              "edit-url": _vm.editUrl,
+              "departments-url": _vm.departmentsUrl,
+              "users-url": _vm.usersUrl
+            },
+            on: {
+              "on-command": _vm.onCommand,
+              "on-update": _vm.onInviteSessionUpdate
+            }
+          })
+        ],
+        1
+      ),
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
               value: !_vm.modeLoading && _vm.modeShow,
               expression: "!modeLoading && modeShow"
             }
@@ -26090,6 +27055,14 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "icon is-small" }, [
+      _c("i", { staticClass: "material-icons icon" }, [_vm._v("check_circle")])
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -26145,6 +27118,7 @@ var render = function() {
                 "tbody",
                 _vm._l(_vm.inviteSessions, function(inviteSession) {
                   return _c("tr", { key: inviteSession.id }, [
+                    _c("td", [_vm._v(_vm._s(inviteSession.dep.title))]),
                     _c("td", {
                       domProps: {
                         innerHTML: _vm._s(_vm.getTitles(inviteSession.extra))
@@ -26219,6 +27193,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", [
+        _c("th", [_vm._v("موضوع جلسه")]),
         _c("th", [_vm._v("دستور جلسه")]),
         _c("th", [_vm._v("وضعیت")]),
         _c("th", [_vm._v("تاریخ ایجاد")]),
@@ -26245,6 +27220,165 @@ var staticRenderFns = [
     ])
   }
 ]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/pug-plain-loader/index.js!./node_modules/vue-loader/lib/index.js?!./resources/js/vue/components/invite-session/multi-text-approv.vue?vue&type=template&id=7576be69&scoped=true&lang=pug&":
+/*!********************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/vue/components/invite-session/multi-text-approv.vue?vue&type=template&id=7576be69&scoped=true&lang=pug& ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "multi-text", attrs: { id: "multi-text-template" } },
+    [
+      _vm._l(_vm.values, function(item, index) {
+        return _c("div", { staticClass: "form-itemsbox" }, [
+          _c("div", { staticClass: "columns is-multiline" }, [
+            _c("div", { staticClass: "column is-12" }, [
+              _c("div", { staticClass: "field" }, [
+                _c("label", { staticClass: "label" }, [_vm._v("عنوان مصوبه")]),
+                _c("div", { staticClass: "control" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: item.title,
+                        expression: "item.title"
+                      }
+                    ],
+                    staticClass: "textarea",
+                    attrs: { placeholder: "عنوان مصوبه" },
+                    domProps: { value: item.title },
+                    on: {
+                      input: [
+                        function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(item, "title", $event.target.value)
+                        },
+                        _vm.updateValue
+                      ]
+                    }
+                  })
+                ])
+              ])
+            ]),
+            _c("div", { staticClass: "column is-2" }, [
+              _c("div", { staticClass: "field" }, [
+                _c("label", { staticClass: "label" }, [_vm._v("مسئول پیگیری")]),
+                _c("div", { staticClass: "control" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: item.responsible,
+                        expression: "item.responsible"
+                      }
+                    ],
+                    staticClass: "input",
+                    attrs: { type: "text" },
+                    domProps: { value: item.responsible },
+                    on: {
+                      input: [
+                        function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(item, "responsible", $event.target.value)
+                        },
+                        _vm.updateValue
+                      ]
+                    }
+                  })
+                ])
+              ])
+            ]),
+            _c("div", { staticClass: "column is-4" }, [
+              _c("div", { staticClass: "field" }, [
+                _c("label", { staticClass: "label" }, [_vm._v("زمان پیگیری")]),
+                _c("div", { staticClass: "control" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: item.time,
+                        expression: "item.time"
+                      }
+                    ],
+                    staticClass: "input",
+                    attrs: { type: "text" },
+                    domProps: { value: item.time },
+                    on: {
+                      input: [
+                        function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(item, "time", $event.target.value)
+                        },
+                        _vm.updateValue
+                      ]
+                    }
+                  })
+                ])
+              ])
+            ]),
+            _c("div", { staticClass: "column is-2" }, [
+              _c(
+                "a",
+                {
+                  staticClass: "button is-danger",
+                  attrs: { href: "#" },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.deleteValue(index)
+                    }
+                  }
+                },
+                [_c("i", { staticClass: "fa fa-times" })]
+              )
+            ])
+          ])
+        ])
+      }),
+      _c(
+        "a",
+        {
+          staticClass: "button is-success",
+          attrs: { href: "#" },
+          on: {
+            click: function($event) {
+              $event.preventDefault()
+              return _vm.addValue($event)
+            }
+          }
+        },
+        [_c("i", { staticClass: "fa fa-plus" })]
+      )
+    ],
+    2
+  )
+}
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -26685,11 +27819,68 @@ var render = function() {
         [
           _c("div", { staticClass: "print-form" }, [
             _vm._m(0),
+            _c("div", { staticClass: "print-form-head" }, [
+              _c(
+                "table",
+                { staticClass: "table is-fullwidth is-bordered text-center" },
+                [
+                  _vm._m(1),
+                  _c("tbody", [
+                    _c("tr", [
+                      _c("td", [_vm._v(_vm._s(_vm.inviteSessionData.dep))]),
+                      _c("td", [
+                        _vm._v(
+                          _vm._s(
+                            _vm.toPersianDate(
+                              _vm.inviteSessionData.date,
+                              "jYYYY",
+                              "fa"
+                            )
+                          )
+                        )
+                      ]),
+                      _c("td", [
+                        _vm._v(
+                          _vm._s(
+                            _vm.toPersianDate(
+                              _vm.inviteSessionData.date,
+                              "HH:MM",
+                              "fa"
+                            )
+                          )
+                        )
+                      ]),
+                      _c("td", [_vm._v(_vm._s(_vm.inviteSessionData.place))])
+                    ])
+                  ])
+                ]
+              )
+            ]),
             _c("div", { staticClass: "print-form-body" }, [
-              _c("div", { staticClass: "print-form-agenda columns" }, [
-                _c("div", { staticClass: "column is-6 print-form-title" }, [
-                  _c("h3", [_vm._v(_vm._s(_vm.inviteSessionData.agenda))])
-                ])
+              _c("label", [_vm._v("دستور جلسه:")]),
+              _c(
+                "table",
+                { staticClass: "table is-fullwidth is-bordered text-center" },
+                [
+                  _vm._m(2),
+                  _c(
+                    "tbody",
+                    _vm._l(_vm.inviteSessionData.agenda, function(agenda) {
+                      return _c("tr", [
+                        _c("td", [_vm._v(_vm._s(agenda.title))]),
+                        _c("td", [_vm._v(_vm._s(agenda.duration))]),
+                        _c("td", [_vm._v(_vm._s(agenda.provider))])
+                      ])
+                    }),
+                    0
+                  )
+                ]
+              )
+            ]),
+            _c("div", { staticClass: "print-form-body" }, [
+              _c("label", [_vm._v("توضیحات:")]),
+              _c("div", { staticClass: "is-fullwidth" }, [
+                _vm._v(_vm._s(_vm.inviteSessionData.body))
               ])
             ])
           ])
@@ -26703,15 +27894,43 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "print-form-head columns" }, [
-      _c("div", { staticClass: "column is-3 print-form-logo" }, [
-        _c("img", { attrs: { src: "/images/logo.png" } })
+    return _c("div", { staticClass: "print-form-top columns" }, [
+      _c("div", { staticClass: "column is-3" }, [
+        _c("div", { staticClass: "print-form-logo" }, [
+          _c("img", { attrs: { src: "/images/logo.png" } })
+        ])
       ]),
-      _c("div", { staticClass: "column is-6 print-form-title" }, [
-        _c("h2", [_vm._v("فرم صورتجلسه")])
+      _c("div", { staticClass: "column is-6 print-form-title text-center" }, [
+        _c("span", [_vm._v("به نام خداوند جان و خرد")])
       ]),
       _c("div", { staticClass: "column is-3 print-form-number" }, [
-        _c("span", [_vm._v("شماره مدرک")])
+        _c("div", [_c("b", [_vm._v("رونق تولید")])]),
+        _c("div", [_vm._v("کد فرم: 13FO20/00")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("موضوع جلسه")]),
+        _c("th", [_vm._v("تاریخ")]),
+        _c("th", [_vm._v("ساعت")]),
+        _c("th", [_vm._v("مکان")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("دستور جلسه")]),
+        _c("th", [_vm._v("زمان (دقیقه)")]),
+        _c("th", [_vm._v("ارائه دهنده")])
       ])
     ])
   }
@@ -28426,6 +29645,78 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/vue/components/invite-session/edit-invite-session.vue":
+/*!****************************************************************************!*\
+  !*** ./resources/js/vue/components/invite-session/edit-invite-session.vue ***!
+  \****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _edit_invite_session_vue_vue_type_template_id_0c2f9a7a_scoped_true_lang_pug___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./edit-invite-session.vue?vue&type=template&id=0c2f9a7a&scoped=true&lang=pug& */ "./resources/js/vue/components/invite-session/edit-invite-session.vue?vue&type=template&id=0c2f9a7a&scoped=true&lang=pug&");
+/* harmony import */ var _edit_invite_session_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./edit-invite-session.vue?vue&type=script&lang=js& */ "./resources/js/vue/components/invite-session/edit-invite-session.vue?vue&type=script&lang=js&");
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _edit_invite_session_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _edit_invite_session_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _edit_invite_session_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _edit_invite_session_vue_vue_type_template_id_0c2f9a7a_scoped_true_lang_pug___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _edit_invite_session_vue_vue_type_template_id_0c2f9a7a_scoped_true_lang_pug___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "0c2f9a7a",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/vue/components/invite-session/edit-invite-session.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/vue/components/invite-session/edit-invite-session.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************************************!*\
+  !*** ./resources/js/vue/components/invite-session/edit-invite-session.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_edit_invite_session_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./edit-invite-session.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/vue/components/invite-session/edit-invite-session.vue?vue&type=script&lang=js&");
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_edit_invite_session_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_edit_invite_session_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_edit_invite_session_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_edit_invite_session_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_edit_invite_session_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/vue/components/invite-session/edit-invite-session.vue?vue&type=template&id=0c2f9a7a&scoped=true&lang=pug&":
+/*!********************************************************************************************************************************!*\
+  !*** ./resources/js/vue/components/invite-session/edit-invite-session.vue?vue&type=template&id=0c2f9a7a&scoped=true&lang=pug& ***!
+  \********************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_pug_plain_loader_index_js_node_modules_vue_loader_lib_index_js_vue_loader_options_edit_invite_session_vue_vue_type_template_id_0c2f9a7a_scoped_true_lang_pug___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/pug-plain-loader!../../../../../node_modules/vue-loader/lib??vue-loader-options!./edit-invite-session.vue?vue&type=template&id=0c2f9a7a&scoped=true&lang=pug& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/pug-plain-loader/index.js!./node_modules/vue-loader/lib/index.js?!./resources/js/vue/components/invite-session/edit-invite-session.vue?vue&type=template&id=0c2f9a7a&scoped=true&lang=pug&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_pug_plain_loader_index_js_node_modules_vue_loader_lib_index_js_vue_loader_options_edit_invite_session_vue_vue_type_template_id_0c2f9a7a_scoped_true_lang_pug___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_pug_plain_loader_index_js_node_modules_vue_loader_lib_index_js_vue_loader_options_edit_invite_session_vue_vue_type_template_id_0c2f9a7a_scoped_true_lang_pug___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/vue/components/invite-session/invite-sessions.vue":
 /*!************************************************************************!*\
   !*** ./resources/js/vue/components/invite-session/invite-sessions.vue ***!
@@ -28565,6 +29856,78 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_pug_plain_loader_index_js_node_modules_vue_loader_lib_index_js_vue_loader_options_list_invite_session_vue_vue_type_template_id_32210766_scoped_true_lang_pug___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_pug_plain_loader_index_js_node_modules_vue_loader_lib_index_js_vue_loader_options_list_invite_session_vue_vue_type_template_id_32210766_scoped_true_lang_pug___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/vue/components/invite-session/multi-text-approv.vue":
+/*!**************************************************************************!*\
+  !*** ./resources/js/vue/components/invite-session/multi-text-approv.vue ***!
+  \**************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _multi_text_approv_vue_vue_type_template_id_7576be69_scoped_true_lang_pug___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./multi-text-approv.vue?vue&type=template&id=7576be69&scoped=true&lang=pug& */ "./resources/js/vue/components/invite-session/multi-text-approv.vue?vue&type=template&id=7576be69&scoped=true&lang=pug&");
+/* harmony import */ var _multi_text_approv_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./multi-text-approv.vue?vue&type=script&lang=js& */ "./resources/js/vue/components/invite-session/multi-text-approv.vue?vue&type=script&lang=js&");
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _multi_text_approv_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _multi_text_approv_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _multi_text_approv_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _multi_text_approv_vue_vue_type_template_id_7576be69_scoped_true_lang_pug___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _multi_text_approv_vue_vue_type_template_id_7576be69_scoped_true_lang_pug___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "7576be69",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/vue/components/invite-session/multi-text-approv.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/vue/components/invite-session/multi-text-approv.vue?vue&type=script&lang=js&":
+/*!***************************************************************************************************!*\
+  !*** ./resources/js/vue/components/invite-session/multi-text-approv.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_multi_text_approv_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./multi-text-approv.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/vue/components/invite-session/multi-text-approv.vue?vue&type=script&lang=js&");
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_multi_text_approv_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_multi_text_approv_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_multi_text_approv_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_multi_text_approv_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_multi_text_approv_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/vue/components/invite-session/multi-text-approv.vue?vue&type=template&id=7576be69&scoped=true&lang=pug&":
+/*!******************************************************************************************************************************!*\
+  !*** ./resources/js/vue/components/invite-session/multi-text-approv.vue?vue&type=template&id=7576be69&scoped=true&lang=pug& ***!
+  \******************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_pug_plain_loader_index_js_node_modules_vue_loader_lib_index_js_vue_loader_options_multi_text_approv_vue_vue_type_template_id_7576be69_scoped_true_lang_pug___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/pug-plain-loader!../../../../../node_modules/vue-loader/lib??vue-loader-options!./multi-text-approv.vue?vue&type=template&id=7576be69&scoped=true&lang=pug& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/pug-plain-loader/index.js!./node_modules/vue-loader/lib/index.js?!./resources/js/vue/components/invite-session/multi-text-approv.vue?vue&type=template&id=7576be69&scoped=true&lang=pug&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_pug_plain_loader_index_js_node_modules_vue_loader_lib_index_js_vue_loader_options_multi_text_approv_vue_vue_type_template_id_7576be69_scoped_true_lang_pug___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_pug_plain_loader_index_js_node_modules_vue_loader_lib_index_js_vue_loader_options_multi_text_approv_vue_vue_type_template_id_7576be69_scoped_true_lang_pug___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

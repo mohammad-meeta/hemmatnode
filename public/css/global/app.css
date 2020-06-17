@@ -3156,6 +3156,10 @@ table td {
   text-align: right !important;
 }
 
+table.text-center td {
+  text-align: center !important;
+}
+
 .button .icon:first-child:not(:last-child) {
   margin-left: 0.25em;
   margin-right: calc(-0.5em - 1px);
@@ -3200,6 +3204,14 @@ h4,
 h5,
 h6 {
   color: #3E4D61;
+}
+
+.text-center {
+  text-align: center;
+}
+
+w-100 {
+  width: 100%;
 }
 
 .disabled-opt {
@@ -3807,7 +3819,12 @@ h2.item-category {
 * Session
 **/
 
-.print-form-head {
-  border: 2px solid #000;
+.print-form-logo {
+  width: 95px;
+  height: auto;
+}
+
+.print-form-body {
+  margin-top: 10px;
 }
 

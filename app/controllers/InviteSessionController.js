@@ -239,3 +239,43 @@ InviteSession.store = async function store(req, res, next) {
         })
         .catch(err => console.error(err));
 };
+/**
+ * store approves session
+ */
+InviteSession.approvesStore = async function approvesStore(req, res, next) {
+
+    const approves = JSON.parse(req.body.approves);
+    let approvesArray = [];
+
+    InviteSessionHelper.insertApproves(approves)
+        .then(dataRes => {
+            for (let index = 0; index < dataRes.length; index++) {
+                approvesArray.push(dataRes[index]["_id"]);
+            }
+
+            const data = {
+                "_id": req.body._id,
+                "introduction": req.body.introduction,
+                "user_list_present": req.body.user_list_present,
+                "other_user": req.body.other_user,
+                "user_id": req.session.auth.userId,
+                "status": req.body.status || 1,
+                "approves": approves
+            };
+
+            InviteSessionHelper.updateInviteSessionApproves(data)
+                .then(dataRes => {
+                    const result = {
+                        success: true,
+                        data: dataRes
+                    };
+                    res.status(200)
+                        .send(result)
+                        .end();
+                })
+                .catch(err => console.error(err));
+
+        })
+        .catch(err => console.error(err));
+
+};

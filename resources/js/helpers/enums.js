@@ -15,7 +15,8 @@ Enums.COMMAND = {
     DELETE: 3,
     SAVE: 4,
     CANCEL: 5,
-    SHOW: 6
+    SHOW: 6,
+    NEWSESSION: 7
 };
 
 /**
@@ -27,5 +28,6 @@ Enums.FORM_MODE = {
     REGISTER: 3,
     EDIT: 4,
     REMOVE: 5,
-    SHOW: 6
+    SHOW: 6,
+    NEWSESSION: 7
 };

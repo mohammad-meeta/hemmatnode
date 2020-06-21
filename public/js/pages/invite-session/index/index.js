@@ -216,337 +216,9 @@ module.exports = {
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/vue/components/invite-session/edit-invite-session.vue?vue&type=script&lang=js& ***!
   \*************************************************************************************************************************************************************************************************/
 /*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-"use strict";
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-var AxiosHelper = __webpack_require__(/*! JS-HELPERS/axios-helper */ "./resources/js/helpers/axios-helper.js");
-
-var ENUMS = __webpack_require__(/*! JS-HELPERS/enums */ "./resources/js/helpers/enums.js");
-
-var InviteSessionValidator = __webpack_require__(/*! JS-VALIDATORS/invite-session-register-validator */ "./resources/js/validators/invite-session-register-validator.js");
-
-var Notification = __webpack_require__(/*! VUE-COMPONENTS/general/notification.vue */ "./resources/js/vue/components/general/notification.vue")["default"];
-
-var VuePersianDatetimePicker = __webpack_require__(/*! vue-persian-datetime-picker */ "./node_modules/vue-persian-datetime-picker/dist/vue-persian-datetime-picker.js")["default"];
-
-var MultiText = __webpack_require__(/*! VUE-COMPONENTS/general/multi-text.vue */ "./resources/js/vue/components/general/multi-text.vue")["default"];
-
-var MultiTextApprov = __webpack_require__(/*! VUE-COMPONENTS/invite-session/multi-text-approv.vue */ "./resources/js/vue/components/invite-session/multi-text-approv.vue")["default"];
-
-module.exports = {
-  name: "EditInviteSession",
-  components: {
-    Notification: Notification,
-    DatePicker: VuePersianDatetimePicker,
-    MultiText: MultiText,
-    MultiTextApprov: MultiTextApprov
-  },
-  data: function data() {
-    return {
-      ENUMS: ENUMS,
-      departments: [],
-      users: [],
-      inviteSessionData: {
-        title: null,
-        body: null,
-        agenda: [],
-        place: null,
-        date: null,
-        department_id: null,
-        files: {},
-        user_list: {},
-        isActive: false,
-        intro: null,
-        approv: []
-      },
-      notificationMessage: null,
-      notificationType: "is-info",
-      showLoadingFlag: false
-    };
-  },
-  props: {
-    editUrl: {
-      type: String,
-      "default": ""
-    },
-    departmentId: {
-      type: String,
-      "default": null
-    },
-    departmentsUrl: {
-      type: String,
-      "default": ""
-    },
-    usersUrl: {
-      type: String,
-      "default": ""
-    },
-    inviteSessionDatas: {}
-  },
-  created: function created() {
-    this.loadDepartments();
-    this.loadUsers();
-  },
-  mounted: function mounted() {},
-  computed: {
-    isLoadingMode: function isLoadingMode(state) {
-      return state.showLoadingFlag == true;
-    },
-    showNotification: function showNotification(state) {
-      return state.notificationMessage != null;
-    }
-  },
-  methods: {
-    /**
-     * Set attachments
-     */
-    setAttachment: function setAttachment(sender) {
-      var files = sender.target.files;
-      Vue.set(this, "files", files);
-    },
-
-    /**
-     * Load specific user
-     */
-    loadInviteSessionData: function loadInviteSessionData(data) {
-      var temp = {
-        _id: data._id,
-        dep: data.dep.title,
-        body: data.body,
-        agenda: data.agenda,
-        place: data.place,
-        date: data.date,
-        department_id: data.department_id,
-        files: data.files,
-        roles: data.roles,
-        user_list: data.user_list,
-        isActive: data.is_active
-      };
-
-      try {
-        temp.agenda = JSON.parse(data.agenda);
-      } catch (ex) {
-        temp.agenda = [];
-      }
-
-      Vue.set(this, "inviteSessionData", temp);
-    },
-
-    /**
-     * To Persian Date
-     */
-    toPersianDate: function toPersianDate(date, format, value) {
-      return DateHelper.toPersianDate(date, format, value);
-    },
-
-    /**
-     * On Command
-     *
-     * @param      {Object}  arg     The argument
-     */
-    commandClick: function commandClick(arg) {
-      switch (arg) {
-        case ENUMS.COMMAND.SAVE:
-          this.editUser();
-          break;
-      }
-    },
-
-    /**
-     * Show Loading
-     */
-    showLoading: function showLoading() {
-      Vue.set(this, "showLoadingFlag", true);
-    },
-
-    /**
-     * HideLoading
-     */
-    hideLoading: function hideLoading() {
-      Vue.set(this, "showLoadingFlag", false);
-    },
-
-    /**
-     * Set notification
-     */
-    setNotification: function setNotification(message) {
-      var notificationType = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "is-info";
-      Vue.set(this, "notificationType", notificationType);
-      Vue.set(this, "notificationMessage", message);
-    },
-
-    /**
-     * Close Notification
-     */
-    closeNotification: function closeNotification() {
-      this.setNotification(null);
-    },
-
-    /**
-     * load all departments for select departments in form
-     */
-    loadDepartments: function loadDepartments() {
-      var _this = this;
-
-      var url = this.departmentsUrl;
-      console.log(url);
-      AxiosHelper.send("get", url, "").then(function (res) {
-        var resData = res.data;
-        var datas = resData.data.data;
-        Vue.set(_this, "departments", datas);
-      });
-    },
-
-    /**
-     * load all users for select user in form
-     */
-    loadUsers: function loadUsers() {
-      var _this2 = this;
-
-      var url = this.usersUrl;
-      console.log(url);
-      AxiosHelper.send("get", url, "").then(function (res) {
-        var resData = res.data;
-        var datas = resData.data.data;
-        Vue.set(_this2, "users", datas);
-      });
-    },
-
-    /**
-     * Edit invite session
-     */
-    EditInviteSession: function EditInviteSession() {
-      var _this3 = this;
-
-      var isValid = this.validate();
-
-      if (!isValid) {
-        return;
-      }
-
-      this.showLoading();
-      var inviteSessionData = {
-        _id: this.inviteSessionData._id,
-        body: this.inviteSessionData.body,
-        agenda: JSON.stringify(this.inviteSessionData.agenda),
-        place: this.inviteSessionData.place,
-        date: this.inviteSessionData.date,
-        department_id: this.inviteSessionData.departments,
-        user_list: this.inviteSessionData.user_list,
-        is_active: this.inviteSessionData.isActive
-      };
-      inviteSessionData.files = this.files[0];
-      var t = Object.keys(inviteSessionData.user_list).filter(function (key) {
-        return true == inviteSessionData.user_list[key];
-      }).map(function (key) {
-        return key;
-      });
-      inviteSessionData.user_list = t;
-      console.log(inviteSessionData);
-      this.showLoading();
-      var url = this.editUrl.replace("$id$", inviteSessionData._id);
-      AxiosHelper.send("patch", url, inviteSessionData).then(function (res) {
-        var data = JSON.parse(res.config.data);
-
-        _this3.$emit("on-update", {
-          sender: _this3,
-          data: data
-        });
-      })["catch"](function (err) {
-        console.error(err);
-
-        _this3.setNotification(".خطا در ذخیره جلسه", "is-danger");
-      }).then(function () {
-        return _this3.hideLoading();
-      });
-    },
-
-    /**
-     * Validate invite session data
-     */
-    validate: function validate() {
-      var result = InviteSessionValidator.validateEdit(this.inviteSessionData);
-
-      if (result.passes) {
-        this.closeNotification();
-        return true;
-      }
-
-      var errors = result.validator.errors.all();
-      var error = Object.keys(errors).map(function (key) {
-        return errors[key].join("\n");
-      }).join("</br>");
-      console.log(error);
-      this.setNotification(error, "is-danger");
-      return false;
-    }
-  }
-};
+throw new Error("Module build failed (from ./node_modules/babel-loader/lib/index.js):\nSyntaxError: /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/package.json: Error while parsing JSON - Unexpected token < in JSON at position 1698\n    at JSON.parse (<anonymous>)\n    at readConfigPackage (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/@babel/core/lib/config/files/package.js:57:20)\n    at /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/@babel/core/lib/config/files/utils.js:37:12\n    at Generator.next (<anonymous>)\n    at Function.<anonymous> (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/@babel/core/lib/gensync-utils/async.js:26:3)\n    at Generator.next (<anonymous>)\n    at evaluateSync (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/gensync/index.js:244:28)\n    at Function.sync (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/gensync/index.js:84:14)\n    at sync (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/@babel/core/lib/gensync-utils/async.js:66:25)\n    at sync (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/gensync/index.js:177:19)\n    at onFirstPause (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/gensync/index.js:204:19)\n    at Generator.next (<anonymous>)\n    at cachedFunction (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/@babel/core/lib/config/caching.js:68:46)\n    at cachedFunction.next (<anonymous>)\n    at findPackageData (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/@babel/core/lib/config/files/package.js:33:18)\n    at findPackageData.next (<anonymous>)\n    at buildRootChain (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/@babel/core/lib/config/config-chain.js:105:92)\n    at buildRootChain.next (<anonymous>)\n    at loadPrivatePartialConfig (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/@babel/core/lib/config/partial.js:95:62)\n    at loadPrivatePartialConfig.next (<anonymous>)\n    at Function.<anonymous> (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/@babel/core/lib/config/partial.js:120:25)\n    at Generator.next (<anonymous>)\n    at evaluateSync (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/gensync/index.js:244:28)\n    at Function.sync (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/gensync/index.js:84:14)\n    at Object.<anonymous> (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/@babel/core/lib/config/index.js:41:61)\n    at Object.<anonymous> (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/babel-loader/lib/index.js:151:26)\n    at Generator.next (<anonymous>)\n    at asyncGeneratorStep (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/babel-loader/lib/index.js:3:103)\n    at _next (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/babel-loader/lib/index.js:5:194)\n    at /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/babel-loader/lib/index.js:5:364\n    at new Promise (<anonymous>)\n    at Object.<anonymous> (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/babel-loader/lib/index.js:5:97)\n    at Object.loader (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/babel-loader/lib/index.js:64:18)\n    at Object.<anonymous> (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/babel-loader/lib/index.js:59:12)");
 
 /***/ }),
 
@@ -999,80 +671,6 @@ module.exports = {
       });
       this.inviteSessions[foundIndex].agenda = editedInviteSessionsData.agenda;
       this.inviteSessions[foundIndex].is_active = editedInviteSessionsData.is_active;
-    }
-  }
-};
-
-/***/ }),
-
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/vue/components/invite-session/multi-text-approv.vue?vue&type=script&lang=js&":
-/*!***********************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/vue/components/invite-session/multi-text-approv.vue?vue&type=script&lang=js& ***!
-  \***********************************************************************************************************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-module.exports = {
-  name: "MultiTextApprov",
-  data: function data() {
-    return {
-      values: {
-        result: []
-      }
-    };
-  },
-  props: {
-    value: null
-  },
-  created: function created() {
-    this.init();
-  },
-  methods: {
-    init: function init() {
-      var v = Array.from(this.value);
-      Vue.set(this, "values", v);
-    },
-    updateValue: function updateValue() {
-      this.$emit("input", this.values);
-    },
-    deleteValue: function deleteValue(index) {
-      Vue["delete"](this.values, index);
-      this.$emit("input", this.values);
-    },
-    addValue: function addValue() {
-      this.values.push({
-        result: []
-      });
-      this.$emit('input', this.values);
     }
   }
 };
@@ -2035,19 +1633,6 @@ function toDate(argument) {
     return new Date(NaN);
   }
 }
-
-/***/ }),
-
-/***/ "./node_modules/form-data/lib/browser.js":
-/*!***********************************************!*\
-  !*** ./node_modules/form-data/lib/browser.js ***!
-  \***********************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/* eslint-env browser */
-module.exports = typeof self == 'object' ? self.FormData : window.FormData;
-
 
 /***/ }),
 
@@ -26706,6 +26291,101 @@ var render = function() {
                 })
               ],
               1
+            )
+          ]),
+          _c("div", { staticClass: "field" }, [
+            _c("label", { staticClass: "label" }, [
+              _vm._v("اعضای حاضر در جلسه")
+            ]),
+            _c(
+              "div",
+              { staticClass: "multi-checkboxes" },
+              _vm._l(_vm.users, function(user, userIndex) {
+                return _c("label", { staticClass: "checkbox column is-12" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.inviteSessionData.user_list[user._id],
+                        expression: "inviteSessionData.user_list[user._id]"
+                      }
+                    ],
+                    attrs: { type: "checkbox", cehcked: true },
+                    domProps: {
+                      value: user._id,
+                      checked: Array.isArray(
+                        _vm.inviteSessionData.user_list[user._id]
+                      )
+                        ? _vm._i(
+                            _vm.inviteSessionData.user_list[user._id],
+                            user._id
+                          ) > -1
+                        : _vm.inviteSessionData.user_list[user._id]
+                    },
+                    on: {
+                      change: function($event) {
+                        var $$a = _vm.inviteSessionData.user_list[user._id],
+                          $$el = $event.target,
+                          $$c = $$el.checked ? true : false
+                        if (Array.isArray($$a)) {
+                          var $$v = user._id,
+                            $$i = _vm._i($$a, $$v)
+                          if ($$el.checked) {
+                            $$i < 0 &&
+                              _vm.$set(
+                                _vm.inviteSessionData.user_list,
+                                user._id,
+                                $$a.concat([$$v])
+                              )
+                          } else {
+                            $$i > -1 &&
+                              _vm.$set(
+                                _vm.inviteSessionData.user_list,
+                                user._id,
+                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                              )
+                          }
+                        } else {
+                          _vm.$set(
+                            _vm.inviteSessionData.user_list,
+                            user._id,
+                            $$c
+                          )
+                        }
+                      }
+                    }
+                  }),
+                  _vm._v(
+                    "  " +
+                      _vm._s(user.name) +
+                      " - " +
+                      _vm._s(user.profile.first_name) +
+                      " " +
+                      _vm._s(user.profile.last_name)
+                  )
+                ])
+              }),
+              0
+            )
+          ]),
+          _c("fieldset", [
+            _c("legend", [_vm._v("مدعوین")]),
+            _c(
+              "div",
+              { staticClass: "field" },
+              [
+                _c("multi-text-member", {
+                  model: {
+                    value: _vm.inviteSessionData.member,
+                    callback: function($$v) {
+                      _vm.$set(_vm.inviteSessionData, "member", $$v)
+                    },
+                    expression: "inviteSessionData.member"
+                  }
+                })
+              ],
+              1
             ),
             _c("div", { staticClass: "field is-grouped" }, [
               _c(
@@ -26902,7 +26582,7 @@ var render = function() {
                 on: {
                   click: function($event) {
                     $event.preventDefault()
-                    return _vm.commandClick(_vm.ENUMS.COMMAND.NEW)
+                    return _vm.commandClick(_vm.ENUMS.COMMAND.NEWSESSION)
                   }
                 }
               },
@@ -27220,165 +26900,6 @@ var staticRenderFns = [
     ])
   }
 ]
-render._withStripped = true
-
-
-
-/***/ }),
-
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/pug-plain-loader/index.js!./node_modules/vue-loader/lib/index.js?!./resources/js/vue/components/invite-session/multi-text-approv.vue?vue&type=template&id=7576be69&scoped=true&lang=pug&":
-/*!********************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/vue/components/invite-session/multi-text-approv.vue?vue&type=template&id=7576be69&scoped=true&lang=pug& ***!
-  \********************************************************************************************************************************************************************************************************************************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "multi-text", attrs: { id: "multi-text-template" } },
-    [
-      _vm._l(_vm.values, function(item, index) {
-        return _c("div", { staticClass: "form-itemsbox" }, [
-          _c("div", { staticClass: "columns is-multiline" }, [
-            _c("div", { staticClass: "column is-12" }, [
-              _c("div", { staticClass: "field" }, [
-                _c("label", { staticClass: "label" }, [_vm._v("عنوان مصوبه")]),
-                _c("div", { staticClass: "control" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: item.title,
-                        expression: "item.title"
-                      }
-                    ],
-                    staticClass: "textarea",
-                    attrs: { placeholder: "عنوان مصوبه" },
-                    domProps: { value: item.title },
-                    on: {
-                      input: [
-                        function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(item, "title", $event.target.value)
-                        },
-                        _vm.updateValue
-                      ]
-                    }
-                  })
-                ])
-              ])
-            ]),
-            _c("div", { staticClass: "column is-2" }, [
-              _c("div", { staticClass: "field" }, [
-                _c("label", { staticClass: "label" }, [_vm._v("مسئول پیگیری")]),
-                _c("div", { staticClass: "control" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: item.responsible,
-                        expression: "item.responsible"
-                      }
-                    ],
-                    staticClass: "input",
-                    attrs: { type: "text" },
-                    domProps: { value: item.responsible },
-                    on: {
-                      input: [
-                        function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(item, "responsible", $event.target.value)
-                        },
-                        _vm.updateValue
-                      ]
-                    }
-                  })
-                ])
-              ])
-            ]),
-            _c("div", { staticClass: "column is-4" }, [
-              _c("div", { staticClass: "field" }, [
-                _c("label", { staticClass: "label" }, [_vm._v("زمان پیگیری")]),
-                _c("div", { staticClass: "control" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: item.time,
-                        expression: "item.time"
-                      }
-                    ],
-                    staticClass: "input",
-                    attrs: { type: "text" },
-                    domProps: { value: item.time },
-                    on: {
-                      input: [
-                        function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(item, "time", $event.target.value)
-                        },
-                        _vm.updateValue
-                      ]
-                    }
-                  })
-                ])
-              ])
-            ]),
-            _c("div", { staticClass: "column is-2" }, [
-              _c(
-                "a",
-                {
-                  staticClass: "button is-danger",
-                  attrs: { href: "#" },
-                  on: {
-                    click: function($event) {
-                      $event.preventDefault()
-                      return _vm.deleteValue(index)
-                    }
-                  }
-                },
-                [_c("i", { staticClass: "fa fa-times" })]
-              )
-            ])
-          ])
-        ])
-      }),
-      _c(
-        "a",
-        {
-          staticClass: "button is-success",
-          attrs: { href: "#" },
-          on: {
-            click: function($event) {
-              $event.preventDefault()
-              return _vm.addValue($event)
-            }
-          }
-        },
-        [_c("i", { staticClass: "fa fa-plus" })]
-      )
-    ],
-    2
-  )
-}
-var staticRenderFns = []
 render._withStripped = true
 
 
@@ -29085,116 +28606,9 @@ RoutesModule.route = function route(name) {
   !*** ./resources/js/helpers/axios-helper.js ***!
   \**********************************************/
 /*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-"use strict";
-
-/**
- * Axios Helper class
- */
-
-function AxiosHelper() {}
-
-module.exports = AxiosHelper;
-/**
- * To GraphQL object
- */
-
-AxiosHelper.toGQL = function toGQL() {
-  var query = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
-  var variables = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  return {
-    query: query,
-    variables: variables
-  };
-};
-/**
- * Send ajax request
- */
-
-
-AxiosHelper.send = function send(method, url) {
-  var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  var options = arguments.length > 3 ? arguments[3] : undefined;
-
-  var FormData = __webpack_require__(/*! form-data */ "./node_modules/form-data/lib/browser.js");
-
-  var postData;
-  data = data || {};
-  /* Setup options */
-
-  options = _.merge({
-    headers: [],
-    useCookie: true,
-    sendAsFormData: false
-  }, options);
-  /* Check form-data flag */
-
-  if (true == options.sendAsFormData) {
-    /* Setup form-data */
-    var formData = new FormData();
-    /* Set new data */
-
-    Object.keys(data).forEach(function (key) {
-      var itemData = data[key];
-
-      if (itemData != null) {
-        if (Array.isArray(itemData)) {
-          itemData = JSON.stringify(itemData);
-        }
-
-        formData.append(key, itemData);
-      }
-    });
-    postData = formData;
-    /* Setup header */
-
-    options.headers['content-type'] = 'multipart/form-data';
-  } else {
-    postData = data;
-
-    if (options.jsonRequest || true) {
-      options.headers['content-type'] = 'application/json';
-    }
-  }
-
-  var config = {
-    method: method,
-    withCredentials: options.useCookie,
-    baseURL: options.baseURL,
-    headers: options.headers
-  };
-
-  if (null != postData.getHeaders) {
-    config['headers'] = postData.getHeaders();
-  }
-  /* Add CSRF token */
-
-
-  var csrf = options.csrfToken || (document.querySelector('meta[name="csrf-token"]') || {
-    content: ''
-  }).content;
-  axios.defaults.headers.common['X-CSRF-TOKEN'] = options.headers['x-xsrf-token'] = options.headers['x-csrf-token'] = options.headers['xsrf-token'] = options.headers['csrf-token'] = csrf;
-  /* Add bearer token */
-
-  if (null != options.token) {
-    config.headers['authorization'] = "Bearer ".concat(options.token);
-  }
-  /* Create axios instance */
-
-
-  var instance = axios.create(config);
-  return instance[method](url, postData);
-};
-/* Add standard restful request types */
-
-
-var types = ['get', 'head', 'post', 'patch', 'put', 'options', 'link'];
-types.forEach(function (type) {
-  AxiosHelper[type] = function send(method, url, data, options) {
-    return AxiosHelper.send(type, method, url, data, options);
-  };
-});
+throw new Error("Module build failed (from ./node_modules/babel-loader/lib/index.js):\nSyntaxError: /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/package.json: Error while parsing JSON - Unexpected token < in JSON at position 1698\n    at JSON.parse (<anonymous>)\n    at readConfigPackage (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/@babel/core/lib/config/files/package.js:57:20)\n    at /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/@babel/core/lib/config/files/utils.js:37:12\n    at Generator.next (<anonymous>)\n    at Function.<anonymous> (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/@babel/core/lib/gensync-utils/async.js:26:3)\n    at Generator.next (<anonymous>)\n    at evaluateSync (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/gensync/index.js:244:28)\n    at Function.sync (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/gensync/index.js:84:14)\n    at sync (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/@babel/core/lib/gensync-utils/async.js:66:25)\n    at sync (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/gensync/index.js:177:19)\n    at onFirstPause (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/gensync/index.js:204:19)\n    at Generator.next (<anonymous>)\n    at cachedFunction (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/@babel/core/lib/config/caching.js:68:46)\n    at cachedFunction.next (<anonymous>)\n    at findPackageData (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/@babel/core/lib/config/files/package.js:33:18)\n    at findPackageData.next (<anonymous>)\n    at buildRootChain (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/@babel/core/lib/config/config-chain.js:105:92)\n    at buildRootChain.next (<anonymous>)\n    at loadPrivatePartialConfig (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/@babel/core/lib/config/partial.js:95:62)\n    at loadPrivatePartialConfig.next (<anonymous>)\n    at Function.<anonymous> (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/@babel/core/lib/config/partial.js:120:25)\n    at Generator.next (<anonymous>)\n    at evaluateSync (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/gensync/index.js:244:28)\n    at Function.sync (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/gensync/index.js:84:14)\n    at Object.<anonymous> (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/@babel/core/lib/config/index.js:41:61)\n    at Object.<anonymous> (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/babel-loader/lib/index.js:151:26)\n    at Generator.next (<anonymous>)\n    at asyncGeneratorStep (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/babel-loader/lib/index.js:3:103)\n    at _next (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/babel-loader/lib/index.js:5:194)\n    at /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/babel-loader/lib/index.js:5:364\n    at new Promise (<anonymous>)\n    at Object.<anonymous> (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/babel-loader/lib/index.js:5:97)\n    at Object.loader (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/babel-loader/lib/index.js:64:18)\n    at Object.<anonymous> (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/babel-loader/lib/index.js:59:12)");
 
 /***/ }),
 
@@ -29224,7 +28638,8 @@ Enums.COMMAND = {
   DELETE: 3,
   SAVE: 4,
   CANCEL: 5,
-  SHOW: 6
+  SHOW: 6,
+  NEWSESSION: 7
 };
 /**
  * ENUM Form-Modes
@@ -29236,7 +28651,8 @@ Enums.FORM_MODE = {
   REGISTER: 3,
   EDIT: 4,
   REMOVE: 5,
-  SHOW: 6
+  SHOW: 6,
+  NEWSESSION: 7
 };
 
 /***/ }),
@@ -29856,78 +29272,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_pug_plain_loader_index_js_node_modules_vue_loader_lib_index_js_vue_loader_options_list_invite_session_vue_vue_type_template_id_32210766_scoped_true_lang_pug___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_pug_plain_loader_index_js_node_modules_vue_loader_lib_index_js_vue_loader_options_list_invite_session_vue_vue_type_template_id_32210766_scoped_true_lang_pug___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
-
-
-
-/***/ }),
-
-/***/ "./resources/js/vue/components/invite-session/multi-text-approv.vue":
-/*!**************************************************************************!*\
-  !*** ./resources/js/vue/components/invite-session/multi-text-approv.vue ***!
-  \**************************************************************************/
-/*! no static exports found */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _multi_text_approv_vue_vue_type_template_id_7576be69_scoped_true_lang_pug___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./multi-text-approv.vue?vue&type=template&id=7576be69&scoped=true&lang=pug& */ "./resources/js/vue/components/invite-session/multi-text-approv.vue?vue&type=template&id=7576be69&scoped=true&lang=pug&");
-/* harmony import */ var _multi_text_approv_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./multi-text-approv.vue?vue&type=script&lang=js& */ "./resources/js/vue/components/invite-session/multi-text-approv.vue?vue&type=script&lang=js&");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _multi_text_approv_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _multi_text_approv_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
-
-
-
-
-
-/* normalize component */
-
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _multi_text_approv_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _multi_text_approv_vue_vue_type_template_id_7576be69_scoped_true_lang_pug___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _multi_text_approv_vue_vue_type_template_id_7576be69_scoped_true_lang_pug___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
-  false,
-  null,
-  "7576be69",
-  null
-  
-)
-
-/* hot reload */
-if (false) { var api; }
-component.options.__file = "resources/js/vue/components/invite-session/multi-text-approv.vue"
-/* harmony default export */ __webpack_exports__["default"] = (component.exports);
-
-/***/ }),
-
-/***/ "./resources/js/vue/components/invite-session/multi-text-approv.vue?vue&type=script&lang=js&":
-/*!***************************************************************************************************!*\
-  !*** ./resources/js/vue/components/invite-session/multi-text-approv.vue?vue&type=script&lang=js& ***!
-  \***************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_multi_text_approv_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./multi-text-approv.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/vue/components/invite-session/multi-text-approv.vue?vue&type=script&lang=js&");
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_multi_text_approv_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_multi_text_approv_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_multi_text_approv_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_multi_text_approv_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
- /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_multi_text_approv_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0___default.a); 
-
-/***/ }),
-
-/***/ "./resources/js/vue/components/invite-session/multi-text-approv.vue?vue&type=template&id=7576be69&scoped=true&lang=pug&":
-/*!******************************************************************************************************************************!*\
-  !*** ./resources/js/vue/components/invite-session/multi-text-approv.vue?vue&type=template&id=7576be69&scoped=true&lang=pug& ***!
-  \******************************************************************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_pug_plain_loader_index_js_node_modules_vue_loader_lib_index_js_vue_loader_options_multi_text_approv_vue_vue_type_template_id_7576be69_scoped_true_lang_pug___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/pug-plain-loader!../../../../../node_modules/vue-loader/lib??vue-loader-options!./multi-text-approv.vue?vue&type=template&id=7576be69&scoped=true&lang=pug& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/pug-plain-loader/index.js!./node_modules/vue-loader/lib/index.js?!./resources/js/vue/components/invite-session/multi-text-approv.vue?vue&type=template&id=7576be69&scoped=true&lang=pug&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_pug_plain_loader_index_js_node_modules_vue_loader_lib_index_js_vue_loader_options_multi_text_approv_vue_vue_type_template_id_7576be69_scoped_true_lang_pug___WEBPACK_IMPORTED_MODULE_0__["render"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_pug_plain_loader_index_js_node_modules_vue_loader_lib_index_js_vue_loader_options_multi_text_approv_vue_vue_type_template_id_7576be69_scoped_true_lang_pug___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

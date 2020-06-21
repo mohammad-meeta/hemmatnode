@@ -27,11 +27,11 @@ DataValidator.validate = function validate(customValidator, req, res, next) {
     }
 
     if (customValidator.messages) {
-        messages = customValidator.messages();
+        messages = customValidator.messages(req);
     }
 
     if (customValidator.attributes) {
-        attributes = customValidator.attributes();
+        attributes = customValidator.attributes(req);
     }
 
 

@@ -245,19 +245,6 @@ module.exports = {
 
 /***/ }),
 
-/***/ "./node_modules/form-data/lib/browser.js":
-/*!***********************************************!*\
-  !*** ./node_modules/form-data/lib/browser.js ***!
-  \***********************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/* eslint-env browser */
-module.exports = typeof self == 'object' ? self.FormData : window.FormData;
-
-
-/***/ }),
-
 /***/ "./node_modules/qs/lib/formats.js":
 /*!****************************************!*\
   !*** ./node_modules/qs/lib/formats.js ***!
@@ -1381,116 +1368,9 @@ function normalizeComponent (
   !*** ./resources/js/helpers/axios-helper.js ***!
   \**********************************************/
 /*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-"use strict";
-
-/**
- * Axios Helper class
- */
-
-function AxiosHelper() {}
-
-module.exports = AxiosHelper;
-/**
- * To GraphQL object
- */
-
-AxiosHelper.toGQL = function toGQL() {
-  var query = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
-  var variables = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  return {
-    query: query,
-    variables: variables
-  };
-};
-/**
- * Send ajax request
- */
-
-
-AxiosHelper.send = function send(method, url) {
-  var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  var options = arguments.length > 3 ? arguments[3] : undefined;
-
-  var FormData = __webpack_require__(/*! form-data */ "./node_modules/form-data/lib/browser.js");
-
-  var postData;
-  data = data || {};
-  /* Setup options */
-
-  options = _.merge({
-    headers: [],
-    useCookie: true,
-    sendAsFormData: false
-  }, options);
-  /* Check form-data flag */
-
-  if (true == options.sendAsFormData) {
-    /* Setup form-data */
-    var formData = new FormData();
-    /* Set new data */
-
-    Object.keys(data).forEach(function (key) {
-      var itemData = data[key];
-
-      if (itemData != null) {
-        if (Array.isArray(itemData)) {
-          itemData = JSON.stringify(itemData);
-        }
-
-        formData.append(key, itemData);
-      }
-    });
-    postData = formData;
-    /* Setup header */
-
-    options.headers['content-type'] = 'multipart/form-data';
-  } else {
-    postData = data;
-
-    if (options.jsonRequest || true) {
-      options.headers['content-type'] = 'application/json';
-    }
-  }
-
-  var config = {
-    method: method,
-    withCredentials: options.useCookie,
-    baseURL: options.baseURL,
-    headers: options.headers
-  };
-
-  if (null != postData.getHeaders) {
-    config['headers'] = postData.getHeaders();
-  }
-  /* Add CSRF token */
-
-
-  var csrf = options.csrfToken || (document.querySelector('meta[name="csrf-token"]') || {
-    content: ''
-  }).content;
-  axios.defaults.headers.common['X-CSRF-TOKEN'] = options.headers['x-xsrf-token'] = options.headers['x-csrf-token'] = options.headers['xsrf-token'] = options.headers['csrf-token'] = csrf;
-  /* Add bearer token */
-
-  if (null != options.token) {
-    config.headers['authorization'] = "Bearer ".concat(options.token);
-  }
-  /* Create axios instance */
-
-
-  var instance = axios.create(config);
-  return instance[method](url, postData);
-};
-/* Add standard restful request types */
-
-
-var types = ['get', 'head', 'post', 'patch', 'put', 'options', 'link'];
-types.forEach(function (type) {
-  AxiosHelper[type] = function send(method, url, data, options) {
-    return AxiosHelper.send(type, method, url, data, options);
-  };
-});
+throw new Error("Module build failed (from ./node_modules/babel-loader/lib/index.js):\nSyntaxError: /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/package.json: Error while parsing JSON - Unexpected token < in JSON at position 1698\n    at JSON.parse (<anonymous>)\n    at readConfigPackage (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/@babel/core/lib/config/files/package.js:57:20)\n    at /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/@babel/core/lib/config/files/utils.js:37:12\n    at Generator.next (<anonymous>)\n    at Function.<anonymous> (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/@babel/core/lib/gensync-utils/async.js:26:3)\n    at Generator.next (<anonymous>)\n    at evaluateSync (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/gensync/index.js:244:28)\n    at Function.sync (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/gensync/index.js:84:14)\n    at sync (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/@babel/core/lib/gensync-utils/async.js:66:25)\n    at sync (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/gensync/index.js:177:19)\n    at onFirstPause (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/gensync/index.js:204:19)\n    at Generator.next (<anonymous>)\n    at cachedFunction (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/@babel/core/lib/config/caching.js:68:46)\n    at cachedFunction.next (<anonymous>)\n    at findPackageData (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/@babel/core/lib/config/files/package.js:33:18)\n    at findPackageData.next (<anonymous>)\n    at buildRootChain (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/@babel/core/lib/config/config-chain.js:105:92)\n    at buildRootChain.next (<anonymous>)\n    at loadPrivatePartialConfig (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/@babel/core/lib/config/partial.js:95:62)\n    at loadPrivatePartialConfig.next (<anonymous>)\n    at Function.<anonymous> (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/@babel/core/lib/config/partial.js:120:25)\n    at Generator.next (<anonymous>)\n    at evaluateSync (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/gensync/index.js:244:28)\n    at Function.sync (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/gensync/index.js:84:14)\n    at Object.<anonymous> (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/@babel/core/lib/config/index.js:41:61)\n    at Object.<anonymous> (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/babel-loader/lib/index.js:151:26)\n    at Generator.next (<anonymous>)\n    at asyncGeneratorStep (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/babel-loader/lib/index.js:3:103)\n    at _next (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/babel-loader/lib/index.js:5:194)\n    at /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/babel-loader/lib/index.js:5:364\n    at new Promise (<anonymous>)\n    at Object.<anonymous> (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/babel-loader/lib/index.js:5:97)\n    at Object.loader (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/babel-loader/lib/index.js:64:18)\n    at Object.<anonymous> (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/babel-loader/lib/index.js:59:12)");
 
 /***/ }),
 

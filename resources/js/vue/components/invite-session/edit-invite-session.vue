@@ -55,6 +55,16 @@
                 .field
                     multi-text-approv(v-model='inviteSessionData.approv')
 
+            .field
+                label.label اعضای حاضر در جلسه
+                .multi-checkboxes
+                    label.checkbox.column.is-12(v-for='(user, userIndex) in users')
+                        input(type='checkbox', v-model="inviteSessionData.user_list[user._id]", :value="user._id", :cehcked="true")
+                        |   {{ user.name }} - {{ user.profile.first_name }} {{ user.profile.last_name }}
+            fieldset
+                legend مدعوین
+                .field
+                    multi-text-member(v-model='inviteSessionData.member')
                 .field.is-grouped
                     .control(v-show="! isLoadingMode")
                         a.button.is-link.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
@@ -70,7 +80,8 @@ const InviteSessionValidator = require("JS-VALIDATORS/invite-session-register-va
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
 const MultiText = require("VUE-COMPONENTS/general/multi-text.vue").default;
-const MultiTextApprov = require("VUE-COMPONENTS/invite-session/multi-text-approv.vue")
+const MultiTextApprov = require("VUE-COMPONENTS/invite-session/multi-text-approv.vue");
+const MultiTextMember = require("VUE-COMPONENTS/invite-session/multi-text-member.vue")
     .default;
 
 module.exports = {
@@ -79,7 +90,8 @@ module.exports = {
         Notification,
         DatePicker: VuePersianDatetimePicker,
         MultiText,
-        MultiTextApprov
+        MultiTextApprov,
+        MultiTextMember
     },
 
     data: () => ({

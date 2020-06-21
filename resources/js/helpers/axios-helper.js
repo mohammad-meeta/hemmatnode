@@ -29,7 +29,8 @@ AxiosHelper.send = function send(method, url, data = {}, options) {
     options = _.merge({
         headers: [],
         useCookie: true,
-        sendAsFormData: false
+        sendAsFormData: false,
+        filesArray: null
     }, options);
 
     /* Check form-data flag */
@@ -42,7 +43,20 @@ AxiosHelper.send = function send(method, url, data = {}, options) {
             .forEach(key => {
                 let itemData = data[key];
 
-                if (itemData != null) {
+                if (itemData == null) {
+                    return;
+                }
+
+                /* Add array of files */
+                if (options.filesArray == key) {
+                    for (let i = 0; i < itemData.length; ++i) {
+                        const file = itemData[i];
+
+                        formData.append(key + "[]", file);
+                    };
+                }
+                /* Add object */
+                else {
                     if (Array.isArray(itemData)) {
                         itemData = JSON.stringify(itemData);
                     }
@@ -50,6 +64,7 @@ AxiosHelper.send = function send(method, url, data = {}, options) {
                     formData.append(key, itemData);
                 }
             });
+
         postData = formData;
 
         /* Setup header */
@@ -78,7 +93,7 @@ AxiosHelper.send = function send(method, url, data = {}, options) {
         (document.querySelector('meta[name="csrf-token"]') || {
             content: ''
         }).content;
-        
+
     axios.defaults.headers.common['X-CSRF-TOKEN'] =
         options.headers['x-xsrf-token'] =
         options.headers['x-csrf-token'] =

@@ -7,6 +7,7 @@ block styles
     link(rel="stylesheet", href=mix("css/global/app.css"))
 
 block content
+<<<<<<< HEAD
     .front-page-top
         .front-page-img
             img(src=asset('images/teamwork.jpg'))
@@ -55,3 +56,19 @@ block content
                 a(href='/document-list') مرکز اسناد راهبردی
 
 block scripts
+=======
+    .container.has-text-centered
+        .columns.is-vcentered
+            .column.is-5
+                figure.image.is-4by3
+                    img(class="is-rounded", src=asset("images/pages/home/img1.jpg"), alt='Home Image')
+            .column.is-6.is-offset-1
+                h1.title.is-2
+                    | Task Tracker
+                h2.subtitle.is-4
+                    | An Intelligent Tracker
+block footer
+    ul
+        li
+            a Copyright&copy; Ojvar, 2018-2020
+>>>>>>> c15a537484aa68bb7a26755bc606efa54d0943be

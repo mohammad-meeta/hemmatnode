@@ -9,13 +9,22 @@
                 .title
                     h1 هماهنگی درون بخشی
             .container.main-content
-                .intro-cards.columns
+                //.intro-cards.columns
                     .column.is-4(v-for='departmentCategory in departmentCategories',
                                  :key='departmentCategory.id')
                         .intro-card
                             .intro-card-head
                                 h2 {{ departmentCategory.title }}
                             .panel-block.is-active(v-for='dep in departmentCategory.department', :key='dep._id')
+                                a(:href="getUrl(dep._id)") {{ dep.title }}
+
+                .inline-cards
+                    .inline-card.w-100(v-for='departmentCategory in departmentCategories',
+                                 :key='departmentCategory.id')
+                        .inline-card-head
+                            h2 {{ departmentCategory.title }}
+                        .inline-card-body
+                            .inline-card-body-item(v-for='dep in departmentCategory.department', :key='dep._id')
                                 a(:href="getUrl(dep._id)") {{ dep.title }}
 
 

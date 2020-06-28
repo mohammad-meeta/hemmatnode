@@ -1,21 +1,21 @@
 extends ../../layout/app.pug
 
 block title
-    | Welcome to Task:Tracker
+    | همت
 
 block styles
     link(rel="stylesheet", href=mix("css/global/app.css"))
 
 block content
-<<<<<<< HEAD
     .front-page-top
         .front-page-img
-            img(src=asset('images/teamwork.jpg'))
+            img(src=asset('images/cooperative.jpg'))
         .front-page-bg
             img(src=asset('images/frontpage-bg.png'))
         .sitename
-            h1 همکاری بین بخشی و مشارکت مردم در سلامت استان
             h2 سامانه همت
+            h1 همکاری بین بخشی و مشارکت مردم در سلامت استان
+
     .front-page-link-box.container.columns.is-mobile.is-multiline
         .column.py-3.has-text-centered.is-one-third
             .blue-luzy.icon-container
@@ -32,14 +32,14 @@ block content
         .column.py-3.has-text-centered.is-one-third
             .blueg-luzy.icon-container
                 a(href='/internal-section')
-                    img(src=asset('images/icons/refresh-button.svg'))
+                    img(src=asset('images/icons/intersectional-coolaboration.png'))
             .icon-container-text.py-2
                 a(href='/internal-section') هماهنگی درون بخشی
     .front-page-link-box-small
         .column.py-3.has-text-centered.is-one-third
             .green-luzy.icon-container
                 a(href='/monitoring-page')
-                    img(src=asset('images/icons/add-heart.svg'))
+                    img(src=asset('images/icons/monitoring-tower.png'))
             .icon-container-text.py-2
                 a(href='/monitoring-page') دیده بانی سلامت استان
         .column.py-3.has-text-centered.is-one-third
@@ -56,19 +56,4 @@ block content
                 a(href='/document-list') مرکز اسناد راهبردی
 
 block scripts
-=======
-    .container.has-text-centered
-        .columns.is-vcentered
-            .column.is-5
-                figure.image.is-4by3
-                    img(class="is-rounded", src=asset("images/pages/home/img1.jpg"), alt='Home Image')
-            .column.is-6.is-offset-1
-                h1.title.is-2
-                    | Task Tracker
-                h2.subtitle.is-4
-                    | An Intelligent Tracker
-block footer
-    ul
-        li
-            a Copyright&copy; Ojvar, 2018-2020
->>>>>>> c15a537484aa68bb7a26755bc606efa54d0943be
+

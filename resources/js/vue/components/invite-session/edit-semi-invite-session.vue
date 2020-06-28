@@ -45,26 +45,6 @@
                 label.checkbox
                     input(type='checkbox', v-model="inviteSessionData.isActive")
                     |   فعال
-
-            .field
-                label.label مقدمه
-                .control
-                    textarea.textarea(placeholder='مقدمه', v-model='inviteSessionData.intro')
-            fieldset
-                legend مصوبات
-                .field
-                    multi-text-approv(v-model='inviteSessionData.approv')
-
-            .field
-                label.label اعضای حاضر در جلسه
-                .multi-checkboxes
-                    label.checkbox.column.is-12(v-for='(user, userIndex) in users')
-                        input(type='checkbox', v-model="inviteSessionData.user_list[user._id]", :value="user._id", :cehcked="true")
-                        |   {{ user.name }} - {{ user.profile.first_name }} {{ user.profile.last_name }}
-            fieldset
-                legend مدعوین
-                .field
-                    multi-text-member(v-model='inviteSessionData.member')
                 .field.is-grouped
                     .control(v-show="! isLoadingMode")
                         a.button.is-link.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
@@ -89,9 +69,7 @@ module.exports = {
     components: {
         Notification,
         DatePicker: VuePersianDatetimePicker,
-        MultiText,
-        MultiTextApprov,
-        MultiTextMember
+        MultiText
     },
 
     data: () => ({
@@ -107,10 +85,7 @@ module.exports = {
             department_id: null,
             files: {},
             user_list: {},
-            isActive: false,
-            intro: null,
-            approv: [],
-            member: []
+            isActive: false
         },
         notificationMessage: null,
         notificationType: "is-info",
@@ -179,26 +154,12 @@ module.exports = {
                 roles: data.roles,
                 user_list: data.user_list,
                 isActive: data.is_active,
-                approv: data.approv,
-                member: data.member
             };
 
             try {
                 temp.agenda = JSON.parse(data.agenda);
             } catch (ex) {
                 temp.agenda = [];
-            }
-
-            try {
-                temp.approv = JSON.parse(data.approv);
-            } catch (ex) {
-                temp.approv = [];
-            }
-
-            try {
-                temp.member = JSON.parse(data.member);
-            } catch (ex) {
-                temp.member = [];
             }
 
             Vue.set(this, "inviteSessionData", temp);
@@ -299,9 +260,7 @@ module.exports = {
                 date: this.inviteSessionData.date,
                 department_id: this.inviteSessionData.departments,
                 user_list: this.inviteSessionData.user_list,
-                is_active: this.inviteSessionData.isActive,
-                approv: JSON.stringify(this.inviteSessionData.approv),
-                member: JSON.stringify(this.inviteSessionData.member)
+                is_active: this.inviteSessionData.isActive
             };
 
             inviteSessionData.files = this.files[0];
@@ -311,7 +270,6 @@ module.exports = {
                 .map(key => key);
 
             inviteSessionData.user_list = t;
-            console.log(inviteSessionData);
             this.showLoading();
 
             const url = this.editUrl.replace("$id$", inviteSessionData._id);

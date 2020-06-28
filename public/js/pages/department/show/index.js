@@ -533,7 +533,8 @@ Enums.COMMAND = {
   SAVE: 4,
   CANCEL: 5,
   SHOW: 6,
-  NEWSESSION: 7
+  NEWSESSION: 7,
+  SEMIEDIT: 8
 };
 /**
  * ENUM Form-Modes
@@ -546,7 +547,8 @@ Enums.FORM_MODE = {
   EDIT: 4,
   REMOVE: 5,
   SHOW: 6,
-  NEWSESSION: 7
+  NEWSESSION: 7,
+  SEMIEDIT: 8
 };
 
 /***/ }),

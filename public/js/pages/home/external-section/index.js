@@ -117,6 +117,15 @@
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 var Routes = __webpack_require__(/*! JS-CORE/routes */ "./resources/js/core/routes.js");
@@ -336,35 +345,33 @@ var render = function() {
         _c("div", { staticClass: "container main-content" }, [
           _c(
             "div",
-            { staticClass: "intro-cards columns" },
+            { staticClass: "inline-cards" },
             _vm._l(_vm.departmentCategories, function(departmentCategory) {
               return _c(
                 "div",
-                { key: departmentCategory.id, staticClass: "column is-4" },
+                {
+                  key: departmentCategory.id,
+                  staticClass: "inline-card w-100"
+                },
                 [
+                  _c("div", { staticClass: "inline-card-head" }, [
+                    _c("h2", [_vm._v(_vm._s(departmentCategory.title))])
+                  ]),
                   _c(
                     "div",
-                    { staticClass: "intro-card" },
-                    [
-                      _c("div", { staticClass: "intro-card-head" }, [
-                        _c("h2", [_vm._v(_vm._s(departmentCategory.title))])
-                      ]),
-                      _vm._l(departmentCategory.department, function(dep) {
-                        return _c(
-                          "div",
-                          {
-                            key: dep._id,
-                            staticClass: "panel-block is-active"
-                          },
-                          [
-                            _c("a", { attrs: { href: _vm.getUrl(dep._id) } }, [
-                              _vm._v(_vm._s(dep.title))
-                            ])
-                          ]
-                        )
-                      })
-                    ],
-                    2
+                    { staticClass: "inline-card-body" },
+                    _vm._l(departmentCategory.department, function(dep) {
+                      return _c(
+                        "div",
+                        { key: dep._id, staticClass: "inline-card-body-item" },
+                        [
+                          _c("a", { attrs: { href: _vm.getUrl(dep._id) } }, [
+                            _vm._v(_vm._s(dep.title))
+                          ])
+                        ]
+                      )
+                    }),
+                    0
                   )
                 ]
               )
@@ -667,7 +674,8 @@ Enums.COMMAND = {
   SAVE: 4,
   CANCEL: 5,
   SHOW: 6,
-  NEWSESSION: 7
+  NEWSESSION: 7,
+  SEMIEDIT: 8
 };
 /**
  * ENUM Form-Modes
@@ -680,7 +688,8 @@ Enums.FORM_MODE = {
   EDIT: 4,
   REMOVE: 5,
   SHOW: 6,
-  NEWSESSION: 7
+  NEWSESSION: 7,
+  SEMIEDIT: 8
 };
 
 /***/ }),

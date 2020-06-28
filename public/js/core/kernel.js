@@ -1899,6 +1899,19 @@ module.exports = {
 
 /***/ }),
 
+/***/ "./node_modules/form-data/lib/browser.js":
+/*!***********************************************!*\
+  !*** ./node_modules/form-data/lib/browser.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/* eslint-env browser */
+module.exports = typeof self == 'object' ? self.FormData : window.FormData;
+
+
+/***/ }),
+
 /***/ "./node_modules/lodash/lodash.js":
 /*!***************************************!*\
   !*** ./node_modules/lodash/lodash.js ***!
@@ -31473,20 +31486,20 @@ if (false) {} else {
 /*!********************************************!*\
   !*** ./node_modules/vuex/dist/vuex.esm.js ***!
   \********************************************/
-/*! exports provided: default, Store, install, mapState, mapMutations, mapGetters, mapActions, createNamespacedHelpers */
+/*! exports provided: default, Store, createNamespacedHelpers, install, mapActions, mapGetters, mapMutations, mapState */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* WEBPACK VAR INJECTION */(function(global) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Store", function() { return Store; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "install", function() { return install; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mapState", function() { return mapState; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mapMutations", function() { return mapMutations; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mapGetters", function() { return mapGetters; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mapActions", function() { return mapActions; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createNamespacedHelpers", function() { return createNamespacedHelpers; });
-/**
- * vuex v3.3.0
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "install", function() { return install; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mapActions", function() { return mapActions; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mapGetters", function() { return mapGetters; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mapMutations", function() { return mapMutations; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mapState", function() { return mapState; });
+/*!
+ * vuex v3.4.0
  * (c) 2020 Evan You
  * @license MIT
  */
@@ -31686,7 +31699,7 @@ ModuleCollection.prototype.register = function register (path, rawModule, runtim
     var this$1 = this;
     if ( runtime === void 0 ) runtime = true;
 
-  if (true) {
+  if ((true)) {
     assertRawModule(path, rawModule);
   }
 
@@ -31722,7 +31735,7 @@ ModuleCollection.prototype.isRegistered = function isRegistered (path) {
 };
 
 function update (path, targetModule, newModule) {
-  if (true) {
+  if ((true)) {
     assertRawModule(path, newModule);
   }
 
@@ -31733,7 +31746,7 @@ function update (path, targetModule, newModule) {
   if (newModule.modules) {
     for (var key in newModule.modules) {
       if (!targetModule.getChild(key)) {
-        if (true) {
+        if ((true)) {
           console.warn(
             "[vuex] trying to add a new module '" + key + "' on hot reloading, " +
             'manual reload is needed'
@@ -31804,7 +31817,7 @@ var Store = function Store (options) {
     install(window.Vue);
   }
 
-  if (true) {
+  if ((true)) {
     assert(Vue, "must call Vue.use(Vuex) before creating a store instance.");
     assert(typeof Promise !== 'undefined', "vuex requires a Promise polyfill in this browser.");
     assert(this instanceof Store, "store must be called with the new operator.");
@@ -31867,7 +31880,7 @@ prototypeAccessors$1.state.get = function () {
 };
 
 prototypeAccessors$1.state.set = function (v) {
-  if (true) {
+  if ((true)) {
     assert(false, "use store.replaceState() to explicit replace store state.");
   }
 };
@@ -31884,7 +31897,7 @@ Store.prototype.commit = function commit (_type, _payload, _options) {
   var mutation = { type: type, payload: payload };
   var entry = this._mutations[type];
   if (!entry) {
-    if (true) {
+    if ((true)) {
       console.error(("[vuex] unknown mutation type: " + type));
     }
     return
@@ -31900,7 +31913,7 @@ Store.prototype.commit = function commit (_type, _payload, _options) {
     .forEach(function (sub) { return sub(mutation, this$1.state); });
 
   if (
-     true &&
+    ( true) &&
     options && options.silent
   ) {
     console.warn(
@@ -31921,7 +31934,7 @@ Store.prototype.dispatch = function dispatch (_type, _payload) {
   var action = { type: type, payload: payload };
   var entry = this._actions[type];
   if (!entry) {
-    if (true) {
+    if ((true)) {
       console.error(("[vuex] unknown action type: " + type));
     }
     return
@@ -31933,7 +31946,7 @@ Store.prototype.dispatch = function dispatch (_type, _payload) {
       .filter(function (sub) { return sub.before; })
       .forEach(function (sub) { return sub.before(action, this$1.state); });
   } catch (e) {
-    if (true) {
+    if ((true)) {
       console.warn("[vuex] error in before action subscribers: ");
       console.error(e);
     }
@@ -31943,18 +31956,32 @@ Store.prototype.dispatch = function dispatch (_type, _payload) {
     ? Promise.all(entry.map(function (handler) { return handler(payload); }))
     : entry[0](payload);
 
-  return result.then(function (res) {
-    try {
-      this$1._actionSubscribers
-        .filter(function (sub) { return sub.after; })
-        .forEach(function (sub) { return sub.after(action, this$1.state); });
-    } catch (e) {
-      if (true) {
-        console.warn("[vuex] error in after action subscribers: ");
-        console.error(e);
+  return new Promise(function (resolve, reject) {
+    result.then(function (res) {
+      try {
+        this$1._actionSubscribers
+          .filter(function (sub) { return sub.after; })
+          .forEach(function (sub) { return sub.after(action, this$1.state); });
+      } catch (e) {
+        if ((true)) {
+          console.warn("[vuex] error in after action subscribers: ");
+          console.error(e);
+        }
       }
-    }
-    return res
+      resolve(res);
+    }, function (error) {
+      try {
+        this$1._actionSubscribers
+          .filter(function (sub) { return sub.error; })
+          .forEach(function (sub) { return sub.error(action, this$1.state, error); });
+      } catch (e) {
+        if ((true)) {
+          console.warn("[vuex] error in error action subscribers: ");
+          console.error(e);
+        }
+      }
+      reject(error);
+    });
   })
 };
 
@@ -31970,7 +31997,7 @@ Store.prototype.subscribeAction = function subscribeAction (fn, options) {
 Store.prototype.watch = function watch (getter, cb, options) {
     var this$1 = this;
 
-  if (true) {
+  if ((true)) {
     assert(typeof getter === 'function', "store.watch only accepts a function.");
   }
   return this._watcherVM.$watch(function () { return getter(this$1.state, this$1.getters); }, cb, options)
@@ -31989,7 +32016,7 @@ Store.prototype.registerModule = function registerModule (path, rawModule, optio
 
   if (typeof path === 'string') { path = [path]; }
 
-  if (true) {
+  if ((true)) {
     assert(Array.isArray(path), "module path must be a string or an Array.");
     assert(path.length > 0, 'cannot register the root module by using registerModule.');
   }
@@ -32005,7 +32032,7 @@ Store.prototype.unregisterModule = function unregisterModule (path) {
 
   if (typeof path === 'string') { path = [path]; }
 
-  if (true) {
+  if ((true)) {
     assert(Array.isArray(path), "module path must be a string or an Array.");
   }
 
@@ -32020,7 +32047,7 @@ Store.prototype.unregisterModule = function unregisterModule (path) {
 Store.prototype.hasModule = function hasModule (path) {
   if (typeof path === 'string') { path = [path]; }
 
-  if (true) {
+  if ((true)) {
     assert(Array.isArray(path), "module path must be a string or an Array.");
   }
 
@@ -32123,7 +32150,7 @@ function installModule (store, rootState, path, module, hot) {
 
   // register in namespace map
   if (module.namespaced) {
-    if (store._modulesNamespaceMap[namespace] && "development" !== 'production') {
+    if (store._modulesNamespaceMap[namespace] && ("development" !== 'production')) {
       console.error(("[vuex] duplicate namespace " + namespace + " for the namespaced module " + (path.join('/'))));
     }
     store._modulesNamespaceMap[namespace] = module;
@@ -32134,7 +32161,7 @@ function installModule (store, rootState, path, module, hot) {
     var parentState = getNestedState(rootState, path.slice(0, -1));
     var moduleName = path[path.length - 1];
     store._withCommit(function () {
-      if (true) {
+      if ((true)) {
         if (moduleName in parentState) {
           console.warn(
             ("[vuex] state field \"" + moduleName + "\" was overridden by a module with the same name at \"" + (path.join('.')) + "\"")
@@ -32184,7 +32211,7 @@ function makeLocalContext (store, namespace, path) {
 
       if (!options || !options.root) {
         type = namespace + type;
-        if ( true && !store._actions[type]) {
+        if (( true) && !store._actions[type]) {
           console.error(("[vuex] unknown local action type: " + (args.type) + ", global type: " + type));
           return
         }
@@ -32201,7 +32228,7 @@ function makeLocalContext (store, namespace, path) {
 
       if (!options || !options.root) {
         type = namespace + type;
-        if ( true && !store._mutations[type]) {
+        if (( true) && !store._mutations[type]) {
           console.error(("[vuex] unknown local mutation type: " + (args.type) + ", global type: " + type));
           return
         }
@@ -32286,7 +32313,7 @@ function registerAction (store, type, handler, local) {
 
 function registerGetter (store, type, rawGetter, local) {
   if (store._wrappedGetters[type]) {
-    if (true) {
+    if ((true)) {
       console.error(("[vuex] duplicate getter key: " + type));
     }
     return
@@ -32303,7 +32330,7 @@ function registerGetter (store, type, rawGetter, local) {
 
 function enableStrictMode (store) {
   store._vm.$watch(function () { return this._data.$$state }, function () {
-    if (true) {
+    if ((true)) {
       assert(store._committing, "do not mutate vuex store state outside mutation handlers.");
     }
   }, { deep: true, sync: true });
@@ -32320,7 +32347,7 @@ function unifyObjectStyle (type, payload, options) {
     type = type.type;
   }
 
-  if (true) {
+  if ((true)) {
     assert(typeof type === 'string', ("expects string as the type, but found " + (typeof type) + "."));
   }
 
@@ -32329,7 +32356,7 @@ function unifyObjectStyle (type, payload, options) {
 
 function install (_Vue) {
   if (Vue && _Vue === Vue) {
-    if (true) {
+    if ((true)) {
       console.error(
         '[vuex] already installed. Vue.use(Vuex) should be called only once.'
       );
@@ -32348,7 +32375,7 @@ function install (_Vue) {
  */
 var mapState = normalizeNamespace(function (namespace, states) {
   var res = {};
-  if ( true && !isValidMap(states)) {
+  if (( true) && !isValidMap(states)) {
     console.error('[vuex] mapState: mapper parameter must be either an Array or an Object');
   }
   normalizeMap(states).forEach(function (ref) {
@@ -32384,7 +32411,7 @@ var mapState = normalizeNamespace(function (namespace, states) {
  */
 var mapMutations = normalizeNamespace(function (namespace, mutations) {
   var res = {};
-  if ( true && !isValidMap(mutations)) {
+  if (( true) && !isValidMap(mutations)) {
     console.error('[vuex] mapMutations: mapper parameter must be either an Array or an Object');
   }
   normalizeMap(mutations).forEach(function (ref) {
@@ -32420,7 +32447,7 @@ var mapMutations = normalizeNamespace(function (namespace, mutations) {
  */
 var mapGetters = normalizeNamespace(function (namespace, getters) {
   var res = {};
-  if ( true && !isValidMap(getters)) {
+  if (( true) && !isValidMap(getters)) {
     console.error('[vuex] mapGetters: mapper parameter must be either an Array or an Object');
   }
   normalizeMap(getters).forEach(function (ref) {
@@ -32433,7 +32460,7 @@ var mapGetters = normalizeNamespace(function (namespace, getters) {
       if (namespace && !getModuleByNamespace(this.$store, 'mapGetters', namespace)) {
         return
       }
-      if ( true && !(val in this.$store.getters)) {
+      if (( true) && !(val in this.$store.getters)) {
         console.error(("[vuex] unknown getter: " + val));
         return
       }
@@ -32453,7 +32480,7 @@ var mapGetters = normalizeNamespace(function (namespace, getters) {
  */
 var mapActions = normalizeNamespace(function (namespace, actions) {
   var res = {};
-  if ( true && !isValidMap(actions)) {
+  if (( true) && !isValidMap(actions)) {
     console.error('[vuex] mapActions: mapper parameter must be either an Array or an Object');
   }
   normalizeMap(actions).forEach(function (ref) {
@@ -32544,16 +32571,16 @@ function normalizeNamespace (fn) {
  */
 function getModuleByNamespace (store, helper, namespace) {
   var module = store._modulesNamespaceMap[namespace];
-  if ( true && !module) {
+  if (( true) && !module) {
     console.error(("[vuex] module namespace not found in " + helper + "(): " + namespace));
   }
   return module
 }
 
-var index_esm = {
+var index = {
   Store: Store,
   install: install,
-  version: '3.3.0',
+  version: '3.4.0',
   mapState: mapState,
   mapMutations: mapMutations,
   mapGetters: mapGetters,
@@ -32561,7 +32588,7 @@ var index_esm = {
   createNamespacedHelpers: createNamespacedHelpers
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (index_esm);
+/* harmony default export */ __webpack_exports__["default"] = (index);
 
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
@@ -32787,9 +32814,132 @@ RoutesModule.route = function route(name) {
   !*** ./resources/js/helpers/axios-helper.js ***!
   \**********************************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-throw new Error("Module build failed (from ./node_modules/babel-loader/lib/index.js):\nSyntaxError: /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/package.json: Error while parsing JSON - Unexpected token < in JSON at position 1698\n    at JSON.parse (<anonymous>)\n    at readConfigPackage (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/@babel/core/lib/config/files/package.js:57:20)\n    at /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/@babel/core/lib/config/files/utils.js:37:12\n    at Generator.next (<anonymous>)\n    at Function.<anonymous> (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/@babel/core/lib/gensync-utils/async.js:26:3)\n    at Generator.next (<anonymous>)\n    at evaluateSync (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/gensync/index.js:244:28)\n    at Function.sync (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/gensync/index.js:84:14)\n    at sync (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/@babel/core/lib/gensync-utils/async.js:66:25)\n    at sync (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/gensync/index.js:177:19)\n    at onFirstPause (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/gensync/index.js:204:19)\n    at Generator.next (<anonymous>)\n    at cachedFunction (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/@babel/core/lib/config/caching.js:68:46)\n    at cachedFunction.next (<anonymous>)\n    at findPackageData (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/@babel/core/lib/config/files/package.js:33:18)\n    at findPackageData.next (<anonymous>)\n    at buildRootChain (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/@babel/core/lib/config/config-chain.js:105:92)\n    at buildRootChain.next (<anonymous>)\n    at loadPrivatePartialConfig (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/@babel/core/lib/config/partial.js:95:62)\n    at loadPrivatePartialConfig.next (<anonymous>)\n    at Function.<anonymous> (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/@babel/core/lib/config/partial.js:120:25)\n    at Generator.next (<anonymous>)\n    at evaluateSync (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/gensync/index.js:244:28)\n    at Function.sync (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/gensync/index.js:84:14)\n    at Object.<anonymous> (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/@babel/core/lib/config/index.js:41:61)\n    at Object.<anonymous> (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/babel-loader/lib/index.js:151:26)\n    at Generator.next (<anonymous>)\n    at asyncGeneratorStep (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/babel-loader/lib/index.js:3:103)\n    at _next (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/babel-loader/lib/index.js:5:194)\n    at /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/babel-loader/lib/index.js:5:364\n    at new Promise (<anonymous>)\n    at Object.<anonymous> (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/babel-loader/lib/index.js:5:97)\n    at Object.loader (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/babel-loader/lib/index.js:64:18)\n    at Object.<anonymous> (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/babel-loader/lib/index.js:59:12)");
+"use strict";
+
+/**
+ * Axios Helper class
+ */
+
+function AxiosHelper() {}
+
+module.exports = AxiosHelper;
+/**
+ * To GraphQL object
+ */
+
+AxiosHelper.toGQL = function toGQL() {
+  var query = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  var variables = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  return {
+    query: query,
+    variables: variables
+  };
+};
+/**
+ * Send ajax request
+ */
+
+
+AxiosHelper.send = function send(method, url) {
+  var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  var options = arguments.length > 3 ? arguments[3] : undefined;
+
+  var FormData = __webpack_require__(/*! form-data */ "./node_modules/form-data/lib/browser.js");
+
+  var postData;
+  data = data || {};
+  /* Setup options */
+
+  options = _.merge({
+    headers: [],
+    useCookie: true,
+    sendAsFormData: false,
+    filesArray: null
+  }, options);
+  /* Check form-data flag */
+
+  if (true == options.sendAsFormData) {
+    /* Setup form-data */
+    var formData = new FormData();
+    /* Set new data */
+
+    Object.keys(data).forEach(function (key) {
+      var itemData = data[key];
+
+      if (itemData == null) {
+        return;
+      }
+      /* Add array of files */
+
+
+      if (options.filesArray == key) {
+        for (var i = 0; i < itemData.length; ++i) {
+          var file = itemData[i];
+          formData.append(key + "[]", file);
+        }
+
+        ;
+      }
+      /* Add object */
+      else {
+          if (Array.isArray(itemData)) {
+            itemData = JSON.stringify(itemData);
+          }
+
+          formData.append(key, itemData);
+        }
+    });
+    postData = formData;
+    /* Setup header */
+
+    options.headers['content-type'] = 'multipart/form-data';
+  } else {
+    postData = data;
+
+    if (options.jsonRequest || true) {
+      options.headers['content-type'] = 'application/json';
+    }
+  }
+
+  var config = {
+    method: method,
+    withCredentials: options.useCookie,
+    baseURL: options.baseURL,
+    headers: options.headers
+  };
+
+  if (null != postData.getHeaders) {
+    config['headers'] = postData.getHeaders();
+  }
+  /* Add CSRF token */
+
+
+  var csrf = options.csrfToken || (document.querySelector('meta[name="csrf-token"]') || {
+    content: ''
+  }).content;
+  axios.defaults.headers.common['X-CSRF-TOKEN'] = options.headers['x-xsrf-token'] = options.headers['x-csrf-token'] = options.headers['xsrf-token'] = options.headers['csrf-token'] = csrf;
+  /* Add bearer token */
+
+  if (null != options.token) {
+    config.headers['authorization'] = "Bearer ".concat(options.token);
+  }
+  /* Create axios instance */
+
+
+  var instance = axios.create(config);
+  return instance[method](url, postData);
+};
+/* Add standard restful request types */
+
+
+var types = ['get', 'head', 'post', 'patch', 'put', 'options', 'link'];
+types.forEach(function (type) {
+  AxiosHelper[type] = function send(method, url, data, options) {
+    return AxiosHelper.send(type, method, url, data, options);
+  };
+});
 
 /***/ }),
 

@@ -19,11 +19,15 @@
                     a.button.is-primary.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.EDIT, inviteSession)")
                         span.icon.is-small
                             i.material-icons.icon check_circle
-                        span ویرایش
+                        span ویرایش صورتجلسه
                     a.button.is-warning.is-rounded.mt-2(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SHOW, inviteSession)")
                         span.icon.is-small
                             i.material-icons.icon swap_horizontal_circle
                         span مشاهده
+                    a.button.is-primary.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SEMIEDIT, inviteSession)")
+                        span.icon.is-small
+                            i.material-icons.icon check_circle
+                        span ویرایش دعوتنامه
 
     paginate(:page-count='pageCount',
         :click-handler='paginatorClick',

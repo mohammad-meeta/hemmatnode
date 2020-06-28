@@ -3214,6 +3214,10 @@ w-100 {
   width: 100%;
 }
 
+.is-justified-between {
+  justify-content: space-between;
+}
+
 .disabled-opt {
   color: #dcdcdc;
 }
@@ -3501,7 +3505,8 @@ nav input:checked ~ #overlay .menu-links {
 .front-page-img {
   width: 54%;
   position: relative;
-  top: -144px;
+  top: -35px;
+  margin-top: -110px;
 }
 
 .front-page-img img {
@@ -3518,13 +3523,14 @@ nav input:checked ~ #overlay .menu-links {
   width: 46%;
   text-align: center;
   margin-top: 50px;
-  top: 20%;
+  top: 10%;
   left: 0%;
 }
 
 .sitename h1 {
   font-size: 20px;
-  margin-bottom: 50px;
+  margin-bottom: 10px;
+  margin-top: 20px;
 }
 
 .sitename h2 {
@@ -3537,14 +3543,14 @@ nav input:checked ~ #overlay .menu-links {
 
 .front-page-link-box {
   background: #fff;
-  margin: 0px auto 15px auto;
+  margin: unset;
   padding: 15px 20px;
   overflow: hidden;
   position: absolute;
   box-shadow: 0px 8px 14px #3E4D6124;
-  left: 0px;
-  right: 0px;
-  top: 314px;
+  left: 40px;
+  top: 250px;
+  width: 40%;
 }
 
 .blue-luzy {
@@ -3608,6 +3614,21 @@ nav input:checked ~ #overlay .menu-links {
   width: 47px;
 }
 
+.blueg-luzy img {
+  width: 68px;
+  height: 68px;
+  margin-right: 0px;
+  margin-top: 4px;
+}
+
+.green-luzy img {
+  width: 40px;
+  height: 44px;
+  margin-right: 1px;
+  margin-top: 10px;
+  width: 44px !important;
+}
+
 /*===============front page link box*/
 
 /*===============footer*/
@@ -3617,9 +3638,20 @@ footer.footer {
   background-size: cover;
 }
 
+.footer-links {
+  width: 100%;
+  margin: 0px;
+  flex-wrap: wrap;
+}
+
 .footer-links a {
   display: block;
   color: #25306F;
+  margin-left: 5px;
+}
+
+.footer-links a:last-child {
+  margin-left: 0px;
 }
 
 .footer-logo {
@@ -3725,11 +3757,11 @@ h2.item-category {
 }
 
 .front-page-link-box-small {
-  width: 40%;
+  width: 35%;
   position: absolute;
-  top: 515px;
+  top: 440px;
   display: flex;
-  left: 220px;
+  left: 75px;
 }
 
 .front-page-link-box-small a {
@@ -3744,6 +3776,44 @@ h2.item-category {
 .front-page-link-box-small .icon-container {
   width: 65px;
   height: 65px;
+}
+
+.inline-card {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.inline-card-head {
+  border-radius: 5px;
+  box-shadow: 0px 5px 14px #c7c7c7;
+  padding: 30px 20px;
+  width: 340px;
+  height: 150px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  background: #fff;
+}
+
+.inline-card-body {
+  display: flex;
+  flex-direction: column;
+  height: 150px;
+  justify-content: space-evenly;
+  margin-right: -15px;
+}
+
+.inline-card-body-item a {
+  border-radius: 3px;
+  border: 1px dashed #c7c7c7;
+  padding: 10px 5px;
+  background: #ddf0f8;
+  display: block;
+  text-align: center;
+  width: 270px;
 }
 
 /*=========================hamahangi daroon bakhshi*/

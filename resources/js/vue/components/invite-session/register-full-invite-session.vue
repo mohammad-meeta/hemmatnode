@@ -24,7 +24,7 @@
                 label.label تاریخ
                 .control
                     date-picker(v-model='inviteSessionData.date' format="YYYY-MM-DD HH:mm:ss"
-                    display-format="jDD/jMM/jYYYY HH:mm" type="datetime" required)
+                    display-format=" jDD/jMM/jYYYY HH:mm" type="datetime" required)
 
             .field
                 label.label حاضرین جلسه
@@ -85,7 +85,7 @@ const MultiTextMember = require("VUE-COMPONENTS/invite-session/multi-text-member
     .default;
 
 module.exports = {
-    name: "EditInviteSession",
+    name: "RegisterFullInviteSession",
     components: {
         Notification,
         DatePicker: VuePersianDatetimePicker,
@@ -110,11 +110,11 @@ module.exports = {
             isActive: false,
             intro: null,
             approv: [],
-            member: []
+            member:[]
         },
         notificationMessage: null,
         notificationType: "is-info",
-        showLoadingFlag: false
+        showLoadingFlag: false,
     }),
 
     props: {
@@ -136,9 +136,9 @@ module.exports = {
         usersUrl: {
             type: String,
             default: ""
-        }
+        },
 
-        // inviteSessionDatas: {}
+        inviteSessionDatas: {}
     },
 
     created() {
@@ -146,7 +146,9 @@ module.exports = {
         this.loadUsers();
     },
 
-    mounted() {},
+    mounted() {
+        Vue.set(this.inviteSessionData, 'departments', this.departmentId);
+    },
 
     computed: {
         isLoadingMode: state => state.showLoadingFlag == true,
@@ -161,47 +163,6 @@ module.exports = {
             const files = sender.target.files;
 
             Vue.set(this, "files", files);
-        },
-
-        /**
-         * Load specific user
-         */
-        loadInviteSessionData(data) {
-            const temp = {
-                _id: data._id,
-                dep: data.dep.title,
-                body: data.body,
-                agenda: data.agenda,
-                place: data.place,
-                date: data.date,
-                department_id: data.department_id,
-                files: data.files,
-                roles: data.roles,
-                user_list: data.user_list,
-                isActive: data.is_active,
-                approv: data.approv,
-                member: data.member
-            };
-
-            try {
-                temp.agenda = JSON.parse(data.agenda);
-            } catch (ex) {
-                temp.agenda = [];
-            }
-
-            try {
-                temp.approv = JSON.parse(data.approv);
-            } catch (ex) {
-                temp.approv = [];
-            }
-
-            try {
-                temp.member = JSON.parse(data.member);
-            } catch (ex) {
-                temp.member = [];
-            }
-
-            Vue.set(this, "inviteSessionData", temp);
         },
 
         /**
@@ -280,9 +241,9 @@ module.exports = {
         },
 
         /**
-         * Edit invite session
+         * Register new invite session
          */
-        EditInviteSession() {
+        registerInviteSession() {
             const isValid = this.validate();
 
             if (!isValid) {
@@ -292,23 +253,24 @@ module.exports = {
             this.showLoading();
 
             let inviteSessionData = {
-                _id: this.inviteSessionData._id,
                 body: this.inviteSessionData.body,
                 agenda: JSON.stringify(this.inviteSessionData.agenda),
+                approv: JSON.stringify(this.inviteSessionData.approv),
+                member: JSON.stringify(this.inviteSessionData.member),
                 place: this.inviteSessionData.place,
                 date: this.inviteSessionData.date,
-                department_id: this.inviteSessionData.departments,
+                department_id: this.inviteSessionData
+                    .departments,
                 user_list: this.inviteSessionData.user_list,
-                is_active: this.inviteSessionData.isActive,
-                approv: JSON.stringify(this.inviteSessionData.approv),
-                member: JSON.stringify(this.inviteSessionData.member)
+                is_active: this.inviteSessionData.isActive
             };
 
             inviteSessionData.files = this.files[0];
 
+
             let t = Object.keys(inviteSessionData.user_list)
-                .filter(key => true == inviteSessionData.user_list[key])
-                .map(key => key);
+            .filter(key => true == inviteSessionData.user_list[key])
+            .map(key => key);
 
             inviteSessionData.user_list = t;
             console.log(inviteSessionData);
@@ -334,9 +296,7 @@ module.exports = {
          * Validate invite session data
          */
         validate() {
-            const result = InviteSessionValidator.validateEdit(
-                this.inviteSessionData
-            );
+            const result = InviteSessionValidator.validateEdit(this.inviteSessionData);
 
             if (result.passes) {
                 this.closeNotification();

@@ -31,9 +31,7 @@ module.exports = {
     name: "MultiTextApprov",
 
     data: () => ({
-        values: {
-            result: []
-        }
+        values: null
     }),
 
     props: {
@@ -41,14 +39,13 @@ module.exports = {
     },
 
     created() {
-        this.init();
+        this.setValue();
     },
 
     methods: {
-        init() {
-            let v = Array.from(this.value);
-
-            Vue.set(this, "values", v);
+        setValue() {
+            var v = Array.from(this.value);
+            this.values = v;
         },
 
         updateValue: function() {
@@ -56,14 +53,12 @@ module.exports = {
         },
 
         deleteValue: function(index) {
-            Vue.delete(this.values, index);
-            this.$emit("input", this.values);
+            this.values.splice(index, 1);
+            this.$emit('input', this.values);
         },
 
         addValue: function() {
-            this.values.push({
-                result: []
-            });
+            this.values.push({});
             this.$emit('input', this.values);
         },
     }

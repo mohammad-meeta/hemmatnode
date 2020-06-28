@@ -1,9 +1,14 @@
 {
+<<<<<<< HEAD
     "/js/core/kernel.js": "/js/core/kernel.js?id=c1edc300a5bc9b282c0e",
+=======
+    "/js/core/kernel.js": "/js/core/kernel.js?id=f3e9125c639944931868",
+>>>>>>> 2c90858e9ea9316a3b5197078a76875a1e0f6b26
     "/css/core/kernel.css": "/css/core/kernel.css?id=3c859d90c3ebc80cf130",
     "/css/global/app.css": "/css/global/app.css?id=31b70fb769402a54495e",
     "/css/pages/home/index.css": "/css/pages/home/index.css?id=ca0c00bb4a7f5ca6c314",
     "/css/pages/auth/login.css": "/css/pages/auth/login.css?id=d41d8cd98f00b204e980",
+<<<<<<< HEAD
     "/js/global/app.js": "/js/global/app.js?id=309a3a38a2a4953508a9",
     "/js/pages/auth/login/index.js": "/js/pages/auth/login/index.js?id=14edcbcdd25e52de2ef3",
     "/js/pages/department-category/index/index.js": "/js/pages/department-category/index/index.js?id=6c6336888695228f50f3",
@@ -23,4 +28,25 @@
     "/js/pages/result/index/index.js": "/js/pages/result/index/index.js?id=292ac2f4b1cafc50b282",
     "/js/pages/task/index/index.js": "/js/pages/task/index/index.js?id=0c56eaac47d6696b86c0",
     "/js/pages/user/index/index.js": "/js/pages/user/index/index.js?id=f7853442648e546987bd"
+=======
+    "/js/global/app.js": "/js/global/app.js?id=26805c0b696279214e49",
+    "/js/pages/auth/login/index.js": "/js/pages/auth/login/index.js?id=b82cda425ce0e8506739",
+    "/js/pages/department-category/index/index.js": "/js/pages/department-category/index/index.js?id=2427b6f04002df750109",
+    "/js/pages/department/index/index.js": "/js/pages/department/index/index.js?id=b3423ebd8d8feadb20e4",
+    "/js/pages/department/show/index.js": "/js/pages/department/show/index.js?id=863a0b74bf6fd183f8c0",
+    "/js/pages/factory.js": "/js/pages/factory.js?id=a447916530f017575362",
+    "/js/pages/home/document-list/index.js": "/js/pages/home/document-list/index.js?id=5723657b9ddf1d1b1c94",
+    "/js/pages/home/event-list/index.js": "/js/pages/home/event-list/index.js?id=8860bc4e9d3f1e8f06b7",
+    "/js/pages/home/external-section/index.js": "/js/pages/home/external-section/index.js?id=8cee775013aba0a9d591",
+    "/js/pages/home/internal-section/index.js": "/js/pages/home/internal-section/index.js?id=50af38761598ea6d7c1f",
+    "/js/pages/home/monitoring-page/index.js": "/js/pages/home/monitoring-page/index.js?id=c02bd198779b91c82aad",
+    "/js/pages/home/people-participation/index.js": "/js/pages/home/people-participation/index.js?id=5dd135b97a6efc3e18c4",
+    "/js/pages/invite-session/index/index.js": "/js/pages/invite-session/index/index.js?id=13f919f9294e01d3ca02",
+    "/js/pages/memorandum/index/index.js": "/js/pages/memorandum/index/index.js?id=d0f913ae4b4714e1a49e",
+    "/js/pages/project/index/index.js": "/js/pages/project/index/index.js?id=0167b4c367877b08d9f3",
+    "/js/pages/regulation/index/index.js": "/js/pages/regulation/index/index.js?id=af9b3fb98fab1b63334d",
+    "/js/pages/result/index/index.js": "/js/pages/result/index/index.js?id=85bd71d7721107309cb2",
+    "/js/pages/task/index/index.js": "/js/pages/task/index/index.js?id=ac0ec4c2f42f28256918",
+    "/js/pages/user/index/index.js": "/js/pages/user/index/index.js?id=542347ffd0b094ed8e24"
+>>>>>>> 2c90858e9ea9316a3b5197078a76875a1e0f6b26
 }

@@ -46,9 +46,6 @@ Model.model = function model() {
             type: Date,
             required: true
         },
-        'other_user': {
-            type: Array
-        },
         'body': {
             type: String
         },
@@ -75,6 +72,25 @@ Model.model = function model() {
         'user_id': {
             type: ObjectId,
             required: true
+        },
+        'other_user': {
+            type: Array
+        },
+        'introduction': {
+            type: String,
+            required: false
+        },
+        'approves': {
+            type: [ObjectId],
+            required: false
+        },
+        'present_user': {
+            type: [ObjectId],
+            required: false
+        },
+        'status': {
+            type: Number,
+            default: 0
         }
     };
 };

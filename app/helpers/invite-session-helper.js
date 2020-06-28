@@ -111,11 +111,42 @@ InviteSessiontHelper.insertNewInviteSession = function insertNewInviteSession(da
             .catch(err => reject(err));
     });
 };
+/**
+ * insert approves  
+ */
+InviteSessiontHelper.insertApproves = function insertApproves(data) {
+
+    return new Promise((resolve, reject) => {
+        const Approves = mongoose.model('Approves');
+
+        Approves.insertMany(data, {})
+            .then(res => {
+                resolve(res);
+            })
+            .catch(err => reject(err));
+    });
+};
 
 /**
  * update dep cat data  
  */
 InviteSessiontHelper.updateInviteSessionData = function updateInviteSessionData(data) {
+    return new Promise((resolve, reject) => {
+        const InviteSession = mongoose.model('InviteSession');
+        InviteSession.findByIdAndUpdate(data._id, data, {
+                useFindAndModify: false
+            })
+            .then(res => {
+                resolve(res);
+            })
+            .catch(err => reject(err));
+    });
+};
+
+/**
+ * update invite session data  
+ */
+InviteSessiontHelper.updateInviteSessionApproves = function updateInviteSessionApproves(data) {
     return new Promise((resolve, reject) => {
         const InviteSession = mongoose.model('InviteSession');
         InviteSession.findByIdAndUpdate(data._id, data, {

@@ -51,6 +51,13 @@ Router.post('/invite-session/:department?', [
     ])
     .as('invitesession.store');
 
+Router.get('/invite-session/approves/:session?', [
+        checkSession,
+        Rule.canAsync('user.permision', 'invitesession.approves.store'),
+        'InviteSession@approvesStore'
+    ])
+    .as('invitesession.approves.store');
+
 Router.get('/invite-session/:invitesession', [
         checkSession,
         Rule.canAsync('user.permision', 'invitesession.show'),

@@ -68,7 +68,7 @@
                 .field.is-grouped
                     .control(v-show="! isLoadingMode")
                         a.button.is-link.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
-                            |   ویرایش
+                            |   ایجاد
 </template>
 
 <script>

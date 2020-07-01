@@ -141,6 +141,325 @@ module.exports = {
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/vue/components/memorandum/edit-memorandum.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/vue/components/memorandum/edit-memorandum.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+var AxiosHelper = __webpack_require__(/*! JS-HELPERS/axios-helper */ "./resources/js/helpers/axios-helper.js");
+
+var ENUMS = __webpack_require__(/*! JS-HELPERS/enums */ "./resources/js/helpers/enums.js");
+
+var MemorandumValidator = __webpack_require__(/*! JS-VALIDATORS/memorandum-register-validator */ "./resources/js/validators/memorandum-register-validator.js");
+
+var Notification = __webpack_require__(/*! VUE-COMPONENTS/general/notification.vue */ "./resources/js/vue/components/general/notification.vue")["default"];
+
+var VuePersianDatetimePicker = __webpack_require__(/*! vue-persian-datetime-picker */ "./node_modules/vue-persian-datetime-picker/dist/vue-persian-datetime-picker.js")["default"];
+
+var MultiTextProject = __webpack_require__(/*! VUE-COMPONENTS/memorandum/multi-text-project.vue */ "./resources/js/vue/components/memorandum/multi-text-project.vue")["default"];
+
+module.exports = {
+  name: "RegisterMemorandum",
+  components: {
+    Notification: Notification,
+    DatePicker: VuePersianDatetimePicker,
+    MultiTextProject: MultiTextProject
+  },
+  data: function data() {
+    return {
+      ENUMS: ENUMS,
+      departments: [],
+      users: [],
+      memorandumData: {
+        title: null,
+        body: null,
+        project: [],
+        conditions: null,
+        date: null,
+        department_id: null,
+        files: {},
+        user_list: {},
+        isActive: false
+      },
+      notificationMessage: null,
+      notificationType: "is-info",
+      showLoadingFlag: false,
+      files: []
+    };
+  },
+  props: {
+    departmentId: {
+      type: String,
+      "default": null
+    },
+    registerUrl: {
+      type: String,
+      "default": ""
+    },
+    departmentsUrl: {
+      type: String,
+      "default": ""
+    },
+    usersUrl: {
+      type: String,
+      "default": ""
+    }
+  },
+  created: function created() {
+    this.loadDepartments();
+    this.loadUsers();
+  },
+  computed: {
+    isLoadingMode: function isLoadingMode(state) {
+      return state.showLoadingFlag == true;
+    },
+    showNotification: function showNotification(state) {
+      return state.notificationMessage != null;
+    }
+  },
+  methods: {
+    /**
+     * Set attachments
+     */
+    setAttachment: function setAttachment(sender) {
+      var files = sender.target.files;
+      Vue.set(this, "files", files);
+    },
+
+    /**
+     * Load specific invite session
+     */
+    loadMemorandumData: function loadMemorandumData(data) {
+      var temp = {
+        _id: data._id,
+        dep: data.dep.title,
+        body: data.body,
+        project: data.project,
+        conditions: data.conditions,
+        date: data.date,
+        department_id: data.department_id,
+        files: data.files,
+        isActive: data.is_active
+      };
+
+      try {
+        temp.project = JSON.parse(data.project);
+      } catch (ex) {
+        temp.project = [];
+      }
+
+      Vue.set(this, "memorandumData", temp);
+    },
+
+    /**
+     * To Persian Date
+     */
+    toPersianDate: function toPersianDate(date, format, value) {
+      return DateHelper.toPersianDate(date, format, value);
+    },
+
+    /**
+     * On Command
+     *
+     * @param      {Object}  arg     The argument
+     */
+    commandClick: function commandClick(arg) {
+      switch (arg) {
+        case ENUMS.COMMAND.SAVE:
+          this.editMemorandum();
+          break;
+      }
+    },
+
+    /**
+     * load all departments for select departments in form
+     */
+    loadDepartments: function loadDepartments() {
+      var _this = this;
+
+      var url = this.departmentsUrl;
+      console.log(url);
+      AxiosHelper.send("get", url, "").then(function (res) {
+        var resData = res.data;
+        var datas = resData.data.data;
+        Vue.set(_this, "departments", datas);
+      });
+    },
+
+    /**
+     * load all users for select user in form
+     */
+    loadUsers: function loadUsers() {
+      var _this2 = this;
+
+      var url = this.usersUrl;
+      console.log(url);
+      AxiosHelper.send("get", url, "").then(function (res) {
+        var resData = res.data;
+        var datas = resData.data.data;
+        Vue.set(_this2, "users", datas);
+      });
+    },
+
+    /**
+     * Show Loading
+     */
+    showLoading: function showLoading() {
+      Vue.set(this, "showLoadingFlag", true);
+    },
+
+    /**
+     * HideLoading
+     */
+    hideLoading: function hideLoading() {
+      Vue.set(this, "showLoadingFlag", false);
+    },
+
+    /**
+     * Set notification
+     */
+    setNotification: function setNotification(message) {
+      var notificationType = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "is-info";
+      Vue.set(this, "notificationType", notificationType);
+      Vue.set(this, "notificationMessage", message);
+    },
+
+    /**
+     * Close Notification
+     */
+    closeNotification: function closeNotification() {
+      this.setNotification(null);
+    },
+
+    /**
+     * Edit memorandum
+     */
+    editMemorandum: function editMemorandum() {
+      var _this3 = this;
+
+      var isValid = this.validate();
+
+      if (!isValid) {
+        return;
+      }
+
+      var memorandumData = {
+        _id: this.memorandumData._id,
+        title: this.memorandumData.title,
+        project: JSON.stringify(this.memorandumData.project),
+        body: this.memorandumData.body,
+        conditions: this.memorandumData.conditions,
+        date: this.memorandumData.date,
+        department_id: this.memorandumData.departments,
+        is_active: this.memorandumData.isActive
+      };
+      memorandumData.files = this.files[0];
+      this.showLoading();
+      var url = this.editUrl.replace("$id$", memorandumData._id);
+      AxiosHelper.send("patch", url, memorandumData, {
+        sendAsFormData: true
+      }).then(function (res) {
+        var data = JSON.parse(res.config.data);
+
+        _this3.$emit("on-update", {
+          sender: _this3,
+          data: data
+        });
+      })["catch"](function (err) {
+        var data = err.response.data;
+
+        _this3.setNotification(data, "is-danger");
+      }).then(function () {
+        return _this3.hideLoading();
+      });
+    },
+
+    /**
+     * Validate new memorandum data
+     */
+    validate: function validate() {
+      var result = MemorandumValidator.validateEdit(this.memorandumData);
+
+      if (result.passes) {
+        this.closeNotification();
+        return true;
+      }
+
+      var errors = result.validator.errors.all();
+      var error = Object.keys(errors).map(function (key) {
+        return errors[key].join("\n");
+      }).join("</br>");
+      console.log(error);
+      this.setNotification(error, "is-danger");
+      return false;
+    }
+  }
+};
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/vue/components/memorandum/list-memorandum.vue?vue&type=script&lang=js&":
 /*!*****************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/vue/components/memorandum/list-memorandum.vue?vue&type=script&lang=js& ***!
@@ -369,6 +688,7 @@ module.exports = {
 //
 //
 //
+//
 
 
 var Routes = __webpack_require__(/*! JS-CORE/routes */ "./resources/js/core/routes.js");
@@ -379,8 +699,9 @@ var Loading = __webpack_require__(/*! VUE-COMPONENTS/general/loading.vue */ "./r
 
 var RegisterMemorandum = __webpack_require__(/*! VUE-COMPONENTS/memorandum/register-memorandum.vue */ "./resources/js/vue/components/memorandum/register-memorandum.vue")["default"];
 
-var ListMemorandum = __webpack_require__(/*! VUE-COMPONENTS/memorandum/list-memorandum.vue */ "./resources/js/vue/components/memorandum/list-memorandum.vue")["default"]; //const EditMemorandum = require("VUE-COMPONENTS/memorandum/edit-memorandum.vue").default;
+var ListMemorandum = __webpack_require__(/*! VUE-COMPONENTS/memorandum/list-memorandum.vue */ "./resources/js/vue/components/memorandum/list-memorandum.vue")["default"];
 
+var EditMemorandum = __webpack_require__(/*! VUE-COMPONENTS/memorandum/edit-memorandum.vue */ "./resources/js/vue/components/memorandum/edit-memorandum.vue")["default"];
 
 var ShowMemorandum = __webpack_require__(/*! VUE-COMPONENTS/memorandum/show-memorandum.vue */ "./resources/js/vue/components/memorandum/show-memorandum.vue")["default"];
 
@@ -392,7 +713,7 @@ module.exports = {
     Loading: Loading,
     ListMemorandum: ListMemorandum,
     RegisterMemorandum: RegisterMemorandum,
-    //EditMemorandum,
+    EditMemorandum: EditMemorandum,
     ShowMemorandum: ShowMemorandum,
     Notification: Notification
   },
@@ -534,7 +855,6 @@ module.exports = {
           break;
 
         case ENUMS.COMMAND.EDIT:
-          /* TODO: REGISTER NEW Memorandum */
           this.$refs.memorandumEdit.loadMemorandumData(data);
           this.changeFormMode(ENUMS.FORM_MODE.EDIT);
           break;
@@ -650,6 +970,9 @@ var MultiTextResult = __webpack_require__(/*! VUE-COMPONENTS/memorandum/multi-te
 
 module.exports = {
   name: "MultiTextProject",
+  components: {
+    MultiTextResult: MultiTextResult
+  },
   data: function data() {
     return {
       values: null
@@ -29392,6 +29715,351 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/pug-plain-loader/index.js!./node_modules/vue-loader/lib/index.js?!./resources/js/vue/components/memorandum/edit-memorandum.vue?vue&type=template&id=eac60178&scoped=true&lang=pug&":
+/*!**************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/vue/components/memorandum/edit-memorandum.vue?vue&type=template&id=eac60178&scoped=true&lang=pug& ***!
+  \**************************************************************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "container-child" },
+    [
+      _vm.showNotification
+        ? _c(
+            "notification",
+            {
+              attrs: { "notification-type": _vm.notificationType },
+              on: { "on-close": _vm.closeNotification }
+            },
+            [
+              _c("span", {
+                domProps: { innerHTML: _vm._s(_vm.notificationMessage) }
+              })
+            ]
+          )
+        : _vm._e(),
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.isLoadingMode,
+              expression: "isLoadingMode"
+            }
+          ],
+          staticClass: "column is-full"
+        },
+        [_c("h1", [_vm._v("در حال بارگذاری")])]
+      ),
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: !_vm.isLoadingMode,
+              expression: "! isLoadingMode"
+            }
+          ],
+          staticClass: "form-small"
+        },
+        [
+          _c("div", { staticClass: "field" }, [
+            _c("label", { staticClass: "label" }),
+            _c("div", { staticClass: "control" }, [
+              _c("div", { staticClass: "select is-primary" }, [
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.memorandumData.departments,
+                        expression: "memorandumData.departments"
+                      }
+                    ],
+                    on: {
+                      change: function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.$set(
+                          _vm.memorandumData,
+                          "departments",
+                          $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        )
+                      }
+                    }
+                  },
+                  _vm._l(_vm.departments, function(
+                    department,
+                    departmentIndex
+                  ) {
+                    return _c(
+                      "option",
+                      { domProps: { value: department._id } },
+                      [_vm._v(_vm._s(department.title))]
+                    )
+                  }),
+                  0
+                )
+              ])
+            ])
+          ]),
+          _c("div", { staticClass: "field" }, [
+            _c("label", { staticClass: "label" }, [_vm._v("عنوان")]),
+            _c("div", { staticClass: "control" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.memorandumData.title,
+                    expression: "memorandumData.title"
+                  }
+                ],
+                staticClass: "input",
+                attrs: { type: "text", placeholder: "عنوان", required: "" },
+                domProps: { value: _vm.memorandumData.title },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.memorandumData, "title", $event.target.value)
+                  }
+                }
+              })
+            ])
+          ]),
+          _c("div", { staticClass: "field" }, [
+            _c("label", { staticClass: "label" }, [_vm._v("سال")]),
+            _c(
+              "div",
+              { staticClass: "control" },
+              [
+                _c("date-picker", {
+                  attrs: {
+                    format: "YYYY",
+                    "display-format": "jYYYY",
+                    type: "datetime",
+                    required: ""
+                  },
+                  model: {
+                    value: _vm.memorandumData.date,
+                    callback: function($$v) {
+                      _vm.$set(_vm.memorandumData, "date", $$v)
+                    },
+                    expression: "memorandumData.date"
+                  }
+                })
+              ],
+              1
+            )
+          ]),
+          _c("div", { staticClass: "field" }, [
+            _c("label", { staticClass: "label" }, [
+              _vm._v("مقدمه و اهداف تفاهم نامه")
+            ]),
+            _c("div", { staticClass: "control" }, [
+              _c("textarea", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.memorandumData.body,
+                    expression: "memorandumData.body"
+                  }
+                ],
+                staticClass: "textarea",
+                attrs: { placeholder: "مقدمه" },
+                domProps: { value: _vm.memorandumData.body },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.memorandumData, "body", $event.target.value)
+                  }
+                }
+              })
+            ])
+          ]),
+          _c("fieldset", [
+            _c("legend", [_vm._v("پروژه ها")]),
+            _c(
+              "div",
+              { staticClass: "field" },
+              [
+                _c("multi-text-project", {
+                  model: {
+                    value: _vm.memorandumData.project,
+                    callback: function($$v) {
+                      _vm.$set(_vm.memorandumData, "project", $$v)
+                    },
+                    expression: "memorandumData.project"
+                  }
+                })
+              ],
+              1
+            )
+          ]),
+          _c("div", { staticClass: "field" }, [
+            _c("label", { staticClass: "label" }, [
+              _vm._v("شرایط اجرای تفاهم نامه")
+            ]),
+            _c("div", { staticClass: "control" }, [
+              _c("textarea", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.memorandumData.conditions,
+                    expression: "memorandumData.conditions"
+                  }
+                ],
+                staticClass: "textarea",
+                attrs: { placeholder: "شرایط اجرای تفاهم نامه" },
+                domProps: { value: _vm.memorandumData.conditions },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(
+                      _vm.memorandumData,
+                      "conditions",
+                      $event.target.value
+                    )
+                  }
+                }
+              })
+            ])
+          ]),
+          _c("div", { staticClass: "field" }, [
+            _c("label", { staticClass: "checkbox" }, [
+              _c("input", {
+                attrs: { type: "file" },
+                on: { change: _vm.setAttachment }
+              }),
+              _vm._v("  ضمیمه")
+            ])
+          ]),
+          _c("div", { staticClass: "field" }, [
+            _c("label", { staticClass: "checkbox" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.memorandumData.isActive,
+                    expression: "memorandumData.isActive"
+                  }
+                ],
+                attrs: { type: "checkbox" },
+                domProps: {
+                  checked: Array.isArray(_vm.memorandumData.isActive)
+                    ? _vm._i(_vm.memorandumData.isActive, null) > -1
+                    : _vm.memorandumData.isActive
+                },
+                on: {
+                  change: function($event) {
+                    var $$a = _vm.memorandumData.isActive,
+                      $$el = $event.target,
+                      $$c = $$el.checked ? true : false
+                    if (Array.isArray($$a)) {
+                      var $$v = null,
+                        $$i = _vm._i($$a, $$v)
+                      if ($$el.checked) {
+                        $$i < 0 &&
+                          _vm.$set(
+                            _vm.memorandumData,
+                            "isActive",
+                            $$a.concat([$$v])
+                          )
+                      } else {
+                        $$i > -1 &&
+                          _vm.$set(
+                            _vm.memorandumData,
+                            "isActive",
+                            $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                          )
+                      }
+                    } else {
+                      _vm.$set(_vm.memorandumData, "isActive", $$c)
+                    }
+                  }
+                }
+              }),
+              _vm._v("  فعال")
+            ])
+          ]),
+          _c("div", { staticClass: "field is-grouped" }, [
+            _c(
+              "div",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: !_vm.isLoadingMode,
+                    expression: "! isLoadingMode"
+                  }
+                ],
+                staticClass: "control"
+              },
+              [
+                _c(
+                  "a",
+                  {
+                    staticClass: "button is-link is-rounded",
+                    attrs: { href: "#" },
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        return _vm.commandClick(_vm.ENUMS.COMMAND.SAVE)
+                      }
+                    }
+                  },
+                  [_vm._v("  ایجاد")]
+                )
+              ]
+            )
+          ])
+        ]
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/pug-plain-loader/index.js!./node_modules/vue-loader/lib/index.js?!./resources/js/vue/components/memorandum/list-memorandum.vue?vue&type=template&id=27c1c230&scoped=true&lang=pug&":
 /*!**************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/vue/components/memorandum/list-memorandum.vue?vue&type=template&id=27c1c230&scoped=true&lang=pug& ***!
@@ -29749,6 +30417,35 @@ var render = function() {
             {
               name: "show",
               rawName: "v-show",
+              value: !_vm.modeLoading && _vm.modeEdit,
+              expression: "!modeLoading && modeEdit"
+            }
+          ],
+          staticClass: "column"
+        },
+        [
+          _c("edit-memorandum", {
+            ref: "memorandumEdit",
+            attrs: {
+              "edit-url": _vm.editUrl,
+              "departments-url": _vm.departmentsUrl,
+              "users-url": _vm.usersUrl
+            },
+            on: {
+              "on-command": _vm.onCommand,
+              "on-update": _vm.onMemorandumUpdate
+            }
+          })
+        ],
+        1
+      ),
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
               value: !_vm.modeLoading && _vm.modeShow,
               expression: "!modeLoading && modeShow"
             }
@@ -29987,7 +30684,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "multi-text", attrs: { id: "multi-text-template" } },
+    { staticClass: "multi-text", attrs: { id: "multi-text-result-template" } },
     [
       _vm._l(_vm.values, function(item, index) {
         return _c("div", { staticClass: "form-itemsbox" }, [
@@ -32207,6 +32904,78 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/vue/components/memorandum/edit-memorandum.vue":
+/*!********************************************************************!*\
+  !*** ./resources/js/vue/components/memorandum/edit-memorandum.vue ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _edit_memorandum_vue_vue_type_template_id_eac60178_scoped_true_lang_pug___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./edit-memorandum.vue?vue&type=template&id=eac60178&scoped=true&lang=pug& */ "./resources/js/vue/components/memorandum/edit-memorandum.vue?vue&type=template&id=eac60178&scoped=true&lang=pug&");
+/* harmony import */ var _edit_memorandum_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./edit-memorandum.vue?vue&type=script&lang=js& */ "./resources/js/vue/components/memorandum/edit-memorandum.vue?vue&type=script&lang=js&");
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _edit_memorandum_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _edit_memorandum_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _edit_memorandum_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _edit_memorandum_vue_vue_type_template_id_eac60178_scoped_true_lang_pug___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _edit_memorandum_vue_vue_type_template_id_eac60178_scoped_true_lang_pug___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "eac60178",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/vue/components/memorandum/edit-memorandum.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/vue/components/memorandum/edit-memorandum.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************************!*\
+  !*** ./resources/js/vue/components/memorandum/edit-memorandum.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_edit_memorandum_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./edit-memorandum.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/vue/components/memorandum/edit-memorandum.vue?vue&type=script&lang=js&");
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_edit_memorandum_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_edit_memorandum_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_edit_memorandum_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_edit_memorandum_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_edit_memorandum_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/vue/components/memorandum/edit-memorandum.vue?vue&type=template&id=eac60178&scoped=true&lang=pug&":
+/*!************************************************************************************************************************!*\
+  !*** ./resources/js/vue/components/memorandum/edit-memorandum.vue?vue&type=template&id=eac60178&scoped=true&lang=pug& ***!
+  \************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_pug_plain_loader_index_js_node_modules_vue_loader_lib_index_js_vue_loader_options_edit_memorandum_vue_vue_type_template_id_eac60178_scoped_true_lang_pug___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/pug-plain-loader!../../../../../node_modules/vue-loader/lib??vue-loader-options!./edit-memorandum.vue?vue&type=template&id=eac60178&scoped=true&lang=pug& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/pug-plain-loader/index.js!./node_modules/vue-loader/lib/index.js?!./resources/js/vue/components/memorandum/edit-memorandum.vue?vue&type=template&id=eac60178&scoped=true&lang=pug&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_pug_plain_loader_index_js_node_modules_vue_loader_lib_index_js_vue_loader_options_edit_memorandum_vue_vue_type_template_id_eac60178_scoped_true_lang_pug___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_pug_plain_loader_index_js_node_modules_vue_loader_lib_index_js_vue_loader_options_edit_memorandum_vue_vue_type_template_id_eac60178_scoped_true_lang_pug___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/vue/components/memorandum/list-memorandum.vue":
 /*!********************************************************************!*\
   !*** ./resources/js/vue/components/memorandum/list-memorandum.vue ***!
@@ -32646,7 +33415,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/pages/memorandum/index/index.js */"./resources/js/pages/memorandum/index/index.js");
+module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/memorandum/index/index.js */"./resources/js/pages/memorandum/index/index.js");
 
 
 /***/ })

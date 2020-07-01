@@ -366,7 +366,6 @@ module.exports = {
     this.loadDepartments();
     this.loadUsers();
   },
-  mounted: function mounted() {},
   computed: {
     isLoadingMode: function isLoadingMode(state) {
       return state.showLoadingFlag == true;
@@ -385,7 +384,7 @@ module.exports = {
     },
 
     /**
-     * Load specific user
+     * Load specific invite session
      */
     loadInviteSessionData: function loadInviteSessionData(data) {
       var temp = {
@@ -397,7 +396,6 @@ module.exports = {
         date: data.date,
         department_id: data.department_id,
         files: data.files,
-        roles: data.roles,
         user_list: data.user_list,
         isActive: data.is_active,
         approv: data.approv,
@@ -440,7 +438,7 @@ module.exports = {
     commandClick: function commandClick(arg) {
       switch (arg) {
         case ENUMS.COMMAND.SAVE:
-          this.editUser();
+          this.EditInviteSession();
           break;
       }
     },
@@ -33016,7 +33014,7 @@ var render = function() {
                         }
                       }
                     },
-                    [_vm._v("  ویرایش")]
+                    [_vm._v("  ایجاد")]
                   )
                 ]
               )
@@ -35970,7 +35968,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/pages/invite-session/index/index.js */"./resources/js/pages/invite-session/index/index.js");
+module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/invite-session/index/index.js */"./resources/js/pages/invite-session/index/index.js");
 
 
 /***/ })

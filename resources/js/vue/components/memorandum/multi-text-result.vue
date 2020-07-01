@@ -1,5 +1,5 @@
 <template lang="pug">
-    .multi-text#multi-text-template
+    .multi-text#multi-text-result-template
         .form-itemsbox(v-for='(item, index) in values')
             .columns
                 .column.is-10

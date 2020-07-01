@@ -32,12 +32,13 @@
 <script>
 "use strict";
 
-const MultiTextResult = require("VUE-COMPONENTS/memorandum/multi-text-result.vue")
-    .default;
+const MultiTextResult = require("VUE-COMPONENTS/memorandum/multi-text-result.vue").default;
 
 module.exports = {
     name: "MultiTextProject",
-
+    components: {
+        MultiTextResult
+    },
     data: () => ({
         values: null
     }),

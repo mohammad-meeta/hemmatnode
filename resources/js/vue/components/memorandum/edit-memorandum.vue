@@ -123,10 +123,6 @@ module.exports = {
         this.loadUsers();
     },
 
-    mounted() {
-        Vue.set(this.memorandumData, "departments", this.departmentId);
-    },
-
     computed: {
         isLoadingMode: state => state.showLoadingFlag == true,
         showNotification: state => state.notificationMessage != null
@@ -143,6 +139,38 @@ module.exports = {
         },
 
         /**
+         * Load specific invite session
+         */
+        loadMemorandumData(data) {
+            const temp = {
+                _id: data._id,
+                dep: data.dep.title,
+                body: data.body,
+                project: data.project,
+                conditions: data.conditions,
+                date: data.date,
+                department_id: data.department_id,
+                files: data.files,
+                isActive: data.is_active
+            };
+
+            try {
+                temp.project = JSON.parse(data.project);
+            } catch (ex) {
+                temp.project = [];
+            }
+
+            Vue.set(this, "memorandumData", temp);
+        },
+
+        /**
+         * To Persian Date
+         */
+        toPersianDate(date, format, value) {
+            return DateHelper.toPersianDate(date, format, value);
+        },
+
+        /**
          * On Command
          *
          * @param      {Object}  arg     The argument
@@ -150,7 +178,7 @@ module.exports = {
         commandClick(arg) {
             switch (arg) {
                 case ENUMS.COMMAND.SAVE:
-                    this.registerMemorandum();
+                    this.editMemorandum();
                     break;
             }
         },
@@ -211,14 +239,15 @@ module.exports = {
         },
 
         /**
-         * Register new memorandum
+         * Edit memorandum
          */
-        registerMemorandum() {
+        editMemorandum() {
             const isValid = this.validate();
             if (!isValid) {
                 return;
             }
             let memorandumData = {
+                _id: this.memorandumData._id,
                 title: this.memorandumData.title,
                 project: JSON.stringify(this.memorandumData.project),
                 body: this.memorandumData.body,
@@ -227,24 +256,18 @@ module.exports = {
                 department_id: this.memorandumData.departments,
                 is_active: this.memorandumData.isActive
             };
-            console.log(memorandumData);
             memorandumData.files = this.files[0];
-
             this.showLoading();
-
-            const url = this.registerUrl;
-            console.log(url);
-            AxiosHelper.send("post", url, memorandumData, {
+            const url = this.editUrl.replace("$id$", memorandumData._id);
+            AxiosHelper.send("patch", url, memorandumData, {
                 sendAsFormData: true
             })
                 .then(res => {
-                    const data = res.data;
-                    if (data.success) {
-                        this.$emit("on-register", {
-                            sender: this,
-                            data
-                        });
-                    }
+                    const data = JSON.parse(res.config.data);
+                    this.$emit("on-update", {
+                        sender: this,
+                        data
+                    });
                 })
                 .catch(err => {
                     const data = err.response.data;
@@ -257,7 +280,7 @@ module.exports = {
          * Validate new memorandum data
          */
         validate() {
-            const result = MemorandumValidator.validate(this.memorandumData);
+            const result = MemorandumValidator.validateEdit(this.memorandumData);
 
             if (result.passes) {
                 this.closeNotification();

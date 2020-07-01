@@ -146,8 +146,6 @@ module.exports = {
         this.loadUsers();
     },
 
-    mounted() {},
-
     computed: {
         isLoadingMode: state => state.showLoadingFlag == true,
         showNotification: state => state.notificationMessage != null
@@ -164,7 +162,7 @@ module.exports = {
         },
 
         /**
-         * Load specific user
+         * Load specific invite session
          */
         loadInviteSessionData(data) {
             const temp = {
@@ -176,7 +174,6 @@ module.exports = {
                 date: data.date,
                 department_id: data.department_id,
                 files: data.files,
-                roles: data.roles,
                 user_list: data.user_list,
                 isActive: data.is_active,
                 approv: data.approv,
@@ -219,7 +216,7 @@ module.exports = {
         commandClick(arg) {
             switch (arg) {
                 case ENUMS.COMMAND.SAVE:
-                    this.editUser();
+                    this.EditInviteSession();
                     break;
             }
         },

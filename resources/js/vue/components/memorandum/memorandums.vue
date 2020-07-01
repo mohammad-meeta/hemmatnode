@@ -45,11 +45,12 @@
                     :departments-url="departmentsUrl",
                     :users-url="usersUrl")
 
-            //.column(v-show="!modeLoading && modeEdit")
-                edit-department(ref="departmentEdit", @on-command="onCommand",
+            .column(v-show="!modeLoading && modeEdit")
+                edit-memorandum(ref="memorandumEdit", @on-command="onCommand",
                 @on-update="onMemorandumUpdate"
                 :edit-url="editUrl",
-                :departmentCategories-url="departmentCategoriesUrl")
+                :departments-url="departmentsUrl",
+                :users-url="usersUrl")
 
             .column(v-show="!modeLoading && modeShow")
                 show-memorandum(ref="memorandumShow", @on-command="onCommand")
@@ -65,7 +66,7 @@ const RegisterMemorandum = require("VUE-COMPONENTS/memorandum/register-memorandu
     .default;
 const ListMemorandum = require("VUE-COMPONENTS/memorandum/list-memorandum.vue")
     .default;
-//const EditMemorandum = require("VUE-COMPONENTS/memorandum/edit-memorandum.vue").default;
+const EditMemorandum = require("VUE-COMPONENTS/memorandum/edit-memorandum.vue").default;
 const ShowMemorandum = require("VUE-COMPONENTS/memorandum/show-memorandum.vue")
     .default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
@@ -77,7 +78,7 @@ module.exports = {
         Loading,
         ListMemorandum,
         RegisterMemorandum,
-        //EditMemorandum,
+        EditMemorandum,
         ShowMemorandum,
         Notification
     },
@@ -239,7 +240,6 @@ module.exports = {
                     break;
 
                 case ENUMS.COMMAND.EDIT:
-                    /* TODO: REGISTER NEW Memorandum */
                     this.$refs.memorandumEdit.loadMemorandumData(data);
                     this.changeFormMode(ENUMS.FORM_MODE.EDIT);
                     break;

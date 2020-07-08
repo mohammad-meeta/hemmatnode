@@ -218,6 +218,7 @@ module.exports = {
             if (!isValid) {
                 return;
             }
+            console.log(this.memorandum);
             let memorandumData = {
                 title: this.memorandumData.title,
                 project: JSON.stringify(this.memorandumData.project),

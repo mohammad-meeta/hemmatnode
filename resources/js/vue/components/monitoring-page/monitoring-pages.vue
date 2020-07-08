@@ -7,7 +7,7 @@
 
             .container.page-header
                 .title
-                    h1 دیده بانی سلامت
+                    h1 دیدبانی سلامت
             .container.main-content
                 .intro-cards.columns
                     .column.is-4(v-for='eventCategory in eventCategories',
@@ -55,11 +55,11 @@ module.exports = {
             },
             {
                 id: 2,
-                title: "دیده بانی سلامت",
+                title: "دیدبانی سلامت",
                 event: [
                     {
                         id: 2,
-                        title: "شاخص های دیده بانی سلامت دانشگاه علوم پزشکی قزوین سال 98",
+                        title: "شاخص های دیدبانی سلامت دانشگاه علوم پزشکی قزوین سال 98",
                         file: "/images/storage/Dideban98.xlsx"
                     }
                 ]

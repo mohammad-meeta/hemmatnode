@@ -24,7 +24,7 @@
                     fieldset
                         legend برآمدها
                         .field
-                            multi-text-result(v-model='item.result || {}')
+                            multi-text-result(v-model='item.result')
         a.button.is-success(href='#', @click.prevent='addValue')
             i.fa.fa-plus
 </template>

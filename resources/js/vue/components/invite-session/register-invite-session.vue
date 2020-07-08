@@ -1,6 +1,9 @@
 <template lang="pug">
     .container-child
-        notification(:notification-type="notificationType", @on-close="closeNotification", v-if="showNotification")
+        notification(:notification-type="notificationType",
+                     @on-close="closeNotification",
+                     v-if="showNotification")
+
             span(v-html="notificationMessage")
 
         .column.is-full(v-show="isLoadingMode")
@@ -34,9 +37,10 @@
                         |   {{ user.name }} - {{ user.profile.first_name }} {{ user.profile.last_name }}
 
             .field
-                label.checkbox
-                    input(type='file', @change="setAttachment")
-                    |   ضمیمه
+                file-upload(ref="fileUpload", :old-files="oldFiles")
+                |   ضمیمه
+                button(@click="getFilesList") Get files
+                //file-upload(ref="fileUpload", :upload-url="articleUploadUrl", @on-file-remove="articleFileRemove")
             .field
                 label.label توضیحات
                 .control
@@ -50,7 +54,6 @@
                 .control(v-show="! isLoadingMode")
                     a.button.is-link.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
                         |   ایجاد
-
 </template>
 
 <script>
@@ -62,6 +65,7 @@ const InviteSessionValidator = require("JS-VALIDATORS/invite-session-register-va
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
 const MultiText = require("VUE-COMPONENTS/general/multi-text.vue").default;
+const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 
 module.exports = {
     name: "RegisterInviteSession",
@@ -69,19 +73,47 @@ module.exports = {
     components: {
         Notification,
         DatePicker: VuePersianDatetimePicker,
-        MultiText
+        MultiText,
+        FileUpload
     },
 
     data: () => ({
         ENUMS,
         departments: [],
         users: [],
+        files: [],
+                oldFiles: [
+            {
+                _id: 1000,
+                name: "Old File 1",
+                size: 10000
+            },
+            {
+                _id: 1001,
+                name: "Old File 2",
+                size: 20000
+            },
+            {
+                _id: 1002,
+                name: "Old File 3",
+                size: 30000
+            }
+        ],
         inviteSessionData: {
             title: null,
             body: null,
-            agenda:
-                [{title: 'تلاوت قرآن و معنی', duration: '5', provider: 'عضو هیات رئیسه'},
-                {title: 'گزارش کشیک نوروزی سال 1398', duration: '20', provider: 'عضو هیات رئیسه'}],
+            agenda: [
+                {
+                    title: "تلاوت قرآن و معنی",
+                    duration: "5",
+                    provider: "عضو هیات رئیسه"
+                },
+                {
+                    title: "گزارش کشیک نوروزی سال 1398",
+                    duration: "20",
+                    provider: "عضو هیات رئیسه"
+                }
+            ],
             place: null,
             date: null,
             department_id: null,
@@ -93,7 +125,7 @@ module.exports = {
         notificationMessage: null,
         notificationType: "is-info",
         showLoadingFlag: false,
-        files: [],
+        files: []
     }),
 
     props: {
@@ -124,7 +156,7 @@ module.exports = {
     },
 
     mounted() {
-        Vue.set(this.inviteSessionData, 'departments', this.departmentId);
+        Vue.set(this.inviteSessionData, "departments", this.departmentId);
     },
 
     computed: {
@@ -133,6 +165,13 @@ module.exports = {
     },
 
     methods: {
+        /**
+         * Get files list
+         */
+        getFilesList() {
+            const files = this.$refs.fileUpload.getFiles();
+        },
+
         /**
          * Set attachments
          */
@@ -160,7 +199,6 @@ module.exports = {
          */
         loadDepartments() {
             const url = this.departmentsUrl;
-            console.log(url);
             AxiosHelper.send("get", url, "").then(res => {
                 const resData = res.data;
                 const datas = resData.data.data;
@@ -173,7 +211,6 @@ module.exports = {
          */
         loadUsers() {
             const url = this.usersUrl;
-            console.log(url);
             AxiosHelper.send("get", url, "").then(res => {
                 const resData = res.data;
                 const datas = resData.data.data;
@@ -224,19 +261,17 @@ module.exports = {
                 agenda: JSON.stringify(this.inviteSessionData.agenda),
                 place: this.inviteSessionData.place,
                 date: this.inviteSessionData.date,
-                department_id: this.inviteSessionData
-                    .departments,
+                department_id: this.inviteSessionData.departments,
                 user_list: this.inviteSessionData.user_list,
                 is_active: this.inviteSessionData.isActive
             };
 
             inviteSessionData.files = this.files[0];
             let t = Object.keys(inviteSessionData.user_list)
-            .filter(key => true == inviteSessionData.user_list[key])
-            .map(key => key);
+                .filter(key => true == inviteSessionData.user_list[key])
+                .map(key => key);
 
             inviteSessionData.user_list = t;
-            console.log(inviteSessionData);
             this.showLoading();
 
             const url = this.registerUrl;
@@ -264,7 +299,9 @@ module.exports = {
          * Validate new invite session data
          */
         validate() {
-            const result = InviteSessionValidator.validate(this.inviteSessionData);
+            const result = InviteSessionValidator.validate(
+                this.inviteSessionData
+            );
 
             if (result.passes) {
                 this.closeNotification();

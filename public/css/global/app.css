@@ -3785,7 +3785,7 @@ h2.item-category {
 }
 
 .inline-card-head {
-  border-radius: 5px;
+  border-radius: 15px;
   box-shadow: 0px 5px 14px #c7c7c7;
   padding: 30px 20px;
   width: 340px;
@@ -3795,7 +3795,11 @@ h2.item-category {
   justify-content: center;
   align-items: center;
   font-size: 18px;
-  background: #fff;
+  background: #00c4a7;
+}
+
+.inline-card-head h2 {
+  color: #fff;
 }
 
 .inline-card-body {

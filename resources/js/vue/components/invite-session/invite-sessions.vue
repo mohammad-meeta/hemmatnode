@@ -91,8 +91,10 @@ const RegisterFullInviteSession = require("VUE-COMPONENTS/invite-session/registe
     .default;
 const ListInviteSession = require("VUE-COMPONENTS/invite-session/list-invite-session.vue")
     .default;
-const EditSemiInviteSession = require("VUE-COMPONENTS/invite-session/edit-semi-invite-session.vue").default;
-const EditInviteSession = require("VUE-COMPONENTS/invite-session/edit-invite-session.vue").default;
+const EditSemiInviteSession = require("VUE-COMPONENTS/invite-session/edit-semi-invite-session.vue")
+    .default;
+const EditInviteSession = require("VUE-COMPONENTS/invite-session/edit-invite-session.vue")
+    .default;
 const ShowInviteSession = require("VUE-COMPONENTS/invite-session/show-invite-session.vue")
     .default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
@@ -116,7 +118,7 @@ module.exports = {
         formModeStack: [],
         inviteSessions: [],
         notificationMessage: null,
-        notificationType: "is-info"
+        notificationType: "is-info",
     }),
 
     props: {
@@ -167,7 +169,8 @@ module.exports = {
         modeLoading: state => state.formMode == ENUMS.FORM_MODE.LOADING,
         modeList: state => state.formMode == ENUMS.FORM_MODE.LIST,
         modeRegister: state => state.formMode == ENUMS.FORM_MODE.REGISTER,
-        modeFullRegister: state => state.formMode == ENUMS.FORM_MODE.FULLREGISTER,
+        modeFullRegister: state =>
+            state.formMode == ENUMS.FORM_MODE.FULLREGISTER,
         modeSemiEdit: state => state.formMode == ENUMS.FORM_MODE.SEMIEDIT,
         modeEdit: state => state.formMode == ENUMS.FORM_MODE.EDIT,
         modeShow: state => state.formMode == ENUMS.FORM_MODE.SHOW,
@@ -221,10 +224,7 @@ module.exports = {
             this.$refs.inviteSessionList.editInInviteSessionList(payload.data);
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
 
-            this.setNotification(
-                ".جلسه با موفقیت ویرایش شد",
-                "is-success"
-            );
+            this.setNotification(".جلسه با موفقیت ویرایش شد", "is-success");
         },
 
         /**
@@ -260,7 +260,9 @@ module.exports = {
 
                 case ENUMS.COMMAND.SEMIEDIT:
                     /* TODO: Semi Edit InviteSession */
-                    this.$refs.inviteSessionSemiEdit.loadInviteSessionData(data);
+                    this.$refs.inviteSessionSemiEdit.loadInviteSessionData(
+                        data
+                    );
                     this.changeFormMode(ENUMS.FORM_MODE.SEMIEDIT);
                     break;
 

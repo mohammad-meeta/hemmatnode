@@ -202,10 +202,10 @@ module.exports = {
         }]
       }, {
         id: 2,
-        title: "دیده بانی سلامت",
+        title: "دیدبانی سلامت",
         event: [{
           id: 2,
-          title: "شاخص های دیده بانی سلامت دانشگاه علوم پزشکی قزوین سال 98",
+          title: "شاخص های دیدبانی سلامت دانشگاه علوم پزشکی قزوین سال 98",
           file: "/images/storage/Dideban98.xlsx"
         }]
       }],
@@ -439,9 +439,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "container page-header" }, [
-      _c("div", { staticClass: "title" }, [
-        _c("h1", [_vm._v("دیده بانی سلامت")])
-      ])
+      _c("div", { staticClass: "title" }, [_c("h1", [_vm._v("دیدبانی سلامت")])])
     ])
   }
 ]

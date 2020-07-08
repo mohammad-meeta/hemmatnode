@@ -1321,6 +1321,7 @@ module.exports = {
         return;
       }
 
+      console.log(this.memorandum);
       var memorandumData = {
         title: this.memorandumData.title,
         project: JSON.stringify(this.memorandumData.project),
@@ -27040,11 +27041,11 @@ var render = function() {
                   [
                     _c("multi-text-result", {
                       model: {
-                        value: item.result || {},
+                        value: item.result,
                         callback: function($$v) {
-                          _vm.$set(item, "result || {}", $$v)
+                          _vm.$set(item, "result", $$v)
                         },
-                        expression: "item.result || {}"
+                        expression: "item.result"
                       }
                     })
                   ],

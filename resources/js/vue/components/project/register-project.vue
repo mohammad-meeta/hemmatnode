@@ -6,38 +6,40 @@
         .column.is-full(v-show="isLoadingMode")
             h1 در حال بارگذاری
         .form-small(v-show="! isLoadingMode")
-            .field
-                label.label نام پروژه
-                .control
-                    input.input(type='text', placeholder='نام پروژه', autofocus, v-model='projectData.title' required)
-            .field
-                label.label برنامه متناظر
-                .control
-                    .select.is-primary
-                        select(v-model="projectData.program_id")
-                            option(v-for='(program, programIndex) in programs',
-                                :value="program._id") {{ program.name }}
-            .field
-                label.label هدف برنامه
-                .control
-                    textarea.textarea(placeholder='هدف برنامه', v-model='projectData.target')
-            .field
-                label.label شاخص های اثر متناظر
-                .control
-                    textarea.textarea(placeholder='شاخص های اثر متناظر', v-model='projectData.same_effects_index')
-            .field
-                label.label مجری سازمانی
-                .control
-                    input.input(type='text', placeholder='مجری سازمانی', autofocus, v-model='projectData.organ_moderator' required)
-            .field
-                label.label
-                    | مجری پروژه - پیمانکار
+            .fieldset
+                legend مشخصات پروژه
+                .field
+                    label.label نام پروژه
                     .control
-                        input.input(type='text', placeholder='مجری پروژه - پیمانکار', autofocus, v-model='projectData.project_moderator' required)
-            .field
-                label.label مشاورین
+                        input.input(type='text', placeholder='نام پروژه', autofocus, v-model='projectData.title' required)
+                .field
+                    label.label برنامه متناظر
                     .control
-                        input.input(type='text', placeholder='مشاورین', autofocus, v-model='projectData.consoultant' required)
+                        .select.is-primary
+                            select(v-model="projectData.program_id")
+                                option(v-for='(program, programIndex) in programs',
+                                    :value="program._id") {{ program.name }}
+                .field
+                    label.label هدف برنامه
+                    .control
+                        textarea.textarea(placeholder='هدف برنامه', v-model='projectData.target')
+                .field
+                    label.label شاخص های اثر متناظر
+                    .control
+                        textarea.textarea(placeholder='شاخص های اثر متناظر', v-model='projectData.same_effects_index')
+                .field
+                    label.label مجری سازمانی
+                    .control
+                        input.input(type='text', placeholder='مجری سازمانی', autofocus, v-model='projectData.organ_moderator' required)
+                .field
+                    label.label
+                        | مجری پروژه - پیمانکار
+                        .control
+                            input.input(type='text', placeholder='مجری پروژه - پیمانکار', autofocus, v-model='projectData.project_moderator' required)
+                .field
+                    label.label مشاورین
+                        .control
+                            input.input(type='text', placeholder='مشاورین', autofocus, v-model='projectData.consoultant' required)
             .field
                 label.label ناظر پروژه
                     .control

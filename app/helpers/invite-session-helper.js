@@ -35,6 +35,81 @@ InviteSessiontHelper.loadAllInviteSessionData = function loadAllInviteSessionDat
             "$unwind": "$dep"
         },
         {
+            "$unwind": {
+                "path": "$files",
+                "preserveNullAndEmptyArrays": true
+            }
+        },
+        {
+            "$lookup": {
+                "from": "files",
+                "localField": "files._id",
+                "foreignField": "_id",
+                "as": "file"
+            }
+        },
+        {
+            "$unwind": {
+                "path": "$file",
+                "preserveNullAndEmptyArrays": true
+            }
+        },
+        {
+            "$project": {
+                "file.encoding": 0,
+                "file.fieldname": 0,
+                "file.mimetype": 0,
+                "file.destination": 0,
+                "file.user_id": 0,
+                "file.path": 0,
+                "file.filename": 0,
+            }
+        },
+        {
+            "$group": {
+                "_id": "$_id",
+                "files": {
+                    "$push": "$file"
+                },
+                "user_list": {
+                    "$last": "$user_list"
+                },
+                "is_active": {
+                    "$last": "$is_active"
+                },
+                "other_user": {
+                    "$last": "$other_user"
+                },
+                "approves": {
+                    "$last": "$approves"
+                },
+                "present_user": {
+                    "$last": "$present_user"
+                },
+                "status": {
+                    "$last": "$status"
+                },
+                "body": {
+                    "$last": "$body"
+                },
+                "agenda": {
+                    "$last": "$agenda"
+                },
+                "place": {
+                    "$last": "$place"
+                },
+                "date": {
+                    "$last": "$date"
+                },
+                "created_at": {
+                    "$last": "$created_at"
+                },
+                "dep": {
+                    "$last": "$dep"
+                }
+            }
+        },
+        {
             "$sort": {
                 "created_at": -1
             }
@@ -50,6 +125,7 @@ InviteSessiontHelper.loadAllInviteSessionData = function loadAllInviteSessionDat
     return new Promise((resolve, reject) => {
         InviteSession.aggregate(pipeline)
             .then(res => {
+                console.log(res)
                 resolve(res);
             })
             .catch(err => reject(err));

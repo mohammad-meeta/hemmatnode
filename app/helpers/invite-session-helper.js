@@ -125,7 +125,6 @@ InviteSessiontHelper.loadAllInviteSessionData = function loadAllInviteSessionDat
     return new Promise((resolve, reject) => {
         InviteSession.aggregate(pipeline)
             .then(res => {
-                console.log(res)
                 resolve(res);
             })
             .catch(err => reject(err));

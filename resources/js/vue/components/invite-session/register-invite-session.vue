@@ -81,6 +81,7 @@ module.exports = {
         departments: [],
         users: [],
         files: [],
+        deletedOldFiles: [],
         oldFiles: [
             {
                 _id: 1000,
@@ -124,8 +125,7 @@ module.exports = {
 
         notificationMessage: null,
         notificationType: "is-info",
-        showLoadingFlag: false,
-        files: []
+        showLoadingFlag: false
     }),
 
     props: {
@@ -241,6 +241,12 @@ module.exports = {
             if (!isValid) {
                 return;
             }
+            const deletedFiles = this.$refs.fileUpload.getDeletedFiles();
+            const newFiles = this.$refs.fileUpload.getNewFiles();
+            let newUploaded = newFiles.map(x => x.file);
+            Vue.set(this, 'files', newUploaded);
+            let deleteUploaded = deletedFiles.map(x => x._id);
+            Vue.set(this, 'deletedOldFiles', deleteUploaded);
             let inviteSessionData = {
                 body: this.inviteSessionData.body,
                 agenda: JSON.stringify(this.inviteSessionData.agenda),
@@ -248,15 +254,10 @@ module.exports = {
                 date: this.inviteSessionData.date,
                 department_id: this.inviteSessionData.departments,
                 user_list: this.inviteSessionData.user_list,
-                is_active: this.inviteSessionData.isActive
+                is_active: this.inviteSessionData.isActive,
+                files:this.files,
+                deletedOldFiles : this.deletedOldFiles
             };
-            const deletedFiles = this.$refs.fileUpload.getDeletedFiles();
-            const newFiles = this.$refs.fileUpload.getNewFiles();
-            let newUploaded = newFiles.map(x => x.file);
-            Vue.set(this, 'files', newUploaded);
-            let deleteUploaded = deletedFiles.map(x => x._id);
-            Vue.set(this, 'deletedOldFiles', deleteUploaded)
-            inviteSessionData.files = this.files[0];
             inviteSessionData.user_list = Object.keys(
                 inviteSessionData.user_list
             )
@@ -266,7 +267,7 @@ module.exports = {
             this.showLoading();
 
             const url = this.registerUrl;
-
+            console.log(inviteSessionData);
             AxiosHelper.send("post", url, inviteSessionData, {
                 sendAsFormData: true
             })

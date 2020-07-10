@@ -2112,8 +2112,6 @@ module.exports = {
 //
 
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 var AxiosHelper = __webpack_require__(/*! JS-HELPERS/axios-helper */ "./resources/js/helpers/axios-helper.js");
 
 var ENUMS = __webpack_require__(/*! JS-HELPERS/enums */ "./resources/js/helpers/enums.js");
@@ -2137,11 +2135,12 @@ module.exports = {
     FileUpload: FileUpload
   },
   data: function data() {
-    return _defineProperty({
+    return {
       ENUMS: ENUMS,
       departments: [],
       users: [],
       files: [],
+      deletedOldFiles: [],
       oldFiles: [{
         _id: 1000,
         name: "Old File 1",
@@ -2178,7 +2177,7 @@ module.exports = {
       notificationMessage: null,
       notificationType: "is-info",
       showLoadingFlag: false
-    }, "files", []);
+    };
   },
   props: {
     departmentId: {
@@ -2297,15 +2296,6 @@ module.exports = {
         return;
       }
 
-      var inviteSessionData = {
-        body: this.inviteSessionData.body,
-        agenda: JSON.stringify(this.inviteSessionData.agenda),
-        place: this.inviteSessionData.place,
-        date: this.inviteSessionData.date,
-        department_id: this.inviteSessionData.departments,
-        user_list: this.inviteSessionData.user_list,
-        is_active: this.inviteSessionData.isActive
-      };
       var deletedFiles = this.$refs.fileUpload.getDeletedFiles();
       var newFiles = this.$refs.fileUpload.getNewFiles();
       var newUploaded = newFiles.map(function (x) {
@@ -2316,7 +2306,17 @@ module.exports = {
         return x._id;
       });
       Vue.set(this, 'deletedOldFiles', deleteUploaded);
-      inviteSessionData.files = this.files[0];
+      var inviteSessionData = {
+        body: this.inviteSessionData.body,
+        agenda: JSON.stringify(this.inviteSessionData.agenda),
+        place: this.inviteSessionData.place,
+        date: this.inviteSessionData.date,
+        department_id: this.inviteSessionData.departments,
+        user_list: this.inviteSessionData.user_list,
+        is_active: this.inviteSessionData.isActive,
+        files: this.files,
+        deletedOldFiles: this.deletedOldFiles
+      };
       inviteSessionData.user_list = Object.keys(inviteSessionData.user_list).filter(function (key) {
         return true == inviteSessionData.user_list[key];
       }).map(function (key) {
@@ -2324,6 +2324,7 @@ module.exports = {
       });
       this.showLoading();
       var url = this.registerUrl;
+      console.log(inviteSessionData);
       AxiosHelper.send("post", url, inviteSessionData, {
         sendAsFormData: true
       }).then(function (res) {

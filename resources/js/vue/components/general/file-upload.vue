@@ -5,13 +5,15 @@
 
         div
             ul
-                li(v-for="(file, index) in fileList")
-                    button.button.is-danger(@click.prevent="removeFile(file, index)") &times;
+                li(v-for="(file, index) in fileList", style="dir: ltr;")
+                    button.button.is-danger(@click.prevent="removeFile(file)") &times;
                     label {{ humanFileSize(file.file.size) }}
                     label {{ file.file.name }}
 </template>
 
 <script>
+const uuidV4 = require("uuid").v4;
+
 export default {
     name: "FileUpload",
 
@@ -22,7 +24,7 @@ export default {
     },
 
     computed: {
-        fileList: state => state.files.filter(x => !x.file.is_deleted)
+        fileList: state => state.files.filter(x => !x.is_deleted)
     },
 
     data: () => ({
@@ -35,12 +37,14 @@ export default {
     created() {
         this.oldFiles.forEach(file => {
             let item = {
+                _id: file._id,
                 type: "old",
                 file: {
                     ...file
                 },
                 is_deleted: false
             };
+
             Vue.set(this.files, this.files.length, item);
         });
     },
@@ -51,6 +55,20 @@ export default {
          */
         getFiles() {
             return this.files;
+        },
+
+        /**
+         * Get deleted files list
+         */
+        getDeletedFiles() {
+            return this.files.filter(x => x.is_deleted);
+        },
+
+        /**
+         * Get new files
+         */
+        getNewFiles() {
+            return this.files.filter(x => x.type == "new");
         },
 
         /**
@@ -68,6 +86,7 @@ export default {
 
             for (let i = 0; i < files.length; ++i) {
                 let obj = {
+                    _id: uuidV4(),
                     type: "new",
                     file: files[i],
                     is_deleted: false
@@ -80,11 +99,17 @@ export default {
         /**
          * Remove a file from list
          */
-        removeFile(file, index) {
-            let confirmDelete = confirm("Are you sure?");
+        removeFile(file) {
+            let confirmDelete = confirm("آیا برای حذف فایل اطمینان دارید؟");
 
             if (confirmDelete) {
-                Vue.delete(this.files, index);
+                if (file.type == "old") {
+                    Vue.set(file, "is_deleted", true);
+                } else {
+                    const index = this.files.findIndex(x => x._id == file._id);
+
+                    Vue.delete(this.files, index);
+                }
             }
         },
 

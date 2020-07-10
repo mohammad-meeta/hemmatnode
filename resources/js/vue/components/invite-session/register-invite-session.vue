@@ -39,7 +39,6 @@
             .field
                 file-upload(ref="fileUpload", :old-files="oldFiles")
                 |   ضمیمه
-                button(@click="getFilesList") Get files
                 //file-upload(ref="fileUpload", :upload-url="articleUploadUrl", @on-file-remove="articleFileRemove")
             .field
                 label.label توضیحات
@@ -82,7 +81,7 @@ module.exports = {
         departments: [],
         users: [],
         files: [],
-                oldFiles: [
+        oldFiles: [
             {
                 _id: 1000,
                 name: "Old File 1",
@@ -118,6 +117,7 @@ module.exports = {
             date: null,
             department_id: null,
             files: {},
+            deletedOldFiles: [],
             user_list: {},
             isActive: false
         },
@@ -165,21 +165,6 @@ module.exports = {
     },
 
     methods: {
-        /**
-         * Get files list
-         */
-        getFilesList() {
-            const files = this.$refs.fileUpload.getFiles();
-        },
-
-        /**
-         * Set attachments
-         */
-        setAttachment(sender) {
-            const files = sender.target.files;
-
-            Vue.set(this, "files", files);
-        },
 
         /**
          * On Command
@@ -265,13 +250,19 @@ module.exports = {
                 user_list: this.inviteSessionData.user_list,
                 is_active: this.inviteSessionData.isActive
             };
-
+            const deletedFiles = this.$refs.fileUpload.getDeletedFiles();
+            const newFiles = this.$refs.fileUpload.getNewFiles();
+            let newUploaded = newFiles.map(x => x.file);
+            Vue.set(this, 'files', newUploaded);
+            let deleteUploaded = deletedFiles.map(x => x._id);
+            Vue.set(this, 'deletedOldFiles', deleteUploaded)
             inviteSessionData.files = this.files[0];
-            let t = Object.keys(inviteSessionData.user_list)
+            inviteSessionData.user_list = Object.keys(
+                inviteSessionData.user_list
+            )
                 .filter(key => true == inviteSessionData.user_list[key])
                 .map(key => key);
 
-            inviteSessionData.user_list = t;
             this.showLoading();
 
             const url = this.registerUrl;

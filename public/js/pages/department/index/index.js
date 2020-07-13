@@ -553,6 +553,12 @@ module.exports = {
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 var AxiosHelper = __webpack_require__(/*! JS-HELPERS/axios-helper */ "./resources/js/helpers/axios-helper.js");
@@ -621,6 +627,13 @@ module.exports = {
     setAttachment: function setAttachment(sender) {
       var files = sender.target.files;
       Vue.set(this, "files", files);
+    },
+
+    /**
+     * onchange department category
+     */
+    onChange: function onChange($event) {
+      console.log($event);
     },
 
     /**
@@ -8182,23 +8195,28 @@ var render = function() {
                       }
                     ],
                     on: {
-                      change: function($event) {
-                        var $$selectedVal = Array.prototype.filter
-                          .call($event.target.options, function(o) {
-                            return o.selected
-                          })
-                          .map(function(o) {
-                            var val = "_value" in o ? o._value : o.value
-                            return val
-                          })
-                        _vm.$set(
-                          _vm.departmentData,
-                          "departmentCategories",
-                          $event.target.multiple
-                            ? $$selectedVal
-                            : $$selectedVal[0]
-                        )
-                      }
+                      change: [
+                        function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.$set(
+                            _vm.departmentData,
+                            "departmentCategories",
+                            $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          )
+                        },
+                        function($event) {
+                          return _vm.onChange($event.target.value)
+                        }
+                      ]
                     }
                   },
                   _vm._l(_vm.departmentCategories, function(

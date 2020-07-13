@@ -19,9 +19,15 @@
                 label.label دسته بندی
                 .control
                     .select.is-primary
-                        select(v-model="departmentData.departmentCategories")
+                        select(v-model="departmentData.departmentCategories",
+                            @change="onChange($event.target.value)")
                             option(v-for='(departmentCategory, departmentCategoryIndex) in departmentCategories',
                                 :value="departmentCategory._id") {{ departmentCategory.title }}
+                //.control
+                    .select.is-primary
+                        select(v-model="departmentData.department")
+                            option(v-for='(department, departmentIndex) in departments',
+                                :value="department._id") {{ department.title }}
 
             .field
                 label.checkbox
@@ -109,6 +115,13 @@ module.exports = {
             const files = sender.target.files;
 
             Vue.set(this, "files", files);
+        },
+
+        /**
+         * onchange department category
+         */
+        onChange($event) {
+            console.log($event);
         },
 
         /**

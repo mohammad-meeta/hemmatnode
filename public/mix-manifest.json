@@ -7,7 +7,7 @@
     "/js/global/app.js": "/js/global/app.js?id=309a3a38a2a4953508a9",
     "/js/pages/auth/login/index.js": "/js/pages/auth/login/index.js?id=14edcbcdd25e52de2ef3",
     "/js/pages/department-category/index/index.js": "/js/pages/department-category/index/index.js?id=6c6336888695228f50f3",
-    "/js/pages/department/index/index.js": "/js/pages/department/index/index.js?id=5aaa2c2f7a0684730383",
+    "/js/pages/department/index/index.js": "/js/pages/department/index/index.js?id=156438ca4cbb4895ac63",
     "/js/pages/department/show/index.js": "/js/pages/department/show/index.js?id=aa0052ff1a270ab10a96",
     "/js/pages/factory.js": "/js/pages/factory.js?id=6c8917067247e05f8332",
     "/js/pages/home/document-list/index.js": "/js/pages/home/document-list/index.js?id=b67d33fff1b5c8ec8c5e",
@@ -16,14 +16,10 @@
     "/js/pages/home/internal-section/index.js": "/js/pages/home/internal-section/index.js?id=35c8e46b8a08b29d7a08",
     "/js/pages/home/monitoring-page/index.js": "/js/pages/home/monitoring-page/index.js?id=1ccc3fc132e6af8cb34f",
     "/js/pages/home/people-participation/index.js": "/js/pages/home/people-participation/index.js?id=7c5905a9acf32bf48a2e",
-<<<<<<< HEAD
     "/js/pages/invite-session/index/index.js": "/js/pages/invite-session/index/index.js?id=a32c21e5511ee4c8ce86",
-=======
-    "/js/pages/invite-session/index/index.js": "/js/pages/invite-session/index/index.js?id=7b58553ab4f821bebf21",
->>>>>>> 5e1ed44ee476265178e16c730a3b85c755cd04b3
     "/js/pages/memorandum/index/index.js": "/js/pages/memorandum/index/index.js?id=c674f1f955e78b5e3212",
     "/js/pages/project/index/index.js": "/js/pages/project/index/index.js?id=93ca1c915f9b4b159ce0",
-    "/js/pages/regulation/index/index.js": "/js/pages/regulation/index/index.js?id=0ead58db57c184bac609",
+    "/js/pages/regulation/index/index.js": "/js/pages/regulation/index/index.js?id=72a2bdf794a22b00db5f",
     "/js/pages/result/index/index.js": "/js/pages/result/index/index.js?id=292ac2f4b1cafc50b282",
     "/js/pages/task/index/index.js": "/js/pages/task/index/index.js?id=0c56eaac47d6696b86c0",
     "/js/pages/user/index/index.js": "/js/pages/user/index/index.js?id=f7853442648e546987bd"

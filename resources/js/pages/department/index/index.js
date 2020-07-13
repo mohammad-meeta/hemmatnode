@@ -6,7 +6,6 @@
 const DepartmentIndexPage = function () {}
 module.exports = DepartmentIndexPage;
 
-
 /**
  * Boot method
  */

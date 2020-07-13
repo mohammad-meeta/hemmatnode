@@ -35,6 +35,26 @@ DepartmentHelper.loadAllDepartmentData = function loadAllDepartmentData(dataPagi
     });
 };
 /**
+ * find all references data result 
+ */
+DepartmentHelper.loadReferencesData = function loadReferencesData(references) {
+
+    const Department = mongoose.model('Department');
+
+    const filterQuery = {
+        references: references
+    };
+    const projection = {};
+
+    return new Promise((resolve, reject) => {
+        Department.find(filterQuery, projection, {})
+            .then(res => {
+                resolve(res);
+            })
+            .catch(err => reject(err));
+    });
+};
+/**
  * find all dep cat count data result 
  */
 DepartmentHelper.loadAllCountDepartmentData = function loadAllCountDepartmentData() {

@@ -133,6 +133,25 @@ Department.editDepartmentData = async function editDepartmentData(req, res, next
 };
 
 /**
+ * return references data
+ */
+Department.References = async function References(req, res, next) {
+    const references = req.params.references;
+
+    DepartmentHelper.loadReferencesData(references)
+        .then(data => {
+            const result = {
+                success: true,
+                data: data
+            };
+            res.status(200)
+                .send(result)
+                .end();
+        })
+        .catch(err => console.error(err));
+};
+
+/**
  * update data dep cat
  */
 Department.update = async function update(req, res, next) {
@@ -155,6 +174,7 @@ Department.update = async function update(req, res, next) {
         "user_id": req.session.auth.userId,
         "is_active": req.body.is_active,
         "department_category_id": req.body.department_category_id,
+        "references": req.body.references,
         "description": req.body.description || '',
         "files": fileList,
         "regulation": req.body.regulation || []
@@ -232,6 +252,7 @@ Department.store = async function store(req, res, next) {
         "user_id": req.session.auth.userId,
         "is_active": req.body.is_active || false,
         "department_category_id": req.body.department_category_id,
+        "references": req.body.references || null,
         "description": req.body.description || '',
         "files": fileList || []
     };

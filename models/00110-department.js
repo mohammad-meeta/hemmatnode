@@ -52,6 +52,10 @@ Model.model = function model() {
             default: true,
             required: true
         },
+        'references': {
+            type: ObjectId,
+            required: false
+        },
         'department_category_id': {
             type: ObjectId,
             required: true

@@ -22,6 +22,13 @@ Router.get('/department', [
     ])
     .as('department.index');
 
+Router.get('/department/references/:references', [
+        checkSession,
+        Rule.canAsync('user.permision', 'department.references'),
+        'Department@References'
+    ])
+    .as('department.references');
+
 Router.get('/api/departments/:page/:size?', [
         checkSession,
         'Department@paginateDepartment'

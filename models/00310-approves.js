@@ -33,6 +33,10 @@ Model.model = function model() {
             type: String,
             required: true
         },
+        'method': {
+            type: String,
+            required: true
+        },
         'user_follower': {
             type: ObjectId,
             required: true

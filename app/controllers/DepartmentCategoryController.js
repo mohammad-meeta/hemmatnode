@@ -87,6 +87,33 @@ DepartmentCategory.departmentCategoryAndDepartment = async function departmentCa
                 .end();
         });
 };
+/**
+ * departmentCategory And Department route
+ */
+DepartmentCategory.departmentData = async function departmentData(req, res, next) {
+    const category = req.params.department_category;
+
+    DepCatHelper.loadAllDepartmentData(category)
+        .then(data => {
+            const result = {
+                success: true,
+                data: {
+                    data: data
+                }
+            };
+
+            res.status(200)
+                .send(result)
+                .end();
+        })
+        .catch(err => {
+            Logger.error(err);
+
+            res.status(500)
+                .send(err)
+                .end();
+        });
+};
 
 /**
  * show route

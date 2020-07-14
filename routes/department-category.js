@@ -25,6 +25,12 @@ Router.get('/api/department-categories/:page/:size?', [
     ])
     .as('api.departmentcategory');
 
+Router.get('/department-categories/department/:department_category', [
+        checkSession,
+        'DepartmentCategory@departmentData'
+    ])
+    .as('api.departmentcategories.department');
+
 Router.get('/api/department-category/department/:section', [
         checkSession,
         'DepartmentCategory@departmentCategoryAndDepartment'

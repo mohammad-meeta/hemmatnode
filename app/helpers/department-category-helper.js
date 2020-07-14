@@ -69,8 +69,36 @@ DepartmentCategoryHelper.loadAllDepCatDataAndDepartment = function loadAllDepCat
         {
             "$lookup": {
                 "from": "departments",
-                "localField": "_id",
-                "foreignField": "department_category_id",
+                "let": {
+                    "code": "$_id"
+                },
+                "pipeline": [{
+                        "$match": {
+                            "$expr": {
+                                "$eq": ["$department_category_id", "$$code"]
+                            },
+                            "references": {
+                                "$eq": null
+                            }
+                        }
+                    },
+                    {
+                        "$lookup": {
+                            "from": "departments",
+                            "let": {
+                                "code": "$_id"
+                            },
+                            "pipeline": [{
+                                "$match": {
+                                    "$expr": {
+                                        "$eq": ["$references", "$$code"]
+                                    },
+                                }
+                            }, ],
+                            "as": "child"
+                        }
+                    }
+                ],
                 "as": "department"
             }
         }
@@ -79,6 +107,7 @@ DepartmentCategoryHelper.loadAllDepCatDataAndDepartment = function loadAllDepCat
     return new Promise((resolve, reject) => {
         DepartmentCategory.aggregate(pipeline)
             .then(res => {
+
                 resolve(res);
             })
             .catch(err => reject(err));

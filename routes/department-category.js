@@ -29,7 +29,7 @@ Router.get('/department-categories/department/:department_category', [
         checkSession,
         'DepartmentCategory@departmentData'
     ])
-    .as('api.departmentcategories.department');
+    .as('departmentcategories.department');
 
 Router.get('/api/department-category/department/:section', [
         checkSession,

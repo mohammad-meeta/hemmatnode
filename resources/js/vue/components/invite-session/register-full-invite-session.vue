@@ -6,41 +6,43 @@
         .column.is-full(v-show="isLoadingMode")
             h1 در حال بارگذاری
         .form-small(v-show="! isLoadingMode")
-            .field
-                label.label
-                .control
-                    .select.is-primary
-                        select(v-model="inviteSessionData.departments")
-                            option(v-for='(department, departmentIndex) in departments',
-                                :value="department._id") {{ department.title }}
-            .field
-                multi-text(v-model='inviteSessionData.agenda')
-            .field
-                label.label مکان
-                .control
-                    input.input(type='text', placeholder='مکان', v-model='inviteSessionData.place' required)
+            fieldset.fieldset
+                legend دعوتنامه
+                .field
+                    label.label
+                    .control
+                        .select.is-primary
+                            select(v-model="inviteSessionData.departments")
+                                option(v-for='(department, departmentIndex) in departments',
+                                    :value="department._id") {{ department.title }}
+                .field
+                    multi-text(v-model='inviteSessionData.agenda')
+                .field
+                    label.label مکان
+                    .control
+                        input.input(type='text', placeholder='مکان', v-model='inviteSessionData.place' required)
 
-            .field
-                label.label تاریخ
-                .control
-                    date-picker(v-model='inviteSessionData.date' format="YYYY-MM-DD HH:mm:ss"
-                    display-format=" jDD/jMM/jYYYY HH:mm" type="datetime" required)
+                .field
+                    label.label تاریخ
+                    .control
+                        date-picker(v-model='inviteSessionData.date' format="YYYY-MM-DD HH:mm:ss"
+                        display-format=" jDD/jMM/jYYYY HH:mm" type="datetime" required)
 
-            .field
-                label.label حاضرین جلسه
-                .multi-checkboxes
-                    label.checkbox.column.is-12(v-for='(user, userIndex) in users')
-                        input(type='checkbox', v-model="inviteSessionData.user_list[user._id]", :value="user._id")
-                        |   {{ user.name }} - {{ user.profile.first_name }} {{ user.profile.last_name }}
+                .field
+                    label.label حاضرین جلسه
+                    .multi-checkboxes
+                        label.checkbox.column.is-12(v-for='(user, userIndex) in users')
+                            input(type='checkbox', v-model="inviteSessionData.user_list[user._id]", :value="user._id")
+                            |   {{ user.name }} - {{ user.profile.first_name }} {{ user.profile.last_name }}
 
-            .field
-                label.checkbox
-                    input(type='file', @change="setAttachment")
-                    |   ضمیمه
-            .field
-                label.label توضیحات
-                .control
-                    textarea.textarea(placeholder='توضیحات', v-model='inviteSessionData.body')
+                .field
+                    label.checkbox
+                        input(type='file', @change="setAttachment")
+                        |   ضمیمه
+                .field
+                    label.label توضیحات
+                    .control
+                        textarea.textarea(placeholder='توضیحات', v-model='inviteSessionData.body')
             .field
                 label.checkbox
                     input(type='checkbox', v-model="inviteSessionData.isActive")

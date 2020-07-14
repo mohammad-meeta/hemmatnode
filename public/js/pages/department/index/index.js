@@ -143,6 +143,7 @@
 //
 //
 //
+//
 
 
 var Routes = __webpack_require__(/*! JS-CORE/routes */ "./resources/js/core/routes.js");
@@ -193,6 +194,10 @@ module.exports = {
       "default": null
     },
     departmentCategoriesUrl: {
+      type: String,
+      "default": null
+    },
+    departmentsUrl: {
       type: String,
       "default": null
     },
@@ -578,6 +583,7 @@ module.exports = {
     return {
       ENUMS: ENUMS,
       departmentCategories: [],
+      departments: [],
       departmentData: {
         title: null,
         description: null,
@@ -598,6 +604,10 @@ module.exports = {
       "default": ""
     },
     departmentCategoriesUrl: {
+      type: String,
+      "default": ""
+    },
+    departmentsUrl: {
       type: String,
       "default": ""
     },
@@ -634,6 +644,15 @@ module.exports = {
      */
     onChange: function onChange($event) {
       console.log($event);
+      console.log(this.departmentsUrl); //let url = this.departmentsUrl;
+
+      var url = this.departmentsUrl.replace("$departmentCategoryId$", $event);
+      console.log(url);
+      /*       AxiosHelper.send("get", url, "").then(res => {
+                 const resData = res.data;
+                 const datas = resData.data.data;
+                 Vue.set(this, "departments", datas);
+             });*/
     },
 
     /**
@@ -7839,7 +7858,8 @@ var render = function() {
             ref: "departmentRegister",
             attrs: {
               "register-url": _vm.registerUrl,
-              "department-categories-url": _vm.departmentCategoriesUrl
+              "department-categories-url": _vm.departmentCategoriesUrl,
+              "departments-url": _vm.departmentsUrl
             },
             on: {
               "on-command": _vm.onCommand,
@@ -8227,6 +8247,53 @@ var render = function() {
                       "option",
                       { domProps: { value: departmentCategory._id } },
                       [_vm._v(_vm._s(departmentCategory.title))]
+                    )
+                  }),
+                  0
+                )
+              ])
+            ]),
+            _c("div", { staticClass: "control" }, [
+              _c("div", { staticClass: "select is-primary" }, [
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.departmentData.department,
+                        expression: "departmentData.department"
+                      }
+                    ],
+                    on: {
+                      change: function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.$set(
+                          _vm.departmentData,
+                          "department",
+                          $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        )
+                      }
+                    }
+                  },
+                  _vm._l(_vm.departments, function(
+                    department,
+                    departmentIndex
+                  ) {
+                    return _c(
+                      "option",
+                      { domProps: { value: department._id } },
+                      [_vm._v(_vm._s(department.title))]
                     )
                   }),
                   0
@@ -9594,7 +9661,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/pages/department/index/index.js */"./resources/js/pages/department/index/index.js");
+module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/department/index/index.js */"./resources/js/pages/department/index/index.js");
 
 
 /***/ })

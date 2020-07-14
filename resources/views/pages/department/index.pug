@@ -9,7 +9,8 @@ block content
             department-categories-url=route('api.departmentcategory', { page: 1, size: 1000 }),
             register-url=route('department.store'),
             edit-url=route('department.update', { id :'$id$'}),
-            load-url=route("api.department.show", { department: '$department$'})
+            load-url=route("api.department.show", { department: '$department$'}),
+            departments-url=route('departmentcategories.department', { departmentCategoryId: '$departmentCategoryId$'})
         )
 
 block scripts

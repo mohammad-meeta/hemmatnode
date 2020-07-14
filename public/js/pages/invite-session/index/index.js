@@ -1797,6 +1797,8 @@ module.exports = {
 //
 //
 //
+//
+//
 
 
 var AxiosHelper = __webpack_require__(/*! JS-HELPERS/axios-helper */ "./resources/js/helpers/axios-helper.js");
@@ -2053,6 +2055,7 @@ module.exports = {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+//
 //
 //
 //
@@ -33076,234 +33079,241 @@ var render = function() {
           staticClass: "form-small"
         },
         [
-          _c("div", { staticClass: "field" }, [
-            _c("label", { staticClass: "label" }),
-            _c("div", { staticClass: "control" }, [
-              _c("div", { staticClass: "select is-primary" }, [
-                _c(
-                  "select",
-                  {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.inviteSessionData.departments,
-                        expression: "inviteSessionData.departments"
+          _c("fieldset", { staticClass: "fieldset" }, [
+            _c("legend", [_vm._v("دعوتنامه")]),
+            _c("div", { staticClass: "field" }, [
+              _c("label", { staticClass: "label" }),
+              _c("div", { staticClass: "control" }, [
+                _c("div", { staticClass: "select is-primary" }, [
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.inviteSessionData.departments,
+                          expression: "inviteSessionData.departments"
+                        }
+                      ],
+                      on: {
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.$set(
+                            _vm.inviteSessionData,
+                            "departments",
+                            $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          )
+                        }
                       }
-                    ],
-                    on: {
-                      change: function($event) {
-                        var $$selectedVal = Array.prototype.filter
-                          .call($event.target.options, function(o) {
-                            return o.selected
-                          })
-                          .map(function(o) {
-                            var val = "_value" in o ? o._value : o.value
-                            return val
-                          })
-                        _vm.$set(
-                          _vm.inviteSessionData,
-                          "departments",
-                          $event.target.multiple
-                            ? $$selectedVal
-                            : $$selectedVal[0]
-                        )
-                      }
-                    }
-                  },
-                  _vm._l(_vm.departments, function(
-                    department,
-                    departmentIndex
-                  ) {
-                    return _c(
-                      "option",
-                      { domProps: { value: department._id } },
-                      [_vm._v(_vm._s(department.title))]
-                    )
-                  }),
-                  0
-                )
+                    },
+                    _vm._l(_vm.departments, function(
+                      department,
+                      departmentIndex
+                    ) {
+                      return _c(
+                        "option",
+                        { domProps: { value: department._id } },
+                        [_vm._v(_vm._s(department.title))]
+                      )
+                    }),
+                    0
+                  )
+                ])
               ])
-            ])
-          ]),
-          _c(
-            "div",
-            { staticClass: "field" },
-            [
-              _c("multi-text", {
-                model: {
-                  value: _vm.inviteSessionData.agenda,
-                  callback: function($$v) {
-                    _vm.$set(_vm.inviteSessionData, "agenda", $$v)
-                  },
-                  expression: "inviteSessionData.agenda"
-                }
-              })
-            ],
-            1
-          ),
-          _c("div", { staticClass: "field" }, [
-            _c("label", { staticClass: "label" }, [_vm._v("مکان")]),
-            _c("div", { staticClass: "control" }, [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.inviteSessionData.place,
-                    expression: "inviteSessionData.place"
-                  }
-                ],
-                staticClass: "input",
-                attrs: { type: "text", placeholder: "مکان", required: "" },
-                domProps: { value: _vm.inviteSessionData.place },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(
-                      _vm.inviteSessionData,
-                      "place",
-                      $event.target.value
-                    )
-                  }
-                }
-              })
-            ])
-          ]),
-          _c("div", { staticClass: "field" }, [
-            _c("label", { staticClass: "label" }, [_vm._v("تاریخ")]),
+            ]),
             _c(
               "div",
-              { staticClass: "control" },
+              { staticClass: "field" },
               [
-                _c("date-picker", {
-                  attrs: {
-                    format: "YYYY-MM-DD HH:mm:ss",
-                    "display-format": " jDD/jMM/jYYYY HH:mm",
-                    type: "datetime",
-                    required: ""
-                  },
+                _c("multi-text", {
                   model: {
-                    value: _vm.inviteSessionData.date,
+                    value: _vm.inviteSessionData.agenda,
                     callback: function($$v) {
-                      _vm.$set(_vm.inviteSessionData, "date", $$v)
+                      _vm.$set(_vm.inviteSessionData, "agenda", $$v)
                     },
-                    expression: "inviteSessionData.date"
+                    expression: "inviteSessionData.agenda"
                   }
                 })
               ],
               1
-            )
-          ]),
-          _c("div", { staticClass: "field" }, [
-            _c("label", { staticClass: "label" }, [_vm._v("حاضرین جلسه")]),
-            _c(
-              "div",
-              { staticClass: "multi-checkboxes" },
-              _vm._l(_vm.users, function(user, userIndex) {
-                return _c("label", { staticClass: "checkbox column is-12" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.inviteSessionData.user_list[user._id],
-                        expression: "inviteSessionData.user_list[user._id]"
+            ),
+            _c("div", { staticClass: "field" }, [
+              _c("label", { staticClass: "label" }, [_vm._v("مکان")]),
+              _c("div", { staticClass: "control" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.inviteSessionData.place,
+                      expression: "inviteSessionData.place"
+                    }
+                  ],
+                  staticClass: "input",
+                  attrs: { type: "text", placeholder: "مکان", required: "" },
+                  domProps: { value: _vm.inviteSessionData.place },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
                       }
-                    ],
-                    attrs: { type: "checkbox" },
-                    domProps: {
-                      value: user._id,
-                      checked: Array.isArray(
-                        _vm.inviteSessionData.user_list[user._id]
+                      _vm.$set(
+                        _vm.inviteSessionData,
+                        "place",
+                        $event.target.value
                       )
-                        ? _vm._i(
-                            _vm.inviteSessionData.user_list[user._id],
-                            user._id
-                          ) > -1
-                        : _vm.inviteSessionData.user_list[user._id]
+                    }
+                  }
+                })
+              ])
+            ]),
+            _c("div", { staticClass: "field" }, [
+              _c("label", { staticClass: "label" }, [_vm._v("تاریخ")]),
+              _c(
+                "div",
+                { staticClass: "control" },
+                [
+                  _c("date-picker", {
+                    attrs: {
+                      format: "YYYY-MM-DD HH:mm:ss",
+                      "display-format": " jDD/jMM/jYYYY HH:mm",
+                      type: "datetime",
+                      required: ""
                     },
-                    on: {
-                      change: function($event) {
-                        var $$a = _vm.inviteSessionData.user_list[user._id],
-                          $$el = $event.target,
-                          $$c = $$el.checked ? true : false
-                        if (Array.isArray($$a)) {
-                          var $$v = user._id,
-                            $$i = _vm._i($$a, $$v)
-                          if ($$el.checked) {
-                            $$i < 0 &&
-                              _vm.$set(
-                                _vm.inviteSessionData.user_list,
-                                user._id,
-                                $$a.concat([$$v])
-                              )
+                    model: {
+                      value: _vm.inviteSessionData.date,
+                      callback: function($$v) {
+                        _vm.$set(_vm.inviteSessionData, "date", $$v)
+                      },
+                      expression: "inviteSessionData.date"
+                    }
+                  })
+                ],
+                1
+              )
+            ]),
+            _c("div", { staticClass: "field" }, [
+              _c("label", { staticClass: "label" }, [_vm._v("حاضرین جلسه")]),
+              _c(
+                "div",
+                { staticClass: "multi-checkboxes" },
+                _vm._l(_vm.users, function(user, userIndex) {
+                  return _c("label", { staticClass: "checkbox column is-12" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.inviteSessionData.user_list[user._id],
+                          expression: "inviteSessionData.user_list[user._id]"
+                        }
+                      ],
+                      attrs: { type: "checkbox" },
+                      domProps: {
+                        value: user._id,
+                        checked: Array.isArray(
+                          _vm.inviteSessionData.user_list[user._id]
+                        )
+                          ? _vm._i(
+                              _vm.inviteSessionData.user_list[user._id],
+                              user._id
+                            ) > -1
+                          : _vm.inviteSessionData.user_list[user._id]
+                      },
+                      on: {
+                        change: function($event) {
+                          var $$a = _vm.inviteSessionData.user_list[user._id],
+                            $$el = $event.target,
+                            $$c = $$el.checked ? true : false
+                          if (Array.isArray($$a)) {
+                            var $$v = user._id,
+                              $$i = _vm._i($$a, $$v)
+                            if ($$el.checked) {
+                              $$i < 0 &&
+                                _vm.$set(
+                                  _vm.inviteSessionData.user_list,
+                                  user._id,
+                                  $$a.concat([$$v])
+                                )
+                            } else {
+                              $$i > -1 &&
+                                _vm.$set(
+                                  _vm.inviteSessionData.user_list,
+                                  user._id,
+                                  $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                                )
+                            }
                           } else {
-                            $$i > -1 &&
-                              _vm.$set(
-                                _vm.inviteSessionData.user_list,
-                                user._id,
-                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                              )
+                            _vm.$set(
+                              _vm.inviteSessionData.user_list,
+                              user._id,
+                              $$c
+                            )
                           }
-                        } else {
-                          _vm.$set(
-                            _vm.inviteSessionData.user_list,
-                            user._id,
-                            $$c
-                          )
                         }
                       }
+                    }),
+                    _vm._v(
+                      "  " +
+                        _vm._s(user.name) +
+                        " - " +
+                        _vm._s(user.profile.first_name) +
+                        " " +
+                        _vm._s(user.profile.last_name)
+                    )
+                  ])
+                }),
+                0
+              )
+            ]),
+            _c("div", { staticClass: "field" }, [
+              _c("label", { staticClass: "checkbox" }, [
+                _c("input", {
+                  attrs: { type: "file" },
+                  on: { change: _vm.setAttachment }
+                }),
+                _vm._v("  ضمیمه")
+              ])
+            ]),
+            _c("div", { staticClass: "field" }, [
+              _c("label", { staticClass: "label" }, [_vm._v("توضیحات")]),
+              _c("div", { staticClass: "control" }, [
+                _c("textarea", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.inviteSessionData.body,
+                      expression: "inviteSessionData.body"
                     }
-                  }),
-                  _vm._v(
-                    "  " +
-                      _vm._s(user.name) +
-                      " - " +
-                      _vm._s(user.profile.first_name) +
-                      " " +
-                      _vm._s(user.profile.last_name)
-                  )
-                ])
-              }),
-              0
-            )
-          ]),
-          _c("div", { staticClass: "field" }, [
-            _c("label", { staticClass: "checkbox" }, [
-              _c("input", {
-                attrs: { type: "file" },
-                on: { change: _vm.setAttachment }
-              }),
-              _vm._v("  ضمیمه")
-            ])
-          ]),
-          _c("div", { staticClass: "field" }, [
-            _c("label", { staticClass: "label" }, [_vm._v("توضیحات")]),
-            _c("div", { staticClass: "control" }, [
-              _c("textarea", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.inviteSessionData.body,
-                    expression: "inviteSessionData.body"
-                  }
-                ],
-                staticClass: "textarea",
-                attrs: { placeholder: "توضیحات" },
-                domProps: { value: _vm.inviteSessionData.body },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
+                  ],
+                  staticClass: "textarea",
+                  attrs: { placeholder: "توضیحات" },
+                  domProps: { value: _vm.inviteSessionData.body },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.inviteSessionData,
+                        "body",
+                        $event.target.value
+                      )
                     }
-                    _vm.$set(_vm.inviteSessionData, "body", $event.target.value)
                   }
-                }
-              })
+                })
+              ])
             ])
           ]),
           _c("div", { staticClass: "field" }, [

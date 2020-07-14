@@ -35,7 +35,8 @@
                 register-department(ref="departmentRegister", @on-command="onCommand",
                   @on-register="onDepartmentRegister"
                   :register-url="registerUrl",
-                  :department-categories-url="departmentCategoriesUrl")
+                  :department-categories-url="departmentCategoriesUrl",
+                  :departments-url="departmentsUrl")
 
             //.column(v-show="!modeLoading && modeEdit")
                 edit-department(ref="departmentEdit", @on-command="onCommand",
@@ -99,6 +100,11 @@ module.exports = {
         },
 
         departmentCategoriesUrl: {
+            type: String,
+            default: null
+        },
+
+        departmentsUrl: {
             type: String,
             default: null
         },

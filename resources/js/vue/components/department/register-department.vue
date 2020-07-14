@@ -23,7 +23,7 @@
                             @change="onChange($event.target.value)")
                             option(v-for='(departmentCategory, departmentCategoryIndex) in departmentCategories',
                                 :value="departmentCategory._id") {{ departmentCategory.title }}
-                //.control
+                .control
                     .select.is-primary
                         select(v-model="departmentData.department")
                             option(v-for='(department, departmentIndex) in departments',
@@ -65,6 +65,7 @@ module.exports = {
     data: () => ({
         ENUMS,
         departmentCategories: [],
+        departments: [],
         departmentData: {
             title: null,
             description: null,
@@ -87,6 +88,11 @@ module.exports = {
         },
 
         departmentCategoriesUrl: {
+            type: String,
+            default: ""
+        },
+
+        departmentsUrl: {
             type: String,
             default: ""
         },
@@ -122,6 +128,15 @@ module.exports = {
          */
         onChange($event) {
             console.log($event);
+            console.log(this.departmentsUrl);
+            //let url = this.departmentsUrl;
+            let url = this.departmentsUrl.replace("$departmentCategoryId$", $event);
+            console.log(url);
+     /*       AxiosHelper.send("get", url, "").then(res => {
+                const resData = res.data;
+                const datas = resData.data.data;
+                Vue.set(this, "departments", datas);
+            });*/
         },
 
         /**

@@ -35,6 +35,26 @@ DepartmentCategoryHelper.loadAllDepCatData = function loadAllDepCatData(dataPagi
     });
 };
 /**
+ * find all dep data result 
+ */
+DepartmentCategoryHelper.loadAllDepartmentData = function loadAllDepartmentData(category) {
+    const Department = mongoose.model('Department');
+    console.log(category)
+    const filterQuery = {
+        department_category_id: category
+    };
+    const projection = {};
+
+    return new Promise((resolve, reject) => {
+        Department.find(filterQuery, projection, {})
+            .then(res => {
+                console.log(res)
+                resolve(res);
+            })
+            .catch(err => reject(err));
+    });
+};
+/**
  * find all dep cat data  and department result 
  */
 DepartmentCategoryHelper.loadAllDepCatDataAndDepartment = function loadAllDepCatDataAndDepartment(section) {

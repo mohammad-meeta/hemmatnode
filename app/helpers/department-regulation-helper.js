@@ -80,7 +80,7 @@ DepartmentRegulationHelper.insertNewDepartmentRegulation = function insertNewDep
     return new Promise((resolve, reject) => {
         const Department = mongoose.model('DepartmentRegulation');
         // const Department1 = new Department(data)
-        console.log(data)
+
         Department.insertMany(data)
             .then(res => {
                 resolve(res);

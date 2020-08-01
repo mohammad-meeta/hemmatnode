@@ -39,7 +39,7 @@ DepartmentCategoryHelper.loadAllDepCatData = function loadAllDepCatData(dataPagi
  */
 DepartmentCategoryHelper.loadAllDepartmentData = function loadAllDepartmentData(category) {
     const Department = mongoose.model('Department');
-    console.log(category)
+
     const filterQuery = {
         department_category_id: category
     };

@@ -14,7 +14,7 @@ module.exports = SMSSenderHelper;
  */
 SMSSenderHelper.sendSms = async function sendSms(allData) {
     let profiles = [];
-    const data = JSON.parse(allData.user_list);
+    const data = allData.user_list;
     const date = allData.date;
     const place = allData.place;
 

@@ -209,7 +209,7 @@ DepartmentRegulation.store = async function store(req, res, next) {
         "description": req.body.description || '',
         "files": fileList || []
     };
-    console.log(data)
+
     DepartmentRegulationHelper.insertNewDepartmentRegulation(data)
         .then(data => {
             const result = {

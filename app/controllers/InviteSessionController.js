@@ -35,7 +35,7 @@ InviteSession.paginateInviteSession = function paginateInviteSession(req, res, n
         .then(data => {
             let count = data.data;
 
-            InviteSessionHelper.loadAllInviteSessionData(dataPaginate, group)
+            InviteSessionHelper.loadAllInviteSessionData(req, dataPaginate, group)
                 .then(data => {
                     const result = {
                         success: true,
@@ -220,11 +220,12 @@ InviteSession.store = async function store(req, res, next) {
         "agenda": req.body.agenda,
         "place": req.body.place,
         "date": req.body.date,
-        "user_list": req.body.user_list,
+        "user_list": JSON.parse(req.body.user_list),
         "other_user": req.body.other_user || null,
         "user_id": req.session.auth.userId,
         "is_active": req.body.is_active,
         "department_id": req.body.department_id,
+        "status": 0,
         "files": fileList
     };
 
@@ -249,6 +250,21 @@ InviteSession.approvesStore = async function approvesStore(req, res, next) {
     const approves = JSON.parse(req.body.approves);
     let approvesArray = [];
 
+    const files = req.files || [];
+    let fileList = [];
+
+    for (let i = 0; i < files.length; ++i) {
+        try {
+            const el = files[i];
+            el.user_id = req.session.auth.userId;
+
+            const data = await FileHelper.insertFileData(el);
+            fileList.push(data[0]._id);
+        } catch (err) {
+            Logger.error(err);
+        }
+    }
+
     InviteSessionHelper.insertApproves(approves)
         .then(dataRes => {
             for (let index = 0; index < dataRes.length; index++) {
@@ -262,7 +278,8 @@ InviteSession.approvesStore = async function approvesStore(req, res, next) {
                 "other_user": req.body.other_user,
                 "user_id": req.session.auth.userId,
                 "status": req.body.status || 1,
-                "approves": approves
+                "approves": approves,
+                "signatured": fileList
             };
 
             InviteSessionHelper.updateInviteSessionApproves(data)

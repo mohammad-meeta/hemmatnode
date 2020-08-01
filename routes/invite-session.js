@@ -52,6 +52,7 @@ Router.post('/invite-session/:department?', [
     .as('invitesession.store');
 
 Router.get('/invite-session/approves/:session?', [
+        upload.array('files'),
         checkSession,
         Rule.canAsync('user.permision', 'invitesession.approves.store'),
         'InviteSession@approvesStore'

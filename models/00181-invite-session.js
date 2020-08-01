@@ -60,6 +60,9 @@ Model.model = function model() {
         'files': {
             type: [File]
         },
+        'signatured': {
+            type: [File]
+        },
         'is_active': {
             type: Boolean,
             default: true,

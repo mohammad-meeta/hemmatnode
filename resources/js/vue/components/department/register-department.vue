@@ -70,6 +70,7 @@ module.exports = {
             title: null,
             description: null,
             department_category_id: null,
+            references: null,
             files: {},
             isActive: false
         },
@@ -127,16 +128,13 @@ module.exports = {
          * onchange department category
          */
         onChange($event) {
-            console.log($event);
-            console.log(this.departmentsUrl);
-            //let url = this.departmentsUrl;
-            let url = this.departmentsUrl.replace("$departmentCategoryId$", $event);
-            console.log(url);
-     /*       AxiosHelper.send("get", url, "").then(res => {
+            let url = this.departmentsUrl.replace("$department_category$", $event);
+            AxiosHelper.send("get", url, "").then(res => {
                 const resData = res.data;
                 const datas = resData.data.data;
                 Vue.set(this, "departments", datas);
-            });*/
+            });
+            console.log(this.departments);
         },
 
         /**
@@ -208,6 +206,7 @@ module.exports = {
                 description: this.departmentData.description,
                 department_category_id: this.departmentData
                     .departmentCategories,
+                references: this.departmentData.department,
                 is_active: this.departmentData.isActive
             };
 

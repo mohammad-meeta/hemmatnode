@@ -588,6 +588,7 @@ module.exports = {
         title: null,
         description: null,
         department_category_id: null,
+        references: null,
         files: {},
         isActive: false
       },
@@ -643,16 +644,15 @@ module.exports = {
      * onchange department category
      */
     onChange: function onChange($event) {
-      console.log($event);
-      console.log(this.departmentsUrl); //let url = this.departmentsUrl;
+      var _this = this;
 
-      var url = this.departmentsUrl.replace("$departmentCategoryId$", $event);
-      console.log(url);
-      /*       AxiosHelper.send("get", url, "").then(res => {
-                 const resData = res.data;
-                 const datas = resData.data.data;
-                 Vue.set(this, "departments", datas);
-             });*/
+      var url = this.departmentsUrl.replace("$department_category$", $event);
+      AxiosHelper.send("get", url, "").then(function (res) {
+        var resData = res.data;
+        var datas = resData.data.data;
+        Vue.set(_this, "departments", datas);
+      });
+      console.log(this.departments);
     },
 
     /**
@@ -672,13 +672,13 @@ module.exports = {
      * load all departmentCategories for select departmentCategories in form
      */
     loadDepartmentCategories: function loadDepartmentCategories() {
-      var _this = this;
+      var _this2 = this;
 
       var url = this.departmentCategoriesUrl;
       AxiosHelper.send("get", url, "").then(function (res) {
         var resData = res.data;
         var datas = resData.data.data;
-        Vue.set(_this, "departmentCategories", datas);
+        Vue.set(_this2, "departmentCategories", datas);
       });
     },
 
@@ -716,7 +716,7 @@ module.exports = {
      * Register new department
      */
     registerDepartment: function registerDepartment() {
-      var _this2 = this;
+      var _this3 = this;
 
       var isValid = this.validate();
 
@@ -728,6 +728,7 @@ module.exports = {
         title: this.departmentData.title,
         description: this.departmentData.description,
         department_category_id: this.departmentData.departmentCategories,
+        references: this.departmentData.department,
         is_active: this.departmentData.isActive
       };
       departmentData.files = this.files[0];
@@ -739,17 +740,17 @@ module.exports = {
         var data = res.data;
 
         if (data.success) {
-          _this2.$emit("on-register", {
-            sender: _this2,
+          _this3.$emit("on-register", {
+            sender: _this3,
             data: data
           });
         }
       })["catch"](function (err) {
         var data = err.response.data;
 
-        _this2.setNotification(data, "is-danger");
+        _this3.setNotification(data, "is-danger");
       }).then(function () {
-        return _this2.hideLoading();
+        return _this3.hideLoading();
       });
     },
 
@@ -9661,7 +9662,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/pages/department/index/index.js */"./resources/js/pages/department/index/index.js");
+module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/department/index/index.js */"./resources/js/pages/department/index/index.js");
 
 
 /***/ })

@@ -25,7 +25,23 @@
                             h2 {{ departmentCategory.title }}
                         .inline-card-body
                             .inline-card-body-item(v-for='dep in departmentCategory.department', :key='dep._id')
-                                a(:href="getUrl(dep._id)") {{ dep.title }}
+                                //a(:href="getUrl(dep._id)")
+                                div(v-if="!hasChildren(dep)")
+                                    a(:href="getUrl(dep._id)") {{ dep.title }}
+                                div(v-if="hasChildren(dep)")
+                                    a(@click="showModal(dep)")
+                                        | {{ dep.title }}
+                                    b-modal(:active.sync='isModalActive' class="departments-modal")
+                                        .childrens(v-for='child in departmentChild')
+                                            a(:href="getUrl(child._id)") {{ child.title }}
+
+                                    //b-collapse(:open='false', aria-id='contentIdForA11y1')
+                                        a(slot='trigger', aria-controls='contentIdForA11y1') {{ dep.title }}
+                                        .notification
+                                            .content
+                                                .childrens(v-for='child in dep.child')
+                                                    a(:href="getUrl(child._id)") {{ child.title }}
+
 
 
 </template>
@@ -38,6 +54,7 @@ const ENUMS = require("JS-HELPERS/enums");
 const Loading = require("VUE-COMPONENTS/general/loading.vue").default;
 
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
+const Buefy = require("buefy").default;
 
 module.exports = {
     name: "ExternalSection",
@@ -53,7 +70,9 @@ module.exports = {
         departmentCategories: [],
         department: [],
         notificationMessage: null,
-        notificationType: "is-info"
+        notificationType: "is-info",
+        isModalActive: false,
+        departmentChild: []
     }),
 
     props: {
@@ -75,7 +94,7 @@ module.exports = {
 
     computed: {
         formMode: state => state.formModeStack[state.formModeStack.length - 1],
-
+        hasChild: state => state.data.department.child.length > 0,
         modeLoading: state => state.formMode == ENUMS.FORM_MODE.LOADING,
         modeList: state => state.formMode == ENUMS.FORM_MODE.LIST,
         showNotification: state => state.notificationMessage != null
@@ -98,6 +117,20 @@ module.exports = {
             const url = this.departmentLinkUrl.replace(/\$id\$/g, id);
 
             return url;
+        },
+
+        /**
+         * set department link behavior
+         */
+        hasChildren(dep) {
+            return dep.child.length > 0;
+        },
+
+        showModal(dep) {
+            if (dep.child.length > 0) {
+                Vue.set(this, 'departmentChild', dep.child);
+                this.isModalActive = true;
+            }
         },
 
         /**

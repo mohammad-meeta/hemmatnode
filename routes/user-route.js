@@ -1,6 +1,10 @@
 'use strict';
 const validator = use('validators/user-register-validator');
 const Rule = use('core/helpers/rule-helper');
+const multer = require('multer');
+const upload = multer({
+    dest: 'uploads/'
+});
 
 const {
     checkSession
@@ -42,6 +46,7 @@ Router.post('/user', [
         checkSession,
         Rule.canAsync('user.permision', 'user.store'),
         validator.validate,
+        upload.array('files'),
         'User@store'
     ])
     .as('user.store');

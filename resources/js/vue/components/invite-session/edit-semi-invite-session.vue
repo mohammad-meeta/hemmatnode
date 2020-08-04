@@ -10,7 +10,7 @@
                 label.label
                 .control
                     .select.is-primary
-                        select(v-model="inviteSessionData.departments")
+                        select(v-model="inviteSessionData.department_id")
                             option(v-for='(department, departmentIndex) in departments',
                                 :value="department._id") {{ department.title }}
             .field
@@ -25,13 +25,16 @@
                 .control
                     date-picker(v-model='inviteSessionData.date' format="YYYY-MM-DD HH:mm:ss"
                     display-format="jDD/jMM/jYYYY HH:mm" type="datetime" required)
-
             .field
                 label.label حاضرین جلسه
                 .multi-checkboxes
                     label.checkbox.column.is-12(v-for='(user, userIndex) in users')
-                        input(type='checkbox', v-model="inviteSessionData.user_list[user._id]", :value="user._id")
+                        input(type='checkbox', v-model="inviteSessionData.user_list", :value="user._id")
                         |   {{ user.name }} - {{ user.profile.first_name }} {{ user.profile.last_name }}
+            fieldset
+                legend مدعوین
+                .field
+                    multi-text-member(ref="multiTextMember" :value='inviteSessionData.other_user')
 
             .field
                 label.checkbox
@@ -69,7 +72,8 @@ module.exports = {
     components: {
         Notification,
         DatePicker: VuePersianDatetimePicker,
-        MultiText
+        MultiText,
+        MultiTextMember
     },
 
     data: () => ({
@@ -85,7 +89,8 @@ module.exports = {
             department_id: null,
             files: {},
             user_list: {},
-            isActive: false
+            isActive: false,
+            other_user: []
         },
         notificationMessage: null,
         notificationType: "is-info",
@@ -149,17 +154,24 @@ module.exports = {
                 agenda: data.agenda,
                 place: data.place,
                 date: data.date,
-                department_id: data.department_id,
+                department_id: data.dep._id,
                 files: data.files,
                 roles: data.roles,
                 user_list: data.user_list,
                 isActive: data.is_active,
+                other_user: data.other_user
             };
 
             try {
                 temp.agenda = JSON.parse(data.agenda);
             } catch (ex) {
                 temp.agenda = [];
+            }
+
+            try {
+                temp.other_user = JSON.parse(data.other_user);
+            } catch (ex) {
+                temp.other_user = [];
             }
 
             Vue.set(this, "inviteSessionData", temp);
@@ -258,9 +270,10 @@ module.exports = {
                 agenda: JSON.stringify(this.inviteSessionData.agenda),
                 place: this.inviteSessionData.place,
                 date: this.inviteSessionData.date,
-                department_id: this.inviteSessionData.departments,
+                department_id: this.inviteSessionData.department_id,
                 user_list: this.inviteSessionData.user_list,
-                is_active: this.inviteSessionData.isActive
+                is_active: this.inviteSessionData.isActive,
+                other_user: JSON.stringify(this.inviteSessionData.other_user)
             };
 
             inviteSessionData.files = this.files[0];

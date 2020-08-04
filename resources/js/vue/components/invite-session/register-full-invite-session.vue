@@ -34,7 +34,10 @@
                         label.checkbox.column.is-12(v-for='(user, userIndex) in users')
                             input(type='checkbox', v-model="inviteSessionData.user_list[user._id]", :value="user._id")
                             |   {{ user.name }} - {{ user.profile.first_name }} {{ user.profile.last_name }}
-
+                fieldset
+                    legend مدعوین
+                    .field
+                        multi-text-member(v-model='inviteSessionData.other_user')
                 .field
                     label.checkbox
                         input(type='file', @change="setAttachment")
@@ -63,10 +66,7 @@
                     label.checkbox.column.is-12(v-for='(user, userIndex) in users')
                         input(type='checkbox', v-model="inviteSessionData.user_list[user._id]", :value="user._id", :cehcked="true")
                         |   {{ user.name }} - {{ user.profile.first_name }} {{ user.profile.last_name }}
-            fieldset
-                legend مدعوین
-                .field
-                    multi-text-member(v-model='inviteSessionData.member')
+
                 .field.is-grouped
                     .control(v-show="! isLoadingMode")
                         a.button.is-link.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
@@ -83,8 +83,7 @@ const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
 const MultiText = require("VUE-COMPONENTS/general/multi-text.vue").default;
 const MultiTextApprov = require("VUE-COMPONENTS/invite-session/multi-text-approv.vue").default;
-const MultiTextMember = require("VUE-COMPONENTS/invite-session/multi-text-member.vue")
-    .default;
+const MultiTextMember = require("VUE-COMPONENTS/invite-session/multi-text-member.vue").default;
 
 module.exports = {
     name: "RegisterFullInviteSession",
@@ -112,7 +111,7 @@ module.exports = {
             isActive: false,
             intro: null,
             approv: [],
-            member:[]
+            other_user:[]
         },
         notificationMessage: null,
         notificationType: "is-info",
@@ -258,7 +257,7 @@ module.exports = {
                 body: this.inviteSessionData.body,
                 agenda: JSON.stringify(this.inviteSessionData.agenda),
                 approv: JSON.stringify(this.inviteSessionData.approv),
-                member: JSON.stringify(this.inviteSessionData.member),
+                other_user: JSON.stringify(this.inviteSessionData.other_user),
                 place: this.inviteSessionData.place,
                 date: this.inviteSessionData.date,
                 department_id: this.inviteSessionData

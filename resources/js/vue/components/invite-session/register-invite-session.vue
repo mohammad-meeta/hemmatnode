@@ -36,10 +36,14 @@
                     label.checkbox.column.is-12(v-for='(user, userIndex) in users')
                         input(type='checkbox', v-model="inviteSessionData.user_list[user._id]", :value="user._id")
                         |   {{ user.name }} - {{ user.profile.first_name }} {{ user.profile.last_name }}
-
-            .field
-                file-upload(ref="fileUpload", :old-files="oldFiles")
-                |   ضمیمه
+            fieldset
+                legend مدعوین
+                    .field
+                        multi-text-member(v-model='inviteSessionData.other_user')
+            fieldset
+                legend فایل های ضمیمه
+                .field
+                    file-upload(ref="fileUpload", :old-files="oldFiles")
                 //file-upload(ref="fileUpload", :upload-url="articleUploadUrl", @on-file-remove="articleFileRemove")
             .field
                 label.label توضیحات
@@ -65,6 +69,7 @@ const InviteSessionValidator = require("JS-VALIDATORS/invite-session-register-va
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
 const MultiText = require("VUE-COMPONENTS/general/multi-text.vue").default;
+const MultiTextMember = require("VUE-COMPONENTS/invite-session/multi-text-member.vue").default;
 const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 
 module.exports = {
@@ -74,7 +79,8 @@ module.exports = {
         Notification,
         DatePicker: VuePersianDatetimePicker,
         MultiText,
-        FileUpload
+        FileUpload,
+        MultiTextMember
     },
 
     data: () => ({
@@ -83,23 +89,7 @@ module.exports = {
         users: [],
         files: [],
         deletedOldFiles: [],
-        oldFiles: [
-            {
-                _id: 1000,
-                name: "Old File 1",
-                size: 10000
-            },
-            {
-                _id: 1001,
-                name: "Old File 2",
-                size: 20000
-            },
-            {
-                _id: 1002,
-                name: "Old File 3",
-                size: 30000
-            }
-        ],
+        oldFiles: [],
         inviteSessionData: {
             title: null,
             body: null,
@@ -118,9 +108,10 @@ module.exports = {
             place: null,
             date: null,
             department_id: null,
-            files: {},
+            files: [],
             deletedOldFiles: [],
             user_list: {},
+            other_user:[],
             isActive: false
         },
 
@@ -251,6 +242,7 @@ module.exports = {
             let inviteSessionData = {
                 body: this.inviteSessionData.body,
                 agenda: JSON.stringify(this.inviteSessionData.agenda),
+                other_user: JSON.stringify(this.inviteSessionData.other_user),
                 place: this.inviteSessionData.place,
                 date: this.inviteSessionData.date,
                 department_id: this.inviteSessionData.departments,
@@ -259,12 +251,12 @@ module.exports = {
                 files:this.files,
                 deletedOldFiles : this.deletedOldFiles
             };
+            console.log(inviteSessionData.files);
             inviteSessionData.user_list = Object.keys(
                 inviteSessionData.user_list
             )
                 .filter(key => true == inviteSessionData.user_list[key])
                 .map(key => key);
-
             this.showLoading();
 
             const url = this.registerUrl;
@@ -274,6 +266,7 @@ module.exports = {
             })
                 .then(res => {
                     const data = res.data;
+                    console.log(data);
                     if (data.success) {
                         this.$emit("on-register", {
                             sender: this,

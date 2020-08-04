@@ -309,31 +309,33 @@ module.exports = {
 module.exports = {
   name: "MultiText",
   data: function data() {
-    return {
-      values: null
-    };
+    return {};
   },
   props: {
-    value: null
+    value: {
+      type: Array,
+      "default": function _default() {
+        return [];
+      }
+    }
   },
   created: function created() {
     this.setValue();
   },
   methods: {
     setValue: function setValue() {
-      var v = Array.from(this.value);
-      this.values = v;
+      Vue.set(this, "values", this.value);
     },
     updateValue: function updateValue() {
-      this.$emit('input', this.values);
+      this.$emit('input', this.value);
     },
     deleteValue: function deleteValue(index) {
-      this.values.splice(index, 1);
-      this.$emit('input', this.values);
+      this.value.splice(index, 1);
+      this.$emit('input', this.value);
     },
     addValue: function addValue() {
-      this.values.push({});
-      this.$emit('input', this.values);
+      this.value.push({});
+      this.$emit('input', this.value);
     }
   }
 };
@@ -453,7 +455,6 @@ module.exports = {
 //
 //
 //
-//
 
 
 var AxiosHelper = __webpack_require__(/*! JS-HELPERS/axios-helper */ "./resources/js/helpers/axios-helper.js");
@@ -498,7 +499,7 @@ module.exports = {
         isActive: false,
         intro: null,
         approv: [],
-        member: []
+        other_user: []
       },
       notificationMessage: null,
       notificationType: "is-info",
@@ -561,7 +562,7 @@ module.exports = {
         user_list: data.user_list,
         isActive: data.is_active,
         approv: data.approv,
-        member: data.member
+        other_user: data.other_user
       };
 
       try {
@@ -577,9 +578,9 @@ module.exports = {
       }
 
       try {
-        temp.member = JSON.parse(data.member);
+        temp.other_user = JSON.parse(data.other_user);
       } catch (ex) {
-        temp.member = [];
+        temp.other_user = [];
       }
 
       Vue.set(this, "inviteSessionData", temp);
@@ -688,7 +689,7 @@ module.exports = {
         user_list: this.inviteSessionData.user_list,
         is_active: this.inviteSessionData.isActive,
         approv: JSON.stringify(this.inviteSessionData.approv),
-        member: JSON.stringify(this.inviteSessionData.member)
+        other_user: JSON.stringify(this.inviteSessionData.other_user)
       };
       inviteSessionData.files = this.files[0];
       var t = Object.keys(inviteSessionData.user_list).filter(function (key) {
@@ -801,6 +802,9 @@ module.exports = {
 //
 //
 //
+//
+//
+//
 
 
 var AxiosHelper = __webpack_require__(/*! JS-HELPERS/axios-helper */ "./resources/js/helpers/axios-helper.js");
@@ -824,7 +828,8 @@ module.exports = {
   components: {
     Notification: Notification,
     DatePicker: VuePersianDatetimePicker,
-    MultiText: MultiText
+    MultiText: MultiText,
+    MultiTextMember: MultiTextMember
   },
   data: function data() {
     return {
@@ -840,7 +845,8 @@ module.exports = {
         department_id: null,
         files: {},
         user_list: {},
-        isActive: false
+        isActive: false,
+        other_user: []
       },
       notificationMessage: null,
       notificationType: "is-info",
@@ -899,17 +905,24 @@ module.exports = {
         agenda: data.agenda,
         place: data.place,
         date: data.date,
-        department_id: data.department_id,
+        department_id: data.dep._id,
         files: data.files,
         roles: data.roles,
         user_list: data.user_list,
-        isActive: data.is_active
+        isActive: data.is_active,
+        other_user: data.other_user
       };
 
       try {
         temp.agenda = JSON.parse(data.agenda);
       } catch (ex) {
         temp.agenda = [];
+      }
+
+      try {
+        temp.other_user = JSON.parse(data.other_user);
+      } catch (ex) {
+        temp.other_user = [];
       }
 
       Vue.set(this, "inviteSessionData", temp);
@@ -1014,9 +1027,10 @@ module.exports = {
         agenda: JSON.stringify(this.inviteSessionData.agenda),
         place: this.inviteSessionData.place,
         date: this.inviteSessionData.date,
-        department_id: this.inviteSessionData.departments,
+        department_id: this.inviteSessionData.department_id,
         user_list: this.inviteSessionData.user_list,
-        is_active: this.inviteSessionData.isActive
+        is_active: this.inviteSessionData.isActive,
+        other_user: JSON.stringify(this.inviteSessionData.other_user)
       };
       inviteSessionData.files = this.files[0];
       var t = Object.keys(inviteSessionData.user_list).filter(function (key) {
@@ -1685,31 +1699,33 @@ module.exports = {
 module.exports = {
   name: "MultiTextMember",
   data: function data() {
-    return {
-      values: null
-    };
+    return {};
   },
   props: {
-    value: null
+    value: {
+      type: Array,
+      "default": function _default() {
+        return [];
+      }
+    }
   },
   created: function created() {
     this.setValue();
   },
   methods: {
     setValue: function setValue() {
-      var v = Array.from(this.value);
-      this.values = v;
+      Vue.set(this, "values", this.value);
     },
     updateValue: function updateValue() {
-      this.$emit("input", this.values);
+      this.$emit("input", this.value);
     },
     deleteValue: function deleteValue(index) {
-      this.values.splice(index, 1);
-      this.$emit('input', this.values);
+      this.value.splice(index, 1);
+      this.$emit("input", this.value);
     },
     addValue: function addValue() {
-      this.values.push({});
-      this.$emit('input', this.values);
+      this.value.push({});
+      this.$emit("input", this.value);
     }
   }
 };
@@ -1843,7 +1859,7 @@ module.exports = {
         isActive: false,
         intro: null,
         approv: [],
-        member: []
+        other_user: []
       },
       notificationMessage: null,
       notificationType: "is-info",
@@ -1990,7 +2006,7 @@ module.exports = {
         body: this.inviteSessionData.body,
         agenda: JSON.stringify(this.inviteSessionData.agenda),
         approv: JSON.stringify(this.inviteSessionData.approv),
-        member: JSON.stringify(this.inviteSessionData.member),
+        other_user: JSON.stringify(this.inviteSessionData.other_user),
         place: this.inviteSessionData.place,
         date: this.inviteSessionData.date,
         department_id: this.inviteSessionData.departments,
@@ -2113,6 +2129,10 @@ module.exports = {
 //
 //
 //
+//
+//
+//
+//
 
 
 var AxiosHelper = __webpack_require__(/*! JS-HELPERS/axios-helper */ "./resources/js/helpers/axios-helper.js");
@@ -2127,6 +2147,8 @@ var VuePersianDatetimePicker = __webpack_require__(/*! vue-persian-datetime-pick
 
 var MultiText = __webpack_require__(/*! VUE-COMPONENTS/general/multi-text.vue */ "./resources/js/vue/components/general/multi-text.vue")["default"];
 
+var MultiTextMember = __webpack_require__(/*! VUE-COMPONENTS/invite-session/multi-text-member.vue */ "./resources/js/vue/components/invite-session/multi-text-member.vue")["default"];
+
 var FileUpload = __webpack_require__(/*! VUE-COMPONENTS/general/file-upload.vue */ "./resources/js/vue/components/general/file-upload.vue")["default"];
 
 module.exports = {
@@ -2135,7 +2157,8 @@ module.exports = {
     Notification: Notification,
     DatePicker: VuePersianDatetimePicker,
     MultiText: MultiText,
-    FileUpload: FileUpload
+    FileUpload: FileUpload,
+    MultiTextMember: MultiTextMember
   },
   data: function data() {
     return {
@@ -2144,19 +2167,7 @@ module.exports = {
       users: [],
       files: [],
       deletedOldFiles: [],
-      oldFiles: [{
-        _id: 1000,
-        name: "Old File 1",
-        size: 10000
-      }, {
-        _id: 1001,
-        name: "Old File 2",
-        size: 20000
-      }, {
-        _id: 1002,
-        name: "Old File 3",
-        size: 30000
-      }],
+      oldFiles: [],
       inviteSessionData: {
         title: null,
         body: null,
@@ -2172,9 +2183,10 @@ module.exports = {
         place: null,
         date: null,
         department_id: null,
-        files: {},
+        files: [],
         deletedOldFiles: [],
         user_list: {},
+        other_user: [],
         isActive: false
       },
       notificationMessage: null,
@@ -2312,6 +2324,7 @@ module.exports = {
       var inviteSessionData = {
         body: this.inviteSessionData.body,
         agenda: JSON.stringify(this.inviteSessionData.agenda),
+        other_user: JSON.stringify(this.inviteSessionData.other_user),
         place: this.inviteSessionData.place,
         date: this.inviteSessionData.date,
         department_id: this.inviteSessionData.departments,
@@ -2320,6 +2333,7 @@ module.exports = {
         files: this.files,
         deletedOldFiles: this.deletedOldFiles
       };
+      console.log(inviteSessionData.files);
       inviteSessionData.user_list = Object.keys(inviteSessionData.user_list).filter(function (key) {
         return true == inviteSessionData.user_list[key];
       }).map(function (key) {
@@ -2332,6 +2346,7 @@ module.exports = {
         sendAsFormData: true
       }).then(function (res) {
         var data = res.data;
+        console.log(data);
 
         if (data.success) {
           _this3.$emit("on-register", {
@@ -31044,7 +31059,7 @@ var render = function() {
     "div",
     { staticClass: "multi-text", attrs: { id: "multi-text-template" } },
     [
-      _vm._l(_vm.values, function(item, index) {
+      _vm._l(_vm.value, function(item, index) {
         return _c("div", { staticClass: "form-itemsbox" }, [
           _c("div", { staticClass: "columns" }, [
             _c("div", { staticClass: "column is-4" }, [
@@ -31296,8 +31311,8 @@ var render = function() {
                       {
                         name: "model",
                         rawName: "v-model",
-                        value: _vm.inviteSessionData.departments,
-                        expression: "inviteSessionData.departments"
+                        value: _vm.inviteSessionData.department_id,
+                        expression: "inviteSessionData.department_id"
                       }
                     ],
                     on: {
@@ -31312,7 +31327,7 @@ var render = function() {
                           })
                         _vm.$set(
                           _vm.inviteSessionData,
-                          "departments",
+                          "department_id",
                           $event.target.multiple
                             ? $$selectedVal
                             : $$selectedVal[0]
@@ -31478,6 +31493,25 @@ var render = function() {
                 ])
               }),
               0
+            )
+          ]),
+          _c("fieldset", [
+            _c("legend", [_vm._v("مدعوین")]),
+            _c(
+              "div",
+              { staticClass: "field" },
+              [
+                _c("multi-text-member", {
+                  model: {
+                    value: _vm.inviteSessionData.other_user,
+                    callback: function($$v) {
+                      _vm.$set(_vm.inviteSessionData, "other_user", $$v)
+                    },
+                    expression: "inviteSessionData.other_user"
+                  }
+                })
+              ],
+              1
             )
           ]),
           _c("div", { staticClass: "field" }, [
@@ -31687,25 +31721,6 @@ var render = function() {
                 ])
               }),
               0
-            )
-          ]),
-          _c("fieldset", [
-            _c("legend", [_vm._v("مدعوین")]),
-            _c(
-              "div",
-              { staticClass: "field" },
-              [
-                _c("multi-text-member", {
-                  model: {
-                    value: _vm.inviteSessionData.member,
-                    callback: function($$v) {
-                      _vm.$set(_vm.inviteSessionData, "member", $$v)
-                    },
-                    expression: "inviteSessionData.member"
-                  }
-                })
-              ],
-              1
             ),
             _c("div", { staticClass: "field is-grouped" }, [
               _c(
@@ -31826,8 +31841,8 @@ var render = function() {
                       {
                         name: "model",
                         rawName: "v-model",
-                        value: _vm.inviteSessionData.departments,
-                        expression: "inviteSessionData.departments"
+                        value: _vm.inviteSessionData.department_id,
+                        expression: "inviteSessionData.department_id"
                       }
                     ],
                     on: {
@@ -31842,7 +31857,7 @@ var render = function() {
                           })
                         _vm.$set(
                           _vm.inviteSessionData,
-                          "departments",
+                          "department_id",
                           $event.target.multiple
                             ? $$selectedVal
                             : $$selectedVal[0]
@@ -31948,25 +31963,20 @@ var render = function() {
                       {
                         name: "model",
                         rawName: "v-model",
-                        value: _vm.inviteSessionData.user_list[user._id],
-                        expression: "inviteSessionData.user_list[user._id]"
+                        value: _vm.inviteSessionData.user_list,
+                        expression: "inviteSessionData.user_list"
                       }
                     ],
                     attrs: { type: "checkbox" },
                     domProps: {
                       value: user._id,
-                      checked: Array.isArray(
-                        _vm.inviteSessionData.user_list[user._id]
-                      )
-                        ? _vm._i(
-                            _vm.inviteSessionData.user_list[user._id],
-                            user._id
-                          ) > -1
-                        : _vm.inviteSessionData.user_list[user._id]
+                      checked: Array.isArray(_vm.inviteSessionData.user_list)
+                        ? _vm._i(_vm.inviteSessionData.user_list, user._id) > -1
+                        : _vm.inviteSessionData.user_list
                     },
                     on: {
                       change: function($event) {
-                        var $$a = _vm.inviteSessionData.user_list[user._id],
+                        var $$a = _vm.inviteSessionData.user_list,
                           $$el = $event.target,
                           $$c = $$el.checked ? true : false
                         if (Array.isArray($$a)) {
@@ -31975,24 +31985,20 @@ var render = function() {
                           if ($$el.checked) {
                             $$i < 0 &&
                               _vm.$set(
-                                _vm.inviteSessionData.user_list,
-                                user._id,
+                                _vm.inviteSessionData,
+                                "user_list",
                                 $$a.concat([$$v])
                               )
                           } else {
                             $$i > -1 &&
                               _vm.$set(
-                                _vm.inviteSessionData.user_list,
-                                user._id,
+                                _vm.inviteSessionData,
+                                "user_list",
                                 $$a.slice(0, $$i).concat($$a.slice($$i + 1))
                               )
                           }
                         } else {
-                          _vm.$set(
-                            _vm.inviteSessionData.user_list,
-                            user._id,
-                            $$c
-                          )
+                          _vm.$set(_vm.inviteSessionData, "user_list", $$c)
                         }
                       }
                     }
@@ -32008,6 +32014,20 @@ var render = function() {
                 ])
               }),
               0
+            )
+          ]),
+          _c("fieldset", [
+            _c("legend", [_vm._v("مدعوین")]),
+            _c(
+              "div",
+              { staticClass: "field" },
+              [
+                _c("multi-text-member", {
+                  ref: "multiTextMember",
+                  attrs: { value: _vm.inviteSessionData.other_user }
+                })
+              ],
+              1
             )
           ]),
           _c("div", { staticClass: "field" }, [
@@ -32906,9 +32926,9 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "multi-text", attrs: { id: "multi-text-template" } },
+    { staticClass: "multi-text", attrs: { id: "multi-text-member-template" } },
     [
-      _vm._l(_vm.values, function(item, index) {
+      _vm._l(_vm.value, function(item, index) {
         return _c("div", { staticClass: "form-itemsbox" }, [
           _c("div", { staticClass: "columns is-multiline" }, [
             _c("div", { staticClass: "column is-5" }, [
@@ -33276,6 +33296,25 @@ var render = function() {
                 0
               )
             ]),
+            _c("fieldset", [
+              _c("legend", [_vm._v("مدعوین")]),
+              _c(
+                "div",
+                { staticClass: "field" },
+                [
+                  _c("multi-text-member", {
+                    model: {
+                      value: _vm.inviteSessionData.other_user,
+                      callback: function($$v) {
+                        _vm.$set(_vm.inviteSessionData, "other_user", $$v)
+                      },
+                      expression: "inviteSessionData.other_user"
+                    }
+                  })
+                ],
+                1
+              )
+            ]),
             _c("div", { staticClass: "field" }, [
               _c("label", { staticClass: "checkbox" }, [
                 _c("input", {
@@ -33488,25 +33527,6 @@ var render = function() {
                 ])
               }),
               0
-            )
-          ]),
-          _c("fieldset", [
-            _c("legend", [_vm._v("مدعوین")]),
-            _c(
-              "div",
-              { staticClass: "field" },
-              [
-                _c("multi-text-member", {
-                  model: {
-                    value: _vm.inviteSessionData.member,
-                    callback: function($$v) {
-                      _vm.$set(_vm.inviteSessionData, "member", $$v)
-                    },
-                    expression: "inviteSessionData.member"
-                  }
-                })
-              ],
-              1
             ),
             _c("div", { staticClass: "field is-grouped" }, [
               _c(
@@ -33811,18 +33831,41 @@ var render = function() {
               0
             )
           ]),
-          _c(
-            "div",
-            { staticClass: "field" },
-            [
-              _c("file-upload", {
-                ref: "fileUpload",
-                attrs: { "old-files": _vm.oldFiles }
-              }),
-              _vm._v("  ضمیمه")
-            ],
-            1
-          ),
+          _c("fieldset", [
+            _c("legend", [
+              _vm._v("مدعوین"),
+              _c(
+                "div",
+                { staticClass: "field" },
+                [
+                  _c("multi-text-member", {
+                    model: {
+                      value: _vm.inviteSessionData.other_user,
+                      callback: function($$v) {
+                        _vm.$set(_vm.inviteSessionData, "other_user", $$v)
+                      },
+                      expression: "inviteSessionData.other_user"
+                    }
+                  })
+                ],
+                1
+              )
+            ])
+          ]),
+          _c("fieldset", [
+            _c("legend", [_vm._v("فایل های ضمیمه")]),
+            _c(
+              "div",
+              { staticClass: "field" },
+              [
+                _c("file-upload", {
+                  ref: "fileUpload",
+                  attrs: { "old-files": _vm.oldFiles }
+                })
+              ],
+              1
+            )
+          ]),
           _c("div", { staticClass: "field" }, [
             _c("label", { staticClass: "label" }, [_vm._v("توضیحات")]),
             _c("div", { staticClass: "control" }, [

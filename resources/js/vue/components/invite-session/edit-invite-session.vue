@@ -10,7 +10,7 @@
                 label.label
                 .control
                     .select.is-primary
-                        select(v-model="inviteSessionData.departments")
+                        select(v-model="inviteSessionData.department_id")
                             option(v-for='(department, departmentIndex) in departments',
                                 :value="department._id") {{ department.title }}
             .field
@@ -32,7 +32,10 @@
                     label.checkbox.column.is-12(v-for='(user, userIndex) in users')
                         input(type='checkbox', v-model="inviteSessionData.user_list[user._id]", :value="user._id")
                         |   {{ user.name }} - {{ user.profile.first_name }} {{ user.profile.last_name }}
-
+            fieldset
+                legend مدعوین
+                .field
+                    multi-text-member(v-model='inviteSessionData.other_user')
             .field
                 label.checkbox
                     input(type='file', @change="setAttachment")
@@ -61,10 +64,6 @@
                     label.checkbox.column.is-12(v-for='(user, userIndex) in users')
                         input(type='checkbox', v-model="inviteSessionData.user_list[user._id]", :value="user._id", :cehcked="true")
                         |   {{ user.name }} - {{ user.profile.first_name }} {{ user.profile.last_name }}
-            fieldset
-                legend مدعوین
-                .field
-                    multi-text-member(v-model='inviteSessionData.member')
                 .field.is-grouped
                     .control(v-show="! isLoadingMode")
                         a.button.is-link.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
@@ -81,8 +80,7 @@ const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
 const MultiText = require("VUE-COMPONENTS/general/multi-text.vue").default;
 const MultiTextApprov = require("VUE-COMPONENTS/invite-session/multi-text-approv.vue").default;
-const MultiTextMember = require("VUE-COMPONENTS/invite-session/multi-text-member.vue")
-    .default;
+const MultiTextMember = require("VUE-COMPONENTS/invite-session/multi-text-member.vue").default;
 
 module.exports = {
     name: "EditInviteSession",
@@ -110,7 +108,7 @@ module.exports = {
             isActive: false,
             intro: null,
             approv: [],
-            member: []
+            other_user: []
         },
         notificationMessage: null,
         notificationType: "is-info",
@@ -177,7 +175,7 @@ module.exports = {
                 user_list: data.user_list,
                 isActive: data.is_active,
                 approv: data.approv,
-                member: data.member
+                other_user: data.other_user
             };
 
             try {
@@ -193,9 +191,9 @@ module.exports = {
             }
 
             try {
-                temp.member = JSON.parse(data.member);
+                temp.other_user = JSON.parse(data.other_user);
             } catch (ex) {
-                temp.member = [];
+                temp.other_user = [];
             }
 
             Vue.set(this, "inviteSessionData", temp);
@@ -298,7 +296,7 @@ module.exports = {
                 user_list: this.inviteSessionData.user_list,
                 is_active: this.inviteSessionData.isActive,
                 approv: JSON.stringify(this.inviteSessionData.approv),
-                member: JSON.stringify(this.inviteSessionData.member)
+                other_user: JSON.stringify(this.inviteSessionData.other_user)
             };
 
             inviteSessionData.files = this.files[0];

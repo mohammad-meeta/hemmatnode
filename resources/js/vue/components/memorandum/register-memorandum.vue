@@ -160,7 +160,6 @@ module.exports = {
          */
         loadDepartments() {
             const url = this.departmentsUrl;
-            console.log(url);
             AxiosHelper.send("get", url, "").then(res => {
                 const resData = res.data;
                 const datas = resData.data.data;
@@ -173,7 +172,6 @@ module.exports = {
          */
         loadUsers() {
             const url = this.usersUrl;
-            console.log(url);
             AxiosHelper.send("get", url, "").then(res => {
                 const resData = res.data;
                 const datas = resData.data.data;
@@ -218,7 +216,6 @@ module.exports = {
             if (!isValid) {
                 return;
             }
-            console.log(this.memorandum);
             let memorandumData = {
                 title: this.memorandumData.title,
                 project: JSON.stringify(this.memorandumData.project),
@@ -228,13 +225,13 @@ module.exports = {
                 department_id: this.memorandumData.departments,
                 is_active: this.memorandumData.isActive
             };
-            console.log(memorandumData);
+            console.log(this.files);
             memorandumData.files = this.files[0];
 
             this.showLoading();
 
             const url = this.registerUrl;
-            console.log(url);
+            console.log(memorandumData);
             AxiosHelper.send("post", url, memorandumData, {
                 sendAsFormData: true
             })

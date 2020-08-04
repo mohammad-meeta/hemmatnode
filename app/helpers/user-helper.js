@@ -17,24 +17,92 @@ UserHelper.loadAllUserData = function loadAllUserData(dataPaginate) {
     const skip = page > 0 ? ((page - 1) * pageSize) : 0
     const User = mongoose.model('User');
 
-    const filterQuery = {};
-    const projection = {
-        pwd: 0
-    };
+    const pipeline = [{
+            "$lookup": {
+                "from": "files",
+                "localField": "profile.image",
+                "foreignField": "_id",
+                "as": "file"
+            }
+        },
+        {
+            "$unwind": {
+                "path": "$file",
+                "preserveNullAndEmptyArrays": true
+            }
+        },
+        {
+            "$project": {
+                "file.encoding": 0,
+                "file.mimetype": 0,
+                "file.user_id": 0,
+            }
+        },
+        {
+            "$group": {
+                "_id": "$_id",
+                "files": {
+                    "$push": "$file"
+                },
+                "is_active": {
+                    "$last": "$is_active"
+                },
+                "name": {
+                    "$last": "$name"
+                },
+                "email": {
+                    "$last": "$email"
+                },
+                "profile": {
+                    "$last": "$profile"
+                },
+                "cellphone": {
+                    "$last": "$cellphone"
+                },
+                "role_group": {
+                    "$last": "$role_group"
+                }
+            }
+        },
+        {
+            "$sort": {
+                "created_at": -1
+            }
+        },
+        {
+            "$skip": skip
+        },
+        {
+            "$limit": pageSize
+        }
+    ];
 
     return new Promise((resolve, reject) => {
-        User.find(filterQuery, projection, {
-                sort: {
-                    'created_at': -1
-                },
-                skip: skip,
-                limit: pageSize
-            })
+        User.aggregate(pipeline)
             .then(res => {
                 resolve(res);
             })
             .catch(err => reject(err));
     });
+
+    // const filterQuery = {};
+    // const projection = {
+    //     pwd: 0
+    // };
+
+    // return new Promise((resolve, reject) => {
+    //     User.find(filterQuery, projection, {
+    //             sort: {
+    //                 'created_at': -1
+    //             },
+    //             skip: skip,
+    //             limit: pageSize
+    //         })
+    //         .then(res => {
+    //             resolve(res);
+    //         })
+    //         .catch(err => reject(err));
+    // });
 };
 
 /**
@@ -58,44 +126,157 @@ UserHelper.loadAllCountUserData = function loadAllCountUserData() {
  */
 UserHelper.loadUserData = function loadUserData(userName) {
     const User = mongoose.model('User');
-
-    const filterQuery = {
-        name: userName
-    };
-
-    const projection = {
-        pwd: 0
-    };
+    const pipeline = [{
+            "$match": {
+                name: userName
+            }
+        },
+        {
+            "$lookup": {
+                "from": "files",
+                "localField": "profile.image",
+                "foreignField": "_id",
+                "as": "file"
+            }
+        }, {
+            "$unwind": {
+                "path": "$file",
+                "preserveNullAndEmptyArrays": true
+            }
+        }, {
+            "$project": {
+                "file.encoding": 0,
+                "file.mimetype": 0,
+                "file.user_id": 0,
+            }
+        }, {
+            "$group": {
+                "_id": "$_id",
+                "files": {
+                    "$push": "$file"
+                },
+                "is_active": {
+                    "$last": "$is_active"
+                },
+                "name": {
+                    "$last": "$name"
+                },
+                "email": {
+                    "$last": "$email"
+                },
+                "profile": {
+                    "$last": "$profile"
+                },
+                "cellphone": {
+                    "$last": "$cellphone"
+                },
+                "role_group": {
+                    "$last": "$role_group"
+                }
+            }
+        }
+    ];
 
     return new Promise((resolve, reject) => {
-        User.findOne(filterQuery, projection)
+        User.aggregate(pipeline)
             .then(res => {
                 resolve(res);
             })
             .catch(err => reject(err));
     });
+    // const filterQuery = {
+    //     name: userName
+    // };
+
+    // const projection = {
+    //     pwd: 0
+    // };
+
+    // return new Promise((resolve, reject) => {
+    //     User.findOne(filterQuery, projection)
+    //         .then(res => {
+    //             resolve(res);
+    //         })
+    //         .catch(err => reject(err));
+    // });
 };
 /**
  * find user data result with _id
  */
 UserHelper.loadUserDataID = function loadUserDataID(id) {
     const User = mongoose.model('User');
-
-    const filterQuery = {
-        _id: id
-    };
-
-    const projection = {
-        pwd: 0
-    };
-
+    const pipeline = [{
+            "$match": {
+                _id: id
+            }
+        },
+        {
+            "$lookup": {
+                "from": "files",
+                "localField": "profile.image",
+                "foreignField": "_id",
+                "as": "file"
+            }
+        }, {
+            "$unwind": {
+                "path": "$file",
+                "preserveNullAndEmptyArrays": true
+            }
+        }, {
+            "$project": {
+                "file.encoding": 0,
+                "file.mimetype": 0,
+                "file.user_id": 0,
+            }
+        }, {
+            "$group": {
+                "_id": "$_id",
+                "files": {
+                    "$push": "$file"
+                },
+                "is_active": {
+                    "$last": "$is_active"
+                },
+                "name": {
+                    "$last": "$name"
+                },
+                "email": {
+                    "$last": "$email"
+                },
+                "profile": {
+                    "$last": "$profile"
+                },
+                "cellphone": {
+                    "$last": "$cellphone"
+                },
+                "role_group": {
+                    "$last": "$role_group"
+                }
+            }
+        }
+    ];
     return new Promise((resolve, reject) => {
-        User.findOne(filterQuery, projection)
+        User.aggregate(pipeline)
             .then(res => {
                 resolve(res);
             })
             .catch(err => reject(err));
     });
+    // const filterQuery = {
+    //     _id: id
+    // };
+
+    // const projection = {
+    //     pwd: 0
+    // };
+
+    // return new Promise((resolve, reject) => {
+    //     User.findOne(filterQuery, projection)
+    //         .then(res => {
+    //             resolve(res);
+    //         })
+    //         .catch(err => reject(err));
+    // });
 };
 
 /**

@@ -193,6 +193,22 @@ UserController.create = async function create(req, res, next) {
  */
 UserController.store = async function store(req, res, next) {
 
+    const files = req.files || [];
+
+    let fileList = [];
+
+    for (let i = 0; i < files.length; ++i) {
+        try {
+            const el = files[i];
+            el.user_id = req.session.auth.userId;
+
+            const data = await FileHelper.insertFileData(el);
+            fileList.push(data[0]._id);
+        } catch (err) {
+            Logger.error(err);
+        }
+    }
+
     const data = {
         "name": req.body.name,
         "user_id": req.session.auth.userId,
@@ -205,7 +221,7 @@ UserController.store = async function store(req, res, next) {
             "first_name": req.body.first_name,
             "last_name": req.body.last_name,
             "nation_code": req.body.nation_code,
-            "image": req.body.image || null
+            "image": fileList
         }
     };
 

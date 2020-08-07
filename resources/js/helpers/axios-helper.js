@@ -52,7 +52,7 @@ AxiosHelper.send = function send(method, url, data = {}, options) {
                     for (let i = 0; i < itemData.length; ++i) {
                         const file = itemData[i];
 
-                        formData.append(key + "[]", file);
+                        formData.append(key, file);
                     };
                 }
                 /* Add object */

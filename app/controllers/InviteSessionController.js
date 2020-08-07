@@ -198,7 +198,6 @@ InviteSession.create = async function create(req, res, next) {
  * store data dep cat
  */
 InviteSession.store = async function store(req, res, next) {
-
     const files = req.files || [];
 
     let fileList = [];
@@ -209,7 +208,13 @@ InviteSession.store = async function store(req, res, next) {
             el.user_id = req.session.auth.userId;
 
             const data = await FileHelper.insertFileData(el);
-            fileList.push(data[0]._id);
+
+            const tempFileData = {
+                file_id: data[0]._id,
+                deleted_at: null
+            };
+            fileList.push(tempFileData);
+
         } catch (err) {
             Logger.error(err);
         }

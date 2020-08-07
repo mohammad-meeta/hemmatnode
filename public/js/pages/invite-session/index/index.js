@@ -119,9 +119,7 @@ var uuidV4 = __webpack_require__(/*! uuid */ "./node_modules/uuid/index.js").v4;
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "FileUpload",
   props: {
-    oldFiles: {
-      type: Array
-    }
+    oldFiles: []
   },
   computed: {
     fileList: function fileList(state) {
@@ -2133,6 +2131,31 @@ module.exports = {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 var AxiosHelper = __webpack_require__(/*! JS-HELPERS/axios-helper */ "./resources/js/helpers/axios-helper.js");
@@ -2316,11 +2339,11 @@ module.exports = {
       var newUploaded = newFiles.map(function (x) {
         return x.file;
       });
-      Vue.set(this, 'files', newUploaded);
+      Vue.set(this, "files", newUploaded);
       var deleteUploaded = deletedFiles.map(function (x) {
         return x._id;
       });
-      Vue.set(this, 'deletedOldFiles', deleteUploaded);
+      Vue.set(this, "deletedOldFiles", deleteUploaded);
       var inviteSessionData = {
         body: this.inviteSessionData.body,
         agenda: JSON.stringify(this.inviteSessionData.agenda),
@@ -2333,7 +2356,6 @@ module.exports = {
         files: this.files,
         deletedOldFiles: this.deletedOldFiles
       };
-      console.log(inviteSessionData.files);
       inviteSessionData.user_list = Object.keys(inviteSessionData.user_list).filter(function (key) {
         return true == inviteSessionData.user_list[key];
       }).map(function (key) {
@@ -2341,12 +2363,11 @@ module.exports = {
       });
       this.showLoading();
       var url = this.registerUrl;
-      console.log(inviteSessionData);
       AxiosHelper.send("post", url, inviteSessionData, {
-        sendAsFormData: true
+        sendAsFormData: true,
+        filesArray: "files"
       }).then(function (res) {
         var data = res.data;
-        console.log(data);
 
         if (data.success) {
           _this3.$emit("on-register", {
@@ -33819,7 +33840,7 @@ var render = function() {
                     }
                   }),
                   _vm._v(
-                    "  " +
+                    "\n" +
                       _vm._s(user.name) +
                       " - " +
                       _vm._s(user.profile.first_name) +
@@ -33938,7 +33959,7 @@ var render = function() {
                   }
                 }
               }),
-              _vm._v("  فعال")
+              _vm._v("\nفعال")
             ])
           ]),
           _c("div", { staticClass: "field is-grouped" }, [
@@ -33968,7 +33989,7 @@ var render = function() {
                       }
                     }
                   },
-                  [_vm._v("  ایجاد")]
+                  [_vm._v("\nایجاد")]
                 )
               ]
             )
@@ -35363,7 +35384,7 @@ AxiosHelper.send = function send(method, url) {
       if (options.filesArray == key) {
         for (var i = 0; i < itemData.length; ++i) {
           var file = itemData[i];
-          formData.append(key + "[]", file);
+          formData.append(key, file);
         }
 
         ;

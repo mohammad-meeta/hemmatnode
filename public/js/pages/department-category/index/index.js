@@ -8375,7 +8375,7 @@ AxiosHelper.send = function send(method, url) {
       if (options.filesArray == key) {
         for (var i = 0; i < itemData.length; ++i) {
           var file = itemData[i];
-          formData.append(key + "[]", file);
+          formData.append(key, file);
         }
 
         ;

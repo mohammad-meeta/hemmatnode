@@ -1,10 +1,9 @@
 {
-    "/js/core/kernel.js": "/js/core/kernel.js?id=95ace8024d7fd1cc4544",
+    "/js/core/kernel.js": "/js/core/kernel.js?id=c1edc300a5bc9b282c0e",
     "/css/core/kernel.css": "/css/core/kernel.css?id=3c859d90c3ebc80cf130",
-    "/css/global/app.css": "/css/global/app.css?id=c1569a11cea8cab16a0a",
+    "/css/global/app.css": "/css/global/app.css?id=b5e0b9a5000829125832",
     "/css/pages/home/index.css": "/css/pages/home/index.css?id=ca0c00bb4a7f5ca6c314",
     "/css/pages/auth/login.css": "/css/pages/auth/login.css?id=d41d8cd98f00b204e980",
-<<<<<<< HEAD
     "/js/global/app.js": "/js/global/app.js?id=309a3a38a2a4953508a9",
     "/js/pages/auth/login/index.js": "/js/pages/auth/login/index.js?id=14edcbcdd25e52de2ef3",
     "/js/pages/department-category/index/index.js": "/js/pages/department-category/index/index.js?id=6c6336888695228f50f3",
@@ -17,32 +16,11 @@
     "/js/pages/home/internal-section/index.js": "/js/pages/home/internal-section/index.js?id=35c8e46b8a08b29d7a08",
     "/js/pages/home/monitoring-page/index.js": "/js/pages/home/monitoring-page/index.js?id=1ccc3fc132e6af8cb34f",
     "/js/pages/home/people-participation/index.js": "/js/pages/home/people-participation/index.js?id=7c5905a9acf32bf48a2e",
-    "/js/pages/invite-session/index/index.js": "/js/pages/invite-session/index/index.js?id=d20d67c953f8752eae46",
+    "/js/pages/invite-session/index/index.js": "/js/pages/invite-session/index/index.js?id=d77a640832fd16b00906",
     "/js/pages/memorandum/index/index.js": "/js/pages/memorandum/index/index.js?id=e2061a0f213a8df4bd9e",
     "/js/pages/project/index/index.js": "/js/pages/project/index/index.js?id=93ca1c915f9b4b159ce0",
     "/js/pages/regulation/index/index.js": "/js/pages/regulation/index/index.js?id=72a2bdf794a22b00db5f",
     "/js/pages/result/index/index.js": "/js/pages/result/index/index.js?id=292ac2f4b1cafc50b282",
     "/js/pages/task/index/index.js": "/js/pages/task/index/index.js?id=0c56eaac47d6696b86c0",
     "/js/pages/user/index/index.js": "/js/pages/user/index/index.js?id=f7853442648e546987bd"
-=======
-    "/js/global/app.js": "/js/global/app.js?id=1484deb22a977eca42c1",
-    "/js/pages/auth/login/index.js": "/js/pages/auth/login/index.js?id=250243653f687d733dd4",
-    "/js/pages/department-category/index/index.js": "/js/pages/department-category/index/index.js?id=df0b689342ddf0c687f4",
-    "/js/pages/department/index/index.js": "/js/pages/department/index/index.js?id=91340c5b16974b98c7d9",
-    "/js/pages/department/show/index.js": "/js/pages/department/show/index.js?id=f90c2e370801740e3eb9",
-    "/js/pages/factory.js": "/js/pages/factory.js?id=25df2dd8101739db6033",
-    "/js/pages/home/document-list/index.js": "/js/pages/home/document-list/index.js?id=b1a261b31204cdf3ce18",
-    "/js/pages/home/event-list/index.js": "/js/pages/home/event-list/index.js?id=a8de76b233d763555ab9",
-    "/js/pages/home/external-section/index.js": "/js/pages/home/external-section/index.js?id=185f58d2b8ea30c82edc",
-    "/js/pages/home/internal-section/index.js": "/js/pages/home/internal-section/index.js?id=bfcc6dfe1a6f54e57676",
-    "/js/pages/home/monitoring-page/index.js": "/js/pages/home/monitoring-page/index.js?id=c413effaad4ccfd4ec8d",
-    "/js/pages/home/people-participation/index.js": "/js/pages/home/people-participation/index.js?id=633e2b15a28a2758526f",
-    "/js/pages/invite-session/index/index.js": "/js/pages/invite-session/index/index.js?id=881e46ba892ecd0a9d43",
-    "/js/pages/memorandum/index/index.js": "/js/pages/memorandum/index/index.js?id=c0c42e78a66a4680c002",
-    "/js/pages/project/index/index.js": "/js/pages/project/index/index.js?id=2bb720b7ed2c81e1d25b",
-    "/js/pages/regulation/index/index.js": "/js/pages/regulation/index/index.js?id=0ead58db57c184bac609",
-    "/js/pages/result/index/index.js": "/js/pages/result/index/index.js?id=9f8580849990bdfbe0ac",
-    "/js/pages/task/index/index.js": "/js/pages/task/index/index.js?id=a6e07bc166fe333b0b72",
-    "/js/pages/user/index/index.js": "/js/pages/user/index/index.js?id=d64fd0e655db27bbff08"
->>>>>>> 13cfe325ce01030c934d5e7246351510bd3daecb
 }

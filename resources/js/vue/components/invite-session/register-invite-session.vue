@@ -18,7 +18,11 @@
                             option(v-for='(department, departmentIndex) in departments',
                                 :value="department._id") {{ department.title }}
             .field
-                multi-text(v-model='inviteSessionData.agenda')
+                .panel
+                    .panel-heading
+                        | دستور جلسه
+                    .panel-block
+                        multi-text(v-model='inviteSessionData.agenda')
             .field
                 label.label مکان
                 .control
@@ -30,6 +34,20 @@
                     date-picker(v-model='inviteSessionData.date' format="YYYY-MM-DD HH:mm:ss"
                     display-format=" jDD/jMM/jYYYY HH:mm" type="datetime" required)
 
+            .field
+                b-table(
+                        :data="users"
+                        :columns="columns"
+                        :checked-rows.sync="checkedRows"
+                        checkable
+                        :paginated="isPaginated",
+                        :per-page="perPage",
+                        :current-page.sync="currentPage",
+                        :pagination-simple="isPaginationSimple",
+                        :pagination-position="paginationPosition",
+                        :checkbox-position="checkboxPosition")
+                    template(slot="bottom-left")
+                        | نفرات انتخاب شده : {{ checkedRows.length }} نفر
             .field
                 label.label حاضرین جلسه
                 .multi-checkboxes
@@ -63,6 +81,7 @@
 <script>
 "use strict";
 
+const Buefy = require("buefy").default;
 const AxiosHelper = require("JS-HELPERS/axios-helper");
 const ENUMS = require("JS-HELPERS/enums");
 const InviteSessionValidator = require("JS-VALIDATORS/invite-session-register-validator");
@@ -71,6 +90,7 @@ const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
 const MultiText = require("VUE-COMPONENTS/general/multi-text.vue").default;
 const MultiTextMember = require("VUE-COMPONENTS/invite-session/multi-text-member.vue").default;
 const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
+
 
 module.exports = {
     name: "RegisterInviteSession",
@@ -112,8 +132,33 @@ module.exports = {
             deletedOldFiles: [],
             user_list: {},
             other_user:[],
-            isActive: false
+            isActive: false,
         },
+
+        checkedRows: [],
+        checkboxPosition: "left",
+        isPaginated: true,
+        isPaginationSimple: false,
+        paginationPosition: "bottom",
+        currentPage: 1,
+        perPage: 3,
+        columns: [
+            {
+                field: "name",
+                label: "نام کاربری",
+                searchable: true,
+            },
+            {
+                field: "profile.first_name",
+                label: "نام",
+                searchable: true,
+            },
+            {
+                field: "profile.last_name",
+                label: "نام خانوادگی",
+                searchable: true,
+            },
+        ],
 
         notificationMessage: null,
         notificationType: "is-info",
@@ -233,6 +278,7 @@ module.exports = {
             if (!isValid) {
                 return;
             }
+
             const deletedFiles = this.$refs.fileUpload.getDeletedFiles();
             const newFiles = this.$refs.fileUpload.getNewFiles();
             let newUploaded = newFiles.map(x => x.file);
@@ -246,11 +292,17 @@ module.exports = {
                 place: this.inviteSessionData.place,
                 date: this.inviteSessionData.date,
                 department_id: this.inviteSessionData.departments,
-                user_list: this.inviteSessionData.user_list,
+                user_list: [],
                 is_active: this.inviteSessionData.isActive,
                 files:this.files,
                 deletedOldFiles : this.deletedOldFiles
             };
+            console.log(this.checkedRows);
+            this.checkedRows.forEach(function(entry) {
+                console.log(entry._id);
+                inviteSessionData.user_list.push(entry._id);
+            });
+            console.log(inviteSessionData);
             console.log(inviteSessionData.files);
             inviteSessionData.user_list = Object.keys(
                 inviteSessionData.user_list
@@ -260,7 +312,7 @@ module.exports = {
             this.showLoading();
 
             const url = this.registerUrl;
-            console.log(inviteSessionData);
+
             AxiosHelper.send("post", url, inviteSessionData, {
                 sendAsFormData: true
             })

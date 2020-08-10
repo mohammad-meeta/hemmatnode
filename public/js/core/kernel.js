@@ -32994,11 +32994,11 @@ types.forEach(function (type) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/sources/hemmatnode/resources/js/core/kernel.js */"./resources/js/core/kernel.js");
-__webpack_require__(/*! /home/sources/hemmatnode/resources/sass/core/kernel.scss */"./resources/sass/core/kernel.scss");
-__webpack_require__(/*! /home/sources/hemmatnode/resources/sass/global/app.scss */"./resources/sass/global/app.scss");
-__webpack_require__(/*! /home/sources/hemmatnode/resources/sass/pages/home/index.scss */"./resources/sass/pages/home/index.scss");
-module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/sass/pages/auth/login.scss */"./resources/sass/pages/auth/login.scss");
+__webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/core/kernel.js */"./resources/js/core/kernel.js");
+__webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/sass/core/kernel.scss */"./resources/sass/core/kernel.scss");
+__webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/sass/global/app.scss */"./resources/sass/global/app.scss");
+__webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/sass/pages/home/index.scss */"./resources/sass/pages/home/index.scss");
+module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/sass/pages/auth/login.scss */"./resources/sass/pages/auth/login.scss");
 
 
 /***/ })

@@ -58,24 +58,32 @@
                 legend مدعوین
                     .field
                         multi-text-member(v-model='inviteSessionData.other_user')
-            fieldset
-                legend فایل های ضمیمه
-                .field
-                    file-upload(ref="fileUpload", :old-files="oldFiles")
-                //file-upload(ref="fileUpload", :upload-url="articleUploadUrl", @on-file-remove="articleFileRemove")
+        fieldset
+            legend فایل های ضمیمه
             .field
-                label.label توضیحات
-                .control
-                    textarea.textarea(placeholder='توضیحات', v-model='inviteSessionData.body')
-            .field
-                label.checkbox
-                    input(type='checkbox', v-model="inviteSessionData.isActive")
-                    |   فعال
+                file-upload(ref="fileUpload", :old-files="oldFiles")
+            //file-upload(ref="fileUpload", :upload-url="articleUploadUrl", @on-file-remove="articleFileRemove")
+        .field
+            label.label توضیحات
+            .control
+                textarea.textarea(
+                    placeholder="توضیحات",
+                    v-model="inviteSessionData.body"
+                )
+        .field
+            label.checkbox
+                input(type="checkbox", v-model="inviteSessionData.isActive")
+                |
+                | فعال
 
-            .field.is-grouped
-                .control(v-show="! isLoadingMode")
-                    a.button.is-link.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
-                        |   ایجاد
+        .field.is-grouped
+            .control(v-show="! isLoadingMode")
+                a.button.is-link.is-rounded(
+                    href="#",
+                    @click.prevent="commandClick(ENUMS.COMMAND.SAVE)"
+                )
+                    |
+                    | ایجاد
 </template>
 
 <script>
@@ -88,7 +96,8 @@ const InviteSessionValidator = require("JS-VALIDATORS/invite-session-register-va
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
 const MultiText = require("VUE-COMPONENTS/general/multi-text.vue").default;
-const MultiTextMember = require("VUE-COMPONENTS/invite-session/multi-text-member.vue").default;
+const MultiTextMember = require("VUE-COMPONENTS/invite-session/multi-text-member.vue")
+    .default;
 const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 
 
@@ -100,7 +109,7 @@ module.exports = {
         DatePicker: VuePersianDatetimePicker,
         MultiText,
         FileUpload,
-        MultiTextMember
+        MultiTextMember,
     },
 
     data: () => ({
@@ -117,13 +126,13 @@ module.exports = {
                 {
                     title: "تلاوت قرآن و معنی",
                     duration: "5",
-                    provider: "عضو هیات رئیسه"
+                    provider: "عضو هیات رئیسه",
                 },
                 {
                     title: "گزارش کشیک نوروزی سال 1398",
                     duration: "20",
-                    provider: "عضو هیات رئیسه"
-                }
+                    provider: "عضو هیات رئیسه",
+                },
             ],
             place: null,
             date: null,
@@ -162,29 +171,29 @@ module.exports = {
 
         notificationMessage: null,
         notificationType: "is-info",
-        showLoadingFlag: false
+        showLoadingFlag: false,
     }),
 
     props: {
         departmentId: {
             type: String,
-            default: null
+            default: null,
         },
 
         registerUrl: {
             type: String,
-            default: ""
+            default: "",
         },
 
         departmentsUrl: {
             type: String,
-            default: ""
+            default: "",
         },
 
         usersUrl: {
             type: String,
-            default: ""
-        }
+            default: "",
+        },
     },
 
     created() {
@@ -197,12 +206,11 @@ module.exports = {
     },
 
     computed: {
-        isLoadingMode: state => state.showLoadingFlag == true,
-        showNotification: state => state.notificationMessage != null
+        isLoadingMode: (state) => state.showLoadingFlag == true,
+        showNotification: (state) => state.notificationMessage != null,
     },
 
     methods: {
-
         /**
          * On Command
          *
@@ -221,7 +229,7 @@ module.exports = {
          */
         loadDepartments() {
             const url = this.departmentsUrl;
-            AxiosHelper.send("get", url, "").then(res => {
+            AxiosHelper.send("get", url, "").then((res) => {
                 const resData = res.data;
                 const datas = resData.data.data;
                 Vue.set(this, "departments", datas);
@@ -233,7 +241,7 @@ module.exports = {
          */
         loadUsers() {
             const url = this.usersUrl;
-            AxiosHelper.send("get", url, "").then(res => {
+            AxiosHelper.send("get", url, "").then((res) => {
                 const resData = res.data;
                 const datas = resData.data.data;
                 Vue.set(this, "users", datas);
@@ -281,10 +289,10 @@ module.exports = {
 
             const deletedFiles = this.$refs.fileUpload.getDeletedFiles();
             const newFiles = this.$refs.fileUpload.getNewFiles();
-            let newUploaded = newFiles.map(x => x.file);
-            Vue.set(this, 'files', newUploaded);
-            let deleteUploaded = deletedFiles.map(x => x._id);
-            Vue.set(this, 'deletedOldFiles', deleteUploaded);
+            let newUploaded = newFiles.map((x) => x.file);
+            Vue.set(this, "files", newUploaded);
+            let deleteUploaded = deletedFiles.map((x) => x._id);
+            Vue.set(this, "deletedOldFiles", deleteUploaded);
             let inviteSessionData = {
                 body: this.inviteSessionData.body,
                 agenda: JSON.stringify(this.inviteSessionData.agenda),
@@ -294,39 +302,38 @@ module.exports = {
                 department_id: this.inviteSessionData.departments,
                 user_list: [],
                 is_active: this.inviteSessionData.isActive,
-                files:this.files,
-                deletedOldFiles : this.deletedOldFiles
+                files: this.files,
+                deletedOldFiles: this.deletedOldFiles,
             };
-            console.log(this.checkedRows);
+
             this.checkedRows.forEach(function(entry) {
-                console.log(entry._id);
                 inviteSessionData.user_list.push(entry._id);
             });
-            console.log(inviteSessionData);
-            console.log(inviteSessionData.files);
+
             inviteSessionData.user_list = Object.keys(
                 inviteSessionData.user_list
             )
-                .filter(key => true == inviteSessionData.user_list[key])
-                .map(key => key);
+                .filter((key) => true == inviteSessionData.user_list[key])
+                .map((key) => key);
             this.showLoading();
 
             const url = this.registerUrl;
 
             AxiosHelper.send("post", url, inviteSessionData, {
-                sendAsFormData: true
+                sendAsFormData: true,
+                filesArray: "files",
             })
-                .then(res => {
+                .then((res) => {
                     const data = res.data;
-                    console.log(data);
+
                     if (data.success) {
                         this.$emit("on-register", {
                             sender: this,
-                            data
+                            data,
                         });
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     const data = err.response.data;
                     this.setNotification(data, "is-danger");
                 })
@@ -348,14 +355,14 @@ module.exports = {
 
             const errors = result.validator.errors.all();
             const error = Object.keys(errors)
-                .map(key => errors[key].join("\n"))
+                .map((key) => errors[key].join("\n"))
                 .join("</br>");
 
             console.log(error);
             this.setNotification(error, "is-danger");
             return false;
-        }
-    }
+        },
+    },
 };
 </script>
 

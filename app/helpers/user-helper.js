@@ -205,9 +205,11 @@ UserHelper.loadUserData = function loadUserData(userName) {
  */
 UserHelper.loadUserDataID = function loadUserDataID(id) {
     const User = mongoose.model('User');
+    const ObjectId = require('mongoose').Types.ObjectId;
+
     const pipeline = [{
             "$match": {
-                _id: id
+                _id: new ObjectId(id)
             }
         },
         {
@@ -255,6 +257,7 @@ UserHelper.loadUserDataID = function loadUserDataID(id) {
             }
         }
     ];
+
     return new Promise((resolve, reject) => {
         User.aggregate(pipeline)
             .then(res => {

@@ -119,9 +119,7 @@ var uuidV4 = __webpack_require__(/*! uuid */ "./node_modules/uuid/index.js").v4;
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "FileUpload",
   props: {
-    oldFiles: {
-      type: Array
-    }
+    oldFiles: []
   },
   computed: {
     fileList: function fileList(state) {
@@ -2151,6 +2149,14 @@ module.exports = {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 var Buefy = __webpack_require__(/*! buefy */ "./node_modules/buefy/dist/esm/index.js")["default"];
@@ -2356,11 +2362,11 @@ module.exports = {
       var newUploaded = newFiles.map(function (x) {
         return x.file;
       });
-      Vue.set(this, 'files', newUploaded);
+      Vue.set(this, "files", newUploaded);
       var deleteUploaded = deletedFiles.map(function (x) {
         return x._id;
       });
-      Vue.set(this, 'deletedOldFiles', deleteUploaded);
+      Vue.set(this, "deletedOldFiles", deleteUploaded);
       var inviteSessionData = {
         body: this.inviteSessionData.body,
         agenda: JSON.stringify(this.inviteSessionData.agenda),
@@ -2373,13 +2379,9 @@ module.exports = {
         files: this.files,
         deletedOldFiles: this.deletedOldFiles
       };
-      console.log(this.checkedRows);
       this.checkedRows.forEach(function (entry) {
-        console.log(entry._id);
         inviteSessionData.user_list.push(entry._id);
       });
-      console.log(inviteSessionData);
-      console.log(inviteSessionData.files);
       inviteSessionData.user_list = Object.keys(inviteSessionData.user_list).filter(function (key) {
         return true == inviteSessionData.user_list[key];
       }).map(function (key) {
@@ -2388,10 +2390,10 @@ module.exports = {
       this.showLoading();
       var url = this.registerUrl;
       AxiosHelper.send("post", url, inviteSessionData, {
-        sendAsFormData: true
+        sendAsFormData: true,
+        filesArray: "files"
       }).then(function (res) {
         var data = res.data;
-        console.log(data);
 
         if (data.success) {
           _this3.$emit("on-register", {
@@ -49360,130 +49362,130 @@ var render = function() {
                 1
               )
             ])
-          ]),
-          _c("fieldset", [
-            _c("legend", [_vm._v("فایل های ضمیمه")]),
-            _c(
-              "div",
-              { staticClass: "field" },
-              [
-                _c("file-upload", {
-                  ref: "fileUpload",
-                  attrs: { "old-files": _vm.oldFiles }
-                })
-              ],
-              1
-            )
-          ]),
-          _c("div", { staticClass: "field" }, [
-            _c("label", { staticClass: "label" }, [_vm._v("توضیحات")]),
-            _c("div", { staticClass: "control" }, [
-              _c("textarea", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.inviteSessionData.body,
-                    expression: "inviteSessionData.body"
-                  }
-                ],
-                staticClass: "textarea",
-                attrs: { placeholder: "توضیحات" },
-                domProps: { value: _vm.inviteSessionData.body },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(_vm.inviteSessionData, "body", $event.target.value)
-                  }
-                }
-              })
-            ])
-          ]),
-          _c("div", { staticClass: "field" }, [
-            _c("label", { staticClass: "checkbox" }, [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.inviteSessionData.isActive,
-                    expression: "inviteSessionData.isActive"
-                  }
-                ],
-                attrs: { type: "checkbox" },
-                domProps: {
-                  checked: Array.isArray(_vm.inviteSessionData.isActive)
-                    ? _vm._i(_vm.inviteSessionData.isActive, null) > -1
-                    : _vm.inviteSessionData.isActive
-                },
-                on: {
-                  change: function($event) {
-                    var $$a = _vm.inviteSessionData.isActive,
-                      $$el = $event.target,
-                      $$c = $$el.checked ? true : false
-                    if (Array.isArray($$a)) {
-                      var $$v = null,
-                        $$i = _vm._i($$a, $$v)
-                      if ($$el.checked) {
-                        $$i < 0 &&
-                          _vm.$set(
-                            _vm.inviteSessionData,
-                            "isActive",
-                            $$a.concat([$$v])
-                          )
-                      } else {
-                        $$i > -1 &&
-                          _vm.$set(
-                            _vm.inviteSessionData,
-                            "isActive",
-                            $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                          )
-                      }
-                    } else {
-                      _vm.$set(_vm.inviteSessionData, "isActive", $$c)
-                    }
-                  }
-                }
-              }),
-              _vm._v("  فعال")
-            ])
-          ]),
-          _c("div", { staticClass: "field is-grouped" }, [
-            _c(
-              "div",
-              {
-                directives: [
-                  {
-                    name: "show",
-                    rawName: "v-show",
-                    value: !_vm.isLoadingMode,
-                    expression: "! isLoadingMode"
-                  }
-                ],
-                staticClass: "control"
-              },
-              [
-                _c(
-                  "a",
-                  {
-                    staticClass: "button is-link is-rounded",
-                    attrs: { href: "#" },
-                    on: {
-                      click: function($event) {
-                        $event.preventDefault()
-                        return _vm.commandClick(_vm.ENUMS.COMMAND.SAVE)
-                      }
-                    }
-                  },
-                  [_vm._v("  ایجاد")]
-                )
-              ]
-            )
           ])
         ]
-      )
+      ),
+      _c("fieldset", [
+        _c("legend", [_vm._v("فایل های ضمیمه")]),
+        _c(
+          "div",
+          { staticClass: "field" },
+          [
+            _c("file-upload", {
+              ref: "fileUpload",
+              attrs: { "old-files": _vm.oldFiles }
+            })
+          ],
+          1
+        )
+      ]),
+      _c("div", { staticClass: "field" }, [
+        _c("label", { staticClass: "label" }, [_vm._v("توضیحات")]),
+        _c("div", { staticClass: "control" }, [
+          _c("textarea", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.inviteSessionData.body,
+                expression: "inviteSessionData.body"
+              }
+            ],
+            staticClass: "textarea",
+            attrs: { placeholder: "توضیحات" },
+            domProps: { value: _vm.inviteSessionData.body },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.inviteSessionData, "body", $event.target.value)
+              }
+            }
+          })
+        ])
+      ]),
+      _c("div", { staticClass: "field" }, [
+        _c("label", { staticClass: "checkbox" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.inviteSessionData.isActive,
+                expression: "inviteSessionData.isActive"
+              }
+            ],
+            attrs: { type: "checkbox" },
+            domProps: {
+              checked: Array.isArray(_vm.inviteSessionData.isActive)
+                ? _vm._i(_vm.inviteSessionData.isActive, null) > -1
+                : _vm.inviteSessionData.isActive
+            },
+            on: {
+              change: function($event) {
+                var $$a = _vm.inviteSessionData.isActive,
+                  $$el = $event.target,
+                  $$c = $$el.checked ? true : false
+                if (Array.isArray($$a)) {
+                  var $$v = null,
+                    $$i = _vm._i($$a, $$v)
+                  if ($$el.checked) {
+                    $$i < 0 &&
+                      _vm.$set(
+                        _vm.inviteSessionData,
+                        "isActive",
+                        $$a.concat([$$v])
+                      )
+                  } else {
+                    $$i > -1 &&
+                      _vm.$set(
+                        _vm.inviteSessionData,
+                        "isActive",
+                        $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                      )
+                  }
+                } else {
+                  _vm.$set(_vm.inviteSessionData, "isActive", $$c)
+                }
+              }
+            }
+          }),
+          _vm._v("\nفعال")
+        ])
+      ]),
+      _c("div", { staticClass: "field is-grouped" }, [
+        _c(
+          "div",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: !_vm.isLoadingMode,
+                expression: "! isLoadingMode"
+              }
+            ],
+            staticClass: "control"
+          },
+          [
+            _c(
+              "a",
+              {
+                staticClass: "button is-link is-rounded",
+                attrs: { href: "#" },
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    return _vm.commandClick(_vm.ENUMS.COMMAND.SAVE)
+                  }
+                }
+              },
+              [_vm._v("\nایجاد")]
+            )
+          ]
+        )
+      ])
     ],
     1
   )
@@ -50872,7 +50874,7 @@ AxiosHelper.send = function send(method, url) {
       if (options.filesArray == key) {
         for (var i = 0; i < itemData.length; ++i) {
           var file = itemData[i];
-          formData.append(key + "[]", file);
+          formData.append(key, file);
         }
 
         ;

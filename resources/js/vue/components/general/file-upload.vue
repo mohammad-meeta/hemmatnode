@@ -18,9 +18,7 @@ export default {
     name: "FileUpload",
 
     props: {
-        oldFiles: {
-            type: Array
-        }
+        oldFiles: []
     },
 
     computed: {

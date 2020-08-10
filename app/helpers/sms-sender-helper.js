@@ -22,10 +22,11 @@ SMSSenderHelper.sendSms = async function sendSms(allData) {
         const element = data[index];
 
         const result = await UserHelper.loadUserDataID(element);
+
         const profile = {
-            name: result.profile.first_name,
-            family: result.profile.last_name,
-            cellphone: result.cellphone
+            name: result[0].profile.first_name,
+            family: result[0].profile.last_name,
+            cellphone: result[0].cellphone
         }
         profiles.push(profile);
     }

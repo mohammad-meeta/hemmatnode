@@ -118,7 +118,7 @@ module.exports = {
         formModeStack: [],
         inviteSessions: [],
         notificationMessage: null,
-        notificationType: "is-info",
+        notificationType: "is-info"
     }),
 
     props: {
@@ -192,6 +192,7 @@ module.exports = {
          */
         onInviteSessionRegister(payload) {
             //***update vue list****
+
             this.$refs.inviteSessionList.addToInviteSessionList(
                 payload.data.data
             );

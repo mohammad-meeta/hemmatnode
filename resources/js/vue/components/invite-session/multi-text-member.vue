@@ -16,7 +16,7 @@
                     a.button.is-danger(href='#', @click.prevent='deleteValue(index)')
                         i.fa.fa-times
         a.button.is-success(href='#', @click.prevent='addValue')
-            i.fa.fa-plus
+            i.fa.fa-plus افزودن مدعوین
 </template>
 
 <script>
@@ -26,6 +26,7 @@ module.exports = {
     name: "MultiTextMember",
 
     data: () => ({
+        values: []
     }),
 
     props: {

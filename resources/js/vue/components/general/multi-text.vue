@@ -31,6 +31,7 @@ module.exports = {
     name: "MultiText",
 
     data: () => ({
+        values: []
     }),
 
     props: {
@@ -50,21 +51,20 @@ module.exports = {
         },
 
         updateValue: function() {
-            this.$emit('input', this.value);
+            this.$emit("input", this.value);
         },
 
         deleteValue: function(index) {
             this.value.splice(index, 1);
-            this.$emit('input', this.value);
+            this.$emit("input", this.value);
         },
 
         addValue: function() {
             this.value.push({});
-            this.$emit('input', this.value);
+            this.$emit("input", this.value);
         }
-    },
+    }
 };
-
 </script>
 
 <style scoped>

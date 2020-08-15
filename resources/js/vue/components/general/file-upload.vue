@@ -1,7 +1,8 @@
 <template lang="pug">
     div
         input(type="file" class="is-hidden" ref="fileInput" multiple @change="addAttachment")
-        button.button.is-success(@click="showFileUpload()") &plus;
+        button.button.is-success(@click="showFileUpload()")
+            i.fa.fa-plus افزودن فایل
 
         div
             ul
@@ -18,7 +19,7 @@ export default {
     name: "FileUpload",
 
     props: {
-        oldFiles: []
+        oldFiles: { type: Array, default: () => [] }
     },
 
     computed: {

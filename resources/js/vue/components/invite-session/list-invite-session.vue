@@ -53,7 +53,7 @@ module.exports = {
         departmentId: {
             type: String,
             default: ""
-        },
+        }
     },
 
     data: () => ({
@@ -138,14 +138,19 @@ module.exports = {
          * add new inviteSessions data to list data
          */
         addToInviteSessionList(payload) {
-            const newInviteSessionsData = {
-                _id: payload._id,
-                agenda: payload.agrnda,
-                is_active: payload.is_active,
-                created_at: payload.created_at
-            };
-
-            this.inviteSessions.unshift(newInviteSessionsData);
+            // console.log(payload);
+            const data = JSON.parse(payload.data.agenda);
+            if (this.inviteSessions.length > 0) {
+                const dep = this.inviteSessions[0].dep;
+                const newInviteSessionsData = {
+                    id: payload._id,
+                    dep: dep,
+                    extra: data,
+                    is_active: payload.data.is_active,
+                    created_at: payload.data.created_at
+                };
+                this.inviteSessions.unshift(newInviteSessionsData);
+            }
         },
 
         editInInviteSessionsList(payload) {

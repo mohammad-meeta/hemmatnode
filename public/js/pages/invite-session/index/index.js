@@ -114,12 +114,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
 var uuidV4 = __webpack_require__(/*! uuid */ "./node_modules/uuid/index.js").v4;
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "FileUpload",
   props: {
-    oldFiles: []
+    oldFiles: {
+      type: Array,
+      "default": function _default() {
+        return [];
+      }
+    }
   },
   computed: {
     fileList: function fileList(state) {
@@ -307,7 +313,9 @@ module.exports = {
 module.exports = {
   name: "MultiText",
   data: function data() {
-    return {};
+    return {
+      values: []
+    };
   },
   props: {
     value: {
@@ -325,15 +333,15 @@ module.exports = {
       Vue.set(this, "values", this.value);
     },
     updateValue: function updateValue() {
-      this.$emit('input', this.value);
+      this.$emit("input", this.value);
     },
     deleteValue: function deleteValue(index) {
       this.value.splice(index, 1);
-      this.$emit('input', this.value);
+      this.$emit("input", this.value);
     },
     addValue: function addValue() {
       this.value.push({});
-      this.$emit('input', this.value);
+      this.$emit("input", this.value);
     }
   }
 };
@@ -1567,13 +1575,20 @@ module.exports = {
      * add new inviteSessions data to list data
      */
     addToInviteSessionList: function addToInviteSessionList(payload) {
-      var newInviteSessionsData = {
-        _id: payload._id,
-        agenda: payload.agrnda,
-        is_active: payload.is_active,
-        created_at: payload.created_at
-      };
-      this.inviteSessions.unshift(newInviteSessionsData);
+      // console.log(payload);
+      var data = JSON.parse(payload.data.agenda);
+
+      if (this.inviteSessions.length > 0) {
+        var dep = this.inviteSessions[0].dep;
+        var newInviteSessionsData = {
+          id: payload._id,
+          dep: dep,
+          extra: data,
+          is_active: payload.data.is_active,
+          created_at: payload.data.created_at
+        };
+        this.inviteSessions.unshift(newInviteSessionsData);
+      }
     },
     editInInviteSessionsList: function editInInviteSessionsList(payload) {
       var editedInviteSessionsData = {
@@ -1697,7 +1712,9 @@ module.exports = {
 module.exports = {
   name: "MultiTextMember",
   data: function data() {
-    return {};
+    return {
+      values: []
+    };
   },
   props: {
     value: {
@@ -2151,12 +2168,6 @@ module.exports = {
 //
 //
 //
-//
-//
-//
-//
-//
-//
 
 
 var Buefy = __webpack_require__(/*! buefy */ "./node_modules/buefy/dist/esm/index.js")["default"];
@@ -2379,13 +2390,8 @@ module.exports = {
         files: this.files,
         deletedOldFiles: this.deletedOldFiles
       };
-      this.checkedRows.forEach(function (entry) {
-        inviteSessionData.user_list.push(entry._id);
-      });
-      inviteSessionData.user_list = Object.keys(inviteSessionData.user_list).filter(function (key) {
-        return true == inviteSessionData.user_list[key];
-      }).map(function (key) {
-        return key;
+      inviteSessionData.user_list = this.checkedRows.map(function (x) {
+        return x._id;
       });
       this.showLoading();
       var url = this.registerUrl;
@@ -2398,7 +2404,10 @@ module.exports = {
         if (data.success) {
           _this3.$emit("on-register", {
             sender: _this3,
-            data: data
+            data: {
+              data: data,
+              dep_title: 0
+            }
           });
         }
       })["catch"](function (err) {
@@ -46427,7 +46436,7 @@ var render = function() {
           }
         }
       },
-      [_vm._v("+")]
+      [_c("i", { staticClass: "fa fa-plus" }, [_vm._v("افزودن فایل")])]
     ),
     _c("div", [
       _c(
@@ -48480,7 +48489,7 @@ var render = function() {
             }
           }
         },
-        [_c("i", { staticClass: "fa fa-plus" })]
+        [_c("i", { staticClass: "fa fa-plus" }, [_vm._v("افزودن مدعوین")])]
       )
     ],
     2
@@ -49224,6 +49233,7 @@ var render = function() {
             "div",
             { staticClass: "field" },
             [
+              _c("label", { staticClass: "label" }, [_vm._v("حاضرین جلسه")]),
               _c(
                 "b-table",
                 {
@@ -49268,83 +49278,9 @@ var render = function() {
             ],
             1
           ),
-          _c("div", { staticClass: "field" }, [
-            _c("label", { staticClass: "label" }, [_vm._v("حاضرین جلسه")]),
-            _c(
-              "div",
-              { staticClass: "multi-checkboxes" },
-              _vm._l(_vm.users, function(user, userIndex) {
-                return _c("label", { staticClass: "checkbox column is-12" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.inviteSessionData.user_list[user._id],
-                        expression: "inviteSessionData.user_list[user._id]"
-                      }
-                    ],
-                    attrs: { type: "checkbox" },
-                    domProps: {
-                      value: user._id,
-                      checked: Array.isArray(
-                        _vm.inviteSessionData.user_list[user._id]
-                      )
-                        ? _vm._i(
-                            _vm.inviteSessionData.user_list[user._id],
-                            user._id
-                          ) > -1
-                        : _vm.inviteSessionData.user_list[user._id]
-                    },
-                    on: {
-                      change: function($event) {
-                        var $$a = _vm.inviteSessionData.user_list[user._id],
-                          $$el = $event.target,
-                          $$c = $$el.checked ? true : false
-                        if (Array.isArray($$a)) {
-                          var $$v = user._id,
-                            $$i = _vm._i($$a, $$v)
-                          if ($$el.checked) {
-                            $$i < 0 &&
-                              _vm.$set(
-                                _vm.inviteSessionData.user_list,
-                                user._id,
-                                $$a.concat([$$v])
-                              )
-                          } else {
-                            $$i > -1 &&
-                              _vm.$set(
-                                _vm.inviteSessionData.user_list,
-                                user._id,
-                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                              )
-                          }
-                        } else {
-                          _vm.$set(
-                            _vm.inviteSessionData.user_list,
-                            user._id,
-                            $$c
-                          )
-                        }
-                      }
-                    }
-                  }),
-                  _vm._v(
-                    "  " +
-                      _vm._s(user.name) +
-                      " - " +
-                      _vm._s(user.profile.first_name) +
-                      " " +
-                      _vm._s(user.profile.last_name)
-                  )
-                ])
-              }),
-              0
-            )
-          ]),
           _c("fieldset", [
             _c("legend", [
-              _vm._v("مدعوین"),
+              _vm._v("مدعوین (به غیر از افراد حاضر و سایر اعضاء)"),
               _c(
                 "div",
                 { staticClass: "field" },
@@ -49362,130 +49298,130 @@ var render = function() {
                 1
               )
             ])
+          ]),
+          _c("fieldset", [
+            _c("legend", [_vm._v("فایل های ضمیمه")]),
+            _c(
+              "div",
+              { staticClass: "field" },
+              [
+                _c("file-upload", {
+                  ref: "fileUpload",
+                  attrs: { "old-files": _vm.oldFiles }
+                })
+              ],
+              1
+            )
+          ]),
+          _c("div", { staticClass: "field" }, [
+            _c("label", { staticClass: "label" }, [_vm._v("توضیحات")]),
+            _c("div", { staticClass: "control" }, [
+              _c("textarea", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.inviteSessionData.body,
+                    expression: "inviteSessionData.body"
+                  }
+                ],
+                staticClass: "textarea",
+                attrs: { placeholder: "توضیحات" },
+                domProps: { value: _vm.inviteSessionData.body },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.inviteSessionData, "body", $event.target.value)
+                  }
+                }
+              })
+            ])
+          ]),
+          _c("div", { staticClass: "field" }, [
+            _c("label", { staticClass: "checkbox" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.inviteSessionData.isActive,
+                    expression: "inviteSessionData.isActive"
+                  }
+                ],
+                attrs: { type: "checkbox" },
+                domProps: {
+                  checked: Array.isArray(_vm.inviteSessionData.isActive)
+                    ? _vm._i(_vm.inviteSessionData.isActive, null) > -1
+                    : _vm.inviteSessionData.isActive
+                },
+                on: {
+                  change: function($event) {
+                    var $$a = _vm.inviteSessionData.isActive,
+                      $$el = $event.target,
+                      $$c = $$el.checked ? true : false
+                    if (Array.isArray($$a)) {
+                      var $$v = null,
+                        $$i = _vm._i($$a, $$v)
+                      if ($$el.checked) {
+                        $$i < 0 &&
+                          _vm.$set(
+                            _vm.inviteSessionData,
+                            "isActive",
+                            $$a.concat([$$v])
+                          )
+                      } else {
+                        $$i > -1 &&
+                          _vm.$set(
+                            _vm.inviteSessionData,
+                            "isActive",
+                            $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                          )
+                      }
+                    } else {
+                      _vm.$set(_vm.inviteSessionData, "isActive", $$c)
+                    }
+                  }
+                }
+              }),
+              _vm._v("\nفعال")
+            ])
+          ]),
+          _c("div", { staticClass: "field is-grouped" }, [
+            _c(
+              "div",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: !_vm.isLoadingMode,
+                    expression: "! isLoadingMode"
+                  }
+                ],
+                staticClass: "control"
+              },
+              [
+                _c(
+                  "a",
+                  {
+                    staticClass: "button is-link is-rounded",
+                    attrs: { href: "#" },
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        return _vm.commandClick(_vm.ENUMS.COMMAND.SAVE)
+                      }
+                    }
+                  },
+                  [_vm._v("\nایجاد")]
+                )
+              ]
+            )
           ])
         ]
-      ),
-      _c("fieldset", [
-        _c("legend", [_vm._v("فایل های ضمیمه")]),
-        _c(
-          "div",
-          { staticClass: "field" },
-          [
-            _c("file-upload", {
-              ref: "fileUpload",
-              attrs: { "old-files": _vm.oldFiles }
-            })
-          ],
-          1
-        )
-      ]),
-      _c("div", { staticClass: "field" }, [
-        _c("label", { staticClass: "label" }, [_vm._v("توضیحات")]),
-        _c("div", { staticClass: "control" }, [
-          _c("textarea", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.inviteSessionData.body,
-                expression: "inviteSessionData.body"
-              }
-            ],
-            staticClass: "textarea",
-            attrs: { placeholder: "توضیحات" },
-            domProps: { value: _vm.inviteSessionData.body },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.$set(_vm.inviteSessionData, "body", $event.target.value)
-              }
-            }
-          })
-        ])
-      ]),
-      _c("div", { staticClass: "field" }, [
-        _c("label", { staticClass: "checkbox" }, [
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.inviteSessionData.isActive,
-                expression: "inviteSessionData.isActive"
-              }
-            ],
-            attrs: { type: "checkbox" },
-            domProps: {
-              checked: Array.isArray(_vm.inviteSessionData.isActive)
-                ? _vm._i(_vm.inviteSessionData.isActive, null) > -1
-                : _vm.inviteSessionData.isActive
-            },
-            on: {
-              change: function($event) {
-                var $$a = _vm.inviteSessionData.isActive,
-                  $$el = $event.target,
-                  $$c = $$el.checked ? true : false
-                if (Array.isArray($$a)) {
-                  var $$v = null,
-                    $$i = _vm._i($$a, $$v)
-                  if ($$el.checked) {
-                    $$i < 0 &&
-                      _vm.$set(
-                        _vm.inviteSessionData,
-                        "isActive",
-                        $$a.concat([$$v])
-                      )
-                  } else {
-                    $$i > -1 &&
-                      _vm.$set(
-                        _vm.inviteSessionData,
-                        "isActive",
-                        $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                      )
-                  }
-                } else {
-                  _vm.$set(_vm.inviteSessionData, "isActive", $$c)
-                }
-              }
-            }
-          }),
-          _vm._v("\nفعال")
-        ])
-      ]),
-      _c("div", { staticClass: "field is-grouped" }, [
-        _c(
-          "div",
-          {
-            directives: [
-              {
-                name: "show",
-                rawName: "v-show",
-                value: !_vm.isLoadingMode,
-                expression: "! isLoadingMode"
-              }
-            ],
-            staticClass: "control"
-          },
-          [
-            _c(
-              "a",
-              {
-                staticClass: "button is-link is-rounded",
-                attrs: { href: "#" },
-                on: {
-                  click: function($event) {
-                    $event.preventDefault()
-                    return _vm.commandClick(_vm.ENUMS.COMMAND.SAVE)
-                  }
-                }
-              },
-              [_vm._v("\nایجاد")]
-            )
-          ]
-        )
-      ])
+      )
     ],
     1
   )

@@ -6,20 +6,9 @@
             .container.page-header
                 .hero-dashboard
                     .field.is-grouped
-                        .control
-                            a.button.is-primary.is-rounded(:href="inviteSessionUrl") جلسات
-                        .control
-                            a.button.is-primary.is-rounded(:href="memorandumUrl") تفاهم نامه ها
-                        .control
-                            a.button.is-primary.is-rounded(href="/project") پروژه ها
-                        .control
-                            a.button.is-primary.is-rounded(href="/result") برآمدها
-                        .control
-                            a.button.is-primary.is-rounded(href="/approv") مصوبات
-                        .control
-                            a.button.is-primary.is-rounded(href="/regulation") آئین نامه ها
-                        .control
-                            a.button.is-primary.is-rounded(href="/project") اقدامات خلاق
+                        .control(v-for='item in accessLink')
+                            a.button.is-primary.is-rounded(:href="item.link") {{ item.text }}
+
             .info-card
                 .info-card-title {{ departmentData.title }}
                 .info-card-details
@@ -46,37 +35,48 @@ module.exports = {
             title: null,
             department_category_id: null,
             files: {},
-            isActive: false
+            isActive: false,
         },
 
-        showLoadingFlag: false
+        accessLink: [],
+
+        showLoadingFlag: false,
     }),
 
     props: {
         departmentId: {
             type: String,
-            default: null
+            default: null,
         },
 
         inviteSessionUrl: {
             type: String,
-            default: null
+            default: null,
         },
 
         memorandumUrl: {
             type: String,
-            default: null
+            default: null,
         },
 
         showLoadUrl: {
             type: String,
-            default: null
-        }
+            default: null,
+        },
+
+        showLoadAccessLinkUrl: {
+            type: String,
+            default: null,
+        },
+    },
+
+    created() {
+        this.loadLinkAccess(this.departmentId);
     },
 
     computed: {
-        isLoadingMode: state => state.showLoadingFlag == true,
-        showNotification: state => state.notificationMessage != null
+        isLoadingMode: (state) => state.showLoadingFlag == true,
+        showNotification: (state) => state.notificationMessage != null,
     },
 
     methods: {
@@ -87,13 +87,13 @@ module.exports = {
             id = id || this.departmentId;
             let url = this.loadUrl || this.showLoadUrl;
             url = url.replace(/\$department\$/g, id);
-            console.log(url);
+
             AxiosHelper.send("get", url)
-                .then(res => {
+                .then((res) => {
                     const data = res.data.data.data;
                     Vue.set(this, "departmentData", data || {});
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.error(err);
                     alert("Error");
                 });
@@ -111,7 +111,46 @@ module.exports = {
          */
         hideLoading() {
             Vue.set(this, "showLoadingFlag", false);
-        }
-    }
+        },
+
+        /**
+         * load link access
+         */
+        loadLinkAccess(id) {
+            id = id || this.departmentId;
+            let url = this.showLoadAccessLinkUrl;
+            url = url.replace(/\$department\$/g, id);
+
+            AxiosHelper.send("get", url)
+                .then((res) => {
+                    if (res.data.success) {
+                        const data = res.data.data || [];
+                        if (data.length > 0) {
+                            const changeData = this.replaceChildInUrl(
+                                data[0].text_link,
+                                id
+                            );
+                            Vue.set(this, "accessLink", changeData);
+                        }
+                    } else {
+                        Vue.set(this, "accessLink", []);
+                    }
+                })
+                .catch((err) => {
+                    console.error(err);
+                    alert("Error");
+                });
+        },
+
+        replaceChildInUrl(input, id) {
+            const data = input;
+            for (let index = 0; index < data.length; index++) {
+                const element = data[index];
+
+                data[index].link = data[index].link.replace("#child#", id);
+            }
+            return data;
+        },
+    },
 };
 </script>

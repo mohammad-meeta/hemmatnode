@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 /**
  * Program controller
  */
-function DepartmentLinkAccessHelper() {}
+function DepartmentLinkAccessHelper() { }
 module.exports = DepartmentLinkAccessHelper;
 
 /**
@@ -15,7 +15,10 @@ DepartmentLinkAccessHelper.loadAllLinkAccessData = function loadAllLinkAccessDat
     const Program = mongoose.model('DepartmentAccessLink');
 
     const filterQuery = {
-        department_id: departmentId
+        "$or": [
+            { department_id: departmentId },
+            { child: departmentId }
+        ]
     };
     const projection = {};
 

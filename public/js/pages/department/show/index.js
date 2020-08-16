@@ -115,17 +115,6 @@
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 var ENUMS = __webpack_require__(/*! JS-HELPERS/enums */ "./resources/js/helpers/enums.js");
@@ -143,6 +132,7 @@ module.exports = {
         files: {},
         isActive: false
       },
+      accessLink: [],
       showLoadingFlag: false
     };
   },
@@ -162,7 +152,14 @@ module.exports = {
     showLoadUrl: {
       type: String,
       "default": null
+    },
+    showLoadAccessLinkUrl: {
+      type: String,
+      "default": null
     }
+  },
+  created: function created() {
+    this.loadLinkAccess(this.departmentId);
   },
   computed: {
     isLoadingMode: function isLoadingMode(state) {
@@ -182,7 +179,6 @@ module.exports = {
       id = id || this.departmentId;
       var url = this.loadUrl || this.showLoadUrl;
       url = url.replace(/\$department\$/g, id);
-      console.log(url);
       AxiosHelper.send("get", url).then(function (res) {
         var data = res.data.data.data;
         Vue.set(_this, "departmentData", data || {});
@@ -204,6 +200,43 @@ module.exports = {
      */
     hideLoading: function hideLoading() {
       Vue.set(this, "showLoadingFlag", false);
+    },
+
+    /**
+     * load link access
+     */
+    loadLinkAccess: function loadLinkAccess(id) {
+      var _this2 = this;
+
+      id = id || this.departmentId;
+      var url = this.showLoadAccessLinkUrl;
+      url = url.replace(/\$department\$/g, id);
+      AxiosHelper.send("get", url).then(function (res) {
+        if (res.data.success) {
+          var data = res.data.data || [];
+
+          if (data.length > 0) {
+            var changeData = _this2.replaceChildInUrl(data[0].text_link, id);
+
+            Vue.set(_this2, "accessLink", changeData);
+          }
+        } else {
+          Vue.set(_this2, "accessLink", []);
+        }
+      })["catch"](function (err) {
+        console.error(err);
+        alert("Error");
+      });
+    },
+    replaceChildInUrl: function replaceChildInUrl(input, id) {
+      var data = input;
+
+      for (var index = 0; index < data.length; index++) {
+        var element = data[index];
+        data[index].link = data[index].link.replace("#child#", id);
+      }
+
+      return data;
     }
   }
 };
@@ -257,33 +290,23 @@ var render = function() {
       [
         _c("div", { staticClass: "container page-header" }, [
           _c("div", { staticClass: "hero-dashboard" }, [
-            _c("div", { staticClass: "field is-grouped" }, [
-              _c("div", { staticClass: "control" }, [
-                _c(
-                  "a",
-                  {
-                    staticClass: "button is-primary is-rounded",
-                    attrs: { href: _vm.inviteSessionUrl }
-                  },
-                  [_vm._v("جلسات")]
-                )
-              ]),
-              _c("div", { staticClass: "control" }, [
-                _c(
-                  "a",
-                  {
-                    staticClass: "button is-primary is-rounded",
-                    attrs: { href: _vm.memorandumUrl }
-                  },
-                  [_vm._v("تفاهم نامه ها")]
-                )
-              ]),
-              _vm._m(0),
-              _vm._m(1),
-              _vm._m(2),
-              _vm._m(3),
-              _vm._m(4)
-            ])
+            _c(
+              "div",
+              { staticClass: "field is-grouped" },
+              _vm._l(_vm.accessLink, function(item) {
+                return _c("div", { staticClass: "control" }, [
+                  _c(
+                    "a",
+                    {
+                      staticClass: "button is-primary is-rounded",
+                      attrs: { href: item.link }
+                    },
+                    [_vm._v(_vm._s(item.text))]
+                  )
+                ])
+              }),
+              0
+            )
           ])
         ]),
         _c("div", { staticClass: "info-card" }, [
@@ -311,83 +334,7 @@ var render = function() {
     )
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "control" }, [
-      _c(
-        "a",
-        {
-          staticClass: "button is-primary is-rounded",
-          attrs: { href: "/project" }
-        },
-        [_vm._v("پروژه ها")]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "control" }, [
-      _c(
-        "a",
-        {
-          staticClass: "button is-primary is-rounded",
-          attrs: { href: "/result" }
-        },
-        [_vm._v("برآمدها")]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "control" }, [
-      _c(
-        "a",
-        {
-          staticClass: "button is-primary is-rounded",
-          attrs: { href: "/approv" }
-        },
-        [_vm._v("مصوبات")]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "control" }, [
-      _c(
-        "a",
-        {
-          staticClass: "button is-primary is-rounded",
-          attrs: { href: "/regulation" }
-        },
-        [_vm._v("آئین نامه ها")]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "control" }, [
-      _c(
-        "a",
-        {
-          staticClass: "button is-primary is-rounded",
-          attrs: { href: "/project" }
-        },
-        [_vm._v("اقدامات خلاق")]
-      )
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -688,7 +635,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/department/show/index.js */"./resources/js/pages/department/show/index.js");
+module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/pages/department/show/index.js */"./resources/js/pages/department/show/index.js");
 
 
 /***/ })

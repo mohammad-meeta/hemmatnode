@@ -5,10 +5,11 @@ block title
 
 block content
     show-department(ref="departmentShow",
-                show-load-url=route("api.department.show", { department: '$department$'}),
-                invite-session-url=route("invitesession.index", { department: departmentId}),
-                memorandum-url=route("memorandum.index", { department: departmentId}),
-                department-id=departmentId)
+        show-load-url=route("api.department.show", { department: '$department$'}),
+        show-load-access-link-url=route("api.department.link.access", { departmentId: '$department$'}),
+        invite-session-url=route("invitesession.index", { department: departmentId}),
+        memorandum-url=route("memorandum.index", { department: departmentId}),
+        department-id=departmentId)
 
 block scripts
     script(defer src=mix("js/pages/department/show/index.js"))

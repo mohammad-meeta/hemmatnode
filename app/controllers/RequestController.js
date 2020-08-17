@@ -139,7 +139,7 @@ Request.update = async function update(req, res, next) {
         "user_id": req.session.auth.userId,
         "is_active": req.body.is_active,
         "request_date": req.body.request_date,
-
+        "deadline": req.body.deadline,
         "files": fileList
     };
 
@@ -211,30 +211,13 @@ Request.store = async function store(req, res, next) {
     }
 
     const data = {
-        "_id": req.body._id,
         "title": req.body.title,
-        "program_id": req.body.program_id || null,
+        "description": req.body.description,
+        "department_id": req.body.department_id,
         "user_id": req.session.auth.userId,
         "is_active": req.body.is_active,
-        "target": req.body.target || '',
-        "same_effects_index": req.body.same_effects_index || '',
-        "organ_moderator": req.body.organ_moderator,
-        "request_moderator": req.body.request_moderator || '',
-        "consoultant": req.body.consoultant || '',
-        "supervisor": req.body.supervisor || '',
-        "committee_leadership": req.body.committee_leadership || '',
-        "coworker": req.body.coworker || '',
-        "description": req.body.description || '',
-        "intervention_review": req.body.intervention_review || '',
-        "pervious_action_relation": req.body.pervious_action_relation || '',
-        "target_corresponding": req.body.target_corresponding || '',
-        "help_ipmrove_index": req.body.help_ipmrove_index || '',
-        "final_product": req.body.final_product || '',
-        "standards": req.body.standards || '',
-        "other_benefit": req.body.other_benefit || '',
-        "result_apply": req.body.result_apply || '',
-        "refree": req.body.refree || '',
-        "monitoring_comment": req.body.monitoring_comment || '',
+        "request_date": req.body.request_date,
+        "deadline": req.body.deadline,
         "files": fileList
     };
 

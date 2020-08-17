@@ -1,6 +1,7 @@
 {
     "/js/core/kernel.js": "/js/core/kernel.js?id=97baf45eb035a41290b6",
     "/css/core/kernel.css": "/css/core/kernel.css?id=3c859d90c3ebc80cf130",
+    "/css/global/app.css": "/css/global/app.css?id=b5e0b9a5000829125832",
     "/css/pages/home/index.css": "/css/pages/home/index.css?id=ca0c00bb4a7f5ca6c314",
     "/css/pages/auth/login.css": "/css/pages/auth/login.css?id=d41d8cd98f00b204e980",
     "/js/global/app.js": "/js/global/app.js?id=1484deb22a977eca42c1",
@@ -21,6 +22,5 @@
     "/js/pages/regulation/index/index.js": "/js/pages/regulation/index/index.js?id=ce4c7e22c544db3e0477",
     "/js/pages/result/index/index.js": "/js/pages/result/index/index.js?id=645a90719701360b3cf4",
     "/js/pages/task/index/index.js": "/js/pages/task/index/index.js?id=89f94c7a76bcfb146f0d",
-    "/js/pages/user/index/index.js": "/js/pages/user/index/index.js?id=70044431e902da344cf8",
-    "/css/global/app.css": "/css/global/app.css?id=81e1b4fb1794c93dd4ed"
+    "/js/pages/user/index/index.js": "/js/pages/user/index/index.js?id=70044431e902da344cf8"
 }

@@ -53,7 +53,7 @@ InviteSessiontHelper.loadAllInviteSessionData = function loadAllInviteSessionDat
         {
             "$lookup": {
                 "from": "files",
-                "localField": "files._id",
+                "localField": "files.file_id",
                 "foreignField": "_id",
                 "as": "file"
             }

@@ -47,13 +47,13 @@ module.exports = {
     props: {
         listUrl: {
             type: String,
-            default: ""
+            default: "",
         },
 
         departmentId: {
             type: String,
-            default: ""
-        }
+            default: "",
+        },
     },
 
     data: () => ({
@@ -61,11 +61,11 @@ module.exports = {
         ENUMS,
         inviteSessions: [],
         inviteSessionsCount: 0,
-        pageCount: 0
+        pageCount: 0,
     }),
 
     computed: {
-        hasInviteSession: state => (state.inviteSessions || []).length
+        hasInviteSession: (state) => (state.inviteSessions || []).length,
     },
 
     methods: {
@@ -73,7 +73,7 @@ module.exports = {
          * Create titles
          */
         getTitles(extra) {
-            let res = extra.map(x => x.title).join("<br/>");
+            let res = extra.map((x) => x.title).join("<br/>");
 
             return res;
         },
@@ -86,11 +86,10 @@ module.exports = {
                 .replace(/\$page\$/g, pageId)
                 .replace(/\$pageSize\$/g, 50);
 
-            AxiosHelper.send("get", url, "").then(res => {
+            AxiosHelper.send("get", url, "").then((res) => {
                 const resData = res.data;
                 const inviteData = resData.data.data;
-
-                inviteData.forEach(x => {
+                inviteData.forEach((x) => {
                     try {
                         x.extra = JSON.parse(x.agenda);
                     } catch (ex) {
@@ -147,7 +146,7 @@ module.exports = {
                     dep: dep,
                     extra: data,
                     is_active: payload.data.is_active,
-                    created_at: payload.data.created_at
+                    created_at: payload.data.created_at,
                 };
                 this.inviteSessions.unshift(newInviteSessionsData);
             }
@@ -158,20 +157,19 @@ module.exports = {
                 _id: payload._id,
                 title: payload.agenda,
                 is_active: payload.is_active,
-                created_at: payload.created_at
+                created_at: payload.created_at,
             };
 
             let foundIndex = this.inviteSessions.findIndex(
-                x => x._id == editedInviteSessionsData._id
+                (x) => x._id == editedInviteSessionsData._id
             );
             this.inviteSessions[foundIndex].agenda =
                 editedInviteSessionsData.agenda;
             this.inviteSessions[foundIndex].is_active =
                 editedInviteSessionsData.is_active;
-        }
-    }
+        },
+    },
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

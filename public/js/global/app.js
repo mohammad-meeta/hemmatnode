@@ -22603,7 +22603,7 @@ DateHelper.toPersianDateLong = function toPersianDateLong(value, locale) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/global/app.js */"./resources/js/global/app.js");
+module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/global/app.js */"./resources/js/global/app.js");
 
 
 /***/ })

@@ -1,18 +1,18 @@
 'use strict';
 const PugView = use('app/helpers/pug-view');
-const ProjectHelper = use('app/helpers/project-helper');
+const RequestHelper = use('app/helpers/request-helper');
 const FileHelper = use('app/helpers/file-helper');
 /**
- * project cat controller
+ * request cat controller
  */
-function Project() {}
-module.exports = Project;
+function Request() { }
+module.exports = Request;
 
 /**
  * Index route
  */
-Project.index = async function index(req, res, next) {
-    const pageRoute = 'project.index';
+Request.index = async function index(req, res, next) {
+    const pageRoute = 'request.index';
     res.render(PugView.getView(pageRoute), {
         req,
         pageRoute
@@ -22,17 +22,17 @@ Project.index = async function index(req, res, next) {
 /**
  * paginate route
  */
-Project.paginateProject = async function paginateProject(req, res, next) {
+Request.paginateRequest = async function paginateRequest(req, res, next) {
     const dataPaginate = {
         page: req.params.page,
         pageSize: req.params.size || 10
     };
     const group = req.params.group;
-    ProjectHelper.loadAllCountProjectData(group)
+    RequestHelper.loadAllCountRequestData(group)
         .then(data => {
             let count = data.data;
 
-            ProjectHelper.loadAllProjectData(dataPaginate, group)
+            RequestHelper.loadAllRequestData(dataPaginate, group)
                 .then(data => {
                     const result = {
                         success: true,
@@ -66,10 +66,10 @@ Project.paginateProject = async function paginateProject(req, res, next) {
 /**
  * show route
  */
-Project.show = async function show(req, res, next) {
-    const ProjectTitle = req.params.projectData;
-    const pageRoute = 'project.show';
-    ProjectHelper.loadProjectData(ProjectTitle)
+Request.show = async function show(req, res, next) {
+    const RequestTitle = req.params.requestData;
+    const pageRoute = 'request.show';
+    RequestHelper.loadRequestData(RequestTitle)
         .then(data => {
             const result = {
                 success: true,
@@ -87,8 +87,8 @@ Project.show = async function show(req, res, next) {
 /**
  * edit page route
  */
-Project.edit = async function edit(req, res, next) {
-    const pageRoute = 'project.edit';
+Request.edit = async function edit(req, res, next) {
+    const pageRoute = 'request.edit';
     res.render(PugView.getView(pageRoute), {
         req,
         pageRoute
@@ -98,10 +98,10 @@ Project.edit = async function edit(req, res, next) {
 /**
  * return edit data route
  */
-Project.editProjectData = async function editProjectData(req, res, next) {
-    const title = req.params.projectData;
+Request.editRequestData = async function editRequestData(req, res, next) {
+    const title = req.params.requestData;
 
-    ProjectHelper.loadProjectData(title)
+    RequestHelper.loadRequestData(title)
         .then(data => {
             const result = {
                 success: true,
@@ -115,9 +115,9 @@ Project.editProjectData = async function editProjectData(req, res, next) {
 };
 
 /**
- * update data project cat
+ * update data request cat
  */
-Project.update = async function update(req, res, next) {
+Request.update = async function update(req, res, next) {
     let data = {};
     const files = req.body.files || [];
 
@@ -134,32 +134,16 @@ Project.update = async function update(req, res, next) {
     data = {
         "_id": req.body._id,
         "title": req.body.title,
-        "program_id": req.body.program_id || null,
+        "description": req.body.description,
+        "department_id": req.body.department_id,
         "user_id": req.session.auth.userId,
         "is_active": req.body.is_active,
-        "target": req.body.target || '',
-        "same_effects_index": req.body.same_effects_index || '',
-        "organ_moderator": req.body.organ_moderator,
-        "project_moderator": req.body.project_moderator || '',
-        "consoultant": req.body.consoultant || '',
-        "supervisor": req.body.supervisor || '',
-        "committee_leadership": req.body.committee_leadership || '',
-        "coworker": req.body.coworker || '',
-        "description": req.body.description || '',
-        "intervention_review": req.body.intervention_review || '',
-        "pervious_action_relation": req.body.pervious_action_relation || '',
-        "target_corresponding": req.body.target_corresponding || '',
-        "help_ipmrove_index": req.body.help_ipmrove_index || '',
-        "final_product": req.body.final_product || '',
-        "standards": req.body.standards || '',
-        "other_benefit": req.body.other_benefit || '',
-        "result_apply": req.body.result_apply || '',
-        "refree": req.body.refree || '',
-        "monitoring_comment": req.body.monitoring_comment || '',
+        "request_date": req.body.request_date,
+        "deadline": req.body.deadline,
         "files": fileList
     };
 
-    ProjectHelper.updateProjectData(data)
+    RequestHelper.updateRequestData(data)
         .then(data => {
             const result = {
                 success: true,
@@ -173,14 +157,14 @@ Project.update = async function update(req, res, next) {
 };
 
 /**
- * delete data project cat
+ * delete data request cat
  */
-Project.destroy = async function destroy(req, res, next) {
+Request.destroy = async function destroy(req, res, next) {
     const data = {
         "_id": req.body._id
     };
 
-    ProjectHelper.deleteProjectData(data)
+    RequestHelper.deleteRequestData(data)
         .then(data => {
             const result = {
                 success: true,
@@ -196,8 +180,8 @@ Project.destroy = async function destroy(req, res, next) {
 /**
  * Create route return page
  */
-Project.create = async function create(req, res, next) {
-    const pageRoute = PugView.getView('project.create');
+Request.create = async function create(req, res, next) {
+    const pageRoute = PugView.getView('request.create');
 
     res.render(pageRoute, {
         req,
@@ -206,9 +190,9 @@ Project.create = async function create(req, res, next) {
 };
 
 /**
- * store data project cat
+ * store data request cat
  */
-Project.store = async function store(req, res, next) {
+Request.store = async function store(req, res, next) {
 
     const files = req.files || [];
 
@@ -228,32 +212,16 @@ Project.store = async function store(req, res, next) {
 
     const data = {
         "title": req.body.title,
-        "program_id": req.body.program_id || null,
+        "description": req.body.description,
+        "department_id": req.body.department_id,
         "user_id": req.session.auth.userId,
         "is_active": req.body.is_active,
-        "target": req.body.target || '',
-        "same_effects_index": req.body.same_effects_index || '',
-        "organ_moderator": req.body.organ_moderator,
-        "project_moderator": req.body.project_moderator || '',
-        "consoultant": req.body.consoultant || '',
-        "supervisor": req.body.supervisor || '',
-        "committee_leadership": req.body.committee_leadership || '',
-        "coworker": req.body.coworker || '',
-        "description": req.body.description || '',
-        "intervention_review": req.body.intervention_review || '',
-        "pervious_action_relation": req.body.pervious_action_relation || '',
-        "target_corresponding": req.body.target_corresponding || '',
-        "help_ipmrove_index": req.body.help_ipmrove_index || '',
-        "final_product": req.body.final_product || '',
-        "standards": req.body.standards || '',
-        "other_benefit": req.body.other_benefit || '',
-        "result_apply": req.body.result_apply || '',
-        "refree": req.body.refree || '',
-        "monitoring_comment": req.body.monitoring_comment || '',
+        "request_date": req.body.request_date,
+        "deadline": req.body.deadline,
         "files": fileList
     };
 
-    ProjectHelper.insertNewProject(data)
+    RequestHelper.insertNewRequest(data)
         .then(data => {
             const result = {
                 success: true,

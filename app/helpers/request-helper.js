@@ -1,10 +1,9 @@
-
 'use strict';
 
 const mongoose = require('mongoose');
 
 /**
- * Program controller
+ * dep cat controller
  */
 function RequestHelper() { }
 module.exports = RequestHelper;
@@ -12,23 +11,129 @@ module.exports = RequestHelper;
 /**
  * find all dep cat data result 
  */
-RequestHelper.loadAllProgramData = function loadAllProgramData(dataPaginate) {
-    const page = parseInt(dataPaginate.page)
-    const pageSize = parseInt(dataPaginate.pageSize)
-    const skip = page > 0 ? ((page - 1) * pageSize) : 0
-    const Program = mongoose.model('Program');
+RequestHelper.loadAllRequestData = function loadAllRequestData(req, dataPaginate, group) {
+    const page = parseInt(dataPaginate.page);
+    const pageSize = parseInt(dataPaginate.pageSize);
+    const skip = page > 0 ? ((page - 1) * pageSize) : 0;
+    const ObjectId = require('mongoose').Types.ObjectId;
+    const Request = mongoose.model('Request');
 
-    const filterQuery = {};
-    const projection = {};
+    const userId = req.session.auth.userId;
+
+    const pipeline = [{
+        "$match": {
+            "department_id": new ObjectId(group),
+
+            $or: [{
+                user_id: ObjectId(userId)
+            },
+            {
+                user_list: userId
+            }
+            ]
+        }
+    },
+    {
+        "$lookup": {
+            "from": "departments",
+            "localField": "department_id",
+            "foreignField": "_id",
+            "as": "dep"
+        }
+    },
+    {
+        "$unwind": "$dep"
+    },
+    {
+        "$unwind": {
+            "path": "$files",
+            "preserveNullAndEmptyArrays": true
+        }
+    },
+    {
+        "$lookup": {
+            "from": "files",
+            "localField": "files.file_id",
+            "foreignField": "_id",
+            "as": "file"
+        }
+    },
+    {
+        "$unwind": {
+            "path": "$file",
+            "preserveNullAndEmptyArrays": true
+        }
+    },
+    {
+        "$project": {
+            "file.encoding": 0,
+            "file.fieldname": 0,
+            "file.mimetype": 0,
+            "file.destination": 0,
+            "file.user_id": 0,
+            "file.path": 0,
+            "file.filename": 0,
+        }
+    },
+    {
+        "$group": {
+            "_id": "$_id",
+            "files": {
+                "$push": "$file"
+            },
+            "user_list": {
+                "$last": "$user_list"
+            },
+            "is_active": {
+                "$last": "$is_active"
+            },
+            "other_user": {
+                "$last": "$other_user"
+            },
+            "approves": {
+                "$last": "$approves"
+            },
+            "present_user": {
+                "$last": "$present_user"
+            },
+            "status": {
+                "$last": "$status"
+            },
+            "body": {
+                "$last": "$body"
+            },
+            "agenda": {
+                "$last": "$agenda"
+            },
+            "place": {
+                "$last": "$place"
+            },
+            "date": {
+                "$last": "$date"
+            },
+            "created_at": {
+                "$last": "$created_at"
+            },
+            "dep": {
+                "$last": "$dep"
+            }
+        }
+    },
+    {
+        "$sort": {
+            "created_at": -1
+        }
+    },
+    {
+        "$skip": skip
+    },
+    {
+        "$limit": pageSize
+    }
+    ];
 
     return new Promise((resolve, reject) => {
-        Program.find(filterQuery, projection, {
-                sort: {
-                    'created_at': -1
-                },
-                skip: skip,
-                limit: pageSize
-            })
+        Request.aggregate(pipeline)
             .then(res => {
                 resolve(res);
             })
@@ -38,15 +143,16 @@ RequestHelper.loadAllProgramData = function loadAllProgramData(dataPaginate) {
 /**
  * find all dep cat count data result 
  */
-RequestHelper.loadAllProgramCountData = function loadAllProgramCountData() {
-    const Program = mongoose.model('Program');
+RequestHelper.loadAllRequestCountData = function loadAllRequestCountData(group) {
+    const Request = mongoose.model('Request');
 
-    const filterQuery = {};
+    const filterQuery = {
+        department_id: group
+    };
 
     return new Promise((resolve, reject) => {
-        Program.countDocuments(filterQuery)
+        Request.countDocuments(filterQuery)
             .then(res => {
-
                 resolve(res);
             })
             .catch(err => reject(err));
@@ -54,18 +160,19 @@ RequestHelper.loadAllProgramCountData = function loadAllProgramCountData() {
 };
 
 /**
- * find Program data result 
+ * find dep cat data result 
  */
-RequestHelper.loadProgramData = function loadProgramData(requestTitle) {
-    const Program = mongoose.model('Program');
+RequestHelper.loadRequestData = function loadRequestData(title) {
+    const Request = mongoose.model('Request');
 
     const filterQuery = {
-        _id: requestTitle
+        title: title
     };
+
     const projection = {};
 
     return new Promise((resolve, reject) => {
-        Program.findOne(filterQuery, projection, {})
+        Request.findOne(filterQuery, projection)
             .then(res => {
                 resolve(res);
             })
@@ -74,15 +181,30 @@ RequestHelper.loadProgramData = function loadProgramData(requestTitle) {
 };
 
 /**
- * insert Program data  
+ * insert dep cat data  
  */
-RequestHelper.insertNewProgram = function insertNewProgram(data) {
+RequestHelper.insertNewRequest = function insertNewRequest(data) {
 
     return new Promise((resolve, reject) => {
-        const Program = mongoose.model('Program');
-        const request = new Program(data)
+        const Request = mongoose.model('Request');
+        const Request1 = new Request(data)
 
-        request.save()
+        Request1.save()
+            .then(res => {
+                resolve(res);
+            })
+            .catch(err => reject(err));
+    });
+};
+/**
+ * insert approves  
+ */
+RequestHelper.insertApproves = function insertApproves(data) {
+
+    return new Promise((resolve, reject) => {
+        const Approves = mongoose.model('Approves');
+
+        Approves.insertMany(data, {})
             .then(res => {
                 resolve(res);
             })
@@ -91,12 +213,14 @@ RequestHelper.insertNewProgram = function insertNewProgram(data) {
 };
 
 /**
- * update Program data  
+ * update dep cat data  
  */
-RequestHelper.updateProgramData = function updateProgramData(data) {
+RequestHelper.updateRequestData = function updateRequestData(data) {
     return new Promise((resolve, reject) => {
-        const Program = mongoose.model('Program');
-        Program.findByIdAndUpdate(data._id, data, { useFindAndModify: false })
+        const Request = mongoose.model('Request');
+        Request.findByIdAndUpdate(data._id, data, {
+            useFindAndModify: false
+        })
             .then(res => {
                 resolve(res);
             })
@@ -105,12 +229,33 @@ RequestHelper.updateProgramData = function updateProgramData(data) {
 };
 
 /**
- * delete request data  
+ * update invite session data  
  */
-RequestHelper.deleteProgram = function deleteProgram(data) {
+RequestHelper.updateRequestApproves = function updateRequestApproves(data) {
     return new Promise((resolve, reject) => {
-        const Program = mongoose.model('Program');
-        Program.findByIdAndUpdate(data._id, { is_active: false }, { useFindAndModify: false })
+        const Request = mongoose.model('Request');
+        Request.findByIdAndUpdate(data._id, data, {
+            useFindAndModify: false
+        })
+            .then(res => {
+                resolve(res);
+            })
+            .catch(err => reject(err));
+    });
+};
+
+/**
+ * delete dep cat data  
+ */
+RequestHelper.deleteRequestData = function deleteRequestData(data) {
+    return new Promise((resolve, reject) => {
+        const Request = mongoose.model('Request');
+
+        Request.findOneAndUpdate(data._id, {
+            is_active: false
+        }, {
+            useFindAndModify: false
+        })
             .then(res => {
                 resolve(res);
             })

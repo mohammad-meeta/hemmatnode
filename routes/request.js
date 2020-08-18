@@ -1,7 +1,7 @@
 'use strict';
 // const validator = use('validators/request-register-validator');
 const Rule = use('core/helpers/rule-helper');
-var multer = require('multer');
+const multer = require('multer');
 const upload = multer({
     dest: 'uploads/'
 });
@@ -15,14 +15,14 @@ const {
     clearAuth
 } = use('core/helpers/auth-helper');
 
-Router.get('/request', [
+Router.get('/request/:department?', [
         checkSession,
         Rule.canAsync('user.permision', 'request.index'),
         'Request@index'
     ])
     .as('request.index');
 
-Router.get('/api/requests/:page/:size?', [
+Router.get('/api/request/:group/:page/:size?/', [
         checkSession,
         'Request@paginateRequest'
     ])
@@ -42,7 +42,7 @@ Router.get('/request/edit', [
     ])
     .as('request.edit');
 
-Router.post('/request', [
+Router.post('/request/:department?', [
         upload.array('files'),
         checkSession,
         Rule.canAsync('user.permision', 'request.store'),

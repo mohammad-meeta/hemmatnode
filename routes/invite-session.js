@@ -1,5 +1,5 @@
 'use strict';
-const validator = use('validators/invite-session-register-validator');
+// const validator = use('validators/invite-session-register-validator');
 const Rule = use('core/helpers/rule-helper');
 const multer = require('multer');
 const upload = multer({
@@ -76,7 +76,7 @@ Router.get('/api/invite-session/:invitesession/edit', [
 Router.patch('/invite-session/:id', [
         checkSession,
         Rule.canAsync('user.permision', 'invitesession.update'),
-        validator.validate,
+        // validator.validate,
         'InviteSession@update'
     ])
     .as('invitesession.update');

@@ -261,10 +261,10 @@ module.exports = {
 
                 case ENUMS.COMMAND.SEMIEDIT:
                     /* TODO: Semi Edit InviteSession */
+                    this.changeFormMode(ENUMS.FORM_MODE.SEMIEDIT);
                     this.$refs.inviteSessionSemiEdit.loadInviteSessionData(
                         data
                     );
-                    this.changeFormMode(ENUMS.FORM_MODE.SEMIEDIT);
                     break;
 
                 case ENUMS.COMMAND.CANCEL:

@@ -9,7 +9,7 @@
                 li(v-for="(file, index) in fileList", style="dir: ltr;")
                     button.button.is-danger(@click.prevent="removeFile(file)") &times;
                     label {{ humanFileSize(file.file.size) }}
-                    label {{ file.file.name }}
+                    label {{ file.file.originalname }}
 </template>
 
 <script>
@@ -33,22 +33,28 @@ export default {
     /**
      * Create method
      */
-    created() {
-        this.oldFiles.forEach(file => {
-            let item = {
-                _id: file._id,
-                type: "old",
-                file: {
-                    ...file
-                },
-                is_deleted: false
-            };
-
-            Vue.set(this.files, this.files.length, item);
-        });
-    },
+    created() {},
 
     methods: {
+        /**
+         * Update old files
+         */
+        updateOldFiles(oldFiles) {
+            Vue.set(this, "files", []);
+
+            oldFiles.forEach(file => {
+                let item = {
+                    _id: file._id,
+                    type: "old",
+                    file: {
+                        ...file
+                    },
+                    is_deleted: false
+                };
+                Vue.set(this.files, this.files.length, item);
+            });
+        },
+
         /**
          * Get files list
          */

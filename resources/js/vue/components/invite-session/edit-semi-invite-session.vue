@@ -14,7 +14,11 @@
                             option(v-for='(department, departmentIndex) in departments',
                                 :value="department._id") {{ department.title }}
             .field
-                multi-text(v-model='inviteSessionData.agenda')
+                .panel
+                    .panel-heading
+                        | دستور جلسه
+                    .panel-block
+                        multi-text(v-model='inviteSessionData.agenda')
             .field
                 label.label مکان
                 .control
@@ -25,21 +29,30 @@
                 .control
                     date-picker(v-model='inviteSessionData.date' format="YYYY-MM-DD HH:mm:ss"
                     display-format="jDD/jMM/jYYYY HH:mm" type="datetime" required)
-            .field
-                label.label حاضرین جلسه
-                .multi-checkboxes
-                    label.checkbox.column.is-12(v-for='(user, userIndex) in users')
-                        input(type='checkbox', v-model="inviteSessionData.user_list", :value="user._id")
-                        |   {{ user.name }} - {{ user.profile.first_name }} {{ user.profile.last_name }}
-            fieldset
-                legend مدعوین
-                .field
-                    multi-text-member(ref="multiTextMember" :value='inviteSessionData.other_user')
 
             .field
-                label.checkbox
-                    input(type='file', @change="setAttachment")
-                    |   ضمیمه
+                label.label حاضرین جلسه
+                b-table(
+                        :data="users"
+                        :columns="columns"
+                        :checked-rows.sync="allCheckedRows"
+                        checkable
+                        :paginated="isPaginated",
+                        :per-page="perPage",
+                        :current-page.sync="currentPage",
+                        :pagination-simple="isPaginationSimple",
+                        :pagination-position="paginationPosition",
+                        :checkbox-position="checkboxPosition")
+                    template(slot="bottom-left")
+                        | نفرات انتخاب شده : {{ checkedRows.length }} نفر
+            fieldset
+                legend مدعوین (به غیر از افراد حاضر و سایر اعضاء)
+                .field
+                    multi-text-member(ref="multiTextMember" :value='inviteSessionData.other_user')
+            fieldset
+                legend فایل های ضمیمه
+                .field
+                    file-upload(ref="fileUpload", :old-files="oldFiles")
             .field
                 label.label توضیحات
                 .control
@@ -57,15 +70,18 @@
 <script>
 "use strict";
 
+const Buefy = require("buefy").default;
 const AxiosHelper = require("JS-HELPERS/axios-helper");
 const ENUMS = require("JS-HELPERS/enums");
 const InviteSessionValidator = require("JS-VALIDATORS/invite-session-register-validator");
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
 const MultiText = require("VUE-COMPONENTS/general/multi-text.vue").default;
-const MultiTextApprov = require("VUE-COMPONENTS/invite-session/multi-text-approv.vue").default;
+const MultiTextApprov = require("VUE-COMPONENTS/invite-session/multi-text-approv.vue")
+    .default;
 const MultiTextMember = require("VUE-COMPONENTS/invite-session/multi-text-member.vue")
     .default;
+const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 
 module.exports = {
     name: "EditInviteSession",
@@ -73,6 +89,7 @@ module.exports = {
         Notification,
         DatePicker: VuePersianDatetimePicker,
         MultiText,
+        FileUpload,
         MultiTextMember
     },
 
@@ -80,6 +97,8 @@ module.exports = {
         ENUMS,
         departments: [],
         users: [],
+        deletedOldFiles: [],
+        oldFiles: [],
         inviteSessionData: {
             title: null,
             body: null,
@@ -90,8 +109,35 @@ module.exports = {
             files: {},
             user_list: {},
             isActive: false,
-            other_user: []
+            other_user: [],
+            deletedOldFiles: []
         },
+
+        checkedRows: [],
+        checkboxPosition: "left",
+        isPaginated: true,
+        isPaginationSimple: false,
+        paginationPosition: "bottom",
+        currentPage: 1,
+        perPage: 3,
+        columns: [
+            {
+                field: "name",
+                label: "نام کاربری",
+                searchable: true
+            },
+            {
+                field: "profile.first_name",
+                label: "نام",
+                searchable: true
+            },
+            {
+                field: "profile.last_name",
+                label: "نام خانوادگی",
+                searchable: true
+            }
+        ],
+
         notificationMessage: null,
         notificationType: "is-info",
         showLoadingFlag: false
@@ -129,6 +175,18 @@ module.exports = {
     mounted() {},
 
     computed: {
+        allCheckedRows: {
+            set: function(value) {
+                Vue.set(this, "checkedRows", value);
+                ``;
+            },
+            get: function() {
+                if (null == this.checkedRows) {
+                    Vue.set(this, "checkedRows", []);
+                }
+                return this.checkedRows;
+            }
+        },
         isLoadingMode: state => state.showLoadingFlag == true,
         showNotification: state => state.notificationMessage != null
     },
@@ -139,7 +197,6 @@ module.exports = {
          */
         setAttachment(sender) {
             const files = sender.target.files;
-
             Vue.set(this, "files", files);
         },
 
@@ -147,6 +204,7 @@ module.exports = {
          * Load specific user
          */
         loadInviteSessionData(data) {
+            console.log(data);
             const temp = {
                 _id: data._id,
                 dep: data.dep.title,
@@ -175,6 +233,13 @@ module.exports = {
             }
 
             Vue.set(this, "inviteSessionData", temp);
+
+            const userslist = this.inviteSessionData.user_list;
+            let checkedUsers = this.users.filter(
+                u => userslist.indexOf(u._id) > -1
+            );
+            Vue.set(this, "allCheckedRows", checkedUsers);
+            console.log(this.inviteSessionData);
         },
 
         /**
@@ -192,7 +257,7 @@ module.exports = {
         commandClick(arg) {
             switch (arg) {
                 case ENUMS.COMMAND.SAVE:
-                    this.editUser();
+                    this.EditInviteSession();
                     break;
             }
         },
@@ -231,7 +296,6 @@ module.exports = {
          */
         loadDepartments() {
             const url = this.departmentsUrl;
-            console.log(url);
             AxiosHelper.send("get", url, "").then(res => {
                 const resData = res.data;
                 const datas = resData.data.data;
@@ -244,7 +308,6 @@ module.exports = {
          */
         loadUsers() {
             const url = this.usersUrl;
-            console.log(url);
             AxiosHelper.send("get", url, "").then(res => {
                 const resData = res.data;
                 const datas = resData.data.data;
@@ -264,6 +327,12 @@ module.exports = {
 
             this.showLoading();
 
+            const deletedFiles = this.$refs.fileUpload.getDeletedFiles();
+            const newFiles = this.$refs.fileUpload.getNewFiles();
+            let newUploaded = newFiles.map(x => x.file);
+            Vue.set(this, "files", newUploaded);
+            let deleteUploaded = deletedFiles.map(x => x._id);
+            Vue.set(this, "deletedOldFiles", deleteUploaded);
             let inviteSessionData = {
                 _id: this.inviteSessionData._id,
                 body: this.inviteSessionData.body,
@@ -273,7 +342,9 @@ module.exports = {
                 department_id: this.inviteSessionData.department_id,
                 user_list: this.inviteSessionData.user_list,
                 is_active: this.inviteSessionData.isActive,
-                other_user: JSON.stringify(this.inviteSessionData.other_user)
+                other_user: JSON.stringify(this.inviteSessionData.other_user),
+                files: this.files,
+                deletedOldFiles: this.deletedOldFiles
             };
 
             inviteSessionData.files = this.files[0];
@@ -283,6 +354,7 @@ module.exports = {
                 .map(key => key);
 
             inviteSessionData.user_list = t;
+            inviteSessionData.user_list = this.checkedRows.map(x => x._id);
             this.showLoading();
 
             const url = this.editUrl.replace("$id$", inviteSessionData._id);

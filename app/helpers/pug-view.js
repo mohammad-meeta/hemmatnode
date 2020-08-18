@@ -3,7 +3,7 @@
 /**
  * Pug view helper class
  */
-function PugView() {}
+function PugView() { }
 module.exports = PugView;
 
 /**
@@ -51,6 +51,12 @@ PugView.viewPath = {
     'project.create': 'pages/project/register.pug',
     'project.show': 'pages/project/show.pug',
     'project.edit': 'pages/project/edit.pug',
+
+    /* request */
+    'request.index': 'pages/request/index.pug',
+    'request.create': 'pages/request/register.pug',
+    'request.show': 'pages/request/show.pug',
+    'request.edit': 'pages/request/edit.pug',
 
     /* task */
     'task.index': 'pages/task/index.pug',

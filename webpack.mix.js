@@ -31,23 +31,23 @@ mix.alias({
 mix.webpackConfig({
     module: {
         rules: [{
-                test: /\.pug$/i,
-                oneOf: [{
-                        resourceQuery: /^\?vue/i,
-                        use: ['pug-plain-loader']
-                    },
-                    {
-                        use: [
-                            'raw-loader',
-                            'pug-plain-loader'
-                        ]
-                    }
-                ]
+            test: /\.pug$/i,
+            oneOf: [{
+                resourceQuery: /^\?vue/i,
+                use: ['pug-plain-loader']
             },
             {
-                test: /\.pug$/,
-                loader: 'pug-plain-loader'
+                use: [
+                    'raw-loader',
+                    'pug-plain-loader'
+                ]
             }
+            ]
+        },
+        {
+            test: /\.pug$/,
+            loader: 'pug-plain-loader'
+        }
         ]
     }
 });
@@ -75,6 +75,7 @@ mix.js('resources/js/core/kernel.js', `${output}/js/core`)
     .js('resources/js/pages/home/external-section/index.js', `${output}/js/pages/home/external-section`)
     .js('resources/js/pages/home/people-participation/index.js', `${output}/js/pages/home/people-participation`)
     .js('resources/js/pages/project/index/index.js', `${output}/js/pages/project/index`)
+    .js('resources/js/pages/request/index/index.js', `${output}/js/pages/request/index`)
     .js('resources/js/pages/result/index/index.js', `${output}/js/pages/result/index`)
     .js('resources/js/pages/task/index/index.js', `${output}/js/pages/task/index`)
     .js('resources/js/pages/auth/login/index.js', `${output}/js/pages/auth/login`)
@@ -86,6 +87,6 @@ mix.js('resources/js/core/kernel.js', `${output}/js/core`)
 
 /* SASS */
 mix.sass('resources/sass/core/kernel.scss', `${output}/css/core`)
-    .sass('resources/sass/global/app.scss' , `${output}/css/global`)
+    .sass('resources/sass/global/app.scss', `${output}/css/global`)
     .sass('resources/sass/pages/home/index.scss', `${output}/css/pages/home`)
     .sass('resources/sass/pages/auth/login.scss', `${output}/css/pages/auth`);

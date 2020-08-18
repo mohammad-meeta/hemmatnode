@@ -3,7 +3,7 @@ const PugView = use('app/helpers/pug-view');
 const RequestHelper = use('app/helpers/request-helper');
 const FileHelper = use('app/helpers/file-helper');
 /**
- * request cat controller
+ * Dep cat controller
  */
 function Request() { }
 module.exports = Request;
@@ -12,27 +12,30 @@ module.exports = Request;
  * Index route
  */
 Request.index = async function index(req, res, next) {
+
     const pageRoute = 'request.index';
+    console.log(PugView.getView(pageRoute))
     res.render(PugView.getView(pageRoute), {
         req,
-        pageRoute
+        pageRoute,
+        departmentId: req.params.department
     });
 };
-
 /**
  * paginate route
  */
-Request.paginateRequest = async function paginateRequest(req, res, next) {
+Request.paginateRequest = function paginateRequest(req, res, next) {
     const dataPaginate = {
         page: req.params.page,
         pageSize: req.params.size || 10
     };
     const group = req.params.group;
-    RequestHelper.loadAllCountRequestData(group)
+
+    RequestHelper.loadAllRequestCountData(group)
         .then(data => {
             let count = data.data;
 
-            RequestHelper.loadAllRequestData(dataPaginate, group)
+            RequestHelper.loadAllRequestData(req, dataPaginate, group)
                 .then(data => {
                     const result = {
                         success: true,
@@ -115,7 +118,7 @@ Request.editRequestData = async function editRequestData(req, res, next) {
 };
 
 /**
- * update data request cat
+ * update data dep cat
  */
 Request.update = async function update(req, res, next) {
     let data = {};
@@ -157,7 +160,7 @@ Request.update = async function update(req, res, next) {
 };
 
 /**
- * delete data request cat
+ * delete data dep cat
  */
 Request.destroy = async function destroy(req, res, next) {
     const data = {
@@ -190,10 +193,9 @@ Request.create = async function create(req, res, next) {
 };
 
 /**
- * store data request cat
+ * store data dep cat
  */
 Request.store = async function store(req, res, next) {
-
     const files = req.files || [];
 
     let fileList = [];
@@ -201,10 +203,16 @@ Request.store = async function store(req, res, next) {
     for (let i = 0; i < files.length; ++i) {
         try {
             const el = files[i];
-            el.user_id = req.session.auth.userId;
+            el.user_id = req.request.auth.userId;
 
             const data = await FileHelper.insertFileData(el);
-            fileList.push(data[0]._id);
+
+            const tempFileData = {
+                file_id: data[0]._id,
+                deleted_at: null
+            };
+            fileList.push(tempFileData);
+
         } catch (err) {
             Logger.error(err);
         }
@@ -222,10 +230,11 @@ Request.store = async function store(req, res, next) {
     };
 
     RequestHelper.insertNewRequest(data)
-        .then(data => {
+        .then(dataRes => {
+            SMSSender.sendSms(data);
             const result = {
                 success: true,
-                data: data
+                data: dataRes
             };
             res.status(200)
                 .send(result)

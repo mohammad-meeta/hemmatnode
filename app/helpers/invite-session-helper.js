@@ -1,135 +1,141 @@
-'use strict';
+"use strict";
 
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 /**
  * dep cat controller
  */
-function InviteSessiontHelper() { }
+function InviteSessiontHelper() {}
 module.exports = InviteSessiontHelper;
 
 /**
- * find all dep cat data result 
+ * find all dep cat data result
  */
-InviteSessiontHelper.loadAllInviteSessionData = function loadAllInviteSessionData(req, dataPaginate, group) {
+InviteSessiontHelper.loadAllInviteSessionData = function loadAllInviteSessionData(
+    req,
+    dataPaginate,
+    group
+) {
     const page = parseInt(dataPaginate.page);
     const pageSize = parseInt(dataPaginate.pageSize);
-    const skip = page > 0 ? ((page - 1) * pageSize) : 0;
-    const ObjectId = require('mongoose').Types.ObjectId;
-    const InviteSession = mongoose.model('InviteSession');
+    const skip = page > 0 ? (page - 1) * pageSize : 0;
+    const ObjectId = require("mongoose").Types.ObjectId;
+    const InviteSession = mongoose.model("InviteSession");
 
     const userId = req.session.auth.userId;
 
-    const pipeline = [{
-        "$match": {
-            "department_id": new ObjectId(group),
+    const pipeline = [
+        {
+            $match: {
+                department_id: new ObjectId(group),
 
-            $or: [{
-                user_id: ObjectId(userId)
-            },
-            {
-                user_list: userId
+                $or: [
+                    {
+                        user_id: ObjectId(userId)
+                    },
+                    {
+                        user_list: userId
+                    }
+                ]
             }
-            ]
-        }
-    },
-    {
-        "$lookup": {
-            "from": "departments",
-            "localField": "department_id",
-            "foreignField": "_id",
-            "as": "dep"
-        }
-    },
-    {
-        "$unwind": "$dep"
-    },
-    {
-        "$unwind": {
-            "path": "$files",
-            "preserveNullAndEmptyArrays": true
-        }
-    },
-    {
-        "$lookup": {
-            "from": "files",
-            "localField": "files.file_id",
-            "foreignField": "_id",
-            "as": "file"
-        }
-    },
-    {
-        "$unwind": {
-            "path": "$file",
-            "preserveNullAndEmptyArrays": true
-        }
-    },
-    {
-        "$project": {
-            "file.encoding": 0,
-            "file.fieldname": 0,
-            "file.mimetype": 0,
-            "file.destination": 0,
-            "file.user_id": 0,
-            "file.path": 0,
-            "file.filename": 0,
-        }
-    },
-    {
-        "$group": {
-            "_id": "$_id",
-            "files": {
-                "$push": "$file"
-            },
-            "user_list": {
-                "$last": "$user_list"
-            },
-            "is_active": {
-                "$last": "$is_active"
-            },
-            "other_user": {
-                "$last": "$other_user"
-            },
-            "approves": {
-                "$last": "$approves"
-            },
-            "present_user": {
-                "$last": "$present_user"
-            },
-            "status": {
-                "$last": "$status"
-            },
-            "body": {
-                "$last": "$body"
-            },
-            "agenda": {
-                "$last": "$agenda"
-            },
-            "place": {
-                "$last": "$place"
-            },
-            "date": {
-                "$last": "$date"
-            },
-            "created_at": {
-                "$last": "$created_at"
-            },
-            "dep": {
-                "$last": "$dep"
+        },
+        {
+            $lookup: {
+                from: "departments",
+                localField: "department_id",
+                foreignField: "_id",
+                as: "dep"
             }
+        },
+        {
+            $unwind: "$dep"
+        },
+        {
+            $unwind: {
+                path: "$files",
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $lookup: {
+                from: "files",
+                localField: "files.file_id",
+                foreignField: "_id",
+                as: "file"
+            }
+        },
+        {
+            $unwind: {
+                path: "$file",
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $project: {
+                "file.encoding": 0,
+                "file.fieldname": 0,
+                "file.mimetype": 0,
+                "file.destination": 0,
+                "file.user_id": 0,
+                "file.path": 0,
+                "file.filename": 0
+            }
+        },
+        {
+            $group: {
+                _id: "$_id",
+                files: {
+                    $push: "$file"
+                },
+                user_list: {
+                    $last: "$user_list"
+                },
+                is_active: {
+                    $last: "$is_active"
+                },
+                other_user: {
+                    $last: "$other_user"
+                },
+                approves: {
+                    $last: "$approves"
+                },
+                present_user: {
+                    $last: "$present_user"
+                },
+                status: {
+                    $last: "$status"
+                },
+                body: {
+                    $last: "$body"
+                },
+                agenda: {
+                    $last: "$agenda"
+                },
+                place: {
+                    $last: "$place"
+                },
+                date: {
+                    $last: "$date"
+                },
+                created_at: {
+                    $last: "$created_at"
+                },
+                dep: {
+                    $last: "$dep"
+                }
+            }
+        },
+        {
+            $sort: {
+                created_at: -1
+            }
+        },
+        {
+            $skip: skip
+        },
+        {
+            $limit: pageSize
         }
-    },
-    {
-        "$sort": {
-            "created_at": -1
-        }
-    },
-    {
-        "$skip": skip
-    },
-    {
-        "$limit": pageSize
-    }
     ];
 
     return new Promise((resolve, reject) => {
@@ -141,10 +147,12 @@ InviteSessiontHelper.loadAllInviteSessionData = function loadAllInviteSessionDat
     });
 };
 /**
- * find all dep cat count data result 
+ * find all dep cat count data result
  */
-InviteSessiontHelper.loadAllInviteSessionCountData = function loadAllInviteSessionCountData(group) {
-    const InviteSession = mongoose.model('InviteSession');
+InviteSessiontHelper.loadAllInviteSessionCountData = function loadAllInviteSessionCountData(
+    group
+) {
+    const InviteSession = mongoose.model("InviteSession");
 
     const filterQuery = {
         department_id: group
@@ -160,10 +168,12 @@ InviteSessiontHelper.loadAllInviteSessionCountData = function loadAllInviteSessi
 };
 
 /**
- * find dep cat data result 
+ * find dep cat data result
  */
-InviteSessiontHelper.loadInviteSessionData = function loadInviteSessionData(title) {
-    const InviteSession = mongoose.model('InviteSession');
+InviteSessiontHelper.loadInviteSessionData = function loadInviteSessionData(
+    title
+) {
+    const InviteSession = mongoose.model("InviteSession");
 
     const filterQuery = {
         title: title
@@ -181,13 +191,14 @@ InviteSessiontHelper.loadInviteSessionData = function loadInviteSessionData(titl
 };
 
 /**
- * insert dep cat data  
+ * insert dep cat data
  */
-InviteSessiontHelper.insertNewInviteSession = function insertNewInviteSession(data) {
-
+InviteSessiontHelper.insertNewInviteSession = function insertNewInviteSession(
+    data
+) {
     return new Promise((resolve, reject) => {
-        const InviteSession = mongoose.model('InviteSession');
-        const InviteSession1 = new InviteSession(data)
+        const InviteSession = mongoose.model("InviteSession");
+        const InviteSession1 = new InviteSession(data);
 
         InviteSession1.save()
             .then(res => {
@@ -197,12 +208,11 @@ InviteSessiontHelper.insertNewInviteSession = function insertNewInviteSession(da
     });
 };
 /**
- * insert approves  
+ * insert approves
  */
 InviteSessiontHelper.insertApproves = function insertApproves(data) {
-
     return new Promise((resolve, reject) => {
-        const Approves = mongoose.model('Approves');
+        const Approves = mongoose.model("Approves");
 
         Approves.insertMany(data, {})
             .then(res => {
@@ -213,11 +223,28 @@ InviteSessiontHelper.insertApproves = function insertApproves(data) {
 };
 
 /**
- * update dep cat data  
+ * update dep cat data
  */
-InviteSessiontHelper.updateInviteSessionData = function updateInviteSessionData(data) {
+InviteSessiontHelper.updateInviteSessionData = async function updateInviteSessionData(
+    data
+) {
+    const InviteSession = mongoose.model("InviteSession");
+
+    let res = await InviteSession.findByIdAndUpdate(data._id, data, {
+        useFindAndModify: false
+    });
+
+    return res;
+};
+
+/**
+ * update invite session data
+ */
+InviteSessiontHelper.updateInviteSessionApproves = function updateInviteSessionApproves(
+    data
+) {
     return new Promise((resolve, reject) => {
-        const InviteSession = mongoose.model('InviteSession');
+        const InviteSession = mongoose.model("InviteSession");
         InviteSession.findByIdAndUpdate(data._id, data, {
             useFindAndModify: false
         })
@@ -229,33 +256,23 @@ InviteSessiontHelper.updateInviteSessionData = function updateInviteSessionData(
 };
 
 /**
- * update invite session data  
+ * delete dep cat data
  */
-InviteSessiontHelper.updateInviteSessionApproves = function updateInviteSessionApproves(data) {
+InviteSessiontHelper.deleteInviteSessionData = function deleteInviteSessionData(
+    data
+) {
     return new Promise((resolve, reject) => {
-        const InviteSession = mongoose.model('InviteSession');
-        InviteSession.findByIdAndUpdate(data._id, data, {
-            useFindAndModify: false
-        })
-            .then(res => {
-                resolve(res);
-            })
-            .catch(err => reject(err));
-    });
-};
+        const InviteSession = mongoose.model("InviteSession");
 
-/**
- * delete dep cat data  
- */
-InviteSessiontHelper.deleteInviteSessionData = function deleteInviteSessionData(data) {
-    return new Promise((resolve, reject) => {
-        const InviteSession = mongoose.model('InviteSession');
-
-        InviteSession.findOneAndUpdate(data._id, {
-            is_active: false
-        }, {
-            useFindAndModify: false
-        })
+        InviteSession.findOneAndUpdate(
+            data._id,
+            {
+                is_active: false
+            },
+            {
+                useFindAndModify: false
+            }
+        )
             .then(res => {
                 resolve(res);
             })

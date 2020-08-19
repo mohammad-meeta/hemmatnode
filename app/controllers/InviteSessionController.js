@@ -123,9 +123,8 @@ InviteSession.editInviteSessionData = async function editInviteSessionData(req, 
 InviteSession.update = async function update(req, res, next) {
     let data = {};
     const files = req.body.files || [];
-
     let fileList = [];
-    files.forEach(element => {
+        files.forEach(element => {
         const fileData = element;
         FileHelper.insertFileData(fileData)
             .then(data => {

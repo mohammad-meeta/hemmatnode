@@ -194,14 +194,6 @@ module.exports = {
 
     methods: {
         /**
-         * Set attachments
-         */
-        setAttachment(sender) {
-            const files = sender.target.files;
-            Vue.set(this, "files", files);
-        },
-
-        /**
          * Load specific user
          */
         loadInviteSessionData(data) {
@@ -361,7 +353,8 @@ module.exports = {
                 filesArray: "files"
             })
                 .then(res => {
-                    const data = JSON.parse(res.config.data);
+                    //const data = JSON.parse(res.config.data);
+                    const data = res.data;
                     this.$emit("on-update", {
                         sender: this,
                         data

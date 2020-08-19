@@ -222,7 +222,8 @@ module.exports = {
          * On Update invite session
          */
         onInviteSessionUpdate(payload) {
-            this.$refs.inviteSessionList.editInInviteSessionList(payload.data);
+            console.log(payload);
+            this.$refs.inviteSessionList.editInviteSessionList(payload.data);
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
 
             this.setNotification(".جلسه با موفقیت ویرایش شد", "is-success");
@@ -244,13 +245,11 @@ module.exports = {
 
                 case ENUMS.COMMAND.REGISTER:
                     /* TODO: REGISTER NEW  */
-                    console.log("REGISTER NEW InviteSession", arg);
                     break;
 
                 case ENUMS.COMMAND.NEWSESSION:
                     /* TODO: REGISTER NEW FULL SESSION */
                     this.changeFormMode(ENUMS.FORM_MODE.FULLREGISTER);
-                    console.log("REGISTER NEW InviteSession", arg);
                     break;
 
                 case ENUMS.COMMAND.EDIT:

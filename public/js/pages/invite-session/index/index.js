@@ -954,14 +954,6 @@ module.exports = {
   },
   methods: {
     /**
-     * Set attachments
-     */
-    setAttachment: function setAttachment(sender) {
-      var files = sender.target.files;
-      Vue.set(this, "files", files);
-    },
-
-    /**
      * Load specific user
      */
     loadInviteSessionData: function loadInviteSessionData(data) {
@@ -1131,7 +1123,8 @@ module.exports = {
         sendAsFormData: true,
         filesArray: "files"
       }).then(function (res) {
-        var data = JSON.parse(res.config.data);
+        //const data = JSON.parse(res.config.data);
+        var data = res.data;
 
         _this3.$emit("on-update", {
           sender: _this3,
@@ -1399,7 +1392,8 @@ module.exports = {
      * On Update invite session
      */
     onInviteSessionUpdate: function onInviteSessionUpdate(payload) {
-      this.$refs.inviteSessionList.editInInviteSessionList(payload.data);
+      console.log(payload);
+      this.$refs.inviteSessionList.editInviteSessionList(payload.data);
       this.changeFormMode(ENUMS.FORM_MODE.LIST);
       this.setNotification(".جلسه با موفقیت ویرایش شد", "is-success");
     },
@@ -1422,13 +1416,11 @@ module.exports = {
 
         case ENUMS.COMMAND.REGISTER:
           /* TODO: REGISTER NEW  */
-          console.log("REGISTER NEW InviteSession", arg);
           break;
 
         case ENUMS.COMMAND.NEWSESSION:
           /* TODO: REGISTER NEW FULL SESSION */
           this.changeFormMode(ENUMS.FORM_MODE.FULLREGISTER);
-          console.log("REGISTER NEW InviteSession", arg);
           break;
 
         case ENUMS.COMMAND.EDIT:
@@ -1577,7 +1569,14 @@ module.exports = {
     return {
       departmentData: null,
       ENUMS: ENUMS,
-      inviteSessions: [],
+      inviteSessions: [{
+        is_active: null,
+        agenda: null,
+        extra: null,
+        dep: {
+          title: null
+        }
+      }],
       inviteSessionsCount: 0,
       pageCount: 0
     };
@@ -1591,11 +1590,15 @@ module.exports = {
     /**
      * Create titles
      */
-    getTitles: function getTitles(extra) {
-      var res = extra.map(function (x) {
-        return x.title;
-      }).join("<br/>");
-      return res;
+    getTitles: function getTitles(extraa) {
+      var extra = extraa || [];
+
+      if (extra.length > 0) {
+        var res = extra.map(function (x) {
+          return x.title;
+        }).join("<br/>");
+        return res;
+      }
     },
 
     /**
@@ -1660,7 +1663,6 @@ module.exports = {
      * add new inviteSessions data to list data
      */
     addToInviteSessionList: function addToInviteSessionList(payload) {
-      // console.log(payload);
       var data = JSON.parse(payload.data.agenda);
 
       if (this.inviteSessions.length > 0) {
@@ -1675,10 +1677,13 @@ module.exports = {
         this.inviteSessions.unshift(newInviteSessionsData);
       }
     },
-    editInInviteSessionsList: function editInInviteSessionsList(payload) {
+    editInviteSessionList: function editInviteSessionList(payload) {
+      var data = JSON.parse(payload.data.agenda);
       var editedInviteSessionsData = {
         _id: payload._id,
         title: payload.agenda,
+        agenda: payload.agenda,
+        extra: data,
         is_active: payload.is_active,
         created_at: payload.created_at
       };

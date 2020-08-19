@@ -77,7 +77,7 @@ RouterModule.handleErrors = function handleErrors() {
             res.send(errorObject)
                 .end();
         } else {
-            res.render(`errors/${errCode}.pug`, errorObject);
+            res.render(`errors/${errCode}.pug`, error);
         }
     });
 };

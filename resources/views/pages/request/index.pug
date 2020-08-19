@@ -5,9 +5,11 @@ block title
 
 block content
     .container
-        requests(list-url=route('api.request', { page: '$page$', size: '$pageSize$' }),
-            register-url=route('request.store'),
+        requests(
+            list-url=route('api.request', { page: '$page$', size: '$pageSize$' ,group:req.params.department})
+            register-url=route('request.store')
             edit-url=route('request.update', { id :'$id$'})
+            department-id=req.params.department
         )
 
 block scripts

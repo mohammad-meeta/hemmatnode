@@ -158,7 +158,7 @@ Department.update = async function update(req, res, next) {
     let data = {};
     const files = req.body.files || [];
 
-    fileList = [];
+    let fileList = [];
     files.forEach(element => {
         const fileData = element;
         FileHelper.insertFileData(fileData)

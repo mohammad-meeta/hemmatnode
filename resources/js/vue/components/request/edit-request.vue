@@ -6,44 +6,41 @@
         .column.is-full(v-show="isLoadingMode")
             h1 در حال بارگذاری
         .form-small(v-show="! isLoadingMode")
-            .fieldset
-                legend مشخصات طلب همکاری
-                .field
-                    label.label عنوان طلب همکاری
-                    .control
-                        input.input(type='text', placeholder='عنوان طلب همکاری', autofocus, v-model='requestData.title' required)
+            .field
+                label.label عنوان
+                .control
+                    input.input(type='text', placeholder='عنوان', v-model='request.title' required)
 
-                .field
-                    label.label شرح
-                    .control
-                        textarea.textarea(placeholder='شرح', v-model='requestData.description')
+            .field
+                label.label توضیحات
+                .control
+                    textarea.textarea(placeholder='توضیحات', v-model='request.description')
 
-                .field
-                    label.label تاریخ
-                    .control
-                        date-picker(v-model='requestData.requestDate' format="YYYY-MM-DD HH:mm:ss"
-                        display-format=" jDD/jMM/jYYYY HH:mm" type="datetime" required)
+            .field
+                label.label تاریخ
+                .control
+                    date-picker(v-model='request.request_date' format="YYYY-MM-DD HH:mm:ss"
+                    display-format="jDD/jMM/jYYYY HH:mm" type="datetime" required)
 
-                .field
-                    label.label تاریخ
-                    .control
-                        date-picker(v-model='requestData.deadline' format="YYYY-MM-DD HH:mm:ss"
-                        display-format=" jDD/jMM/jYYYY HH:mm" type="datetime" required)
+            .field
+                label.label مهلت اجرا
+                .control
+                    date-picker(v-model='request.deadline' format="YYYY-MM-DD HH:mm:ss"
+                    display-format="jDD/jMM/jYYYY HH:mm" type="datetime" required)
 
-                .field
-                    label.checkbox
-                        input(type='file', @change="setAttachment")
-                        |   ضمیمه
-                .field
-                    label.checkbox
-                        input(type='checkbox', v-model="requestData.isActive")
-                        |   فعال
+            .field
+                label.checkbox
+                    input(type='file', @change="setAttachment")
+                    |   ضمیمه
+            .field
+                label.checkbox
+                    input(type='checkbox', v-model="request.isActive")
+                    |   فعال
 
                 .field.is-grouped
                     .control(v-show="! isLoadingMode")
                         a.button.is-link.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
-                            |   ایجاد
-
+                            |   ویرایش
 </template>
 
 <script>
@@ -56,8 +53,7 @@ const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
 
 module.exports = {
-    name: "RegisterRequest",
-
+    name: "EditRequest",
     components: {
         Notification,
         DatePicker: VuePersianDatetimePicker,
@@ -65,31 +61,31 @@ module.exports = {
 
     data: () => ({
         ENUMS,
-        programs: [],
-        requestData: {
+        users: [],
+        request: {
+            id: null,
             title: null,
+            dep: null,
             description: null,
-            departmentId: null,
-            requestDate: null,
+            request_date: null,
             deadline: null,
             files: {},
             isActive: false,
         },
-
         notificationMessage: null,
         notificationType: "is-info",
         showLoadingFlag: false,
-        files: [],
     }),
 
     props: {
-        registerUrl: {
+        editUrl: {
             type: String,
             default: "",
         },
+
         departmentId: {
             type: String,
-            default: "",
+            default: null,
         },
     },
 
@@ -111,6 +107,31 @@ module.exports = {
         },
 
         /**
+         * Load specific invite session
+         */
+        loadRequestData(data) {
+            const temp = {
+                id: data._id,
+                dep: data.dep.title,
+                title: data.title,
+                description: data.description,
+                request_date: data.request_date,
+                deadline: data.deadline,
+                files: data.files,
+                isActive: data.is_active,
+            };
+
+            Vue.set(this, "request", temp);
+        },
+
+        /**
+         * To Persian Date
+         */
+        toPersianDate(date, format, value) {
+            return DateHelper.toPersianDate(date, format, value);
+        },
+
+        /**
          * On Command
          *
          * @param      {Object}  arg     The argument
@@ -118,7 +139,7 @@ module.exports = {
         commandClick(arg) {
             switch (arg) {
                 case ENUMS.COMMAND.SAVE:
-                    this.registerRequest();
+                    this.EditRequest();
                     break;
             }
         },
@@ -153,47 +174,53 @@ module.exports = {
         },
 
         /**
-         * Register new request
+         * Edit invite session
          */
-        registerRequest() {
+        EditRequest() {
             const isValid = this.validate();
 
             if (!isValid) {
                 return;
             }
-            let requestData = this.requestData;
 
-            requestData.files = this.files[0];
-            requestData.departmentId = this.departmentId;
-            
             this.showLoading();
 
-            const url = this.registerUrl;
-            console.log(requestData);
-            AxiosHelper.send("post", url, requestData, {
-                sendAsFormData: true,
-            })
+            let request = {
+                _id: this.request.id,
+                title: this.request.title,
+                department_id: this.departmentId,
+                description: this.request.description,
+                request_date: this.request.request_date,
+                deadline: this.request.deadline,
+                is_active: this.request.isActive,
+            };
+
+            request.files = this.files;
+
+            this.showLoading();
+
+            const url = this.editUrl.replace("$id$", request._id);
+            console.log(url);
+            AxiosHelper.send("patch", url, request)
                 .then((res) => {
-                    const data = res.data;
-                    if (data.success) {
-                        this.$emit("on-register", {
-                            sender: this,
-                            data,
-                        });
-                    }
+                    const data = JSON.parse(res.config.data);
+                    this.$emit("on-update", {
+                        sender: this,
+                        data,
+                    });
                 })
                 .catch((err) => {
-                    const data = err.response.data;
-                    this.setNotification(data, "is-danger");
+                    console.error(err);
+                    this.setNotification(".خطا در ذخیره جلسه", "is-danger");
                 })
                 .then(() => this.hideLoading());
         },
 
         /**
-         * Validate new request data
+         * Validate invite session data
          */
         validate() {
-            const result = RequestValidator.validate(this.requestData);
+            const result = RequestValidator.validateEdit(this.request);
 
             if (result.passes) {
                 this.closeNotification();

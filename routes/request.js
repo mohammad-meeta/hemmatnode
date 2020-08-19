@@ -15,14 +15,14 @@ const {
     clearAuth
 } = use('core/helpers/auth-helper');
 
-Router.get('/request/:department?', [
+Router.get('/request/:department', [
         checkSession,
         Rule.canAsync('user.permision', 'request.index'),
         'Request@index'
     ])
     .as('request.index');
 
-Router.get('/api/request/:group/:page/:size?/', [
+Router.get('/api/request/:group/:page/:size?', [
         checkSession,
         'Request@paginateRequest'
     ])
@@ -42,7 +42,7 @@ Router.get('/request/edit', [
     ])
     .as('request.edit');
 
-Router.post('/request/:department?', [
+Router.post('/request', [
         upload.array('files'),
         checkSession,
         Rule.canAsync('user.permision', 'request.store'),

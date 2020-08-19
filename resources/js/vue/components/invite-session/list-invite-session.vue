@@ -47,35 +47,46 @@ module.exports = {
     props: {
         listUrl: {
             type: String,
-            default: "",
+            default: ""
         },
 
         departmentId: {
             type: String,
-            default: "",
-        },
+            default: ""
+        }
     },
 
     data: () => ({
         departmentData: null,
         ENUMS,
-        inviteSessions: [],
+        inviteSessions: [
+            {
+                is_active: null,
+                agenda: null,
+                extra: null,
+                dep: {
+                    title: null
+                }
+            }
+        ],
         inviteSessionsCount: 0,
-        pageCount: 0,
+        pageCount: 0
     }),
 
     computed: {
-        hasInviteSession: (state) => (state.inviteSessions || []).length,
+        hasInviteSession: state => (state.inviteSessions || []).length
     },
 
     methods: {
         /**
          * Create titles
          */
-        getTitles(extra) {
-            let res = extra.map((x) => x.title).join("<br/>");
-
-            return res;
+        getTitles(extraa) {
+            const extra = extraa || [];
+            if (extra.length > 0) {
+                let res = extra.map(x => x.title).join("<br/>");
+                return res;
+            }
         },
 
         /**
@@ -86,10 +97,10 @@ module.exports = {
                 .replace(/\$page\$/g, pageId)
                 .replace(/\$pageSize\$/g, 50);
 
-            AxiosHelper.send("get", url, "").then((res) => {
+            AxiosHelper.send("get", url, "").then(res => {
                 const resData = res.data;
                 const inviteData = resData.data.data;
-                inviteData.forEach((x) => {
+                inviteData.forEach(x => {
                     try {
                         x.extra = JSON.parse(x.agenda);
                     } catch (ex) {
@@ -137,7 +148,6 @@ module.exports = {
          * add new inviteSessions data to list data
          */
         addToInviteSessionList(payload) {
-            // console.log(payload);
             const data = JSON.parse(payload.data.agenda);
             if (this.inviteSessions.length > 0) {
                 const dep = this.inviteSessions[0].dep;
@@ -146,29 +156,32 @@ module.exports = {
                     dep: dep,
                     extra: data,
                     is_active: payload.data.is_active,
-                    created_at: payload.data.created_at,
+                    created_at: payload.data.created_at
                 };
                 this.inviteSessions.unshift(newInviteSessionsData);
             }
         },
 
-        editInInviteSessionsList(payload) {
+        editInviteSessionList(payload) {
+            const data = JSON.parse(payload.data.agenda);
             const editedInviteSessionsData = {
                 _id: payload._id,
                 title: payload.agenda,
+                agenda: payload.agenda,
+                extra: data,
                 is_active: payload.is_active,
-                created_at: payload.created_at,
+                created_at: payload.created_at
             };
 
             let foundIndex = this.inviteSessions.findIndex(
-                (x) => x._id == editedInviteSessionsData._id
+                x => x._id == editedInviteSessionsData._id
             );
             this.inviteSessions[foundIndex].agenda =
                 editedInviteSessionsData.agenda;
             this.inviteSessions[foundIndex].is_active =
                 editedInviteSessionsData.is_active;
-        },
-    },
+        }
+    }
 };
 </script>
 

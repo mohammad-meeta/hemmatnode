@@ -143,20 +143,26 @@ var uuidV4 = __webpack_require__(/*! uuid */ "./node_modules/uuid/index.js").v4;
   /**
    * Create method
    */
-  created: function created() {
-    var _this = this;
-
-    this.oldFiles.forEach(function (file) {
-      var item = {
-        _id: file._id,
-        type: "old",
-        file: _objectSpread({}, file),
-        is_deleted: false
-      };
-      Vue.set(_this.files, _this.files.length, item);
-    });
-  },
+  created: function created() {},
   methods: {
+    /**
+     * Update old files
+     */
+    updateOldFiles: function updateOldFiles(oldFiles) {
+      var _this = this;
+
+      Vue.set(this, "files", []);
+      oldFiles.forEach(function (file) {
+        var item = {
+          _id: file._id,
+          type: "old",
+          file: _objectSpread({}, file),
+          is_deleted: false
+        };
+        Vue.set(_this.files, _this.files.length, item);
+      });
+    },
+
     /**
      * Get files list
      */
@@ -847,7 +853,7 @@ var MultiTextMember = __webpack_require__(/*! VUE-COMPONENTS/invite-session/mult
 var FileUpload = __webpack_require__(/*! VUE-COMPONENTS/general/file-upload.vue */ "./resources/js/vue/components/general/file-upload.vue")["default"];
 
 module.exports = {
-  name: "EditInviteSession",
+  name: "EditInviteeSssion",
   components: {
     Notification: Notification,
     DatePicker: VuePersianDatetimePicker,
@@ -860,6 +866,7 @@ module.exports = {
       ENUMS: ENUMS,
       departments: [],
       users: [],
+      files: [],
       deletedOldFiles: [],
       oldFiles: [],
       inviteSessionData: {
@@ -958,7 +965,6 @@ module.exports = {
      * Load specific user
      */
     loadInviteSessionData: function loadInviteSessionData(data) {
-      console.log(data);
       var temp = {
         _id: data._id,
         dep: data.dep.title,
@@ -986,13 +992,14 @@ module.exports = {
         temp.other_user = [];
       }
 
+      Vue.set(this, "oldFiles", data.files);
       Vue.set(this, "inviteSessionData", temp);
+      this.$refs.fileUpload.updateOldFiles(data.files);
       var userslist = this.inviteSessionData.user_list;
       var checkedUsers = this.users.filter(function (u) {
         return userslist.indexOf(u._id) > -1;
       });
       Vue.set(this, "allCheckedRows", checkedUsers);
-      console.log(this.inviteSessionData);
     },
 
     /**
@@ -1109,7 +1116,6 @@ module.exports = {
         files: this.files,
         deletedOldFiles: this.deletedOldFiles
       };
-      inviteSessionData.files = this.files[0];
       var t = Object.keys(inviteSessionData.user_list).filter(function (key) {
         return true == inviteSessionData.user_list[key];
       }).map(function (key) {
@@ -1121,7 +1127,10 @@ module.exports = {
       });
       this.showLoading();
       var url = this.editUrl.replace("$id$", inviteSessionData._id);
-      AxiosHelper.send("patch", url, inviteSessionData).then(function (res) {
+      AxiosHelper.send("patch", url, inviteSessionData, {
+        sendAsFormData: true,
+        filesArray: "files"
+      }).then(function (res) {
         var data = JSON.parse(res.config.data);
 
         _this3.$emit("on-update", {
@@ -1430,8 +1439,8 @@ module.exports = {
 
         case ENUMS.COMMAND.SEMIEDIT:
           /* TODO: Semi Edit InviteSession */
-          this.$refs.inviteSessionSemiEdit.loadInviteSessionData(data);
           this.changeFormMode(ENUMS.FORM_MODE.SEMIEDIT);
+          this.$refs.inviteSessionSemiEdit.loadInviteSessionData(data);
           break;
 
         case ENUMS.COMMAND.CANCEL:
@@ -46533,7 +46542,7 @@ var render = function() {
               [_vm._v("×")]
             ),
             _c("label", [_vm._v(_vm._s(_vm.humanFileSize(file.file.size)))]),
-            _c("label", [_vm._v(_vm._s(file.file.name))])
+            _c("label", [_vm._v(_vm._s(file.file.originalname))])
           ])
         }),
         0
@@ -52125,7 +52134,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/pages/invite-session/index/index.js */"./resources/js/pages/invite-session/index/index.js");
+module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/invite-session/index/index.js */"./resources/js/pages/invite-session/index/index.js");
 
 
 /***/ })

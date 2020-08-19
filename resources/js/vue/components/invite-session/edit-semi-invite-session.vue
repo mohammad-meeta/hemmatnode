@@ -84,7 +84,7 @@ const MultiTextMember = require("VUE-COMPONENTS/invite-session/multi-text-member
 const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 
 module.exports = {
-    name: "EditInviteSession",
+    name: "EditInviteeSssion",
     components: {
         Notification,
         DatePicker: VuePersianDatetimePicker,
@@ -97,6 +97,7 @@ module.exports = {
         ENUMS,
         departments: [],
         users: [],
+        files: [],
         deletedOldFiles: [],
         oldFiles: [],
         inviteSessionData: {
@@ -204,7 +205,6 @@ module.exports = {
          * Load specific user
          */
         loadInviteSessionData(data) {
-            console.log(data);
             const temp = {
                 _id: data._id,
                 dep: data.dep.title,
@@ -231,15 +231,16 @@ module.exports = {
             } catch (ex) {
                 temp.other_user = [];
             }
-
+            Vue.set(this, "oldFiles", data.files);
             Vue.set(this, "inviteSessionData", temp);
+
+            this.$refs.fileUpload.updateOldFiles(data.files);
 
             const userslist = this.inviteSessionData.user_list;
             let checkedUsers = this.users.filter(
                 u => userslist.indexOf(u._id) > -1
             );
             Vue.set(this, "allCheckedRows", checkedUsers);
-            console.log(this.inviteSessionData);
         },
 
         /**
@@ -346,9 +347,6 @@ module.exports = {
                 files: this.files,
                 deletedOldFiles: this.deletedOldFiles
             };
-
-            inviteSessionData.files = this.files[0];
-
             let t = Object.keys(inviteSessionData.user_list)
                 .filter(key => true == inviteSessionData.user_list[key])
                 .map(key => key);
@@ -358,7 +356,10 @@ module.exports = {
             this.showLoading();
 
             const url = this.editUrl.replace("$id$", inviteSessionData._id);
-            AxiosHelper.send("patch", url, inviteSessionData)
+            AxiosHelper.send("patch", url, inviteSessionData,{
+                sendAsFormData: true,
+                filesArray: "files"
+            })
                 .then(res => {
                     const data = JSON.parse(res.config.data);
                     this.$emit("on-update", {

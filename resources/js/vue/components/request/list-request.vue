@@ -1,7 +1,7 @@
 <template lang="pug">
 .container-child
-    h1(v-if="! hasProject") هیچ پروژه ای ایجاد نشده
-    table.table.is-striped.is-hoverable.is-fullwidth(v-if="hasProject")
+    h1(v-if="! hasRequest") هیچ طلب همکاری ای ایجاد نشده
+    table.table.is-striped.is-hoverable.is-fullwidth(v-if="hasRequest")
         thead
             tr
                 th عنوان
@@ -9,16 +9,16 @@
                 th تاریخ ایجاد
                 th عملیات
         tbody
-            tr(v-for='project in projects', :key='project.id')
-                td {{ project.title }}
-                td {{ project.is_active }}
-                td {{ toPersianDate(project.created_at) }}
+            tr(v-for='request in requests', :key='request._id')
+                td {{ request.title }}
+                td {{ request.is_active }}
+                td {{ toPersianDate(request.created_at) }}
                 td.function-links
-                    a.button.is-primary.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.EDIT, project)")
+                    a.button.is-primary.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.EDIT, request)")
                         span.icon.is-small
                             i.material-icons.icon check_circle
                         span ویرایش
-                    a.button.is-warning.is-rounded.mt-2(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SHOW, project)")
+                    a.button.is-warning.is-rounded.mt-2(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SHOW, request)")
                         span.icon.is-small
                             i.material-icons.icon swap_horizontal_circle
                         span مشاهده
@@ -41,33 +41,32 @@ module.exports = {
     props: {
         listUrl: {
             type: String,
-            default: ""
-        }
+            default: "",
+        },
     },
 
     data: () => ({
         ENUMS,
-        projects: [],
-        projectsCount: 0,
-        pageCount: 0
+        requests: [],
+        requestsCount: 0,
+        pageCount: 0,
     }),
 
     computed: {
-        hasProject: state => (state.projects || []).length
+        hasRequest: (state) => (state.requests || []).length,
     },
 
     methods: {
         /**
-         * Load projects
+         * Load requests
          */
-        loadProjects(pageId) {
+        loadRequests(pageId) {
             let url = this.listUrl.replace("$page$", pageId);
             url = url.replace("$pageSize$", 50);
-
-            AxiosHelper.send("get", url, "").then(res => {
+            AxiosHelper.send("get", url, "").then((res) => {
                 const resData = res.data;
-                Vue.set(this, "projects", resData.data.data);
-                Vue.set(this, "projectsCount", resData.data.count);
+                Vue.set(this, "requests", resData.data.data);
+                Vue.set(this, "requestsCount", resData.data.count);
 
                 this.paginator();
             });
@@ -93,47 +92,45 @@ module.exports = {
          * Paginator
          */
         paginator() {
-            let pageCount = Math.ceil(this.projectsCount / 50);
+            let pageCount = Math.ceil(this.requestsCount / 50);
             Vue.set(this, "pageCount", pageCount);
         },
         /**
          * paginator click link
          */
         paginatorClick(id) {
-            this.loadProject(id);
+            this.loadRequest(id);
         },
         /**
-         * add new Project data to list data
+         * add new Request data to list data
          */
-        addToProjectList(payload) {
-            const newProjectData = {
+        addToRequestList(payload) {
+            const newRequestData = {
                 _id: payload._id,
                 title: payload.title,
                 is_active: payload.is_active,
-                created_at: payload.created_at
+                created_at: payload.created_at,
             };
 
-            this.projects.unshift(newProjectData);
+            this.requests.unshift(newRequestData);
         },
 
-        editInProjectList(payload) {
-            const editedProjectData = {
+        editInRequestList(payload) {
+            const editedRequestData = {
                 _id: payload._id,
                 title: payload.title,
                 is_active: payload.is_active,
-                created_at: payload.created_at
+                created_at: payload.created_at,
             };
 
-            let foundIndex = this.projects.findIndex(
-                x => x._id == editedProjectData._id
+            let foundIndex = this.requests.findIndex(
+                (x) => x._id == editedRequestData._id
             );
-            this.projects[foundIndex].title = editedProjectData.title;
-            this.projects[foundIndex].is_active =
-                editedProjectData.is_active;
-        }
-    }
+            this.requests[foundIndex].title = editedRequestData.title;
+            this.requests[foundIndex].is_active = editedRequestData.is_active;
+        },
+    },
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

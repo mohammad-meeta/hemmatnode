@@ -34,11 +34,14 @@
             .column(v-show="!modeLoading && modeRegister")
                 register-request(ref="requestRegister", @on-command="onCommand",
                   @on-register="onRequestRegister"
-                  :register-url="registerUrl",
-                  :requests-url="requestsUrl")
+                  :register-url="registerUrl"
+                  :department-id="departmentId")
 
             .column(v-show="!modeLoading && modeShow")
                 show-request(ref="requestShow", @on-command="onCommand")
+
+            .column(v-show="!modeLoading && modeEdit")
+                edit-request(ref="requestEdit", @on-command="onCommand" ,:edit-url="editUrl" :department-id="departmentId")
 </template>
 
 <script>
@@ -51,6 +54,7 @@ const RegisterRequest = require("VUE-COMPONENTS/request/register-request.vue")
     .default;
 const ListRequest = require("VUE-COMPONENTS/request/list-request.vue").default;
 const ShowRequest = require("VUE-COMPONENTS/request/show-request.vue").default;
+const EditRequest = require("VUE-COMPONENTS/request/edit-request.vue").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
 module.exports = {
@@ -58,6 +62,7 @@ module.exports = {
 
     components: {
         Loading,
+        EditRequest,
         ListRequest,
         RegisterRequest,
         ShowRequest,
@@ -73,11 +78,6 @@ module.exports = {
     }),
 
     props: {
-        title: {
-            type: String,
-            default: null,
-        },
-
         listUrl: {
             type: String,
             default: null,
@@ -88,12 +88,12 @@ module.exports = {
             default: null,
         },
 
-        requestsUrl: {
+        editUrl: {
             type: String,
             default: null,
         },
 
-        editUrl: {
+        departmentId: {
             type: String,
             default: null,
         },

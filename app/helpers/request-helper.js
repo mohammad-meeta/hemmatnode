@@ -81,35 +81,23 @@ RequestHelper.loadAllRequestData = function loadAllRequestData(req, dataPaginate
             "files": {
                 "$push": "$file"
             },
-            "user_list": {
-                "$last": "$user_list"
-            },
             "is_active": {
                 "$last": "$is_active"
             },
-            "other_user": {
-                "$last": "$other_user"
+            "title": {
+                "$last": "$title"
             },
-            "approves": {
-                "$last": "$approves"
+            "description": {
+                "$last": "$description"
             },
-            "present_user": {
-                "$last": "$present_user"
+            "request_date": {
+                "$last": "$request_date"
             },
-            "status": {
-                "$last": "$status"
+            "deadline": {
+                "$last": "$deadline"
             },
-            "body": {
-                "$last": "$body"
-            },
-            "agenda": {
-                "$last": "$agenda"
-            },
-            "place": {
-                "$last": "$place"
-            },
-            "date": {
-                "$last": "$date"
+            "request_date": {
+                "$last": "$request_date"
             },
             "created_at": {
                 "$last": "$created_at"
@@ -162,11 +150,11 @@ RequestHelper.loadAllRequestCountData = function loadAllRequestCountData(group) 
 /**
  * find dep cat data result 
  */
-RequestHelper.loadRequestData = function loadRequestData(title) {
+RequestHelper.loadRequestData = function loadRequestData(id) {
     const Request = mongoose.model('Request');
 
     const filterQuery = {
-        title: title
+        _id: id
     };
 
     const projection = {};
@@ -196,42 +184,11 @@ RequestHelper.insertNewRequest = function insertNewRequest(data) {
             .catch(err => reject(err));
     });
 };
-/**
- * insert approves  
- */
-RequestHelper.insertApproves = function insertApproves(data) {
-
-    return new Promise((resolve, reject) => {
-        const Approves = mongoose.model('Approves');
-
-        Approves.insertMany(data, {})
-            .then(res => {
-                resolve(res);
-            })
-            .catch(err => reject(err));
-    });
-};
 
 /**
  * update dep cat data  
  */
 RequestHelper.updateRequestData = function updateRequestData(data) {
-    return new Promise((resolve, reject) => {
-        const Request = mongoose.model('Request');
-        Request.findByIdAndUpdate(data._id, data, {
-            useFindAndModify: false
-        })
-            .then(res => {
-                resolve(res);
-            })
-            .catch(err => reject(err));
-    });
-};
-
-/**
- * update invite session data  
- */
-RequestHelper.updateRequestApproves = function updateRequestApproves(data) {
     return new Promise((resolve, reject) => {
         const Request = mongoose.model('Request');
         Request.findByIdAndUpdate(data._id, data, {

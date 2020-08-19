@@ -12,9 +12,8 @@ module.exports = Request;
  * Index route
  */
 Request.index = async function index(req, res, next) {
-
     const pageRoute = 'request.index';
-    console.log(PugView.getView(pageRoute))
+
     res.render(PugView.getView(pageRoute), {
         req,
         pageRoute,
@@ -124,7 +123,7 @@ Request.update = async function update(req, res, next) {
     let data = {};
     const files = req.body.files || [];
 
-    fileList = [];
+    let fileList = [];
     files.forEach(element => {
         const fileData = element;
         FileHelper.insertFileData(fileData)
@@ -203,7 +202,7 @@ Request.store = async function store(req, res, next) {
     for (let i = 0; i < files.length; ++i) {
         try {
             const el = files[i];
-            el.user_id = req.request.auth.userId;
+            el.user_id = req.session.auth.userId;
 
             const data = await FileHelper.insertFileData(el);
 
@@ -221,23 +220,18 @@ Request.store = async function store(req, res, next) {
     const data = {
         "title": req.body.title,
         "description": req.body.description,
-        "department_id": req.body.department_id,
+        "department_id": req.body.departmentId,
         "user_id": req.session.auth.userId,
-        "is_active": req.body.is_active,
-        "request_date": req.body.request_date,
+        "is_active": req.body.isActive,
+        "request_date": req.body.requestDate,
         "deadline": req.body.deadline,
         "files": fileList
     };
 
     RequestHelper.insertNewRequest(data)
         .then(dataRes => {
-            SMSSender.sendSms(data);
-            const result = {
-                success: true,
-                data: dataRes
-            };
             res.status(200)
-                .send(result)
+                .send(dataRes)
                 .end();
         })
         .catch(err => console.error(err));

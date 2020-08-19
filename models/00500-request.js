@@ -40,7 +40,6 @@ Model.model = function model() {
     return {
         'title': {
             type: String,
-            required: true
         },
         'description': {
             type: String,
@@ -56,16 +55,13 @@ Model.model = function model() {
             default: true,
         },
         'request_date': {
-            type: Boolean,
-            default: true,
+            type: Date,
         },
         'deadline': {
-            type: Boolean,
-            default: true,
+            type: Date,
         },
         'user_id': {
-            type: ObjectId,
-            required: true
+            type: ObjectId
         }
     };
 };

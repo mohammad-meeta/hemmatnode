@@ -1,5 +1,8 @@
 'use strict';
 
+const Requests = require('VUE-COMPONENTS/request/requests.vue').default;
+
+
 /**
  * RequestIndexPage class
  */
@@ -18,7 +21,6 @@ RequestIndexPage.boot = function () {
  * Init vue
  */
 RequestIndexPage.initVue = function () {
-    const Requests = require('VUE-COMPONENTS/request/requests.vue').default;
 
     window.v =
         new Vue({

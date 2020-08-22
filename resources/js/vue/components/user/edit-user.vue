@@ -118,6 +118,7 @@ module.exports = {
          * Load specific user
          */
         loadUserData(data) {
+            console.log(data);
             const temp = {
                 _id: data._id,
                 name: data.name,

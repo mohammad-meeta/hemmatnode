@@ -267,6 +267,7 @@ module.exports = {
      * Load specific user
      */
     loadUserData: function loadUserData(data) {
+      console.log(data);
       var temp = {
         _id: data._id,
         name: data.name,
@@ -10443,7 +10444,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/pages/user/index/index.js */"./resources/js/pages/user/index/index.js");
+module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/user/index/index.js */"./resources/js/pages/user/index/index.js");
 
 
 /***/ })

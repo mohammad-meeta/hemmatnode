@@ -58,6 +58,12 @@ PugView.viewPath = {
     'request.show': 'pages/request/show.pug',
     'request.edit': 'pages/request/edit.pug',
 
+    /* response */
+    'response.index': 'pages/response/index.pug',
+    'response.create': 'pages/response/register.pug',
+    'response.show': 'pages/response/show.pug',
+    'response.edit': 'pages/response/edit.pug',
+
     /* task */
     'task.index': 'pages/task/index.pug',
     'task.create': 'pages/task/register.pug',

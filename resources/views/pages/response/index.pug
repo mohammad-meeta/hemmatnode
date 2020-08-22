@@ -1,0 +1,17 @@
+extends ../../layout/app.pug
+
+block title
+    | طلب همکاری
+
+block content
+    .container
+        responses(
+            list-url=route('api.response', { page: '$page$', size: '$pageSize$'})
+            register-url=route('response.store')
+            edit-url=route('response.update', { id :'$id$'})
+        )
+
+block scripts
+    script(defer, src=mix('js/pages/response/index/index.js'))
+
+

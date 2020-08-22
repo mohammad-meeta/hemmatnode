@@ -10,6 +10,7 @@
                     button.button.is-danger(@click.prevent="removeFile(file)") &times;
                     label {{ humanFileSize(file.file.size) }}
                     label {{ file.file.originalname }}
+
 </template>
 
 <script>
@@ -96,7 +97,7 @@ export default {
                     file: files[i],
                     is_deleted: false
                 };
-
+                console.log(obj);
                 Vue.set(this.files, this.files.length, obj);
             }
         },

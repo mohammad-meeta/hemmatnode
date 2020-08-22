@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
-const PugView = use('app/helpers/pug-view');
-const UserHelper = use('app/helpers/user-helper');
+const PugView = use("app/helpers/pug-view");
+const UserHelper = use("app/helpers/user-helper");
 /**
  * Auth controller
  */
@@ -12,7 +12,7 @@ module.exports = UserController;
  * Index route
  */
 UserController.index = async function index(req, res, next) {
-    const pageRoute = 'user.index';
+    const pageRoute = "user.index";
 
     res.render(PugView.getView(pageRoute), {
         req,
@@ -22,16 +22,19 @@ UserController.index = async function index(req, res, next) {
 /**
  * paginate route
  */
-UserController.paginateUserData = async function paginateUserData(req, res, next) {
+UserController.paginateUserData = async function paginateUserData(
+    req,
+    res,
+    next
+) {
     const dataPaginate = {
         page: req.params.page,
         pageSize: req.params.size || 10
     };
 
-    let count = 0;
     UserHelper.loadAllCountUserData()
         .then(data => {
-            count = data;
+            let count = data;
 
             UserHelper.loadAllUserData(dataPaginate)
                 .then(data => {
@@ -56,7 +59,7 @@ UserController.paginateUserData = async function paginateUserData(req, res, next
  */
 UserController.show = async function show(req, res, next) {
     const userName = req.params.userData;
-    const pageRoute = 'user.show';
+    const pageRoute = "user.show";
 
     UserHelper.loadUserData(userName)
         .then(data => {
@@ -77,7 +80,7 @@ UserController.show = async function show(req, res, next) {
  * edit page route
  */
 UserController.edit = async function edit(req, res, next) {
-    const pageRoute = 'user.edit';
+    const pageRoute = "user.edit";
     res.render(PugView.getView(pageRoute), {
         req,
         pageRoute
@@ -110,35 +113,35 @@ UserController.update = async function update(req, res, next) {
     let data = {};
     if (req.body.password == undefined) {
         data = {
-            "_id": req.body._id,
-            "user_id": req.session.auth.userId,
-            "name": req.body.name,
-            "email": req.body.email,
-            "cellphone": req.body.cellphone,
-            "roles": req.body.roles,
-            "is_active": req.body.is_active,
-            "profile": {
-                "first_name": req.body.first_name,
-                "last_name": req.body.last_name,
-                "nation_code": req.body.nation_code,
-                "image": req.body.image || null
+            _id: req.body._id,
+            user_id: req.session.auth.userId,
+            name: req.body.name,
+            email: req.body.email,
+            cellphone: req.body.cellphone,
+            roles: req.body.roles,
+            is_active: req.body.is_active,
+            profile: {
+                first_name: req.body.first_name,
+                last_name: req.body.last_name,
+                nation_code: req.body.nation_code,
+                image: req.body.image || null
             }
         };
     } else {
         data = {
-            "_id": req.body._id,
-            "user_id": req.session.auth.userId,
-            "name": req.body.name,
-            "email": req.body.email,
-            "pwd": req.body.password,
-            "roles": req.body.roles,
-            "cellphone": req.body.cellphone,
-            "is_active": req.body.is_active,
-            "profile": {
-                "first_name": req.body.first_name,
-                "last_name": req.body.last_name,
-                "nation_code": req.body.nation_code,
-                "image": req.body.image || null
+            _id: req.body._id,
+            user_id: req.session.auth.userId,
+            name: req.body.name,
+            email: req.body.email,
+            pwd: req.body.password,
+            roles: req.body.roles,
+            cellphone: req.body.cellphone,
+            is_active: req.body.is_active,
+            profile: {
+                first_name: req.body.first_name,
+                last_name: req.body.last_name,
+                nation_code: req.body.nation_code,
+                image: req.body.image || null
             }
         };
     }
@@ -160,7 +163,7 @@ UserController.update = async function update(req, res, next) {
  */
 UserController.destroy = async function destroy(req, res, next) {
     const data = {
-        "_id": req.body._id
+        _id: req.body._id
     };
 
     const UserDelete = UserHelper.deleteUserData(data)
@@ -180,7 +183,7 @@ UserController.destroy = async function destroy(req, res, next) {
  * Create route return page
  */
 UserController.create = async function create(req, res, next) {
-    const pageRoute = PugView.getView('user.create');
+    const pageRoute = PugView.getView("user.create");
 
     res.render(pageRoute, {
         req,
@@ -192,7 +195,6 @@ UserController.create = async function create(req, res, next) {
  * store data user
  */
 UserController.store = async function store(req, res, next) {
-
     const files = req.files || [];
 
     let fileList = [];
@@ -210,18 +212,18 @@ UserController.store = async function store(req, res, next) {
     }
 
     const data = {
-        "name": req.body.name,
-        "user_id": req.session.auth.userId,
-        "pwd": req.body.password,
-        "email": req.body.email,
-        "roles": req.body.roles || [],
-        "cellphone": req.body.cellphone,
-        "is_active": req.body.is_active || false,
-        "profile": {
-            "first_name": req.body.first_name,
-            "last_name": req.body.last_name,
-            "nation_code": req.body.nation_code,
-            "image": fileList
+        name: req.body.name,
+        user_id: req.session.auth.userId,
+        pwd: req.body.password,
+        email: req.body.email,
+        roles: req.body.roles || [],
+        cellphone: req.body.cellphone,
+        is_active: req.body.is_active || false,
+        profile: {
+            first_name: req.body.first_name,
+            last_name: req.body.last_name,
+            nation_code: req.body.nation_code,
+            image: fileList
         }
     };
 

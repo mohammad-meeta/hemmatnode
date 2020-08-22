@@ -76,7 +76,7 @@ module.exports = {
         formModeStack: [],
         users: [],
         notificationMessage: null,
-        notificationType: "is-info",
+        notificationType: "is-info"
     }),
 
     props: {
@@ -136,10 +136,7 @@ module.exports = {
 
             //this.$refs.userList.loadUsers(1);
             // console.log(payload);
-            this.setNotification(
-                ".کاربر با موفقیت ذخیره شد",
-                "is-success"
-            );
+            this.setNotification(".کاربر با موفقیت ذخیره شد", "is-success");
         },
 
         /**
@@ -151,10 +148,7 @@ module.exports = {
 
             //this.$refs.userList.loadUsers(1);
             // console.log(payload);
-            this.setNotification(
-                ".کاربر با موفقیت ویرایش شد",
-                "is-success"
-            );
+            this.setNotification(".کاربر با موفقیت ویرایش شد", "is-success");
         },
 
         /**
@@ -245,7 +239,7 @@ module.exports = {
          */
         closeNotification() {
             this.setNotification(null);
-        },
+        }
     }
 };
 </script>

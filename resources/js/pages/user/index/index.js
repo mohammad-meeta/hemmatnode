@@ -29,20 +29,6 @@ UserIndexPage.initVue = function () {
             },
 
             data: {},
-
-            mounted() {
-                this.init();
-            },
-
-            methods: {
-                init() {
-                    this.loadUsers();
-                },
-
-                loadUsers() {
-                    this.$refs.users.loadUsers();
-                }
-            }
         });
 }
 

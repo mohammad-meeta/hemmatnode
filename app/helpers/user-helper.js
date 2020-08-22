@@ -9,7 +9,7 @@ function UserHelper() {}
 module.exports = UserHelper;
 
 /**
- * find all users data result 
+ * find all users data result
  */
 UserHelper.loadAllUserData = function loadAllUserData(dataPaginate) {
     const page = parseInt(dataPaginate.page)
@@ -17,63 +17,67 @@ UserHelper.loadAllUserData = function loadAllUserData(dataPaginate) {
     const skip = page > 0 ? ((page - 1) * pageSize) : 0
     const User = mongoose.model('User');
 
-    const pipeline = [{
-            "$lookup": {
-                "from": "files",
-                "localField": "profile.image",
-                "foreignField": "_id",
-                "as": "file"
+    const pipeline = [
+        {
+            $lookup: {
+                from: "files",
+                localField: "profile.image",
+                foreignField: "_id",
+                as: "file"
             }
         },
         {
-            "$unwind": {
-                "path": "$file",
-                "preserveNullAndEmptyArrays": true
+            $unwind: {
+                path: "$file",
+                preserveNullAndEmptyArrays: true
             }
         },
         {
-            "$project": {
+            $project: {
                 "file.encoding": 0,
                 "file.mimetype": 0,
-                "file.user_id": 0,
+                "file.user_id": 0
             }
         },
         {
-            "$group": {
-                "_id": "$_id",
-                "files": {
-                    "$push": "$file"
+            $group: {
+                _id: "$_id",
+                files: {
+                    $push: "$file"
                 },
-                "is_active": {
-                    "$last": "$is_active"
+                is_active: {
+                    $last: "$is_active"
                 },
-                "name": {
-                    "$last": "$name"
+                name: {
+                    $last: "$name"
                 },
-                "email": {
-                    "$last": "$email"
+                createdAt: {
+                    $last: "$created_at"
                 },
-                "profile": {
-                    "$last": "$profile"
+                email: {
+                    $last: "$email"
                 },
-                "cellphone": {
-                    "$last": "$cellphone"
+                profile: {
+                    $last: "$profile"
                 },
-                "role_group": {
-                    "$last": "$role_group"
+                cellphone: {
+                    $last: "$cellphone"
+                },
+                role_group: {
+                    $last: "$role_group"
                 }
             }
         },
         {
-            "$sort": {
-                "created_at": -1
+            $sort: {
+                created_at: -1
             }
         },
         {
-            "$skip": skip
+            $skip: skip
         },
         {
-            "$limit": pageSize
+            $limit: pageSize
         }
     ];
 
@@ -106,7 +110,7 @@ UserHelper.loadAllUserData = function loadAllUserData(dataPaginate) {
 };
 
 /**
- * find all count users data result 
+ * find all count users data result
  */
 UserHelper.loadAllCountUserData = function loadAllCountUserData() {
     const User = mongoose.model('User');
@@ -122,7 +126,7 @@ UserHelper.loadAllCountUserData = function loadAllCountUserData() {
 
 
 /**
- * find user data result 
+ * find user data result
  */
 UserHelper.loadUserData = function loadUserData(userName) {
     const User = mongoose.model('User');
@@ -283,7 +287,7 @@ UserHelper.loadUserDataID = function loadUserDataID(id) {
 };
 
 /**
- * insert user data  
+ * insert user data
  */
 UserHelper.insertNewUser = function insertNewUser(data) {
 
@@ -300,7 +304,7 @@ UserHelper.insertNewUser = function insertNewUser(data) {
 };
 
 /**
- * update user data  
+ * update user data
  */
 UserHelper.updateUserData = function updateUserData(data) {
     return new Promise((resolve, reject) => {
@@ -316,7 +320,7 @@ UserHelper.updateUserData = function updateUserData(data) {
 };
 
 /**
- * delete user data  
+ * delete user data
  */
 UserHelper.deleteUserData = function deleteUserData(data) {
     return new Promise((resolve, reject) => {

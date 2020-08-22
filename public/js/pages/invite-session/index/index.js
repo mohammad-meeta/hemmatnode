@@ -115,6 +115,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
 var uuidV4 = __webpack_require__(/*! uuid */ "./node_modules/uuid/index.js").v4;
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -208,6 +209,7 @@ var uuidV4 = __webpack_require__(/*! uuid */ "./node_modules/uuid/index.js").v4;
           file: files[i],
           is_deleted: false
         };
+        console.log(obj);
         Vue.set(this.files, this.files.length, obj);
       }
     },
@@ -1393,7 +1395,7 @@ module.exports = {
      */
     onInviteSessionUpdate: function onInviteSessionUpdate(payload) {
       console.log(payload);
-      this.$refs.inviteSessionList.editInviteSessionList(payload.data);
+      this.$refs.inviteSessionList.editInviteSessionList(payload);
       this.changeFormMode(ENUMS.FORM_MODE.LIST);
       this.setNotification(".جلسه با موفقیت ویرایش شد", "is-success");
     },
@@ -1547,6 +1549,26 @@ module.exports = {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 var ENUMS = __webpack_require__(/*! JS-HELPERS/enums */ "./resources/js/helpers/enums.js");
@@ -1569,6 +1591,19 @@ module.exports = {
     return {
       departmentData: null,
       ENUMS: ENUMS,
+      pagination: {
+        total: 200,
+        current: 10,
+        perPage: 10,
+        rangeBefore: 3,
+        rangeAfter: 1,
+        order: '',
+        size: '',
+        isSimple: false,
+        isRounded: false,
+        prevIcon: 'chevron-left',
+        nextIcon: 'chevron-right'
+      },
       inviteSessions: [{
         is_active: null,
         agenda: null,
@@ -1678,14 +1713,14 @@ module.exports = {
       }
     },
     editInviteSessionList: function editInviteSessionList(payload) {
-      var data = JSON.parse(payload.data.agenda);
+      var data = JSON.parse(payload.data.data.agenda);
       var editedInviteSessionsData = {
-        _id: payload._id,
-        title: payload.agenda,
-        agenda: payload.agenda,
+        _id: payload.data.data._id,
+        title: payload.data.data.agenda,
+        agenda: payload.data.data.agenda,
         extra: data,
-        is_active: payload.is_active,
-        created_at: payload.created_at
+        is_active: payload.data.data.is_active,
+        created_at: payload.data.data.created_at
       };
       var foundIndex = this.inviteSessions.findIndex(function (x) {
         return x._id == editedInviteSessionsData._id;
@@ -48170,7 +48205,12 @@ var render = function() {
                         innerHTML: _vm._s(_vm.getTitles(inviteSession.extra))
                       }
                     }),
-                    _c("td", [_vm._v(_vm._s(inviteSession.is_active))]),
+                    inviteSession.is_active
+                      ? _c("td", [_vm._v("فعال")])
+                      : _vm._e(),
+                    !inviteSession.is_active
+                      ? _c("td", [_vm._v("غیر فعال")])
+                      : _vm._e(),
                     _c("td", [
                       _vm._v(
                         _vm._s(_vm.toPersianDate(inviteSession.created_at))
@@ -48242,6 +48282,30 @@ var render = function() {
             ]
           )
         : _vm._e(),
+      _c("b-pagination", {
+        attrs: {
+          total: _vm.pagination.total,
+          current: _vm.pagination.current,
+          "range-before": _vm.pagination.rangeBefore,
+          "range-after": _vm.pagination.rangeAfter,
+          order: _vm.pagination.order,
+          size: _vm.pagination.size,
+          simple: _vm.pagination.isSimple,
+          rounded: _vm.pagination.isRounded,
+          "per-page": _vm.pagination.perPage,
+          "icon-prev": _vm.pagination.prevIcon,
+          "icon-next": _vm.pagination.nextIcon,
+          "aria-next-label": "Next page",
+          "aria-previous-label": "Previous page",
+          "aria-page-label": "Page",
+          "aria-current-label": "Current page"
+        },
+        on: {
+          "update:current": function($event) {
+            return _vm.$set(_vm.pagination, "current", $event)
+          }
+        }
+      }),
       _c("paginate", {
         attrs: {
           "page-count": _vm.pageCount,

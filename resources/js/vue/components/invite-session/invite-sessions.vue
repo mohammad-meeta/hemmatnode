@@ -223,7 +223,7 @@ module.exports = {
          */
         onInviteSessionUpdate(payload) {
             console.log(payload);
-            this.$refs.inviteSessionList.editInviteSessionList(payload.data);
+            this.$refs.inviteSessionList.editInviteSessionList(payload);
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
 
             this.setNotification(".جلسه با موفقیت ویرایش شد", "is-success");

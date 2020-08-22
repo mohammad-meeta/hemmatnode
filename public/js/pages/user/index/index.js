@@ -464,6 +464,9 @@ module.exports = {
 //
 //
 //
+//
+//
+//
 
 
 var ENUMS = __webpack_require__(/*! JS-HELPERS/enums */ "./resources/js/helpers/enums.js");
@@ -559,7 +562,7 @@ module.exports = {
         },
         cellphone: payload.cellphone,
         is_active: payload.is_active,
-        created_at: payload.created_at
+        createdAt: payload.createdAt
       };
       this.users.unshift(newUserData);
     },
@@ -573,7 +576,7 @@ module.exports = {
         nation_code: payload.nation_code,
         cellphone: payload.cellphone,
         is_active: payload.is_active,
-        created_at: payload.created_at
+        createdAt: payload.createdAt
       };
       var foundIndex = this.users.findIndex(function (x) {
         return x._id == editedUserData._id;
@@ -8447,9 +8450,10 @@ var render = function() {
                     ]),
                     _c("td", [_vm._v(_vm._s(user.profile.nation_code))]),
                     _c("td", [_vm._v(_vm._s(user.cellphone))]),
-                    _c("td", [_vm._v(_vm._s(user.is_active))]),
+                    user.is_active ? _c("td", [_vm._v("فعال")]) : _vm._e(),
+                    !user.is_active ? _c("td", [_vm._v("غیر فعال")]) : _vm._e(),
                     _c("td", [
-                      _vm._v(_vm._s(_vm.toPersianDate(user.created_at)))
+                      _vm._v(_vm._s(_vm.toPersianDate(user.createdAt)))
                     ]),
                     _c("td", { staticClass: "function-links" }, [
                       _c(
@@ -9753,18 +9757,7 @@ UserIndexPage.initVue = function () {
     components: {
       Users: Users
     },
-    data: {},
-    mounted: function mounted() {
-      this.init();
-    },
-    methods: {
-      init: function init() {
-        this.loadUsers();
-      },
-      loadUsers: function loadUsers() {
-        this.$refs.users.loadUsers();
-      }
-    }
+    data: {}
   });
 };
 /* Boot */

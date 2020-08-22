@@ -19,8 +19,11 @@
                 td {{ user.profile.first_name }} {{ user.profile.last_name }}
                 td {{ user.profile.nation_code }}
                 td {{ user.cellphone }}
-                td {{ user.is_active }}
-                td {{ toPersianDate(user.created_at) }}
+                td(v-if="user.is_active")
+                    | فعال
+                td(v-if="!user.is_active")
+                    | غیر فعال
+                td {{ toPersianDate(user.createdAt) }}
                 td.function-links
                     a.button.is-primary.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.EDIT, user)")
                         span.icon.is-small
@@ -125,7 +128,7 @@ module.exports = {
                 },
                 cellphone: payload.cellphone,
                 is_active: payload.is_active,
-                created_at: payload.created_at
+                createdAt: payload.createdAt
             };
 
             this.users.unshift(newUserData);
@@ -141,7 +144,7 @@ module.exports = {
                 nation_code: payload.nation_code,
                 cellphone: payload.cellphone,
                 is_active: payload.is_active,
-                created_at: payload.created_at
+                createdAt: payload.createdAt
             };
 
             let foundIndex = this.users.findIndex(

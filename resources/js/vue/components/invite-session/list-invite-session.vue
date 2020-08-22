@@ -13,7 +13,10 @@
             tr(v-for='inviteSession in inviteSessions', :key='inviteSession.id')
                 td {{ inviteSession.dep.title }}
                 td(v-html="getTitles(inviteSession.extra)")
-                td {{ inviteSession.is_active }}
+                td(v-if="inviteSession.is_active")
+                    | فعال
+                td(v-if="!inviteSession.is_active")
+                    | غیر فعال
                 td {{ toPersianDate(inviteSession.created_at) }}
                 td.function-links
                     a.button.is-primary.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.EDIT, inviteSession)")
@@ -28,6 +31,23 @@
                         span.icon.is-small
                             i.material-icons.icon check_circle
                         span ویرایش دعوتنامه
+    b-pagination(
+        :total="pagination.total"
+        :current.sync="pagination.current"
+        :range-before="pagination.rangeBefore"
+        :range-after="pagination.rangeAfter"
+        :order="pagination.order"
+        :size="pagination.size"
+        :simple="pagination.isSimple"
+        :rounded="pagination.isRounded"
+        :per-page="pagination.perPage"
+        :icon-prev="pagination.prevIcon"
+        :icon-next="pagination.nextIcon"
+        aria-next-label="Next page"
+        aria-previous-label="Previous page"
+        aria-page-label="Page"
+        aria-current-label="Current page"
+    )
 
     paginate(:page-count='pageCount',
         :click-handler='paginatorClick',
@@ -59,6 +79,19 @@ module.exports = {
     data: () => ({
         departmentData: null,
         ENUMS,
+        pagination: {
+            total: 200,
+            current: 10,
+            perPage: 10,
+            rangeBefore: 3,
+            rangeAfter: 1,
+            order: '',
+            size: '',
+            isSimple: false,
+            isRounded: false,
+            prevIcon: 'chevron-left',
+            nextIcon: 'chevron-right'
+        },
         inviteSessions: [
             {
                 is_active: null,
@@ -163,14 +196,14 @@ module.exports = {
         },
 
         editInviteSessionList(payload) {
-            const data = JSON.parse(payload.data.agenda);
+            const data = JSON.parse(payload.data.data.agenda);
             const editedInviteSessionsData = {
-                _id: payload._id,
-                title: payload.agenda,
-                agenda: payload.agenda,
+                _id: payload.data.data._id,
+                title: payload.data.data.agenda,
+                agenda: payload.data.data.agenda,
                 extra: data,
-                is_active: payload.is_active,
-                created_at: payload.created_at
+                is_active: payload.data.data.is_active,
+                created_at: payload.data.data.created_at
             };
 
             let foundIndex = this.inviteSessions.findIndex(

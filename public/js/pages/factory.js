@@ -255,13 +255,13 @@ module.exports = {
         lastName: data.profile.last_name,
         nationCode: data.profile.nation_code,
         cellphone: data.cellphone,
-        roles: data.roles,
+        roles: {},
         isActive: data.is_active
       };
-      temp.roles = {};
-      data.roles.forEach(function (role) {
-        return temp.roles[role] = true;
+      data.role_group.forEach(function (role) {
+        return temp.roles[role];
       });
+      console.log(temp.roles);
       Vue.set(this, "userData", temp);
     },
 

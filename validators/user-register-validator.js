@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-const validator = use('core/helpers/data-validator');
+const validator = use("core/helpers/data-validator");
 
 /**
  * User Login Validator
@@ -14,14 +14,13 @@ UserRegisterValidator.async = true;
  * Validation funciton
  */
 UserRegisterValidator.lang = function lang() {
-    return 'fa';
+    return "fa";
 };
 
 /**
  * Validation funciton
  */
 UserRegisterValidator.validate = function validate(req, res, next) {
-
     validator.validate(UserRegisterValidator, req, res, next);
 };
 
@@ -45,17 +44,17 @@ UserRegisterValidator.data = function data(req) {
  * Rules function
  */
 UserRegisterValidator.rules = function rules(req) {
-    const id = req.body._id || 'XXX';
+    const id = req.body._id || "XXX";
 
     return {
-        'user_id': 'required',
-        'name': 'required|min:3|max:25|user_name_available:' + id,
-        'password': 'password_available:' + id,
-        'email': 'required|email|email_available:' + id,
-        'first_name': 'required|min:3|max:25',
-        'last_name': 'required|min:4|max:25',
-        'nation_code': 'required|size:10',
-        'cellphone': 'required|size:11'
+        user_id: "required",
+        name: "required|min:3|max:25|user_name_available:" + id,
+        password: "password_available:" + id,
+        email: "required|email|email_available:" + id,
+        first_name: "required|min:3|max:25",
+        last_name: "required|min:4|max:25",
+        nation_code: "required|size:10",
+        cellphone: "required|size:11"
     };
 };
 
@@ -71,13 +70,13 @@ UserRegisterValidator.messages = function messages() {
  */
 UserRegisterValidator.attributes = function attributes() {
     return {
-        user_id: 'user_id',
-        name: 'user_name',
-        password: 'password',
-        email: 'email',
-        first_name: 'first_name',
-        last_name: 'last_name',
-        nation_code: 'nation_code',
-        cellphone: 'cellphone'
+        user_id: "user_id",
+        name: "user_name",
+        password: "password",
+        email: "email",
+        first_name: "first_name",
+        last_name: "last_name",
+        nation_code: "nation_code",
+        cellphone: "cellphone"
     };
 };

@@ -45,8 +45,8 @@ Router.get('/user/edit', [
 Router.post('/user', [
         checkSession,
         Rule.canAsync('user.permision', 'user.store'),
-        validator.validate,
         upload.array('files'),
+        validator.validate,
         'User@store'
     ])
     .as('user.store');

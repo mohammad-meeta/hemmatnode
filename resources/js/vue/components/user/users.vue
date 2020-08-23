@@ -35,6 +35,7 @@
                 register-user(@on-command="onCommand",
                   @on-register="onUserRegister"
                   :register-url="registerUrl",
+                  :departments-url="departmentsUrl",
                   :roles-url="rolesUrl")
 
             .column(v-show="!modeLoading && modeEdit")
@@ -101,6 +102,11 @@ module.exports = {
         },
 
         editUrl: {
+            type: String,
+            default: null
+        },
+
+        departmentsUrl: {
             type: String,
             default: null
         }
@@ -172,6 +178,7 @@ module.exports = {
 
                 case ENUMS.COMMAND.EDIT:
                     /* TODO: REGISTER NEW USER */
+                    console.log(data);
                     this.$refs.userEdit.loadUserData(data);
                     this.changeFormMode(ENUMS.FORM_MODE.EDIT);
                     break;

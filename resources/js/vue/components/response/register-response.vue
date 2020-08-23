@@ -8,16 +8,23 @@
         .form-small(v-show="! isLoadingMode")
             .fieldset
                 legend مشخصات پاسخ به طلب همکاری
-
                 .field
                     label.label درخواست
                     .control
-                        input.input(placeholder='درخواست', v-model='responseData.requestId')
+                        input.input(placeholder='درخواست', disabled ,v-model='value.title')
 
                 .field
-                    label.label واحد مسئول
+                    label.label
                     .control
-                        input.input(placeholder='واحد مسئول', v-model='responseData.departmentId')
+                        .select.is-primary
+                            select(v-model="responseData.departmentId")
+                                option(v-for='(department, departmentIndex) in departments',
+                                    :value="department._id") {{ department.title }}
+
+                //- .field
+                //-     label.label واحد مسئول
+                //-     .control
+                //-         input.input(placeholder='واحد مسئول', v-model='responseData.departmentId')
 
                 .field
                     label.label عنوان پاسخ به طلب همکاری
@@ -74,6 +81,7 @@ module.exports = {
     },
 
     data: () => ({
+        departments: [],
         ENUMS,
         responseData: {
             requestId: null,
@@ -93,13 +101,24 @@ module.exports = {
     }),
 
     props: {
+        departmentsUrl: {
+            type: String,
+            default: "",
+        },
+
         registerUrl: {
             type: String,
             default: "",
         },
+        value: {
+            type: Object,
+            default: () => {},
+        },
     },
 
-    created() {},
+    created() {
+        this.loadDepartments();
+    },
 
     computed: {
         isLoadingMode: (state) => state.showLoadingFlag == true,
@@ -107,6 +126,18 @@ module.exports = {
     },
 
     methods: {
+        /**
+         * load all departments for select departments in form
+         */
+        loadDepartments() {
+            const url = this.departmentsUrl;
+            AxiosHelper.send("get", url, "").then((res) => {
+                const resData = res.data;
+                const datas = resData.data.data;
+                Vue.set(this, "departments", datas);
+            });
+        },
+
         /**
          * Set attachments
          */
@@ -174,6 +205,7 @@ module.exports = {
             this.showLoading();
 
             const url = this.registerUrl;
+            Vue.set(this.responseData, "requestId", this.value._id);
 
             AxiosHelper.send("post", url, responseData, {
                 sendAsFormData: true,

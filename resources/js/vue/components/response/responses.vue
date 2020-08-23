@@ -29,16 +29,21 @@
                 loading
 
             .column(v-show="!modeLoading && modeList")
-                list-response(ref="responseList", @on-command="onCommand", :list-url="listUrl")
+                list-request(ref="requestList", @on-command="onCommand", :request-list-url="requestListUrl")
 
             .column(v-show="!modeLoading && modeRegister")
                 register-response(ref="responseRegister", @on-command="onCommand",
                   @on-register="onResponseRegister"
                   :register-url="registerUrl"
+                  :departments-url="departmentsUrl"
+                  v-model="requestData"
                 )
 
             .column(v-show="!modeLoading && modeShow")
                 show-response(ref="responseShow", @on-command="onCommand")
+
+            .column(v-show="!modeLoading && modeShow")
+                show-request(ref="requestShow", @on-command="onCommand")
 
             .column(v-show="!modeLoading && modeEdit")
                 edit-response(ref="responseEdit", @on-command="onCommand" ,:edit-url="editUrl")
@@ -52,10 +57,12 @@ const ENUMS = require("JS-HELPERS/enums");
 const Loading = require("VUE-COMPONENTS/general/loading.vue").default;
 const RegisterResponse = require("VUE-COMPONENTS/response/register-response.vue")
     .default;
-const ListResponse = require("VUE-COMPONENTS/response/list-response.vue")
-    .default;
+// const ListResponse = require("VUE-COMPONENTS/response/list-response.vue")
+//     .default;
+const ListRequest = require("VUE-COMPONENTS/response/list-request.vue").default;
 const ShowResponse = require("VUE-COMPONENTS/response/show-response.vue")
     .default;
+const ShowRequest = require("VUE-COMPONENTS/request/show-request.vue").default;
 const EditResponse = require("VUE-COMPONENTS/response/edit-response.vue")
     .default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
@@ -66,9 +73,11 @@ module.exports = {
     components: {
         Loading,
         EditResponse,
-        ListResponse,
+        // ListResponse,
+        ListRequest,
         RegisterResponse,
         ShowResponse,
+        ShowRequest,
         Notification,
     },
 
@@ -78,6 +87,7 @@ module.exports = {
         responses: [],
         notificationMessage: null,
         notificationType: "is-info",
+        requestData: {},
     }),
 
     props: {
@@ -86,9 +96,19 @@ module.exports = {
             default: null,
         },
 
+        requestListUrl: {
+            type: String,
+            default: null,
+        },
+
         registerUrl: {
             type: String,
             default: null,
+        },
+
+        departmentsUrl: {
+            type: String,
+            default: "",
         },
 
         editUrl: {
@@ -106,6 +126,7 @@ module.exports = {
         modeRegister: (state) => state.formMode == ENUMS.FORM_MODE.REGISTER,
         modeEdit: (state) => state.formMode == ENUMS.FORM_MODE.EDIT,
         modeShow: (state) => state.formMode == ENUMS.FORM_MODE.SHOW,
+        modeShowRequest: (state) => state.formMode == ENUMS.COMMAND.SHOW,
         showNotification: (state) => state.notificationMessage != null,
     },
 
@@ -115,7 +136,8 @@ module.exports = {
 
     mounted() {
         this.changeFormMode(ENUMS.FORM_MODE.LIST);
-        this.$refs.responseList.loadResponses(1);
+        // this.$refs.responseList.loadResponses(1);
+        this.$refs.requestList.loadRequests(1);
     },
 
     methods: {
@@ -156,6 +178,7 @@ module.exports = {
             }
             switch (arg) {
                 case ENUMS.COMMAND.NEW:
+                    Vue.set(this, "requestData", data);
                     this.changeFormMode(ENUMS.FORM_MODE.REGISTER);
                     break;
 
@@ -174,8 +197,13 @@ module.exports = {
                     this.changeFormMode(null, { pop: true });
                     break;
 
+                // case ENUMS.COMMAND.SHOW:
+                //     this.$refs.responseShow.loadResponseData(data);
+                //     this.changeFormMode(ENUMS.FORM_MODE.SHOW);
+                //     break;
+
                 case ENUMS.COMMAND.SHOW:
-                    this.$refs.responseShow.loadResponseData(data);
+                    this.$refs.requestShow.loadRequestData(data);
                     this.changeFormMode(ENUMS.FORM_MODE.SHOW);
                     break;
             }

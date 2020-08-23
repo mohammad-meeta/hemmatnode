@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 /**
  * dep cat controller
  */
-function InviteSessiontHelper() {}
+function InviteSessiontHelper() { }
 module.exports = InviteSessiontHelper;
 
 /**
@@ -23,7 +23,6 @@ InviteSessiontHelper.loadAllInviteSessionData = function loadAllInviteSessionDat
     const InviteSession = mongoose.model("InviteSession");
 
     const userId = req.session.auth.userId;
-
     const pipeline = [
         {
             $match: {
@@ -149,13 +148,21 @@ InviteSessiontHelper.loadAllInviteSessionData = function loadAllInviteSessionDat
 /**
  * find all dep cat count data result
  */
-InviteSessiontHelper.loadAllInviteSessionCountData = function loadAllInviteSessionCountData(
-    group
-) {
+InviteSessiontHelper.loadAllInviteSessionCountData = function loadAllInviteSessionCountData(req, group) {
     const InviteSession = mongoose.model("InviteSession");
+    const ObjectId = require("mongoose").Types.ObjectId;
+    const userId = req.session.auth.userId;
 
     const filterQuery = {
-        department_id: group
+        "department_id": new ObjectId(group),
+        $or: [
+            {
+                user_id: new ObjectId(userId)
+            },
+            {
+                user_list: userId
+            }
+        ]
     };
 
     return new Promise((resolve, reject) => {

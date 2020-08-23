@@ -86,6 +86,180 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/vue/components/general/file-upload.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/vue/components/general/file-upload.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var uuidV4 = __webpack_require__(/*! uuid */ "./node_modules/uuid/index.js").v4;
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "FileUpload",
+  props: {
+    oldFiles: {
+      type: Array,
+      "default": function _default() {
+        return [];
+      }
+    }
+  },
+  computed: {
+    fileList: function fileList(state) {
+      return state.files.filter(function (x) {
+        return !x.is_deleted;
+      });
+    }
+  },
+  data: function data() {
+    return {
+      files: []
+    };
+  },
+
+  /**
+   * Create method
+   */
+  created: function created() {},
+  methods: {
+    /**
+     * Update old files
+     */
+    updateOldFiles: function updateOldFiles(oldFiles) {
+      var _this = this;
+
+      Vue.set(this, "files", []);
+      oldFiles.forEach(function (file) {
+        var item = {
+          _id: file._id,
+          type: "old",
+          file: _objectSpread({}, file),
+          is_deleted: false
+        };
+        Vue.set(_this.files, _this.files.length, item);
+      });
+    },
+
+    /**
+     * Get files list
+     */
+    getFiles: function getFiles() {
+      return this.files;
+    },
+
+    /**
+     * Get deleted files list
+     */
+    getDeletedFiles: function getDeletedFiles() {
+      return this.files.filter(function (x) {
+        return x.is_deleted;
+      });
+    },
+
+    /**
+     * Get new files
+     */
+    getNewFiles: function getNewFiles() {
+      return this.files.filter(function (x) {
+        return x.type == "new";
+      });
+    },
+
+    /**
+     * Show file upload
+     */
+    showFileUpload: function showFileUpload() {
+      this.$refs.fileInput.click();
+    },
+
+    /**
+     * Add new attachment(s)
+     */
+    addAttachment: function addAttachment() {
+      var files = this.$refs.fileInput.files;
+
+      for (var i = 0; i < files.length; ++i) {
+        var obj = {
+          _id: uuidV4(),
+          type: "new",
+          file: files[i],
+          is_deleted: false
+        };
+        console.log(obj);
+        Vue.set(this.files, this.files.length, obj);
+      }
+    },
+
+    /**
+     * Remove a file from list
+     */
+    removeFile: function removeFile(file) {
+      var confirmDelete = confirm("آیا برای حذف فایل اطمینان دارید؟");
+
+      if (confirmDelete) {
+        if (file.type == "old") {
+          Vue.set(file, "is_deleted", true);
+        } else {
+          var index = this.files.findIndex(function (x) {
+            return x._id == file._id;
+          });
+          Vue["delete"](this.files, index);
+        }
+      }
+    },
+
+    /**
+     * Human size
+     */
+    humanFileSize: function humanFileSize(bytes) {
+      var si = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+      var dp = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
+      var thresh = si ? 1000 : 1024;
+
+      if (Math.abs(bytes) < thresh) {
+        return bytes + " B";
+      }
+
+      var units = si ? ["kB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"] : ["KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"];
+      var u = -1;
+      var r = Math.pow(10, dp);
+
+      do {
+        bytes /= thresh;
+        ++u;
+      } while (Math.round(Math.abs(bytes) * r) / r >= thresh && u < units.length - 1);
+
+      return bytes.toFixed(dp) + " " + units[u];
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/vue/components/general/loading.vue?vue&type=script&lang=js&":
 /*!******************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/vue/components/general/loading.vue?vue&type=script&lang=js& ***!
@@ -277,13 +451,13 @@ module.exports = {
         lastName: data.profile.last_name,
         nationCode: data.profile.nation_code,
         cellphone: data.cellphone,
-        roles: data.roles,
+        roles: {},
         isActive: data.is_active
       };
-      temp.roles = {};
-      data.roles.forEach(function (role) {
-        return temp.roles[role] = true;
+      data.role_group.forEach(function (role) {
+        return temp.roles[role];
       });
+      console.log(temp.roles);
       Vue.set(this, "userData", temp);
     },
 
@@ -657,6 +831,17 @@ module.exports = {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 var AxiosHelper = __webpack_require__(/*! JS-HELPERS/axios-helper */ "./resources/js/helpers/axios-helper.js");
@@ -667,15 +852,22 @@ var UserValidator = __webpack_require__(/*! JS-VALIDATORS/user-register-validato
 
 var Notification = __webpack_require__(/*! VUE-COMPONENTS/general/notification.vue */ "./resources/js/vue/components/general/notification.vue")["default"];
 
+var FileUpload = __webpack_require__(/*! VUE-COMPONENTS/general/file-upload.vue */ "./resources/js/vue/components/general/file-upload.vue")["default"];
+
 module.exports = {
   name: "RegisterUser",
   components: {
-    Notification: Notification
+    Notification: Notification,
+    FileUpload: FileUpload
   },
   data: function data() {
     return {
       ENUMS: ENUMS,
       roles: [],
+      files: [],
+      deletedOldFiles: [],
+      oldFiles: [],
+      departments: [],
       userData: {
         name: null,
         password: null,
@@ -684,6 +876,8 @@ module.exports = {
         lastName: null,
         nationCode: null,
         cellphone: null,
+        files: [],
+        deletedOldFiles: [],
         roles: {},
         isActive: false
       },
@@ -700,10 +894,15 @@ module.exports = {
     rolesUrl: {
       type: String,
       "default": ""
+    },
+    departmentsUrl: {
+      type: String,
+      "default": ""
     }
   },
   created: function created() {
     this.loadRoles();
+    this.loadDepartments();
   },
   computed: {
     isLoadingMode: function isLoadingMode(state) {
@@ -728,17 +927,31 @@ module.exports = {
     },
 
     /**
+     * load all departments for select departments in form
+     */
+    loadDepartments: function loadDepartments() {
+      var _this = this;
+
+      var url = this.departmentsUrl;
+      AxiosHelper.send("get", url, "").then(function (res) {
+        var resData = res.data;
+        var datas = resData.data.data;
+        Vue.set(_this, "departments", datas);
+      });
+    },
+
+    /**
      * load all roles for select roles in form
      */
     loadRoles: function loadRoles() {
-      var _this = this;
+      var _this2 = this;
 
       //let roles = ["superadmin", "admin", "karmand1"];
       var url = this.rolesUrl;
       AxiosHelper.send("get", url, "").then(function (res) {
         var resData = res.data;
         var datas = resData.data.data;
-        Vue.set(_this, "roles", datas);
+        Vue.set(_this2, "roles", datas);
       }); //            Vue.set(this.userData, "roles", roles);
     },
 
@@ -776,7 +989,7 @@ module.exports = {
      * Register new user
      */
     registerUser: function registerUser() {
-      var _this2 = this;
+      var _this3 = this;
 
       var isValid = this.validate();
 
@@ -784,6 +997,16 @@ module.exports = {
         return;
       }
 
+      var deletedFiles = this.$refs.fileUpload.getDeletedFiles();
+      var newFiles = this.$refs.fileUpload.getNewFiles();
+      var newUploaded = newFiles.map(function (x) {
+        return x.file;
+      });
+      Vue.set(this, "files", newUploaded);
+      var deleteUploaded = deletedFiles.map(function (x) {
+        return x._id;
+      });
+      Vue.set(this, "deletedOldFiles", deleteUploaded);
       var userData = {
         name: this.userData.name,
         password: this.userData.password,
@@ -792,8 +1015,11 @@ module.exports = {
         last_name: this.userData.lastName,
         nation_code: this.userData.nationCode,
         cellphone: this.userData.cellphone,
+        department_id: this.userData.departments,
         roles: this.userData.roles,
-        is_active: this.userData.isActive
+        is_active: this.userData.isActive,
+        files: this.files,
+        deletedOldFiles: this.deletedOldFiles
       };
       var t = Object.keys(userData.roles).filter(function (key) {
         return true == userData.roles[key];
@@ -804,19 +1030,26 @@ module.exports = {
       console.log(userData);
       this.showLoading();
       var url = this.registerUrl;
-      AxiosHelper.send("post", url, userData).then(function (res) {
+      AxiosHelper.send("post", url, userData, {
+        sendAsFormData: true,
+        filesArray: "files"
+      }).then(function (res) {
         var data = res.data;
 
-        _this2.$emit("on-register", {
-          sender: _this2,
-          data: data
-        });
+        if (data.success) {
+          _this3.$emit("on-register", {
+            sender: _this3,
+            data: {
+              data: data
+            }
+          });
+        }
       })["catch"](function (err) {
         var data = err.response.data;
 
-        _this2.setNotification(data, "is-danger");
+        _this3.setNotification(data, "is-danger");
       }).then(function () {
-        return _this2.hideLoading();
+        return _this3.hideLoading();
       }); //this.changeFormMode(ENUMS.FORM_MODE.LIST);
       //this.$refs.userList.loadUsers(1);
     },
@@ -994,6 +1227,7 @@ module.exports = {
 //
 //
 //
+//
 
 
 var Routes = __webpack_require__(/*! JS-CORE/routes */ "./resources/js/core/routes.js");
@@ -1049,6 +1283,10 @@ module.exports = {
       "default": null
     },
     editUrl: {
+      type: String,
+      "default": null
+    },
+    departmentsUrl: {
       type: String,
       "default": null
     }
@@ -1129,6 +1367,7 @@ module.exports = {
 
         case ENUMS.COMMAND.EDIT:
           /* TODO: REGISTER NEW USER */
+          console.log(data);
           this.$refs.userEdit.loadUserData(data);
           this.changeFormMode(ENUMS.FORM_MODE.EDIT);
           break;
@@ -1719,6 +1958,267 @@ function toDate(argument) {
 
 /* eslint-env browser */
 module.exports = typeof self == 'object' ? self.FormData : window.FormData;
+
+
+/***/ }),
+
+/***/ "./node_modules/uuid/index.js":
+/*!************************************!*\
+  !*** ./node_modules/uuid/index.js ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var v1 = __webpack_require__(/*! ./v1 */ "./node_modules/uuid/v1.js");
+var v4 = __webpack_require__(/*! ./v4 */ "./node_modules/uuid/v4.js");
+
+var uuid = v4;
+uuid.v1 = v1;
+uuid.v4 = v4;
+
+module.exports = uuid;
+
+
+/***/ }),
+
+/***/ "./node_modules/uuid/lib/bytesToUuid.js":
+/*!**********************************************!*\
+  !*** ./node_modules/uuid/lib/bytesToUuid.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * Convert array of 16 byte values to UUID string format of the form:
+ * XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+ */
+var byteToHex = [];
+for (var i = 0; i < 256; ++i) {
+  byteToHex[i] = (i + 0x100).toString(16).substr(1);
+}
+
+function bytesToUuid(buf, offset) {
+  var i = offset || 0;
+  var bth = byteToHex;
+  // join used to fix memory issue caused by concatenation: https://bugs.chromium.org/p/v8/issues/detail?id=3175#c4
+  return ([
+    bth[buf[i++]], bth[buf[i++]],
+    bth[buf[i++]], bth[buf[i++]], '-',
+    bth[buf[i++]], bth[buf[i++]], '-',
+    bth[buf[i++]], bth[buf[i++]], '-',
+    bth[buf[i++]], bth[buf[i++]], '-',
+    bth[buf[i++]], bth[buf[i++]],
+    bth[buf[i++]], bth[buf[i++]],
+    bth[buf[i++]], bth[buf[i++]]
+  ]).join('');
+}
+
+module.exports = bytesToUuid;
+
+
+/***/ }),
+
+/***/ "./node_modules/uuid/lib/rng-browser.js":
+/*!**********************************************!*\
+  !*** ./node_modules/uuid/lib/rng-browser.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// Unique ID creation requires a high quality random # generator.  In the
+// browser this is a little complicated due to unknown quality of Math.random()
+// and inconsistent support for the `crypto` API.  We do the best we can via
+// feature-detection
+
+// getRandomValues needs to be invoked in a context where "this" is a Crypto
+// implementation. Also, find the complete implementation of crypto on IE11.
+var getRandomValues = (typeof(crypto) != 'undefined' && crypto.getRandomValues && crypto.getRandomValues.bind(crypto)) ||
+                      (typeof(msCrypto) != 'undefined' && typeof window.msCrypto.getRandomValues == 'function' && msCrypto.getRandomValues.bind(msCrypto));
+
+if (getRandomValues) {
+  // WHATWG crypto RNG - http://wiki.whatwg.org/wiki/Crypto
+  var rnds8 = new Uint8Array(16); // eslint-disable-line no-undef
+
+  module.exports = function whatwgRNG() {
+    getRandomValues(rnds8);
+    return rnds8;
+  };
+} else {
+  // Math.random()-based (RNG)
+  //
+  // If all else fails, use Math.random().  It's fast, but is of unspecified
+  // quality.
+  var rnds = new Array(16);
+
+  module.exports = function mathRNG() {
+    for (var i = 0, r; i < 16; i++) {
+      if ((i & 0x03) === 0) r = Math.random() * 0x100000000;
+      rnds[i] = r >>> ((i & 0x03) << 3) & 0xff;
+    }
+
+    return rnds;
+  };
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/uuid/v1.js":
+/*!*********************************!*\
+  !*** ./node_modules/uuid/v1.js ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var rng = __webpack_require__(/*! ./lib/rng */ "./node_modules/uuid/lib/rng-browser.js");
+var bytesToUuid = __webpack_require__(/*! ./lib/bytesToUuid */ "./node_modules/uuid/lib/bytesToUuid.js");
+
+// **`v1()` - Generate time-based UUID**
+//
+// Inspired by https://github.com/LiosK/UUID.js
+// and http://docs.python.org/library/uuid.html
+
+var _nodeId;
+var _clockseq;
+
+// Previous uuid creation time
+var _lastMSecs = 0;
+var _lastNSecs = 0;
+
+// See https://github.com/uuidjs/uuid for API details
+function v1(options, buf, offset) {
+  var i = buf && offset || 0;
+  var b = buf || [];
+
+  options = options || {};
+  var node = options.node || _nodeId;
+  var clockseq = options.clockseq !== undefined ? options.clockseq : _clockseq;
+
+  // node and clockseq need to be initialized to random values if they're not
+  // specified.  We do this lazily to minimize issues related to insufficient
+  // system entropy.  See #189
+  if (node == null || clockseq == null) {
+    var seedBytes = rng();
+    if (node == null) {
+      // Per 4.5, create and 48-bit node id, (47 random bits + multicast bit = 1)
+      node = _nodeId = [
+        seedBytes[0] | 0x01,
+        seedBytes[1], seedBytes[2], seedBytes[3], seedBytes[4], seedBytes[5]
+      ];
+    }
+    if (clockseq == null) {
+      // Per 4.2.2, randomize (14 bit) clockseq
+      clockseq = _clockseq = (seedBytes[6] << 8 | seedBytes[7]) & 0x3fff;
+    }
+  }
+
+  // UUID timestamps are 100 nano-second units since the Gregorian epoch,
+  // (1582-10-15 00:00).  JSNumbers aren't precise enough for this, so
+  // time is handled internally as 'msecs' (integer milliseconds) and 'nsecs'
+  // (100-nanoseconds offset from msecs) since unix epoch, 1970-01-01 00:00.
+  var msecs = options.msecs !== undefined ? options.msecs : new Date().getTime();
+
+  // Per 4.2.1.2, use count of uuid's generated during the current clock
+  // cycle to simulate higher resolution clock
+  var nsecs = options.nsecs !== undefined ? options.nsecs : _lastNSecs + 1;
+
+  // Time since last uuid creation (in msecs)
+  var dt = (msecs - _lastMSecs) + (nsecs - _lastNSecs)/10000;
+
+  // Per 4.2.1.2, Bump clockseq on clock regression
+  if (dt < 0 && options.clockseq === undefined) {
+    clockseq = clockseq + 1 & 0x3fff;
+  }
+
+  // Reset nsecs if clock regresses (new clockseq) or we've moved onto a new
+  // time interval
+  if ((dt < 0 || msecs > _lastMSecs) && options.nsecs === undefined) {
+    nsecs = 0;
+  }
+
+  // Per 4.2.1.2 Throw error if too many uuids are requested
+  if (nsecs >= 10000) {
+    throw new Error('uuid.v1(): Can\'t create more than 10M uuids/sec');
+  }
+
+  _lastMSecs = msecs;
+  _lastNSecs = nsecs;
+  _clockseq = clockseq;
+
+  // Per 4.1.4 - Convert from unix epoch to Gregorian epoch
+  msecs += 12219292800000;
+
+  // `time_low`
+  var tl = ((msecs & 0xfffffff) * 10000 + nsecs) % 0x100000000;
+  b[i++] = tl >>> 24 & 0xff;
+  b[i++] = tl >>> 16 & 0xff;
+  b[i++] = tl >>> 8 & 0xff;
+  b[i++] = tl & 0xff;
+
+  // `time_mid`
+  var tmh = (msecs / 0x100000000 * 10000) & 0xfffffff;
+  b[i++] = tmh >>> 8 & 0xff;
+  b[i++] = tmh & 0xff;
+
+  // `time_high_and_version`
+  b[i++] = tmh >>> 24 & 0xf | 0x10; // include version
+  b[i++] = tmh >>> 16 & 0xff;
+
+  // `clock_seq_hi_and_reserved` (Per 4.2.2 - include variant)
+  b[i++] = clockseq >>> 8 | 0x80;
+
+  // `clock_seq_low`
+  b[i++] = clockseq & 0xff;
+
+  // `node`
+  for (var n = 0; n < 6; ++n) {
+    b[i + n] = node[n];
+  }
+
+  return buf ? buf : bytesToUuid(b);
+}
+
+module.exports = v1;
+
+
+/***/ }),
+
+/***/ "./node_modules/uuid/v4.js":
+/*!*********************************!*\
+  !*** ./node_modules/uuid/v4.js ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var rng = __webpack_require__(/*! ./lib/rng */ "./node_modules/uuid/lib/rng-browser.js");
+var bytesToUuid = __webpack_require__(/*! ./lib/bytesToUuid */ "./node_modules/uuid/lib/bytesToUuid.js");
+
+function v4(options, buf, offset) {
+  var i = buf && offset || 0;
+
+  if (typeof(options) == 'string') {
+    buf = options === 'binary' ? new Array(16) : null;
+    options = null;
+  }
+  options = options || {};
+
+  var rnds = options.random || (options.rng || rng)();
+
+  // Per 4.4, set bits for version and `clock_seq_hi_and_reserved`
+  rnds[6] = (rnds[6] & 0x0f) | 0x40;
+  rnds[8] = (rnds[8] & 0x3f) | 0x80;
+
+  // Copy bytes to buffer, if provided
+  if (buf) {
+    for (var ii = 0; ii < 16; ++ii) {
+      buf[i + ii] = rnds[ii];
+    }
+  }
+
+  return buf || bytesToUuid(rnds);
+}
+
+module.exports = v4;
 
 
 /***/ }),
@@ -7890,6 +8390,74 @@ module.exports = Validator;
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/pug-plain-loader/index.js!./node_modules/vue-loader/lib/index.js?!./resources/js/vue/components/general/file-upload.vue?vue&type=template&id=def9890e&scoped=true&lang=pug&":
+/*!*******************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/vue/components/general/file-upload.vue?vue&type=template&id=def9890e&scoped=true&lang=pug& ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("input", {
+      ref: "fileInput",
+      staticClass: "is-hidden",
+      attrs: { type: "file", multiple: "" },
+      on: { change: _vm.addAttachment }
+    }),
+    _c(
+      "button",
+      {
+        staticClass: "button is-success",
+        on: {
+          click: function($event) {
+            return _vm.showFileUpload()
+          }
+        }
+      },
+      [_c("i", { staticClass: "fa fa-plus" }, [_vm._v("افزودن فایل")])]
+    ),
+    _c("div", [
+      _c(
+        "ul",
+        _vm._l(_vm.fileList, function(file, index) {
+          return _c("li", { staticStyle: { dir: "ltr" } }, [
+            _c(
+              "button",
+              {
+                staticClass: "button is-danger",
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    return _vm.removeFile(file)
+                  }
+                }
+              },
+              [_vm._v("×")]
+            ),
+            _c("label", [_vm._v(_vm._s(_vm.humanFileSize(file.file.size)))]),
+            _c("label", [_vm._v(_vm._s(file.file.originalname))])
+          ])
+        }),
+        0
+      )
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/pug-plain-loader/index.js!./node_modules/vue-loader/lib/index.js?!./resources/js/vue/components/general/loading.vue?vue&type=template&id=8a8bd07a&scoped=true&lang=pug&":
 /*!***************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/vue/components/general/loading.vue?vue&type=template&id=8a8bd07a&scoped=true&lang=pug& ***!
@@ -8854,6 +9422,70 @@ var render = function() {
               })
             ])
           ]),
+          _c("fieldset", [
+            _c("legend", [_vm._v("فایل های ضمیمه")]),
+            _c(
+              "div",
+              { staticClass: "field" },
+              [
+                _c("file-upload", {
+                  ref: "fileUpload",
+                  attrs: { "old-files": _vm.oldFiles }
+                })
+              ],
+              1
+            )
+          ]),
+          _c("div", { staticClass: "field" }, [
+            _c("label", { staticClass: "label" }),
+            _c("div", { staticClass: "control" }, [
+              _c("div", { staticClass: "select is-primary" }, [
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.userData.departments,
+                        expression: "userData.departments"
+                      }
+                    ],
+                    on: {
+                      change: function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.$set(
+                          _vm.userData,
+                          "departments",
+                          $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        )
+                      }
+                    }
+                  },
+                  _vm._l(_vm.departments, function(
+                    department,
+                    departmentIndex
+                  ) {
+                    return _c(
+                      "option",
+                      { domProps: { value: department._id } },
+                      [_vm._v(_vm._s(department.title))]
+                    )
+                  }),
+                  0
+                )
+              ])
+            ])
+          ]),
           _c(
             "div",
             { staticClass: "field" },
@@ -9278,6 +9910,7 @@ var render = function() {
           _c("register-user", {
             attrs: {
               "register-url": _vm.registerUrl,
+              "departments-url": _vm.departmentsUrl,
               "roles-url": _vm.rolesUrl
             },
             on: {
@@ -9930,6 +10563,75 @@ UserRegisterValidator.validateEdit = function validateEdit(data) {
   };
   return BaseValidator.validate(data, rules, options);
 };
+
+/***/ }),
+
+/***/ "./resources/js/vue/components/general/file-upload.vue":
+/*!*************************************************************!*\
+  !*** ./resources/js/vue/components/general/file-upload.vue ***!
+  \*************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _file_upload_vue_vue_type_template_id_def9890e_scoped_true_lang_pug___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./file-upload.vue?vue&type=template&id=def9890e&scoped=true&lang=pug& */ "./resources/js/vue/components/general/file-upload.vue?vue&type=template&id=def9890e&scoped=true&lang=pug&");
+/* harmony import */ var _file_upload_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./file-upload.vue?vue&type=script&lang=js& */ "./resources/js/vue/components/general/file-upload.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _file_upload_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _file_upload_vue_vue_type_template_id_def9890e_scoped_true_lang_pug___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _file_upload_vue_vue_type_template_id_def9890e_scoped_true_lang_pug___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "def9890e",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/vue/components/general/file-upload.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/vue/components/general/file-upload.vue?vue&type=script&lang=js&":
+/*!**************************************************************************************!*\
+  !*** ./resources/js/vue/components/general/file-upload.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_file_upload_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./file-upload.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/vue/components/general/file-upload.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_file_upload_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/vue/components/general/file-upload.vue?vue&type=template&id=def9890e&scoped=true&lang=pug&":
+/*!*****************************************************************************************************************!*\
+  !*** ./resources/js/vue/components/general/file-upload.vue?vue&type=template&id=def9890e&scoped=true&lang=pug& ***!
+  \*****************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_pug_plain_loader_index_js_node_modules_vue_loader_lib_index_js_vue_loader_options_file_upload_vue_vue_type_template_id_def9890e_scoped_true_lang_pug___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/pug-plain-loader!../../../../../node_modules/vue-loader/lib??vue-loader-options!./file-upload.vue?vue&type=template&id=def9890e&scoped=true&lang=pug& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/pug-plain-loader/index.js!./node_modules/vue-loader/lib/index.js?!./resources/js/vue/components/general/file-upload.vue?vue&type=template&id=def9890e&scoped=true&lang=pug&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_pug_plain_loader_index_js_node_modules_vue_loader_lib_index_js_vue_loader_options_file_upload_vue_vue_type_template_id_def9890e_scoped_true_lang_pug___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_pug_plain_loader_index_js_node_modules_vue_loader_lib_index_js_vue_loader_options_file_upload_vue_vue_type_template_id_def9890e_scoped_true_lang_pug___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
 
 /***/ }),
 

@@ -38,6 +38,17 @@
                 label.label شماره موبایل
                 .control
                     input.input(type='text', placeholder='شماره موبایل', v-model='userData.cellphone' required)
+            fieldset
+                legend فایل های ضمیمه
+                .field
+                    file-upload(ref="fileUpload", :old-files="oldFiles")
+            .field
+                label.label
+                .control
+                    .select.is-primary
+                        select(v-model="userData.departments")
+                            option(v-for='(department, departmentIndex) in departments',
+                                :value="department._id") {{ department.title }}
             .field
                 label.checkbox(v-for='(role, roleIndex) in roles')
                     input(type='checkbox', v-model="userData.roles[role.name]", :value="role.name")
@@ -59,17 +70,23 @@ const AxiosHelper = require("JS-HELPERS/axios-helper");
 const ENUMS = require("JS-HELPERS/enums");
 const UserValidator = require("JS-VALIDATORS/user-register-validator");
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
+const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 
 module.exports = {
     name: "RegisterUser",
 
     components: {
-        Notification
+        Notification,
+        FileUpload
     },
 
     data: () => ({
         ENUMS,
         roles: [],
+        files: [],
+        deletedOldFiles: [],
+        oldFiles: [],
+        departments: [],
         userData: {
             name: null,
             password: null,
@@ -78,6 +95,8 @@ module.exports = {
             lastName: null,
             nationCode: null,
             cellphone: null,
+            files: [],
+            deletedOldFiles: [],
             roles: {},
             isActive: false
         },
@@ -96,11 +115,18 @@ module.exports = {
         rolesUrl: {
             type: String,
             default: ""
-        }
+        },
+
+        departmentsUrl: {
+            type: String,
+            default: ""
+        },
+
     },
 
     created() {
         this.loadRoles();
+        this.loadDepartments();
     },
 
     computed: {
@@ -120,6 +146,18 @@ module.exports = {
                     this.registerUser();
                     break;
             }
+        },
+
+        /**
+         * load all departments for select departments in form
+         */
+        loadDepartments() {
+            const url = this.departmentsUrl;
+            AxiosHelper.send("get", url, "").then(res => {
+                const resData = res.data;
+                const datas = resData.data.data;
+                Vue.set(this, "departments", datas);
+            });
         },
 
         /**
@@ -176,7 +214,12 @@ module.exports = {
             if (!isValid) {
                 return;
             }
-
+            const deletedFiles = this.$refs.fileUpload.getDeletedFiles();
+            const newFiles = this.$refs.fileUpload.getNewFiles();
+            let newUploaded = newFiles.map(x => x.file);
+            Vue.set(this, "files", newUploaded);
+            let deleteUploaded = deletedFiles.map(x => x._id);
+            Vue.set(this, "deletedOldFiles", deleteUploaded);
             let userData = {
                 name: this.userData.name,
                 password: this.userData.password,
@@ -185,8 +228,11 @@ module.exports = {
                 last_name: this.userData.lastName,
                 nation_code: this.userData.nationCode,
                 cellphone: this.userData.cellphone,
+                department_id: this.userData.departments,
                 roles: this.userData.roles,
-                is_active: this.userData.isActive
+                is_active: this.userData.isActive,
+                files: this.files,
+                deletedOldFiles: this.deletedOldFiles
             };
 
             let t = Object.keys(userData.roles)
@@ -198,13 +244,21 @@ module.exports = {
             this.showLoading();
 
             const url = this.registerUrl;
-            AxiosHelper.send("post", url, userData)
+            AxiosHelper.send("post", url, userData, {
+                sendAsFormData: true,
+                filesArray: "files"
+            })
                 .then(res => {
                     const data = res.data;
-                    this.$emit("on-register", {
-                        sender: this,
-                        data
-                    });
+
+                    if (data.success) {
+                        this.$emit("on-register", {
+                            sender: this,
+                            data:{
+                                data:data
+                            }
+                        });
+                    }
                 })
                 .catch(err => {
                     const data = err.response.data;

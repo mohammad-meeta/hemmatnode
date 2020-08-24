@@ -52,9 +52,13 @@ Model.model = function model() {
             type: Boolean,
             default: false
         },
-        'role_group': {
-            type: Object,
-            default: {}
+        'role_group_group': {
+            type: ObjectId,
+            required: true
+        },
+        'role_group_role': {
+            type: Array,
+            required: true
         },
         'profile': new mongoose.Schema({
             'first_name': {

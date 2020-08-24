@@ -20,10 +20,11 @@ Rule.check = function check(user, data) {
         },
         {
             "$project": {
-                "role": "$role_group.role",
-                "group": "$role_group.group"
+                "role": "$role_group_role",
+                "group": "$role_group_group"
             }
         },
+        { "$unwind": "$role" },
         {
             "$lookup": {
                 "from": "roles",

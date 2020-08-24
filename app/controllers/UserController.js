@@ -195,7 +195,7 @@ UserController.create = async function create(req, res, next) {
  * store data user
  */
 UserController.store = async function store(req, res, next) {
-    const FileHelper = use('app/helpers/file-helper');
+    const FileHelper = use("app/helpers/file-helper");
     const files = req.files || [];
 
     let fileList = [];

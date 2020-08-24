@@ -38,10 +38,22 @@
                     label.label شماره موبایل
                     .control
                         input.input(type='text', placeholder='شماره موبایل', v-model='userData.cellphone' required)
+                fieldset
+                    legend فایل های ضمیمه
+                    .field
+                        file-upload(ref="fileUpload", :old-files="oldFiles")
                 .field
-                label.checkbox(v-for='(role, roleIndex) in roles')
-                    input(type='checkbox', v-model="userData.roles[role.name]", :value="role.name")
-                    |   {{ role.name }}
+                    label.label
+                    .control
+                        .select.is-primary
+                            select(v-model="userData.role_group[0].group")
+                                option(v-for='(department, departmentIndex) in departments',
+                                    :value="department._id") {{ department.title }}
+                .field
+                    label.checkbox(v-for='(role, roleIndex) in roles')
+                        input(type='checkbox', v-model="userData.role_group[0].role", :value="role._id")
+                        |   {{ role.name }}
+
                 .field
                     label.checkbox
                         input(type='checkbox', v-model="userData.isActive")
@@ -59,18 +71,23 @@ const AxiosHelper = require("JS-HELPERS/axios-helper");
 const ENUMS = require("JS-HELPERS/enums");
 const UserValidator = require("JS-VALIDATORS/user-register-validator");
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
+const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 
 module.exports = {
     name: "EditUser",
     components: {
-        Notification
+        Notification,
+        FileUpload
     },
 
     data: () => ({
         ENUMS,
         roles: [],
+        files: [],
+        deletedOldFiles: [],
+        oldFiles: [],
+        departments: [],
         userData: {
-            _id: null,
             name: null,
             password: null,
             email: null,
@@ -78,8 +95,15 @@ module.exports = {
             lastName: null,
             nationCode: null,
             cellphone: null,
-            roles: {},
-            isActive: false
+            files: [],
+            deletedOldFiles: [],
+            isActive: false,
+            role_group: [
+                {
+                    role: null,
+                    group: null
+                }
+            ]
         },
         notificationMessage: null,
         notificationType: "is-info",
@@ -93,6 +117,11 @@ module.exports = {
         },
 
         rolesUrl: {
+            type: String,
+            default: ""
+        },
+
+        departmentsUrl: {
             type: String,
             default: ""
         },
@@ -128,13 +157,18 @@ module.exports = {
                 lastName: data.profile.last_name,
                 nationCode: data.profile.nation_code,
                 cellphone: data.cellphone,
-                roles: {},
+                role_group: {
+                    role: data.role_group[0].role,
+                    group: data.role_group[0].group
+                },
+                files: data.files,
                 isActive: data.is_active
             };
+            console.log(temp);
 
-            data.role_group.forEach(role => temp.roles[role]);
-            console.log(temp.roles);
-            Vue.set(this, "userData", temp);
+            // Vue.set(this, "oldFiles", data.files);
+            // Vue.set(this, "userData", temp);
+            // this.$refs.fileUpload.updateOldFiles(data.files);
         },
 
         /**
@@ -216,8 +250,13 @@ module.exports = {
                 last_name: this.userData.lastName,
                 nation_code: this.userData.nationCode,
                 cellphone: this.userData.cellphone,
-                roles: this.userData.roles,
-                is_active: this.userData.isActive
+                role_group: {
+                    role: this.userData.role_group[0].role,
+                    group: this.userData.role_group[0].group
+                },
+                is_active: this.userData.isActive,
+                files: this.files,
+                deletedOldFiles: this.deletedOldFiles
             };
 
             let t = Object.keys(userData.roles)
@@ -227,9 +266,13 @@ module.exports = {
             userData.roles = t;
 
             const url = this.editUrl.replace("$id$", userData._id);
-            AxiosHelper.send("patch", url, userData)
+            AxiosHelper.send("patch", url, userData,{
+                sendAsFormData: true,
+                filesArray: "files"
+            })
                 .then(res => {
-                    const data = JSON.parse(res.config.data);
+                    //const data = JSON.parse(res.config.data);
+                    const data = res.data;
                     this.$emit("on-update", {
                         sender: this,
                         data

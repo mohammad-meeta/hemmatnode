@@ -46,12 +46,12 @@
                 label.label
                 .control
                     .select.is-primary
-                        select(v-model="userData.departments")
+                        select(v-model="userData.role_group[0].group")
                             option(v-for='(department, departmentIndex) in departments',
                                 :value="department._id") {{ department.title }}
             .field
                 label.checkbox(v-for='(role, roleIndex) in roles')
-                    input(type='checkbox', v-model="userData.roles[role.name]", :value="role.name")
+                    input(type='checkbox', name="roles" v-model="userData.role_group[0].role", :value="role._id")
                     |   {{ role.name }}
             .field
                 label.checkbox
@@ -97,8 +97,13 @@ module.exports = {
             cellphone: null,
             files: [],
             deletedOldFiles: [],
-            roles: {},
-            isActive: false
+            isActive: false,
+            role_group: [
+                {
+                    role: [],
+                    group: []
+                }
+            ]
         },
 
         notificationMessage: null,
@@ -120,8 +125,7 @@ module.exports = {
         departmentsUrl: {
             type: String,
             default: ""
-        },
-
+        }
     },
 
     created() {
@@ -228,22 +232,18 @@ module.exports = {
                 last_name: this.userData.lastName,
                 nation_code: this.userData.nationCode,
                 cellphone: this.userData.cellphone,
-                department_id: this.userData.departments,
-                roles: this.userData.roles,
+                role_group: {
+                    role: this.userData.role_group[0].role,
+                    group: this.userData.role_group[0].group
+                },
                 is_active: this.userData.isActive,
                 files: this.files,
                 deletedOldFiles: this.deletedOldFiles
             };
-
-            let t = Object.keys(userData.roles)
-                .filter(key => true == userData.roles[key])
-                .map(key => key);
-
-            userData.roles = t;
-            console.log(userData);
             this.showLoading();
 
             const url = this.registerUrl;
+            console.log(userData);
             AxiosHelper.send("post", url, userData, {
                 sendAsFormData: true,
                 filesArray: "files"
@@ -254,8 +254,8 @@ module.exports = {
                     if (data.success) {
                         this.$emit("on-register", {
                             sender: this,
-                            data:{
-                                data:data
+                            data: {
+                                data: data
                             }
                         });
                     }

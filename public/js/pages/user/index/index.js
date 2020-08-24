@@ -377,6 +377,18 @@ module.exports = {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 var AxiosHelper = __webpack_require__(/*! JS-HELPERS/axios-helper */ "./resources/js/helpers/axios-helper.js");
@@ -387,17 +399,23 @@ var UserValidator = __webpack_require__(/*! JS-VALIDATORS/user-register-validato
 
 var Notification = __webpack_require__(/*! VUE-COMPONENTS/general/notification.vue */ "./resources/js/vue/components/general/notification.vue")["default"];
 
+var FileUpload = __webpack_require__(/*! VUE-COMPONENTS/general/file-upload.vue */ "./resources/js/vue/components/general/file-upload.vue")["default"];
+
 module.exports = {
   name: "EditUser",
   components: {
-    Notification: Notification
+    Notification: Notification,
+    FileUpload: FileUpload
   },
   data: function data() {
     return {
       ENUMS: ENUMS,
       roles: [],
+      files: [],
+      deletedOldFiles: [],
+      oldFiles: [],
+      departments: [],
       userData: {
-        _id: null,
         name: null,
         password: null,
         email: null,
@@ -405,8 +423,13 @@ module.exports = {
         lastName: null,
         nationCode: null,
         cellphone: null,
-        roles: {},
-        isActive: false
+        files: [],
+        deletedOldFiles: [],
+        isActive: false,
+        role_group: [{
+          role: null,
+          group: null
+        }]
       },
       notificationMessage: null,
       notificationType: "is-info",
@@ -419,6 +442,10 @@ module.exports = {
       "default": ""
     },
     rolesUrl: {
+      type: String,
+      "default": ""
+    },
+    departmentsUrl: {
       type: String,
       "default": ""
     },
@@ -451,14 +478,16 @@ module.exports = {
         lastName: data.profile.last_name,
         nationCode: data.profile.nation_code,
         cellphone: data.cellphone,
-        roles: {},
+        role_group: {
+          role: data.role_group[0].role,
+          group: data.role_group[0].group
+        },
+        files: data.files,
         isActive: data.is_active
       };
-      data.role_group.forEach(function (role) {
-        return temp.roles[role];
-      });
-      console.log(temp.roles);
-      Vue.set(this, "userData", temp);
+      console.log(temp); // Vue.set(this, "oldFiles", data.files);
+      // Vue.set(this, "userData", temp);
+      // this.$refs.fileUpload.updateOldFiles(data.files);
     },
 
     /**
@@ -541,8 +570,13 @@ module.exports = {
         last_name: this.userData.lastName,
         nation_code: this.userData.nationCode,
         cellphone: this.userData.cellphone,
-        roles: this.userData.roles,
-        is_active: this.userData.isActive
+        role_group: {
+          role: this.userData.role_group[0].role,
+          group: this.userData.role_group[0].group
+        },
+        is_active: this.userData.isActive,
+        files: this.files,
+        deletedOldFiles: this.deletedOldFiles
       };
       var t = Object.keys(userData.roles).filter(function (key) {
         return true == userData.roles[key];
@@ -551,8 +585,12 @@ module.exports = {
       });
       userData.roles = t;
       var url = this.editUrl.replace("$id$", userData._id);
-      AxiosHelper.send("patch", url, userData).then(function (res) {
-        var data = JSON.parse(res.config.data);
+      AxiosHelper.send("patch", url, userData, {
+        sendAsFormData: true,
+        filesArray: "files"
+      }).then(function (res) {
+        //const data = JSON.parse(res.config.data);
+        var data = res.data;
 
         _this2.$emit("on-update", {
           sender: _this2,
@@ -727,17 +765,17 @@ module.exports = {
     addToUserList: function addToUserList(payload) {
       console.log(payload);
       var newUserData = {
-        _id: payload._id,
-        name: payload.name,
-        email: payload.email,
+        _id: payload.data._id,
+        name: payload.data.name,
+        email: payload.data.email,
         profile: {
-          first_name: payload.profile.first_name,
-          last_name: payload.profile.last_name,
-          nation_code: payload.profile.nation_code
+          first_name: payload.data.profile.first_name,
+          last_name: payload.data.profile.last_name,
+          nation_code: payload.data.profile.nation_code
         },
-        cellphone: payload.cellphone,
-        is_active: payload.is_active,
-        createdAt: payload.createdAt
+        cellphone: payload.data.cellphone,
+        is_active: payload.data.is_active,
+        createdAt: payload.data.createdAt
       };
       this.users.unshift(newUserData);
     },
@@ -878,8 +916,11 @@ module.exports = {
         cellphone: null,
         files: [],
         deletedOldFiles: [],
-        roles: {},
-        isActive: false
+        isActive: false,
+        role_group: [{
+          role: [],
+          group: []
+        }]
       },
       notificationMessage: null,
       notificationType: "is-info",
@@ -1015,21 +1056,17 @@ module.exports = {
         last_name: this.userData.lastName,
         nation_code: this.userData.nationCode,
         cellphone: this.userData.cellphone,
-        department_id: this.userData.departments,
-        roles: this.userData.roles,
+        role_group: {
+          role: this.userData.role_group[0].role,
+          group: this.userData.role_group[0].group
+        },
         is_active: this.userData.isActive,
         files: this.files,
         deletedOldFiles: this.deletedOldFiles
       };
-      var t = Object.keys(userData.roles).filter(function (key) {
-        return true == userData.roles[key];
-      }).map(function (key) {
-        return key;
-      });
-      userData.roles = t;
-      console.log(userData);
       this.showLoading();
       var url = this.registerUrl;
+      console.log(userData);
       AxiosHelper.send("post", url, userData, {
         sendAsFormData: true,
         filesArray: "files"
@@ -1367,7 +1404,6 @@ module.exports = {
 
         case ENUMS.COMMAND.EDIT:
           /* TODO: REGISTER NEW USER */
-          console.log(data);
           this.$refs.userEdit.loadUserData(data);
           this.changeFormMode(ENUMS.FORM_MODE.EDIT);
           break;
@@ -8831,57 +8867,125 @@ var render = function() {
                 })
               ])
             ]),
-            _c("div", { staticClass: "field" }),
-            _vm._l(_vm.roles, function(role, roleIndex) {
-              return _c("label", { staticClass: "checkbox" }, [
-                _c("input", {
-                  directives: [
+            _c("fieldset", [
+              _c("legend", [_vm._v("فایل های ضمیمه")]),
+              _c(
+                "div",
+                { staticClass: "field" },
+                [
+                  _c("file-upload", {
+                    ref: "fileUpload",
+                    attrs: { "old-files": _vm.oldFiles }
+                  })
+                ],
+                1
+              )
+            ]),
+            _c("div", { staticClass: "field" }, [
+              _c("label", { staticClass: "label" }),
+              _c("div", { staticClass: "control" }, [
+                _c("div", { staticClass: "select is-primary" }, [
+                  _c(
+                    "select",
                     {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.userData.roles[role.name],
-                      expression: "userData.roles[role.name]"
-                    }
-                  ],
-                  attrs: { type: "checkbox" },
-                  domProps: {
-                    value: role.name,
-                    checked: Array.isArray(_vm.userData.roles[role.name])
-                      ? _vm._i(_vm.userData.roles[role.name], role.name) > -1
-                      : _vm.userData.roles[role.name]
-                  },
-                  on: {
-                    change: function($event) {
-                      var $$a = _vm.userData.roles[role.name],
-                        $$el = $event.target,
-                        $$c = $$el.checked ? true : false
-                      if (Array.isArray($$a)) {
-                        var $$v = role.name,
-                          $$i = _vm._i($$a, $$v)
-                        if ($$el.checked) {
-                          $$i < 0 &&
-                            _vm.$set(
-                              _vm.userData.roles,
-                              role.name,
-                              $$a.concat([$$v])
-                            )
-                        } else {
-                          $$i > -1 &&
-                            _vm.$set(
-                              _vm.userData.roles,
-                              role.name,
-                              $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                            )
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.userData.role_group[0].group,
+                          expression: "userData.role_group[0].group"
                         }
-                      } else {
-                        _vm.$set(_vm.userData.roles, role.name, $$c)
+                      ],
+                      on: {
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.$set(
+                            _vm.userData.role_group[0],
+                            "group",
+                            $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          )
+                        }
+                      }
+                    },
+                    _vm._l(_vm.departments, function(
+                      department,
+                      departmentIndex
+                    ) {
+                      return _c(
+                        "option",
+                        { domProps: { value: department._id } },
+                        [_vm._v(_vm._s(department.title))]
+                      )
+                    }),
+                    0
+                  )
+                ])
+              ])
+            ]),
+            _c(
+              "div",
+              { staticClass: "field" },
+              _vm._l(_vm.roles, function(role, roleIndex) {
+                return _c("label", { staticClass: "checkbox" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.userData.role_group[0].role,
+                        expression: "userData.role_group[0].role"
+                      }
+                    ],
+                    attrs: { type: "checkbox" },
+                    domProps: {
+                      value: role._id,
+                      checked: Array.isArray(_vm.userData.role_group[0].role)
+                        ? _vm._i(_vm.userData.role_group[0].role, role._id) > -1
+                        : _vm.userData.role_group[0].role
+                    },
+                    on: {
+                      change: function($event) {
+                        var $$a = _vm.userData.role_group[0].role,
+                          $$el = $event.target,
+                          $$c = $$el.checked ? true : false
+                        if (Array.isArray($$a)) {
+                          var $$v = role._id,
+                            $$i = _vm._i($$a, $$v)
+                          if ($$el.checked) {
+                            $$i < 0 &&
+                              _vm.$set(
+                                _vm.userData.role_group[0],
+                                "role",
+                                $$a.concat([$$v])
+                              )
+                          } else {
+                            $$i > -1 &&
+                              _vm.$set(
+                                _vm.userData.role_group[0],
+                                "role",
+                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                              )
+                          }
+                        } else {
+                          _vm.$set(_vm.userData.role_group[0], "role", $$c)
+                        }
                       }
                     }
-                  }
-                }),
-                _vm._v("  " + _vm._s(role.name))
-              ])
-            }),
+                  }),
+                  _vm._v("  " + _vm._s(role.name))
+                ])
+              }),
+              0
+            ),
             _c("div", { staticClass: "field" }, [
               _c("label", { staticClass: "checkbox" }, [
                 _c("input", {
@@ -8963,8 +9067,7 @@ var render = function() {
                 ]
               )
             ])
-          ],
-          2
+          ]
         )
       ])
     ],
@@ -9447,8 +9550,8 @@ var render = function() {
                       {
                         name: "model",
                         rawName: "v-model",
-                        value: _vm.userData.departments,
-                        expression: "userData.departments"
+                        value: _vm.userData.role_group[0].group,
+                        expression: "userData.role_group[0].group"
                       }
                     ],
                     on: {
@@ -9462,8 +9565,8 @@ var render = function() {
                             return val
                           })
                         _vm.$set(
-                          _vm.userData,
-                          "departments",
+                          _vm.userData.role_group[0],
+                          "group",
                           $event.target.multiple
                             ? $$selectedVal
                             : $$selectedVal[0]
@@ -9496,42 +9599,42 @@ var render = function() {
                     {
                       name: "model",
                       rawName: "v-model",
-                      value: _vm.userData.roles[role.name],
-                      expression: "userData.roles[role.name]"
+                      value: _vm.userData.role_group[0].role,
+                      expression: "userData.role_group[0].role"
                     }
                   ],
-                  attrs: { type: "checkbox" },
+                  attrs: { type: "checkbox", name: "roles" },
                   domProps: {
-                    value: role.name,
-                    checked: Array.isArray(_vm.userData.roles[role.name])
-                      ? _vm._i(_vm.userData.roles[role.name], role.name) > -1
-                      : _vm.userData.roles[role.name]
+                    value: role._id,
+                    checked: Array.isArray(_vm.userData.role_group[0].role)
+                      ? _vm._i(_vm.userData.role_group[0].role, role._id) > -1
+                      : _vm.userData.role_group[0].role
                   },
                   on: {
                     change: function($event) {
-                      var $$a = _vm.userData.roles[role.name],
+                      var $$a = _vm.userData.role_group[0].role,
                         $$el = $event.target,
                         $$c = $$el.checked ? true : false
                       if (Array.isArray($$a)) {
-                        var $$v = role.name,
+                        var $$v = role._id,
                           $$i = _vm._i($$a, $$v)
                         if ($$el.checked) {
                           $$i < 0 &&
                             _vm.$set(
-                              _vm.userData.roles,
-                              role.name,
+                              _vm.userData.role_group[0],
+                              "role",
                               $$a.concat([$$v])
                             )
                         } else {
                           $$i > -1 &&
                             _vm.$set(
-                              _vm.userData.roles,
-                              role.name,
+                              _vm.userData.role_group[0],
+                              "role",
                               $$a.slice(0, $$i).concat($$a.slice($$i + 1))
                             )
                         }
                       } else {
-                        _vm.$set(_vm.userData.roles, role.name, $$c)
+                        _vm.$set(_vm.userData.role_group[0], "role", $$c)
                       }
                     }
                   }

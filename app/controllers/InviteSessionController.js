@@ -6,7 +6,7 @@ const SMSSender = use('app/helpers/sms-sender-helper')
 /**
  * Dep cat controller
  */
-function InviteSession() {}
+function InviteSession() { }
 module.exports = InviteSession;
 
 /**
@@ -31,7 +31,7 @@ InviteSession.paginateInviteSession = function paginateInviteSession(req, res, n
     };
     const group = req.params.group;
 
-    InviteSessionHelper.loadAllInviteSessionCountData(group)
+    InviteSessionHelper.loadAllInviteSessionCountData(req, group)
         .then(data => {
             let count = data.data;
 
@@ -122,42 +122,44 @@ InviteSession.editInviteSessionData = async function editInviteSessionData(req, 
  */
 InviteSession.update = async function update(req, res, next) {
     let data = {};
-    const files = req.body.files || [];
-    let fileList = [];
-        files.forEach(element => {
-        const fileData = element;
-        FileHelper.insertFileData(fileData)
-            .then(data => {
-                console.log(data);
-            })
-            .catch(err => console.error(err));
-    });
+    console.log(JSON.stringify(req.body));
 
-    data = {
-        "_id": req.body._id,
-        "body": req.body.body,
-        "agenda": req.body.agenda,
-        "place": req.body.place,
-        "date": req.body.date,
-        "user_list": req.body.user_list,
-        "other_user": req.body.other_user || null,
-        "user_id": req.session.auth.userId,
-        "is_active": req.body.is_active,
-        "department_id": req.body.department_id,
-        "files": fileList
-    };
+    // const files = req.body.files || [];
+    // let fileList = [];
+    // files.forEach(element => {
+    //     const fileData = element;
+    //     FileHelper.insertFileData(fileData)
+    //         .then(data => {
+    //             console.log(data);
+    //         })
+    //         .catch(err => console.error(err));
+    // });
 
-    InviteSessionHelper.updateInviteSessionData(data)
-        .then(data => {
-            const result = {
-                success: true,
-                data: data
-            };
-            res.status(200)
-                .send(result)
-                .end();
-        })
-        .catch(err => console.error(err));
+    // data = {
+    //     "_id": req.body._id,
+    //     "body": req.body.body,
+    //     "agenda": req.body.agenda,
+    //     "place": req.body.place,
+    //     "date": req.body.date,
+    //     "user_list": JSON.parse(req.body.user_list),
+    //     "other_user": req.body.other_user || null,
+    //     "user_id": req.session.auth.userId,
+    //     "is_active": req.body.is_active,
+    //     "department_id": req.body.department_id,
+    //     "files": fileList
+    // };
+
+    // InviteSessionHelper.updateInviteSessionData(data)
+    //     .then(data => {
+    //         const result = {
+    //             success: true,
+    //             data: data
+    //         };
+    //         res.status(200)
+    //             .send(result)
+    //             .end();
+    //     })
+    //     .catch(err => console.error(err));
 };
 
 /**

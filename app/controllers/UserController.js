@@ -5,7 +5,7 @@ const UserHelper = use("app/helpers/user-helper");
 /**
  * Auth controller
  */
-function UserController() {}
+function UserController() { }
 module.exports = UserController;
 
 /**
@@ -118,7 +118,7 @@ UserController.update = async function update(req, res, next) {
             name: req.body.name,
             email: req.body.email,
             cellphone: req.body.cellphone,
-            roles: req.body.roles,
+            role_group: req.body.role_group,
             is_active: req.body.is_active,
             profile: {
                 first_name: req.body.first_name,
@@ -134,7 +134,7 @@ UserController.update = async function update(req, res, next) {
             name: req.body.name,
             email: req.body.email,
             pwd: req.body.password,
-            roles: req.body.roles,
+            role_group: req.body.role_group,
             cellphone: req.body.cellphone,
             is_active: req.body.is_active,
             profile: {
@@ -217,7 +217,7 @@ UserController.store = async function store(req, res, next) {
         user_id: req.session.auth.userId,
         pwd: req.body.password,
         email: req.body.email,
-        roles: req.body.roles || [],
+        role_group: req.body.role_group || [],
         cellphone: req.body.cellphone,
         is_active: req.body.is_active || false,
         profile: {

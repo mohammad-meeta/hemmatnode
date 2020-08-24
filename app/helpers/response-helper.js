@@ -8,6 +8,132 @@ const mongoose = require('mongoose');
 function ResponseHelper() { }
 module.exports = ResponseHelper;
 
+
+/**
+ * find all request 
+ */
+ResponseHelper.loadAllRequestData = function loadAllRequestData(req, dataPaginate) {
+    const page = parseInt(dataPaginate.page);
+    const pageSize = parseInt(dataPaginate.pageSize);
+    const skip = page > 0 ? ((page - 1) * pageSize) : 0;
+    const ObjectId = require('mongoose').Types.ObjectId;
+    const Request = mongoose.model('Request');
+
+    const pipeline = [
+        {
+            "$lookup": {
+                "from": "departments",
+                "localField": "department_id",
+                "foreignField": "_id",
+                "as": "dep"
+            }
+        },
+        {
+            "$unwind": "$dep"
+        },
+        {
+            "$unwind": {
+                "path": "$files",
+                "preserveNullAndEmptyArrays": true
+            }
+        },
+        {
+            "$lookup": {
+                "from": "files",
+                "localField": "files.file_id",
+                "foreignField": "_id",
+                "as": "file"
+            }
+        },
+        {
+            "$unwind": {
+                "path": "$file",
+                "preserveNullAndEmptyArrays": true
+            }
+        },
+        {
+            "$project": {
+                "file.encoding": 0,
+                "file.fieldname": 0,
+                "file.mimetype": 0,
+                "file.destination": 0,
+                "file.user_id": 0,
+                "file.path": 0,
+                "file.filename": 0,
+            }
+        },
+        {
+            "$group": {
+                "_id": "$_id",
+                "files": {
+                    "$push": "$file"
+                },
+                "is_active": {
+                    "$last": "$is_active"
+                },
+                "title": {
+                    "$last": "$title"
+                },
+                "description": {
+                    "$last": "$description"
+                },
+                "request_date": {
+                    "$last": "$request_date"
+                },
+                "deadline": {
+                    "$last": "$deadline"
+                },
+                "request_date": {
+                    "$last": "$request_date"
+                },
+                "created_at": {
+                    "$last": "$created_at"
+                },
+                "dep": {
+                    "$last": "$dep"
+                }
+            }
+        },
+        {
+            "$sort": {
+                "created_at": -1
+            }
+        },
+        {
+            "$skip": skip
+        },
+        {
+            "$limit": pageSize
+        }
+    ];
+
+    return new Promise((resolve, reject) => {
+        Request.aggregate(pipeline)
+            .then(res => {
+                resolve(res);
+            })
+            .catch(err => reject(err));
+    });
+};
+/**
+ * find all  count data result 
+ */
+ResponseHelper.loadAllRequestCountData = function loadAllRequestCountData(group) {
+    const Request = mongoose.model('Request');
+
+    const filterQuery = {
+    };
+
+    return new Promise((resolve, reject) => {
+        Request.countDocuments(filterQuery)
+            .then(res => {
+                resolve(res);
+            })
+            .catch(err => reject(err));
+    });
+};
+
+
 /**
  * find all data result 
  */

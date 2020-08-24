@@ -52,7 +52,7 @@ Model.model = function model() {
             type: Boolean,
             default: false
         },
-        'roles': {
+        'role_group': {
             type: Array,
             default: []
         },

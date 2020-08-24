@@ -64,6 +64,50 @@ Response.paginateResponse = function paginateResponse(req, res, next) {
 };
 
 /**
+ * paginate route request
+ */
+Response.paginateRequest = function paginateRequest(req, res, next) {
+    const dataPaginate = {
+        page: req.params.page,
+        pageSize: req.params.size || 10
+    };
+
+    ResponseHelper.loadAllRequestCountData()
+        .then(data => {
+            let count = data.data;
+
+            ResponseHelper.loadAllRequestData(req, dataPaginate)
+                .then(data => {
+                    const result = {
+                        success: true,
+                        data: {
+                            data: data,
+                            count: count
+                        }
+                    };
+
+                    res.status(200)
+                        .send(result)
+                        .end();
+                })
+                .catch(err => {
+                    Logger.error(err);
+
+                    res.status(500)
+                        .send(err)
+                        .end();
+                });
+        })
+        .catch(err => {
+            Logger.error(err);
+
+            res.status(500)
+                .send(err)
+                .end();
+        });
+};
+
+/**
  * show route
  */
 Response.show = async function show(req, res, next) {

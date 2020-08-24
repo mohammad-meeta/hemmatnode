@@ -367,6 +367,7 @@ module.exports = {
 //
 //
 //
+//
 
 
 var AxiosHelper = __webpack_require__(/*! JS-HELPERS/axios-helper */ "./resources/js/helpers/axios-helper.js");
@@ -427,12 +428,16 @@ module.exports = {
       type: String,
       "default": ""
     },
-    userDatas: {}
+    userDatas: {
+      role_group: {
+        role: [],
+        group: null
+      }
+    }
   },
   created: function created() {
     this.loadRoles();
   },
-  mounted: function mounted() {},
   computed: {
     isLoadingMode: function isLoadingMode(state) {
       return state.showLoadingFlag == true;
@@ -446,7 +451,6 @@ module.exports = {
      * Load specific user
      */
     loadUserData: function loadUserData(data) {
-      console.log(data);
       var temp = {
         _id: data._id,
         name: data.name,
@@ -457,15 +461,17 @@ module.exports = {
         nationCode: data.profile.nation_code,
         cellphone: data.cellphone,
         role_group: {
-          role: data.role_group[0].role,
-          group: data.role_group[0].group
+          role: [],
+          // data.role_group.role,
+          group: null // data.role_group.group
+
         },
         files: data.files,
         isActive: data.is_active
       };
-      console.log(temp); // Vue.set(this, "oldFiles", data.files);
-      // Vue.set(this, "userData", temp);
-      // this.$refs.fileUpload.updateOldFiles(data.files);
+      Vue.set(this, "oldFiles", data.files);
+      Vue.set(this, "userData", temp);
+      this.$refs.fileUpload.updateOldFiles(data.files);
     },
 
     /**
@@ -7686,6 +7692,7 @@ var render = function() {
     "div",
     { staticClass: "container" },
     [
+      _c("pre", [_vm._v(_vm._s(_vm.userData))]),
       _vm.showNotification
         ? _c(
             "notification",
@@ -7980,56 +7987,6 @@ var render = function() {
                 ],
                 1
               )
-            ]),
-            _c("div", { staticClass: "field" }, [
-              _c("label", { staticClass: "label" }),
-              _c("div", { staticClass: "control" }, [
-                _c("div", { staticClass: "select is-primary" }, [
-                  _c(
-                    "select",
-                    {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.userData.role_group[0].group,
-                          expression: "userData.role_group[0].group"
-                        }
-                      ],
-                      on: {
-                        change: function($event) {
-                          var $$selectedVal = Array.prototype.filter
-                            .call($event.target.options, function(o) {
-                              return o.selected
-                            })
-                            .map(function(o) {
-                              var val = "_value" in o ? o._value : o.value
-                              return val
-                            })
-                          _vm.$set(
-                            _vm.userData.role_group[0],
-                            "group",
-                            $event.target.multiple
-                              ? $$selectedVal
-                              : $$selectedVal[0]
-                          )
-                        }
-                      }
-                    },
-                    _vm._l(_vm.departments, function(
-                      department,
-                      departmentIndex
-                    ) {
-                      return _c(
-                        "option",
-                        { domProps: { value: department._id } },
-                        [_vm._v(_vm._s(department.title))]
-                      )
-                    }),
-                    0
-                  )
-                ])
-              ])
             ]),
             _c(
               "div",
@@ -8903,7 +8860,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/pages/factory.js */"./resources/js/pages/factory.js");
+module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/factory.js */"./resources/js/pages/factory.js");
 
 
 /***/ })

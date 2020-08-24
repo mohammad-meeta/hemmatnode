@@ -180,7 +180,6 @@ module.exports = {
                     /* TODO: REGISTER NEW USER */
                     this.$refs.userEdit.loadUserData(data);
                     this.changeFormMode(ENUMS.FORM_MODE.EDIT);
-                    break;
 
                 case ENUMS.COMMAND.CANCEL:
                     this.changeFormMode(null, { pop: true });

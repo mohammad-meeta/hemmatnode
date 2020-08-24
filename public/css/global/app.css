@@ -18304,6 +18304,10 @@ MIT (https://github.com/Wikiki/bulma-steps/blob/master/LICENSE)
 }
 @charset "UTF-8";
 
+pre {
+  direction: ltr !important;
+}
+
 .footer {
   padding: 0px;
 }

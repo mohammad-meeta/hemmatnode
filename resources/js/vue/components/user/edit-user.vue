@@ -1,5 +1,6 @@
 <template lang="pug">
     .container
+        pre {{ userData }}
         notification(:notification-type="notificationType", @on-close="closeNotification", v-if="showNotification")
             span(v-html="notificationMessage")
         .columns.is-vcentered
@@ -42,7 +43,7 @@
                     legend فایل های ضمیمه
                     .field
                         file-upload(ref="fileUpload", :old-files="oldFiles")
-                .field
+                //- .field
                     label.label
                     .control
                         .select.is-primary
@@ -107,7 +108,7 @@ module.exports = {
         },
         notificationMessage: null,
         notificationType: "is-info",
-        showLoadingFlag: false,
+        showLoadingFlag: false
     }),
 
     props: {
@@ -126,15 +127,16 @@ module.exports = {
             default: ""
         },
 
-        userDatas: {}
+        userDatas: {
+            role_group: {
+                role: [],
+                group: null
+            }
+        }
     },
 
     created() {
         this.loadRoles();
-    },
-
-    mounted() {
-
     },
 
     computed: {
@@ -147,7 +149,6 @@ module.exports = {
          * Load specific user
          */
         loadUserData(data) {
-            console.log(data);
             const temp = {
                 _id: data._id,
                 name: data.name,
@@ -158,17 +159,17 @@ module.exports = {
                 nationCode: data.profile.nation_code,
                 cellphone: data.cellphone,
                 role_group: {
-                    role: data.role_group[0].role,
-                    group: data.role_group[0].group
+                     role: [], // data.role_group.role,
+                    group: null, // data.role_group.group
                 },
                 files: data.files,
                 isActive: data.is_active
             };
-            console.log(temp);
 
-            // Vue.set(this, "oldFiles", data.files);
-            // Vue.set(this, "userData", temp);
-            // this.$refs.fileUpload.updateOldFiles(data.files);
+Vue.set(this, "oldFiles", data.files);
+            Vue.set(this, "userData", temp);
+
+            this.$refs.fileUpload.updateOldFiles(data.files);
         },
 
         /**
@@ -266,7 +267,7 @@ module.exports = {
             userData.roles = t;
 
             const url = this.editUrl.replace("$id$", userData._id);
-            AxiosHelper.send("patch", url, userData,{
+            AxiosHelper.send("patch", url, userData, {
                 sendAsFormData: true,
                 filesArray: "files"
             })

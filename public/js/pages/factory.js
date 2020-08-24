@@ -405,10 +405,8 @@ module.exports = {
         files: [],
         deletedOldFiles: [],
         isActive: false,
-        role_group: [{
-          role: null,
-          group: null
-        }]
+        role_group_role: [],
+        role_group_group: null
       },
       notificationMessage: null,
       notificationType: "is-info",
@@ -429,10 +427,8 @@ module.exports = {
       "default": ""
     },
     userDatas: {
-      role_group: {
-        role: [],
-        group: null
-      }
+      role_group_role: [],
+      role_group_group: null
     }
   },
   created: function created() {
@@ -460,12 +456,8 @@ module.exports = {
         lastName: data.profile.last_name,
         nationCode: data.profile.nation_code,
         cellphone: data.cellphone,
-        role_group: {
-          role: [],
-          // data.role_group.role,
-          group: null // data.role_group.group
-
-        },
+        role_group_role: data.role_group_role,
+        role_group_group: data.role_group_group,
         files: data.files,
         isActive: data.is_active
       };
@@ -554,10 +546,8 @@ module.exports = {
         last_name: this.userData.lastName,
         nation_code: this.userData.nationCode,
         cellphone: this.userData.cellphone,
-        role_group: {
-          role: this.userData.role_group[0].role,
-          group: this.userData.role_group[0].group
-        },
+        role_group_role: this.userData.role_group_role,
+        role_group_group: this.userData.role_group_group,
         is_active: this.userData.isActive,
         files: this.files,
         deletedOldFiles: this.deletedOldFiles
@@ -7988,6 +7978,56 @@ var render = function() {
                 1
               )
             ]),
+            _c("div", { staticClass: "field" }, [
+              _c("label", { staticClass: "label" }),
+              _c("div", { staticClass: "control" }, [
+                _c("div", { staticClass: "select is-primary" }, [
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.userData.role_group_group,
+                          expression: "userData.role_group_group"
+                        }
+                      ],
+                      on: {
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.$set(
+                            _vm.userData,
+                            "role_group_group",
+                            $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          )
+                        }
+                      }
+                    },
+                    _vm._l(_vm.departments, function(
+                      department,
+                      departmentIndex
+                    ) {
+                      return _c(
+                        "option",
+                        { domProps: { value: department._id } },
+                        [_vm._v(_vm._s(department.title))]
+                      )
+                    }),
+                    0
+                  )
+                ])
+              ])
+            ]),
             _c(
               "div",
               { staticClass: "field" },
@@ -7998,20 +8038,20 @@ var render = function() {
                       {
                         name: "model",
                         rawName: "v-model",
-                        value: _vm.userData.role_group[0].role,
-                        expression: "userData.role_group[0].role"
+                        value: _vm.userData.role_group_role,
+                        expression: "userData.role_group_role"
                       }
                     ],
                     attrs: { type: "checkbox" },
                     domProps: {
                       value: role._id,
-                      checked: Array.isArray(_vm.userData.role_group[0].role)
-                        ? _vm._i(_vm.userData.role_group[0].role, role._id) > -1
-                        : _vm.userData.role_group[0].role
+                      checked: Array.isArray(_vm.userData.role_group_role)
+                        ? _vm._i(_vm.userData.role_group_role, role._id) > -1
+                        : _vm.userData.role_group_role
                     },
                     on: {
                       change: function($event) {
-                        var $$a = _vm.userData.role_group[0].role,
+                        var $$a = _vm.userData.role_group_role,
                           $$el = $event.target,
                           $$c = $$el.checked ? true : false
                         if (Array.isArray($$a)) {
@@ -8020,20 +8060,20 @@ var render = function() {
                           if ($$el.checked) {
                             $$i < 0 &&
                               _vm.$set(
-                                _vm.userData.role_group[0],
-                                "role",
+                                _vm.userData,
+                                "role_group_role",
                                 $$a.concat([$$v])
                               )
                           } else {
                             $$i > -1 &&
                               _vm.$set(
-                                _vm.userData.role_group[0],
-                                "role",
+                                _vm.userData,
+                                "role_group_role",
                                 $$a.slice(0, $$i).concat($$a.slice($$i + 1))
                               )
                           }
                         } else {
-                          _vm.$set(_vm.userData.role_group[0], "role", $$c)
+                          _vm.$set(_vm.userData, "role_group_role", $$c)
                         }
                       }
                     }
@@ -8860,7 +8900,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/pages/factory.js */"./resources/js/pages/factory.js");
+module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/factory.js */"./resources/js/pages/factory.js");
 
 
 /***/ })

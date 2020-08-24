@@ -43,16 +43,16 @@
                     legend فایل های ضمیمه
                     .field
                         file-upload(ref="fileUpload", :old-files="oldFiles")
-                //- .field
+                .field
                     label.label
                     .control
                         .select.is-primary
-                            select(v-model="userData.role_group[0].group")
+                            select(v-model="userData.role_group_group")
                                 option(v-for='(department, departmentIndex) in departments',
                                     :value="department._id") {{ department.title }}
                 .field
                     label.checkbox(v-for='(role, roleIndex) in roles')
-                        input(type='checkbox', v-model="userData.role_group[0].role", :value="role._id")
+                        input(type='checkbox', v-model="userData.role_group_role", :value="role._id")
                         |   {{ role.name }}
 
                 .field
@@ -99,12 +99,8 @@ module.exports = {
             files: [],
             deletedOldFiles: [],
             isActive: false,
-            role_group: [
-                {
-                    role: null,
-                    group: null
-                }
-            ]
+            role_group_role: [],
+            role_group_group: null
         },
         notificationMessage: null,
         notificationType: "is-info",
@@ -128,11 +124,9 @@ module.exports = {
         },
 
         userDatas: {
-            role_group: {
-                role: [],
-                group: null
+            role_group_role: [],
+            role_group_group: null
             }
-        }
     },
 
     created() {
@@ -158,10 +152,8 @@ module.exports = {
                 lastName: data.profile.last_name,
                 nationCode: data.profile.nation_code,
                 cellphone: data.cellphone,
-                role_group: {
-                     role: [], // data.role_group.role,
-                    group: null, // data.role_group.group
-                },
+                role_group_role: data.role_group_role,
+                role_group_group: data.role_group_group,
                 files: data.files,
                 isActive: data.is_active
             };
@@ -251,10 +243,8 @@ Vue.set(this, "oldFiles", data.files);
                 last_name: this.userData.lastName,
                 nation_code: this.userData.nationCode,
                 cellphone: this.userData.cellphone,
-                role_group: {
-                    role: this.userData.role_group[0].role,
-                    group: this.userData.role_group[0].group
-                },
+                role_group_role: this.userData.role_group_role,
+                role_group_group: this.userData.role_group_group,
                 is_active: this.userData.isActive,
                 files: this.files,
                 deletedOldFiles: this.deletedOldFiles

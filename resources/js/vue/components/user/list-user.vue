@@ -116,7 +116,6 @@ module.exports = {
          * add new user data to list data
          */
         addToUserList(payload) {
-            console.log(payload);
             const newUserData = {
                 _id: payload.data._id,
                 name: payload.data.name,

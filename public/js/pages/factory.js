@@ -472,13 +472,12 @@ module.exports = {
     loadRoles: function loadRoles() {
       var _this = this;
 
-      //let roles = ["superadmin", "admin", "karmand1"];
       var url = this.rolesUrl;
       AxiosHelper.send("get", url, "").then(function (res) {
         var resData = res.data;
         var datas = resData.data.data;
         Vue.set(_this, "roles", datas);
-      }); //            Vue.set(this.userData, "roles", roles);
+      });
     },
 
     /**
@@ -8900,7 +8899,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/pages/factory.js */"./resources/js/pages/factory.js");
+module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/factory.js */"./resources/js/pages/factory.js");
 
 
 /***/ })

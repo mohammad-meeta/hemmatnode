@@ -178,10 +178,8 @@ module.exports = {
 
                 case ENUMS.COMMAND.EDIT:
                     /* TODO: REGISTER NEW USER */
-                    console.log(data);
                     this.$refs.userEdit.loadUserData(data);
                     this.changeFormMode(ENUMS.FORM_MODE.EDIT);
-                    break;
 
                 case ENUMS.COMMAND.CANCEL:
                     this.changeFormMode(null, { pop: true });

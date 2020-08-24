@@ -118,17 +118,17 @@ module.exports = {
         addToUserList(payload) {
             console.log(payload);
             const newUserData = {
-                _id: payload._id,
-                name: payload.name,
-                email: payload.email,
+                _id: payload.data._id,
+                name: payload.data.name,
+                email: payload.data.email,
                 profile: {
-                    first_name: payload.profile.first_name,
-                    last_name: payload.profile.last_name,
-                    nation_code: payload.profile.nation_code
+                    first_name: payload.data.profile.first_name,
+                    last_name: payload.data.profile.last_name,
+                    nation_code: payload.data.profile.nation_code
                 },
-                cellphone: payload.cellphone,
-                is_active: payload.is_active,
-                createdAt: payload.createdAt
+                cellphone: payload.data.cellphone,
+                is_active: payload.data.is_active,
+                createdAt: payload.data.createdAt
             };
 
             this.users.unshift(newUserData);

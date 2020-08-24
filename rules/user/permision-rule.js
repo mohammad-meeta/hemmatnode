@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 /**
  * Rule
  */
-function Rule() {}
+function Rule() { }
 module.exports = Rule;
 
 /**
@@ -14,63 +14,60 @@ Rule.check = function check(user, data) {
         const User = mongoose.model('User');
 
         const pipeline = [{
-                "$match": {
-                    "name": user.userName
-                }
-            },
-            {
-                "$unwind": "$role_group"
-            },
-            {
-                "$project": {
-                    "role": "$role_group.role",
-                    "group": "$role_group.group"
-                }
-            },
-            {
-                "$lookup": {
-                    "from": "roles",
-                    "localField": "role",
-                    "foreignField": "_id",
-                    "as": "res"
-                }
-            },
-            {
-                "$project": {
-                    "role": 1,
-                    "group": 1,
-                    "permision": "$res.permision"
-                }
-            },
-            {
-                "$unwind": "$permision"
-            },
-            {
-                "$unwind": "$permision"
-            },
-            {
-                "$lookup": {
-                    "from": "rules",
-                    "localField": "permision",
-                    "foreignField": "id",
-                    "as": "res2"
-                }
-            },
-            {
-                "$unwind": "$res2"
-            },
-            {
-                "$project": {
-                    "role": 1,
-                    "group": 1,
-                    "source": "$res2.short_cut"
-                }
-            },
-            {
-                "$match": {
-                    "source": data
-                }
+            "$match": {
+                "name": user.userName
             }
+        },
+        {
+            "$project": {
+                "role": "$role_group.role",
+                "group": "$role_group.group"
+            }
+        },
+        {
+            "$lookup": {
+                "from": "roles",
+                "localField": "role",
+                "foreignField": "_id",
+                "as": "res"
+            }
+        },
+        {
+            "$project": {
+                "role": 1,
+                "group": 1,
+                "permision": "$res.permision"
+            }
+        },
+        {
+            "$unwind": "$permision"
+        },
+        {
+            "$unwind": "$permision"
+        },
+        {
+            "$lookup": {
+                "from": "rules",
+                "localField": "permision",
+                "foreignField": "id",
+                "as": "res2"
+            }
+        },
+        {
+            "$unwind": "$res2"
+        },
+        {
+            "$project": {
+                "role": 1,
+                "group": 1,
+                "source": "$res2.short_cut"
+            }
+        },
+        {
+            "$match": {
+                "source": data
+            }
+        }
         ];
         // const pipeline = [{
         //         "$match": {

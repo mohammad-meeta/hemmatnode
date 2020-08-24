@@ -46,13 +46,13 @@
                 label.label
                 .control
                     .select.is-primary
-                        select(v-model="userData.role_group[0].group")
+                        select(v-model="userData.role_group.group")
                             option(v-for='(department, departmentIndex) in departments',
                                 :value="department._id") {{ department.title }}
             .field
                 pre {{ userData }}
                 label.checkbox(v-for='(role, roleIndex) in roles')
-                    input(type='checkbox',:name="role._id" v-model="userData.role_group[0].role", :value="role._id")
+                    input(type='checkbox',:name="role._id" v-model="userData.role_group.role", :value="role._id")
                     |   {{ role.name }}
             .field
                 label.checkbox
@@ -99,12 +99,12 @@ module.exports = {
             files: [],
             deletedOldFiles: [],
             isActive: false,
-            role_group: [
+            role_group:
                 {
                     role: [],
-                    group: []
+                    group: null
                 }
-            ]
+
         },
 
         notificationMessage: null,
@@ -233,12 +233,11 @@ module.exports = {
                 last_name: this.userData.lastName,
                 nation_code: this.userData.nationCode,
                 cellphone: this.userData.cellphone,
-                role_group: [
+                role_group:
                     {
-                        role: this.userData.role_group[0].role,
-                        group: this.userData.role_group[0].group
-                    }
-                ],
+                        role: this.userData.role_group.role,
+                        group: this.userData.role_group.group
+                    },
                 is_active: this.userData.isActive,
                 files: this.files,
                 deletedOldFiles: this.deletedOldFiles

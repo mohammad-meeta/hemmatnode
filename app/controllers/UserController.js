@@ -217,7 +217,7 @@ UserController.store = async function store(req, res, next) {
         user_id: req.session.auth.userId,
         pwd: req.body.password,
         email: req.body.email,
-        role_group: req.body.role_group || {},
+        role_group: JSON.parse(req.body.role_group) || {},
         cellphone: req.body.cellphone,
         is_active: req.body.is_active || false,
         profile: {

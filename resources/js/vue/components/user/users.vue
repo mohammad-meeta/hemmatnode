@@ -139,9 +139,6 @@ module.exports = {
         onUserRegister(payload) {
             this.$refs.userList.addToUserList(payload.data.data);
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
-
-            //this.$refs.userList.loadUsers(1);
-            // console.log(payload);
             this.setNotification(".کاربر با موفقیت ذخیره شد", "is-success");
         },
 
@@ -151,9 +148,6 @@ module.exports = {
         onUserUpdate(payload) {
             this.$refs.userList.editInUserList(payload.data);
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
-
-            //this.$refs.userList.loadUsers(1);
-            // console.log(payload);
             this.setNotification(".کاربر با موفقیت ویرایش شد", "is-success");
         },
 
@@ -180,6 +174,7 @@ module.exports = {
                     /* TODO: REGISTER NEW USER */
                     this.$refs.userEdit.loadUserData(data);
                     this.changeFormMode(ENUMS.FORM_MODE.EDIT);
+                    break;
 
                 case ENUMS.COMMAND.CANCEL:
                     this.changeFormMode(null, { pop: true });

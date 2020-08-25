@@ -157,8 +157,7 @@ module.exports = {
                 files: data.files,
                 isActive: data.is_active
             };
-
-Vue.set(this, "oldFiles", data.files);
+            Vue.set(this, "oldFiles", data.files);
             Vue.set(this, "userData", temp);
 
             this.$refs.fileUpload.updateOldFiles(data.files);
@@ -168,16 +167,12 @@ Vue.set(this, "oldFiles", data.files);
          * load all roles for select roles in form
          */
         loadRoles() {
-            //let roles = ["superadmin", "admin", "karmand1"];
-
             const url = this.rolesUrl;
             AxiosHelper.send("get", url, "").then(res => {
                 const resData = res.data;
                 const datas = resData.data.data;
                 Vue.set(this, "roles", datas);
             });
-
-            //            Vue.set(this.userData, "roles", roles);
         },
 
         /**

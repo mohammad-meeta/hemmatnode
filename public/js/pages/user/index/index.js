@@ -494,13 +494,12 @@ module.exports = {
     loadRoles: function loadRoles() {
       var _this = this;
 
-      //let roles = ["superadmin", "admin", "karmand1"];
       var url = this.rolesUrl;
       AxiosHelper.send("get", url, "").then(function (res) {
         var resData = res.data;
         var datas = resData.data.data;
         Vue.set(_this, "roles", datas);
-      }); //            Vue.set(this.userData, "roles", roles);
+      });
     },
 
     /**
@@ -759,7 +758,6 @@ module.exports = {
      * add new user data to list data
      */
     addToUserList: function addToUserList(payload) {
-      console.log(payload);
       var newUserData = {
         _id: payload.data._id,
         name: payload.data.name,
@@ -982,13 +980,12 @@ module.exports = {
     loadRoles: function loadRoles() {
       var _this2 = this;
 
-      //let roles = ["superadmin", "admin", "karmand1"];
       var url = this.rolesUrl;
       AxiosHelper.send("get", url, "").then(function (res) {
         var resData = res.data;
         var datas = resData.data.data;
         Vue.set(_this2, "roles", datas);
-      }); //            Vue.set(this.userData, "roles", roles);
+      });
     },
 
     /**
@@ -1357,9 +1354,7 @@ module.exports = {
      */
     onUserRegister: function onUserRegister(payload) {
       this.$refs.userList.addToUserList(payload.data.data);
-      this.changeFormMode(ENUMS.FORM_MODE.LIST); //this.$refs.userList.loadUsers(1);
-      // console.log(payload);
-
+      this.changeFormMode(ENUMS.FORM_MODE.LIST);
       this.setNotification(".کاربر با موفقیت ذخیره شد", "is-success");
     },
 
@@ -1368,9 +1363,7 @@ module.exports = {
      */
     onUserUpdate: function onUserUpdate(payload) {
       this.$refs.userList.editInUserList(payload.data);
-      this.changeFormMode(ENUMS.FORM_MODE.LIST); //this.$refs.userList.loadUsers(1);
-      // console.log(payload);
-
+      this.changeFormMode(ENUMS.FORM_MODE.LIST);
       this.setNotification(".کاربر با موفقیت ویرایش شد", "is-success");
     },
 
@@ -1399,6 +1392,7 @@ module.exports = {
           /* TODO: REGISTER NEW USER */
           this.$refs.userEdit.loadUserData(data);
           this.changeFormMode(ENUMS.FORM_MODE.EDIT);
+          break;
 
         case ENUMS.COMMAND.CANCEL:
           this.changeFormMode(null, {
@@ -11245,7 +11239,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/pages/user/index/index.js */"./resources/js/pages/user/index/index.js");
+module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/user/index/index.js */"./resources/js/pages/user/index/index.js");
 
 
 /***/ })

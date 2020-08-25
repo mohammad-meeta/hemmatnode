@@ -45,6 +45,9 @@
             .column(v-show="!modeLoading && modeShow")
                 show-request(ref="requestShow", @on-command="onCommand")
 
+            .column(v-show="!modeLoading && modeShow")
+                list-response(@on-command="onCommand")
+
             .column(v-show="!modeLoading && modeEdit")
                 edit-response(ref="responseEdit", @on-command="onCommand" ,:edit-url="editUrl")
 </template>
@@ -60,6 +63,8 @@ const RegisterResponse = require("VUE-COMPONENTS/response/register-response.vue"
 // const ListResponse = require("VUE-COMPONENTS/response/list-response.vue")
 //     .default;
 const ListRequest = require("VUE-COMPONENTS/response/list-request.vue").default;
+const ListResponse = require("VUE-COMPONENTS/response/list-response.vue")
+    .default;
 const ShowResponse = require("VUE-COMPONENTS/response/show-response.vue")
     .default;
 const ShowRequest = require("VUE-COMPONENTS/request/show-request.vue").default;
@@ -73,7 +78,7 @@ module.exports = {
     components: {
         Loading,
         EditResponse,
-        // ListResponse,
+        ListResponse,
         ListRequest,
         RegisterResponse,
         ShowResponse,
@@ -142,11 +147,17 @@ module.exports = {
 
     methods: {
         /**
+         * onShowResponse
+         */
+        onShowResponse(payload) {
+            console.log("OKOKOKOK");
+        },
+        /**
          * On Register response
          */
         onResponseRegister(payload) {
             //***update vue list****
-            this.$refs.responseList.addToResponseList(payload.data.data);
+            // this.$refs.responseList.addToResponseList(payload.data.data);
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
             this.setNotification(
                 ".پاسخ به طلب همکاری با موفقیت ذخیره شد",
@@ -185,6 +196,7 @@ module.exports = {
                 case ENUMS.COMMAND.REGISTER:
                     /* TODO: REGISTER NEW  */
                     console.log("REGISTER NEW Response", arg);
+                    this.changeFormMode(ENUMS.FORM_MODE.SHOW);
                     break;
 
                 case ENUMS.COMMAND.EDIT:

@@ -433,6 +433,7 @@ module.exports = {
   },
   created: function created() {
     this.loadRoles();
+    this.loadDepartments();
   },
   computed: {
     isLoadingMode: function isLoadingMode(state) {
@@ -450,13 +451,12 @@ module.exports = {
       var temp = {
         _id: data._id,
         name: data.name,
-        password: data.password,
         email: data.email,
         firstName: data.profile.first_name,
         lastName: data.profile.last_name,
         nationCode: data.profile.nation_code,
         cellphone: data.cellphone,
-        role_group_role: data.role_group_role,
+        role_group_role: JSON.parse(data.role_group_role),
         role_group_group: data.role_group_group,
         files: data.files,
         isActive: data.is_active
@@ -477,6 +477,20 @@ module.exports = {
         var resData = res.data;
         var datas = resData.data.data;
         Vue.set(_this, "roles", datas);
+      });
+    },
+
+    /**
+     * load all departments for select departments in form
+     */
+    loadDepartments: function loadDepartments() {
+      var _this2 = this;
+
+      var url = this.departmentsUrl;
+      AxiosHelper.send("get", url, "").then(function (res) {
+        var resData = res.data;
+        var datas = resData.data;
+        Vue.set(_this2, "departments", datas.data);
       });
     },
 
@@ -527,7 +541,7 @@ module.exports = {
      * Edit user
      */
     editUser: function editUser() {
-      var _this2 = this;
+      var _this3 = this;
 
       var isValid = this.validate();
 
@@ -551,12 +565,6 @@ module.exports = {
         files: this.files,
         deletedOldFiles: this.deletedOldFiles
       };
-      var t = Object.keys(userData.roles).filter(function (key) {
-        return true == userData.roles[key];
-      }).map(function (key) {
-        return key;
-      });
-      userData.roles = t;
       var url = this.editUrl.replace("$id$", userData._id);
       AxiosHelper.send("patch", url, userData, {
         sendAsFormData: true,
@@ -565,16 +573,16 @@ module.exports = {
         //const data = JSON.parse(res.config.data);
         var data = res.data;
 
-        _this2.$emit("on-update", {
-          sender: _this2,
+        _this3.$emit("on-update", {
+          sender: _this3,
           data: data
         });
       })["catch"](function (err) {
         console.error(err);
 
-        _this2.setNotification(".خطا در ذخیره کاربر", "is-danger");
+        _this3.setNotification(".خطا در ذخیره کاربر", "is-danger");
       }).then(function () {
-        return _this2.hideLoading();
+        return _this3.hideLoading();
       });
     },
 
@@ -8041,7 +8049,7 @@ var render = function() {
                         expression: "userData.role_group_role"
                       }
                     ],
-                    attrs: { type: "checkbox" },
+                    attrs: { type: "checkbox", name: role._id },
                     domProps: {
                       value: role._id,
                       checked: Array.isArray(_vm.userData.role_group_role)

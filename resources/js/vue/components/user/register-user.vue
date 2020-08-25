@@ -50,7 +50,6 @@
                             option(v-for='(department, departmentIndex) in departments',
                                 :value="department._id") {{ department.title }}
             .field
-                pre {{ userData }}
                 label.checkbox(v-for='(role, roleIndex) in roles')
                     input(type='checkbox',:name="role._id" v-model="userData.role_group_role", :value="role._id")
                     |   {{ role.name }}

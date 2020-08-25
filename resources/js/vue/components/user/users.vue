@@ -42,6 +42,7 @@
                 edit-user(ref="userEdit", @on-command="onCommand",
                 @on-update="onUserUpdate"
                 :edit-url="editUrl",
+                :departments-url="departmentsUrl",
                 :roles-url="rolesUrl")
 
             .column(v-show="!modeLoading && modeShow")

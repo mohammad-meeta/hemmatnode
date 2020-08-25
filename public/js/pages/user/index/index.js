@@ -455,6 +455,7 @@ module.exports = {
   },
   created: function created() {
     this.loadRoles();
+    this.loadDepartments();
   },
   computed: {
     isLoadingMode: function isLoadingMode(state) {
@@ -472,13 +473,12 @@ module.exports = {
       var temp = {
         _id: data._id,
         name: data.name,
-        password: data.password,
         email: data.email,
         firstName: data.profile.first_name,
         lastName: data.profile.last_name,
         nationCode: data.profile.nation_code,
         cellphone: data.cellphone,
-        role_group_role: data.role_group_role,
+        role_group_role: JSON.parse(data.role_group_role),
         role_group_group: data.role_group_group,
         files: data.files,
         isActive: data.is_active
@@ -499,6 +499,20 @@ module.exports = {
         var resData = res.data;
         var datas = resData.data.data;
         Vue.set(_this, "roles", datas);
+      });
+    },
+
+    /**
+     * load all departments for select departments in form
+     */
+    loadDepartments: function loadDepartments() {
+      var _this2 = this;
+
+      var url = this.departmentsUrl;
+      AxiosHelper.send("get", url, "").then(function (res) {
+        var resData = res.data;
+        var datas = resData.data;
+        Vue.set(_this2, "departments", datas.data);
       });
     },
 
@@ -549,7 +563,7 @@ module.exports = {
      * Edit user
      */
     editUser: function editUser() {
-      var _this2 = this;
+      var _this3 = this;
 
       var isValid = this.validate();
 
@@ -573,12 +587,6 @@ module.exports = {
         files: this.files,
         deletedOldFiles: this.deletedOldFiles
       };
-      var t = Object.keys(userData.roles).filter(function (key) {
-        return true == userData.roles[key];
-      }).map(function (key) {
-        return key;
-      });
-      userData.roles = t;
       var url = this.editUrl.replace("$id$", userData._id);
       AxiosHelper.send("patch", url, userData, {
         sendAsFormData: true,
@@ -587,16 +595,16 @@ module.exports = {
         //const data = JSON.parse(res.config.data);
         var data = res.data;
 
-        _this2.$emit("on-update", {
-          sender: _this2,
+        _this3.$emit("on-update", {
+          sender: _this3,
           data: data
         });
       })["catch"](function (err) {
         console.error(err);
 
-        _this2.setNotification(".خطا در ذخیره کاربر", "is-danger");
+        _this3.setNotification(".خطا در ذخیره کاربر", "is-danger");
       }).then(function () {
-        return _this2.hideLoading();
+        return _this3.hideLoading();
       });
     },
 
@@ -809,7 +817,6 @@ module.exports = {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-//
 //
 //
 //
@@ -1205,6 +1212,7 @@ module.exports = {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+//
 //
 //
 //
@@ -8932,7 +8940,7 @@ var render = function() {
                         expression: "userData.role_group_role"
                       }
                     ],
-                    attrs: { type: "checkbox" },
+                    attrs: { type: "checkbox", name: role._id },
                     domProps: {
                       value: role._id,
                       checked: Array.isArray(_vm.userData.role_group_role)
@@ -9579,60 +9587,57 @@ var render = function() {
           _c(
             "div",
             { staticClass: "field" },
-            [
-              _c("pre", [_vm._v(_vm._s(_vm.userData))]),
-              _vm._l(_vm.roles, function(role, roleIndex) {
-                return _c("label", { staticClass: "checkbox" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.userData.role_group_role,
-                        expression: "userData.role_group_role"
-                      }
-                    ],
-                    attrs: { type: "checkbox", name: role._id },
-                    domProps: {
-                      value: role._id,
-                      checked: Array.isArray(_vm.userData.role_group_role)
-                        ? _vm._i(_vm.userData.role_group_role, role._id) > -1
-                        : _vm.userData.role_group_role
-                    },
-                    on: {
-                      change: function($event) {
-                        var $$a = _vm.userData.role_group_role,
-                          $$el = $event.target,
-                          $$c = $$el.checked ? true : false
-                        if (Array.isArray($$a)) {
-                          var $$v = role._id,
-                            $$i = _vm._i($$a, $$v)
-                          if ($$el.checked) {
-                            $$i < 0 &&
-                              _vm.$set(
-                                _vm.userData,
-                                "role_group_role",
-                                $$a.concat([$$v])
-                              )
-                          } else {
-                            $$i > -1 &&
-                              _vm.$set(
-                                _vm.userData,
-                                "role_group_role",
-                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                              )
-                          }
+            _vm._l(_vm.roles, function(role, roleIndex) {
+              return _c("label", { staticClass: "checkbox" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.userData.role_group_role,
+                      expression: "userData.role_group_role"
+                    }
+                  ],
+                  attrs: { type: "checkbox", name: role._id },
+                  domProps: {
+                    value: role._id,
+                    checked: Array.isArray(_vm.userData.role_group_role)
+                      ? _vm._i(_vm.userData.role_group_role, role._id) > -1
+                      : _vm.userData.role_group_role
+                  },
+                  on: {
+                    change: function($event) {
+                      var $$a = _vm.userData.role_group_role,
+                        $$el = $event.target,
+                        $$c = $$el.checked ? true : false
+                      if (Array.isArray($$a)) {
+                        var $$v = role._id,
+                          $$i = _vm._i($$a, $$v)
+                        if ($$el.checked) {
+                          $$i < 0 &&
+                            _vm.$set(
+                              _vm.userData,
+                              "role_group_role",
+                              $$a.concat([$$v])
+                            )
                         } else {
-                          _vm.$set(_vm.userData, "role_group_role", $$c)
+                          $$i > -1 &&
+                            _vm.$set(
+                              _vm.userData,
+                              "role_group_role",
+                              $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                            )
                         }
+                      } else {
+                        _vm.$set(_vm.userData, "role_group_role", $$c)
                       }
                     }
-                  }),
-                  _vm._v("  " + _vm._s(role.name))
-                ])
-              })
-            ],
-            2
+                  }
+                }),
+                _vm._v("  " + _vm._s(role.name))
+              ])
+            }),
+            0
           ),
           _c("div", { staticClass: "field" }, [
             _c("label", { staticClass: "checkbox" }, [
@@ -10030,7 +10035,11 @@ var render = function() {
         [
           _c("edit-user", {
             ref: "userEdit",
-            attrs: { "edit-url": _vm.editUrl, "roles-url": _vm.rolesUrl },
+            attrs: {
+              "edit-url": _vm.editUrl,
+              "departments-url": _vm.departmentsUrl,
+              "roles-url": _vm.rolesUrl
+            },
             on: { "on-command": _vm.onCommand, "on-update": _vm.onUserUpdate }
           })
         ],

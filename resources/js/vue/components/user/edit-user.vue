@@ -52,7 +52,7 @@
                                     :value="department._id") {{ department.title }}
                 .field
                     label.checkbox(v-for='(role, roleIndex) in roles')
-                        input(type='checkbox', v-model="userData.role_group_role", :value="role._id")
+                        input(type='checkbox', :name="role._id" v-model="userData.role_group_role", :value="role._id")
                         |   {{ role.name }}
 
                 .field
@@ -131,6 +131,7 @@ module.exports = {
 
     created() {
         this.loadRoles();
+        this.loadDepartments();
     },
 
     computed: {
@@ -146,13 +147,12 @@ module.exports = {
             const temp = {
                 _id: data._id,
                 name: data.name,
-                password: data.password,
                 email: data.email,
                 firstName: data.profile.first_name,
                 lastName: data.profile.last_name,
                 nationCode: data.profile.nation_code,
                 cellphone: data.cellphone,
-                role_group_role: data.role_group_role,
+                role_group_role: JSON.parse(data.role_group_role),
                 role_group_group: data.role_group_group,
                 files: data.files,
                 isActive: data.is_active
@@ -172,6 +172,18 @@ module.exports = {
                 const resData = res.data;
                 const datas = resData.data.data;
                 Vue.set(this, "roles", datas);
+            });
+        },
+
+        /**
+         * load all departments for select departments in form
+         */
+        loadDepartments() {
+            const url = this.departmentsUrl;
+            AxiosHelper.send("get", url, "").then(res => {
+                const resData = res.data;
+                const datas = resData.data;
+                Vue.set(this, "departments", datas.data);
             });
         },
 
@@ -244,12 +256,6 @@ module.exports = {
                 files: this.files,
                 deletedOldFiles: this.deletedOldFiles
             };
-
-            let t = Object.keys(userData.roles)
-                .filter(key => true == userData.roles[key])
-                .map(key => key);
-
-            userData.roles = t;
 
             const url = this.editUrl.replace("$id$", userData._id);
             AxiosHelper.send("patch", url, userData, {

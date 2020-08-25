@@ -68,6 +68,7 @@ Router.get('/api/user/:userData/edit', [
 Router.patch('/user/:id', [
     checkSession,
     Rule.canAsync('user.permision', 'user.update'),
+    upload.array('files'),
     validator.validate,
     'User@update'
 ])

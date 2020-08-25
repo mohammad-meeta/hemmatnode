@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 /**
  * Algorithm controller
  */
-function UserHelper() {}
+function UserHelper() { }
 module.exports = UserHelper;
 
 /**
@@ -63,8 +63,11 @@ UserHelper.loadAllUserData = function loadAllUserData(dataPaginate) {
                 cellphone: {
                     $last: "$cellphone"
                 },
-                role_group: {
-                    $last: "$role_group"
+                role_group_group: {
+                    $last: "$role_group_group"
+                },
+                role_group_role: {
+                    $last: "$role_group_role"
                 }
             }
         },
@@ -131,54 +134,54 @@ UserHelper.loadAllCountUserData = function loadAllCountUserData() {
 UserHelper.loadUserData = function loadUserData(userName) {
     const User = mongoose.model('User');
     const pipeline = [{
-            "$match": {
-                name: userName
-            }
-        },
-        {
-            "$lookup": {
-                "from": "files",
-                "localField": "profile.image",
-                "foreignField": "_id",
-                "as": "file"
-            }
-        }, {
-            "$unwind": {
-                "path": "$file",
-                "preserveNullAndEmptyArrays": true
-            }
-        }, {
-            "$project": {
-                "file.encoding": 0,
-                "file.mimetype": 0,
-                "file.user_id": 0,
-            }
-        }, {
-            "$group": {
-                "_id": "$_id",
-                "files": {
-                    "$push": "$file"
-                },
-                "is_active": {
-                    "$last": "$is_active"
-                },
-                "name": {
-                    "$last": "$name"
-                },
-                "email": {
-                    "$last": "$email"
-                },
-                "profile": {
-                    "$last": "$profile"
-                },
-                "cellphone": {
-                    "$last": "$cellphone"
-                },
-                "role_group": {
-                    "$last": "$role_group"
-                }
+        "$match": {
+            name: userName
+        }
+    },
+    {
+        "$lookup": {
+            "from": "files",
+            "localField": "profile.image",
+            "foreignField": "_id",
+            "as": "file"
+        }
+    }, {
+        "$unwind": {
+            "path": "$file",
+            "preserveNullAndEmptyArrays": true
+        }
+    }, {
+        "$project": {
+            "file.encoding": 0,
+            "file.mimetype": 0,
+            "file.user_id": 0,
+        }
+    }, {
+        "$group": {
+            "_id": "$_id",
+            "files": {
+                "$push": "$file"
+            },
+            "is_active": {
+                "$last": "$is_active"
+            },
+            "name": {
+                "$last": "$name"
+            },
+            "email": {
+                "$last": "$email"
+            },
+            "profile": {
+                "$last": "$profile"
+            },
+            "cellphone": {
+                "$last": "$cellphone"
+            },
+            "role_group": {
+                "$last": "$role_group"
             }
         }
+    }
     ];
 
     return new Promise((resolve, reject) => {
@@ -212,54 +215,54 @@ UserHelper.loadUserDataID = function loadUserDataID(id) {
     const ObjectId = require('mongoose').Types.ObjectId;
 
     const pipeline = [{
-            "$match": {
-                _id: new ObjectId(id)
-            }
-        },
-        {
-            "$lookup": {
-                "from": "files",
-                "localField": "profile.image",
-                "foreignField": "_id",
-                "as": "file"
-            }
-        }, {
-            "$unwind": {
-                "path": "$file",
-                "preserveNullAndEmptyArrays": true
-            }
-        }, {
-            "$project": {
-                "file.encoding": 0,
-                "file.mimetype": 0,
-                "file.user_id": 0,
-            }
-        }, {
-            "$group": {
-                "_id": "$_id",
-                "files": {
-                    "$push": "$file"
-                },
-                "is_active": {
-                    "$last": "$is_active"
-                },
-                "name": {
-                    "$last": "$name"
-                },
-                "email": {
-                    "$last": "$email"
-                },
-                "profile": {
-                    "$last": "$profile"
-                },
-                "cellphone": {
-                    "$last": "$cellphone"
-                },
-                "role_group": {
-                    "$last": "$role_group"
-                }
+        "$match": {
+            _id: new ObjectId(id)
+        }
+    },
+    {
+        "$lookup": {
+            "from": "files",
+            "localField": "profile.image",
+            "foreignField": "_id",
+            "as": "file"
+        }
+    }, {
+        "$unwind": {
+            "path": "$file",
+            "preserveNullAndEmptyArrays": true
+        }
+    }, {
+        "$project": {
+            "file.encoding": 0,
+            "file.mimetype": 0,
+            "file.user_id": 0,
+        }
+    }, {
+        "$group": {
+            "_id": "$_id",
+            "files": {
+                "$push": "$file"
+            },
+            "is_active": {
+                "$last": "$is_active"
+            },
+            "name": {
+                "$last": "$name"
+            },
+            "email": {
+                "$last": "$email"
+            },
+            "profile": {
+                "$last": "$profile"
+            },
+            "cellphone": {
+                "$last": "$cellphone"
+            },
+            "role_group": {
+                "$last": "$role_group"
             }
         }
+    }
     ];
 
     return new Promise((resolve, reject) => {
@@ -310,8 +313,8 @@ UserHelper.updateUserData = function updateUserData(data) {
     return new Promise((resolve, reject) => {
         const User = mongoose.model('User');
         User.findByIdAndUpdate(data._id, data, {
-                useFindAndModify: false
-            })
+            useFindAndModify: false
+        })
             .then(res => {
                 resolve(res);
             })
@@ -327,10 +330,10 @@ UserHelper.deleteUserData = function deleteUserData(data) {
         const User = mongoose.model('User');
 
         User.findOneAndUpdate(data._id, {
-                is_active: false
-            }, {
-                useFindAndModify: false
-            })
+            is_active: false
+        }, {
+            useFindAndModify: false
+        })
             .then(res => {
                 resolve(res);
             })

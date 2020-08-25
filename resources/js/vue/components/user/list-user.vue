@@ -134,28 +134,32 @@ module.exports = {
         },
 
         editInUserList(payload) {
+            const data = payload.data;
             const editedUserData = {
-                _id: payload._id,
-                name: payload.name,
-                email: payload.email,
-                first_name: payload.first_name,
-                last_name: payload.last_name,
-                nation_code: payload.nation_code,
-                cellphone: payload.cellphone,
-                is_active: payload.is_active,
-                createdAt: payload.createdAt
+                _id: data._id,
+                name: data.name,
+                email: data.email,
+                cellphone: data.cellphone,
+                is_active: data.is_active,
+                createdAt: data.createdAt,
+                first_name: data.profile.first_name,
+                last_name: data.profile.last_name,
+                nation_code: data.profile.nation_code
             };
+            console.log(editedUserData);
 
             let foundIndex = this.users.findIndex(
                 x => x._id == editedUserData._id
             );
-            this.users[foundIndex].name= editedUserData.name;
-            this.users[foundIndex].email= editedUserData.email;
-            this.users[foundIndex].profile.first_name= editedUserData.first_name;
-            this.users[foundIndex].profile.last_name= editedUserData.last_name;
-            this.users[foundIndex].profile.nation_code= editedUserData.nation_code;
-            this.users[foundIndex].cellphone= editedUserData.cellphone;
-            this.users[foundIndex].is_active= editedUserData.is_active;
+            this.users[foundIndex].name = editedUserData.name;
+            this.users[foundIndex].email = editedUserData.email;
+            this.users[foundIndex].profile.first_name =
+                editedUserData.first_name;
+            this.users[foundIndex].profile.last_name = editedUserData.last_name;
+            this.users[foundIndex].profile.nation_code =
+                editedUserData.nation_code;
+            this.users[foundIndex].cellphone = editedUserData.cellphone;
+            this.users[foundIndex].is_active = editedUserData.is_active;
         }
     }
 };

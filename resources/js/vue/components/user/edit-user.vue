@@ -67,7 +67,7 @@
 
 <script>
 "use strict";
-
+const _ = require("lodash");
 const AxiosHelper = require("JS-HELPERS/axios-helper");
 const ENUMS = require("JS-HELPERS/enums");
 const UserValidator = require("JS-VALIDATORS/user-register-validator");
@@ -126,7 +126,7 @@ module.exports = {
         userDatas: {
             role_group_role: [],
             role_group_group: null
-            }
+        }
     },
 
     created() {
@@ -144,7 +144,7 @@ module.exports = {
          * Load specific user
          */
         loadUserData(data) {
-            const temp = {
+            let temp = {
                 _id: data._id,
                 name: data.name,
                 email: data.email,
@@ -154,10 +154,11 @@ module.exports = {
                 cellphone: data.cellphone,
                 role_group_role: JSON.parse(data.role_group_role),
                 role_group_group: data.role_group_group,
-                files: data.files,
+                files: _.cloneDeep(data.files),
                 isActive: data.is_active
             };
-            Vue.set(this, "oldFiles", data.files);
+
+            Vue.set(this, "oldFiles", temp.files);
             Vue.set(this, "userData", temp);
 
             this.$refs.fileUpload.updateOldFiles(data.files);
@@ -233,9 +234,7 @@ module.exports = {
          * Edit user
          */
         editUser() {
-            const isValid = this.validate();
-
-            if (!isValid) {
+            if (!this.validate()) {
                 return;
             }
 
@@ -263,7 +262,6 @@ module.exports = {
                 filesArray: "files"
             })
                 .then(res => {
-                    //const data = JSON.parse(res.config.data);
                     const data = res.data;
                     this.$emit("on-update", {
                         sender: this,

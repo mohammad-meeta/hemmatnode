@@ -147,8 +147,8 @@ module.exports = {
          * On Update user
          */
         onUserUpdate(payload) {
-            this.$refs.userList.editInUserList(payload.data);
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
+            this.$refs.userList.editInUserList(payload.data);
             this.setNotification(".کاربر با موفقیت ویرایش شد", "is-success");
         },
 
@@ -158,9 +158,11 @@ module.exports = {
         onCommand(payload) {
             let arg = payload.arg || null;
             const data = payload.data || {};
-            if (null == arg) {
-                arg = payload;
-            }
+            arg = arg || payload;
+
+            console.log('*************************')
+            console.log(data)
+
             switch (arg) {
                 case ENUMS.COMMAND.NEW:
                     this.changeFormMode(ENUMS.FORM_MODE.REGISTER);

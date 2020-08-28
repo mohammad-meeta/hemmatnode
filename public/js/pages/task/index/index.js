@@ -472,7 +472,6 @@ module.exports = {
       var _this = this;
 
       var url = this.parentsUrl;
-      console.log(url);
       AxiosHelper.send("get", url, {}).then(function (res) {
         console.log(res);
         var resData = res.data;
@@ -31940,7 +31939,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/pages/task/index/index.js */"./resources/js/pages/task/index/index.js");
+module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/task/index/index.js */"./resources/js/pages/task/index/index.js");
 
 
 /***/ })

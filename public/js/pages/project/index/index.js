@@ -776,7 +776,6 @@ module.exports = {
       var _this = this;
 
       var url = this.programsUrl;
-      console.log(url);
       AxiosHelper.send("get", url, "").then(function (res) {
         var resData = res.data;
         var datas = resData.data.data;
@@ -10137,7 +10136,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/pages/project/index/index.js */"./resources/js/pages/project/index/index.js");
+module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/project/index/index.js */"./resources/js/pages/project/index/index.js");
 
 
 /***/ })

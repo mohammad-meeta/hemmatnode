@@ -222,7 +222,6 @@ module.exports = {
          * On Update invite session
          */
         onInviteSessionUpdate(payload) {
-            console.log(payload);
             this.$refs.inviteSessionList.editInviteSessionList(payload);
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
 

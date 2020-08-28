@@ -48,7 +48,7 @@
             fieldset
                 legend مدعوین (به غیر از افراد حاضر و سایر اعضاء)
                 .field
-                    multi-text-member(ref="multiTextMember" :value='inviteSessionData.other_user')
+                    multi-text-member(ref="multiTextMember" v-model='inviteSessionData.other_user')
             fieldset
                 legend فایل های ضمیمه
                 .field
@@ -197,11 +197,13 @@ module.exports = {
          * Load specific user
          */
         loadInviteSessionData(data) {
-            const temp = {
+            const agenda = JSON.parse(data.agenda);
+            const other_user = JSON.parse(data.other_user);
+            let temp = {
                 _id: data._id,
                 dep: data.dep.title,
                 body: data.body,
-                agenda: data.agenda,
+                agenda: agenda,
                 place: data.place,
                 date: data.date,
                 department_id: data.dep._id,
@@ -209,23 +211,10 @@ module.exports = {
                 roles: data.roles,
                 user_list: data.user_list,
                 isActive: data.is_active,
-                other_user: data.other_user
+                other_user: other_user
             };
-
-            try {
-                temp.agenda = JSON.parse(data.agenda);
-            } catch (ex) {
-                temp.agenda = [];
-            }
-
-            try {
-                temp.other_user = JSON.parse(data.other_user);
-            } catch (ex) {
-                temp.other_user = [];
-            }
             Vue.set(this, "oldFiles", data.files);
             Vue.set(this, "inviteSessionData", temp);
-
             this.$refs.fileUpload.updateOldFiles(data.files);
 
             const userslist = this.inviteSessionData.user_list;
@@ -348,7 +337,7 @@ module.exports = {
             this.showLoading();
 
             const url = this.editUrl.replace("$id$", inviteSessionData._id);
-            AxiosHelper.send("patch", url, inviteSessionData,{
+            AxiosHelper.send("patch", url, inviteSessionData, {
                 sendAsFormData: true,
                 filesArray: "files"
             })

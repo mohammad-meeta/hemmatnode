@@ -1383,8 +1383,6 @@ module.exports = {
       var arg = payload.arg || null;
       var data = payload.data || {};
       arg = arg || payload;
-      console.log('*************************');
-      console.log(data);
 
       switch (arg) {
         case ENUMS.COMMAND.NEW:

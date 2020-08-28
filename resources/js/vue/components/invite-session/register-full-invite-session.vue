@@ -220,7 +220,6 @@ module.exports = {
          */
         loadDepartments() {
             const url = this.departmentsUrl;
-            console.log(url);
             AxiosHelper.send("get", url, "").then(res => {
                 const resData = res.data;
                 const datas = resData.data.data;
@@ -233,7 +232,6 @@ module.exports = {
          */
         loadUsers() {
             const url = this.usersUrl;
-            console.log(url);
             AxiosHelper.send("get", url, "").then(res => {
                 const resData = res.data;
                 const datas = resData.data.data;
@@ -274,7 +272,6 @@ module.exports = {
             .map(key => key);
 
             inviteSessionData.user_list = t;
-            console.log(inviteSessionData);
             this.showLoading();
 
             const url = this.editUrl.replace("$id$", inviteSessionData._id);

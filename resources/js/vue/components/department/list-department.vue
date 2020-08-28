@@ -67,8 +67,6 @@ module.exports = {
         loadDepartments(pageId) {
             let url = this.listUrl.replace("$page$", pageId);
             url = url.replace("$pageSize$", 50);
-
-            console.log(url);
             AxiosHelper.send("get", url, "").then(res => {
                 const resData = res.data;
                 Vue.set(this, "departments", resData.data.data);

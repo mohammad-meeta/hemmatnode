@@ -433,7 +433,6 @@ module.exports = {
 
       var url = this.listUrl.replace("$page$", pageId);
       url = url.replace("$pageSize$", 50);
-      console.log(url);
       AxiosHelper.send("get", url, "").then(function (res) {
         var resData = res.data;
         Vue.set(_this, "departments", resData.data.data);
@@ -9609,7 +9608,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/pages/department/index/index.js */"./resources/js/pages/department/index/index.js");
+module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/department/index/index.js */"./resources/js/pages/department/index/index.js");
 
 
 /***/ })

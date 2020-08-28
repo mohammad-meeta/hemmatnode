@@ -159,10 +159,6 @@ module.exports = {
             let arg = payload.arg || null;
             const data = payload.data || {};
             arg = arg || payload;
-
-            console.log('*************************')
-            console.log(data)
-
             switch (arg) {
                 case ENUMS.COMMAND.NEW:
                     this.changeFormMode(ENUMS.FORM_MODE.REGISTER);

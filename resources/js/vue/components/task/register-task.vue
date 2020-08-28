@@ -171,7 +171,6 @@ module.exports = {
          */
         loadParents() {
             const url = this.parentsUrl;
-            console.log(url);
             AxiosHelper.send("get", url, {}).then(res => {
                 console.log(res)
                 const resData = res.data;

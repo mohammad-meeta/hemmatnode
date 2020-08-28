@@ -61,7 +61,7 @@
                 label.label توضیحات
                 .control
                     textarea.textarea(
-                        placeholder="توضیحات",
+                        placeholder="تکالیف حاضرین",
                         v-model="inviteSessionData.body"
                     )
             .field
@@ -118,11 +118,13 @@ module.exports = {
             agenda: [
                 {
                     title: "تلاوت قرآن و معنی",
+                    way: "سخنرانی",
                     duration: "5",
                     provider: "عضو هیات رئیسه"
                 },
                 {
                     title: "گزارش کشیک نوروزی سال 1398",
+                    way: "سخنرانی",
                     duration: "20",
                     provider: "عضو هیات رئیسه"
                 }

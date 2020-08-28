@@ -133,7 +133,6 @@ module.exports = {
          */
         loadDepartments() {
             const url = this.departmentsUrl;
-            console.log(url);
             AxiosHelper.send("get", url, "").then(res => {
                 const resData = res.data;
                 const datas = resData.data.data;
@@ -146,7 +145,6 @@ module.exports = {
          */
         loadUsers() {
             const url = this.usersUrl;
-            console.log(url);
             AxiosHelper.send("get", url, "").then(res => {
                 const resData = res.data;
                 const datas = resData.data.data;

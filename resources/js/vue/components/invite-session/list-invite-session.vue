@@ -85,12 +85,12 @@ module.exports = {
             perPage: 10,
             rangeBefore: 3,
             rangeAfter: 1,
-            order: '',
-            size: '',
+            order: "",
+            size: "",
             isSimple: false,
             isRounded: false,
-            prevIcon: 'chevron-left',
-            nextIcon: 'chevron-right'
+            prevIcon: "chevron-left",
+            nextIcon: "chevron-right"
         },
         inviteSessions: [
             {
@@ -188,6 +188,13 @@ module.exports = {
                     id: payload._id,
                     dep: dep,
                     extra: data,
+                    agenda: data,
+                    place: payload.data.place,
+                    date: payload.data.date,
+                    body: payload.data.body,
+                    user_list: payload.data.user_list,
+                    other_user: JSON.parse(payload.data.other_user),
+                    files: payload.data.files,
                     is_active: payload.data.is_active,
                     created_at: payload.data.created_at
                 };
@@ -197,11 +204,17 @@ module.exports = {
 
         editInviteSessionList(payload) {
             const data = JSON.parse(payload.data.data.agenda);
+            const otherUsers = JSON.parse(payload.data.otherUsers);
             const editedInviteSessionsData = {
                 _id: payload.data.data._id,
                 title: payload.data.data.agenda,
-                agenda: payload.data.data.agenda,
+                agenda: data,
                 extra: data,
+                place: payload.data.data.place,
+                date: payload.data.date,
+                body: payload.data.body,
+                user_list: payload.data.user_list,
+                oldFiles: payload.data.files,
                 is_active: payload.data.data.is_active,
                 created_at: payload.data.data.created_at
             };

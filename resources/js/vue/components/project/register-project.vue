@@ -217,7 +217,6 @@ module.exports = {
          */
         loadPrograms() {
             const url = this.programsUrl;
-            console.log(url);
             AxiosHelper.send("get", url, "").then(res => {
                 const resData = res.data;
                 const datas = resData.data.data;

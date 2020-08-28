@@ -153,7 +153,6 @@ module.exports = {
             this.showLoading();
 
             const url = this.registerUrl;
-            console.log(url);
             AxiosHelper.send("post", url, departmentCategoryData)
                 .then(res => {
                     const data = res.data;

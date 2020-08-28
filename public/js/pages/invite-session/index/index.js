@@ -316,6 +316,20 @@ module.exports = {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 module.exports = {
@@ -657,7 +671,6 @@ module.exports = {
       var _this = this;
 
       var url = this.departmentsUrl;
-      console.log(url);
       AxiosHelper.send("get", url, "").then(function (res) {
         var resData = res.data;
         var datas = resData.data.data;
@@ -672,7 +685,6 @@ module.exports = {
       var _this2 = this;
 
       var url = this.usersUrl;
-      console.log(url);
       AxiosHelper.send("get", url, "").then(function (res) {
         var resData = res.data;
         var datas = resData.data.data;
@@ -712,7 +724,6 @@ module.exports = {
         return key;
       });
       inviteSessionData.user_list = t;
-      console.log(inviteSessionData);
       this.showLoading();
       var url = this.editUrl.replace("$id$", inviteSessionData._id);
       AxiosHelper.send("patch", url, inviteSessionData).then(function (res) {
@@ -959,11 +970,13 @@ module.exports = {
      * Load specific user
      */
     loadInviteSessionData: function loadInviteSessionData(data) {
+      var agenda = JSON.parse(data.agenda);
+      var other_user = JSON.parse(data.other_user);
       var temp = {
         _id: data._id,
         dep: data.dep.title,
         body: data.body,
-        agenda: data.agenda,
+        agenda: agenda,
         place: data.place,
         date: data.date,
         department_id: data.dep._id,
@@ -971,21 +984,8 @@ module.exports = {
         roles: data.roles,
         user_list: data.user_list,
         isActive: data.is_active,
-        other_user: data.other_user
+        other_user: other_user
       };
-
-      try {
-        temp.agenda = JSON.parse(data.agenda);
-      } catch (ex) {
-        temp.agenda = [];
-      }
-
-      try {
-        temp.other_user = JSON.parse(data.other_user);
-      } catch (ex) {
-        temp.other_user = [];
-      }
-
       Vue.set(this, "oldFiles", data.files);
       Vue.set(this, "inviteSessionData", temp);
       this.$refs.fileUpload.updateOldFiles(data.files);
@@ -1394,7 +1394,6 @@ module.exports = {
      * On Update invite session
      */
     onInviteSessionUpdate: function onInviteSessionUpdate(payload) {
-      console.log(payload);
       this.$refs.inviteSessionList.editInviteSessionList(payload);
       this.changeFormMode(ENUMS.FORM_MODE.LIST);
       this.setNotification(".جلسه با موفقیت ویرایش شد", "is-success");
@@ -1597,12 +1596,12 @@ module.exports = {
         perPage: 10,
         rangeBefore: 3,
         rangeAfter: 1,
-        order: '',
-        size: '',
+        order: "",
+        size: "",
         isSimple: false,
         isRounded: false,
-        prevIcon: 'chevron-left',
-        nextIcon: 'chevron-right'
+        prevIcon: "chevron-left",
+        nextIcon: "chevron-right"
       },
       inviteSessions: [{
         is_active: null,
@@ -1706,6 +1705,13 @@ module.exports = {
           id: payload._id,
           dep: dep,
           extra: data,
+          agenda: data,
+          place: payload.data.place,
+          date: payload.data.date,
+          body: payload.data.body,
+          user_list: payload.data.user_list,
+          other_user: JSON.parse(payload.data.other_user),
+          files: payload.data.files,
           is_active: payload.data.is_active,
           created_at: payload.data.created_at
         };
@@ -1714,11 +1720,17 @@ module.exports = {
     },
     editInviteSessionList: function editInviteSessionList(payload) {
       var data = JSON.parse(payload.data.data.agenda);
+      var otherUsers = JSON.parse(payload.data.otherUsers);
       var editedInviteSessionsData = {
         _id: payload.data.data._id,
         title: payload.data.data.agenda,
-        agenda: payload.data.data.agenda,
+        agenda: data,
         extra: data,
+        place: payload.data.data.place,
+        date: payload.data.date,
+        body: payload.data.body,
+        user_list: payload.data.user_list,
+        oldFiles: payload.data.files,
         is_active: payload.data.data.is_active,
         created_at: payload.data.data.created_at
       };
@@ -2106,7 +2118,6 @@ module.exports = {
       var _this = this;
 
       var url = this.departmentsUrl;
-      console.log(url);
       AxiosHelper.send("get", url, "").then(function (res) {
         var resData = res.data;
         var datas = resData.data.data;
@@ -2121,7 +2132,6 @@ module.exports = {
       var _this2 = this;
 
       var url = this.usersUrl;
-      console.log(url);
       AxiosHelper.send("get", url, "").then(function (res) {
         var resData = res.data;
         var datas = resData.data.data;
@@ -2160,7 +2170,6 @@ module.exports = {
         return key;
       });
       inviteSessionData.user_list = t;
-      console.log(inviteSessionData);
       this.showLoading();
       var url = this.editUrl.replace("$id$", inviteSessionData._id);
       AxiosHelper.send("patch", url, inviteSessionData).then(function (res) {
@@ -2335,10 +2344,12 @@ module.exports = {
         body: null,
         agenda: [{
           title: "تلاوت قرآن و معنی",
+          way: "سخنرانی",
           duration: "5",
           provider: "عضو هیات رئیسه"
         }, {
           title: "گزارش کشیک نوروزی سال 1398",
+          way: "سخنرانی",
           duration: "20",
           provider: "عضو هیات رئیسه"
         }],
@@ -46651,8 +46662,8 @@ var render = function() {
     [
       _vm._l(_vm.value, function(item, index) {
         return _c("div", { staticClass: "form-itemsbox" }, [
-          _c("div", { staticClass: "columns" }, [
-            _c("div", { staticClass: "column is-4" }, [
+          _c("div", { staticClass: "columns is-multiline" }, [
+            _c("div", { staticClass: "column is-12" }, [
               _c("div", { staticClass: "field" }, [
                 _c("label", { staticClass: "label" }, [_vm._v("دستور جلسه")]),
                 _c("div", { staticClass: "control" }, [
@@ -46683,6 +46694,59 @@ var render = function() {
                 ])
               ])
             ]),
+            _c(
+              "div",
+              { staticClass: "column is-4" },
+              [
+                _c(
+                  "b-field",
+                  { attrs: { label: "روش" } },
+                  [
+                    _c("b-select", { attrs: { placeholder: "انتخاب روش" } }, [
+                      _c("optgroup", { attrs: { label: "تصمیم گیری" } }, [
+                        _c("option", { attrs: { value: "رای گیری" } }, [
+                          _vm._v("رای گیری")
+                        ]),
+                        _c("option", { attrs: { value: "رای مخفی" } }, [
+                          _vm._v("رای مخفی")
+                        ]),
+                        _c("option", { attrs: { value: "رای منفی" } }, [
+                          _vm._v("رای منفی")
+                        ]),
+                        _c("option", { attrs: { value: "اجماع" } }, [
+                          _vm._v("اجماع")
+                        ]),
+                        _c(
+                          "option",
+                          { attrs: { value: "تفویز اختیار رئیس" } },
+                          [_vm._v("تفویز اختیار رئیس")]
+                        )
+                      ]),
+                      _c("optgroup", { attrs: { label: "بحث" } }, [
+                        _c(
+                          "option",
+                          { attrs: { value: "ارائه نظرات چرخشی" } },
+                          [_vm._v("ارائه نظرات چرخشی")]
+                        ),
+                        _c("option", { attrs: { value: "ارائه" } }, [
+                          _vm._v("ارائه")
+                        ]),
+                        _c("option", { attrs: { value: "سخنرانی" } }, [
+                          _vm._v("سخنرانی")
+                        ]),
+                        _c(
+                          "option",
+                          { attrs: { value: "ارائه مخالف و موافق" } },
+                          [_vm._v("ارائه مخالف و موافق")]
+                        )
+                      ])
+                    ])
+                  ],
+                  1
+                )
+              ],
+              1
+            ),
             _c("div", { staticClass: "column is-2" }, [
               _c("div", { staticClass: "field" }, [
                 _c("label", { staticClass: "label" }, [_vm._v("زمان")]),
@@ -47607,7 +47671,13 @@ var render = function() {
               [
                 _c("multi-text-member", {
                   ref: "multiTextMember",
-                  attrs: { value: _vm.inviteSessionData.other_user }
+                  model: {
+                    value: _vm.inviteSessionData.other_user,
+                    callback: function($$v) {
+                      _vm.$set(_vm.inviteSessionData, "other_user", $$v)
+                    },
+                    expression: "inviteSessionData.other_user"
+                  }
                 })
               ],
               1
@@ -49478,7 +49548,7 @@ var render = function() {
                   }
                 ],
                 staticClass: "textarea",
-                attrs: { placeholder: "توضیحات" },
+                attrs: { placeholder: "تکالیف حاضرین" },
                 domProps: { value: _vm.inviteSessionData.body },
                 on: {
                   input: function($event) {

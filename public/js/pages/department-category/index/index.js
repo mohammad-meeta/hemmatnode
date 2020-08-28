@@ -655,7 +655,6 @@ module.exports = {
       };
       this.showLoading();
       var url = this.registerUrl;
-      console.log(url);
       AxiosHelper.send("post", url, departmentCategoryData).then(function (res) {
         var data = res.data;
 
@@ -9052,7 +9051,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/pages/department-category/index/index.js */"./resources/js/pages/department-category/index/index.js");
+module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/department-category/index/index.js */"./resources/js/pages/department-category/index/index.js");
 
 
 /***/ })

@@ -200,7 +200,6 @@ module.exports = {
             this.showLoading();
 
             const url = this.editUrl.replace("$id$", request._id);
-            console.log(url);
             AxiosHelper.send("patch", url, request)
                 .then((res) => {
                     const data = JSON.parse(res.config.data);

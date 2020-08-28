@@ -132,7 +132,6 @@ module.exports = {
          */
         loadProjects() {
             const url = this.projectsUrl;
-            console.log(url);
             AxiosHelper.send("get", url, "").then(res => {
                 const resData = res.data;
                 const datas = resData.data.data;

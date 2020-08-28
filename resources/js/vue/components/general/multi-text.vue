@@ -1,12 +1,26 @@
 <template lang="pug">
     .multi-text#multi-text-template
         .form-itemsbox(v-for='(item, index) in value')
-            .columns
-                .column.is-4
+            .columns.is-multiline
+                .column.is-12
                     .field
                         label.label دستور جلسه
                         .control
                             input.input(type='text', v-model='item.title', @input='updateValue')
+                .column.is-4
+                    b-field(label='روش')
+                        b-select(placeholder='انتخاب روش')
+                            optgroup(label='تصمیم گیری')
+                                option(value='رای گیری') رای گیری
+                                option(value='رای مخفی') رای مخفی
+                                option(value='رای منفی') رای منفی
+                                option(value='اجماع') اجماع
+                                option(value='تفویز اختیار رئیس') تفویز اختیار رئیس
+                            optgroup(label='بحث')
+                                option(value='ارائه نظرات چرخشی') ارائه نظرات چرخشی
+                                option(value='ارائه') ارائه
+                                option(value='سخنرانی') سخنرانی
+                                option(value='ارائه مخالف و موافق') ارائه مخالف و موافق
                 .column.is-2
                     .field
                         label.label زمان

@@ -8,6 +8,7 @@ block content
         responses(
             departments-url=route('api.department', { page: 1, size: 1000 })
             list-url=route('api.response', { page: '$page$', size: '$pageSize$'})
+            response-list-url=route('api.response.requset', { reqId: '$reqId$',page: 1, size: 1000})
             request-list-url=route('api.all-request', { page: '$page$', size: '$pageSize$'})
             register-url=route('response.store')
             edit-url=route('response.update', { id :'$id$'})

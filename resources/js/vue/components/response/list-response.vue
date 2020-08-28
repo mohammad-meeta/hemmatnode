@@ -39,7 +39,7 @@ const Paginate = require("vuejs-paginate");
 Vue.component("paginate", Paginate);
 module.exports = {
     props: {
-        listUrl: {
+        responseListUrl: {
             type: String,
             default: "",
         },
@@ -57,6 +57,17 @@ module.exports = {
     },
 
     methods: {
+        /**
+         * Load responses
+         */
+        loadResponseData(data) {
+            let url = this.responseListUrl.replace("$reqId$", data._id);
+            AxiosHelper.send("get", url, "").then((res) => {
+                const resData = res.data;
+                Vue.set(this, "responses", resData.data.data);
+                Vue.set(this, "responsesCount", resData.data.count);
+            });
+        },
         /**
          * Load responses
          */

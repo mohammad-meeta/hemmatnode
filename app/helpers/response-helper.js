@@ -115,6 +115,133 @@ ResponseHelper.loadAllRequestData = function loadAllRequestData(req, dataPaginat
             .catch(err => reject(err));
     });
 };
+
+/**
+ * find all request 
+ */
+ResponseHelper.loadAllResponseRequestData = function loadAllResponseRequestData(reqId, dataPaginate) {
+    const page = parseInt(dataPaginate.page);
+    const pageSize = parseInt(dataPaginate.pageSize);
+    const skip = page > 0 ? ((page - 1) * pageSize) : 0;
+
+    const ObjectId = require('mongoose').Types.ObjectId;
+    const Response = mongoose.model('Response');
+
+    const pipeline = [
+        {
+            "$match": {
+                request_id: ObjectId(reqId)
+            }
+        },
+        {
+            "$lookup": {
+                "from": "departments",
+                "localField": "department_id",
+                "foreignField": "_id",
+                "as": "dep"
+            }
+        },
+        {
+            "$unwind": "$dep"
+        },
+        {
+            "$lookup": {
+                "from": "requests",
+                "localField": "request_id",
+                "foreignField": "_id",
+                "as": "req"
+            }
+        },
+        {
+            "$unwind": "$req"
+        },
+        {
+            "$unwind": {
+                "path": "$files",
+                "preserveNullAndEmptyArrays": true
+            }
+        },
+        {
+            "$lookup": {
+                "from": "files",
+                "localField": "files.file_id",
+                "foreignField": "_id",
+                "as": "file"
+            }
+        },
+        {
+            "$unwind": {
+                "path": "$file",
+                "preserveNullAndEmptyArrays": true
+            }
+        },
+        {
+            "$project": {
+                "file.encoding": 0,
+                "file.fieldname": 0,
+                "file.mimetype": 0,
+                "file.destination": 0,
+                "file.user_id": 0,
+                "file.path": 0,
+                "file.filename": 0,
+            }
+        },
+        {
+            "$group": {
+                "_id": "$_id",
+                "files": {
+                    "$push": "$file"
+                },
+                "is_active": {
+                    "$last": "$is_active"
+                },
+                "title": {
+                    "$last": "$title"
+                },
+                "action": {
+                    "$last": "$action"
+                },
+                "deadline": {
+                    "$last": "$deadline"
+                },
+                "result": {
+                    "$last": "$result"
+                },
+                "request_id": {
+                    "$last": "$request_id"
+                },
+                "created_at": {
+                    "$last": "$created_at"
+                },
+                "dep": {
+                    "$last": "$dep"
+                },
+                "req": {
+                    "$last": "$req"
+                }
+            }
+        },
+        {
+            "$sort": {
+                "created_at": -1
+            }
+        },
+        {
+            "$skip": skip
+        },
+        {
+            "$limit": pageSize
+        }
+    ];
+
+    return new Promise((resolve, reject) => {
+        Response.aggregate(pipeline)
+            .then(res => {
+                resolve(res);
+            })
+            .catch(err => reject(err));
+    });
+};
 /**
  * find all  count data result 
  */
@@ -122,6 +249,25 @@ ResponseHelper.loadAllRequestCountData = function loadAllRequestCountData(group)
     const Request = mongoose.model('Request');
 
     const filterQuery = {
+    };
+
+    return new Promise((resolve, reject) => {
+        Request.countDocuments(filterQuery)
+            .then(res => {
+                resolve(res);
+            })
+            .catch(err => reject(err));
+    });
+};
+
+/**
+ * find all  count data result 
+ */
+ResponseHelper.loadAllResponseRequestCountData = function loadAllResponseRequestCountData(reqId) {
+    const Request = mongoose.model('Response');
+
+    const filterQuery = {
+        request_id: reqId
     };
 
     return new Promise((resolve, reject) => {
@@ -246,24 +392,6 @@ ResponseHelper.loadAllResponseData = function loadAllResponseData(req, dataPagin
 
     return new Promise((resolve, reject) => {
         Response.aggregate(pipeline)
-            .then(res => {
-                resolve(res);
-            })
-            .catch(err => reject(err));
-    });
-};
-/**
- * find response 
- */
-ResponseHelper.loadAllResponseRequestData = function loadAllResponseRequestData(req, request_id) {
-    const filterQuery = {
-        request_id: request_id
-    };
-
-    const projection = {};
-
-    return new Promise((resolve, reject) => {
-        Response.findOne(filterQuery, projection)
             .then(res => {
                 resolve(res);
             })

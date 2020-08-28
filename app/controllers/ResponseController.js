@@ -62,6 +62,50 @@ Response.paginateResponse = function paginateResponse(req, res, next) {
                 .end();
         });
 };
+/**
+ * paginate route
+ */
+Response.paginateResponseRequest = function paginateResponseRequest(req, res, next) {
+    const dataPaginate = {
+        page: req.params.page,
+        pageSize: req.params.size || 10
+    };
+    const reqId = req.params.reqId;
+
+    ResponseHelper.loadAllResponseRequestCountData(reqId)
+        .then(data => {
+            let count = data.data;
+
+            ResponseHelper.loadAllResponseRequestData(reqId, dataPaginate)
+                .then(data => {
+                    const result = {
+                        success: true,
+                        data: {
+                            data: data,
+                            count: count
+                        }
+                    };
+
+                    res.status(200)
+                        .send(result)
+                        .end();
+                })
+                .catch(err => {
+                    Logger.error(err);
+
+                    res.status(500)
+                        .send(err)
+                        .end();
+                });
+        })
+        .catch(err => {
+            Logger.error(err);
+
+            res.status(500)
+                .send(err)
+                .end();
+        });
+};
 
 /**
  * paginate route request
@@ -178,16 +222,17 @@ Response.update = async function update(req, res, next) {
     data = {
         "_id": req.body._id,
         "title": req.body.title,
-        "request_id": req.body.requestId,
-        "department_id": req.body.departmentId,
+        "request_id": req.body.request_id,
+        "department_id": req.body.department_id,
         "action": req.body.action,
         "deadline": req.body.deadline,
         "result": req.body.result,
         "user_id": req.session.auth.userId,
-        "is_active": req.body.isActive,
+        "is_active": req.body.is_active,
         "files": fileList
     };
 
+    console.log(data);
     ResponseHelper.updateResponseData(data)
         .then(data => {
             const result = {

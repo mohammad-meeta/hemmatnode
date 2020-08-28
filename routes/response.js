@@ -34,6 +34,12 @@ Router.get('/api/all-request/:page/:size?', [
 ])
     .as('api.all-request');
 
+Router.get('/api/response/:reqId/:page/:size?', [
+    checkSession,
+    'Response@paginateResponseRequest'
+])
+    .as('api.response.requset');
+
 Router.get('/response/create', [
     checkSession,
     Rule.canAsync('user.permision', 'response.create'),

@@ -9,12 +9,12 @@
                 .field
                     label.label درخواست
                     .control
-                        input.input(placeholder='درخواست', v-model='responseData.requestId')
+                        input.input(placeholder='درخواست' disabled, v-model='request')
 
                 .field
                     label.label واحد مسئول
                     .control
-                        input.input(placeholder='واحد مسئول', v-model='responseData.departmentId')
+                        input.input(placeholder='واحد مسئول' disabled, v-model='department')
 
                 .field
                     label.label عنوان پاسخ به طلب همکاری
@@ -49,11 +49,6 @@
                 .field.is-grouped
                     .control(v-show="! isLoadingMode")
                         a.button.is-link.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
-                            |   ایجاد
-
-                .field.is-grouped
-                    .control(v-show="! isLoadingMode")
-                        a.button.is-link.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
                             |   ویرایش
 </template>
 
@@ -77,7 +72,7 @@ module.exports = {
         ENUMS,
         users: [],
         responseData: {
-            id: null,
+            _id: null,
             requestId: null,
             departmentId: null,
             title: null,
@@ -87,6 +82,8 @@ module.exports = {
             files: {},
             isActive: false,
         },
+        department: null,
+        request: null,
         notificationMessage: null,
         notificationType: "is-info",
         showLoadingFlag: false,
@@ -120,17 +117,20 @@ module.exports = {
          * Load specific invite session
          */
         loadResponseData(data) {
+            console.log(data);
             const temp = {
                 _id: data._id,
                 title: data.title,
                 result: data.result,
                 action: data.action,
                 departmentId: data.dep._id,
-                requestId: data.req._id,
+                requestId: data.request_id,
                 deadline: data.deadline,
                 files: {},
                 isActive: data.is_active,
             };
+            Vue.set(this, "department", data.dep.title);
+            Vue.set(this, "request", data.req.title);
 
             Vue.set(this, "responseData", temp);
         },
@@ -203,9 +203,9 @@ module.exports = {
                 department_id: this.responseData.departmentId,
                 request_id: this.responseData.requestId,
                 deadline: this.responseData.deadline,
+                result: this.responseData.result,
                 is_active: this.responseData.isActive,
             };
-
             response.files = this.files;
 
             this.showLoading();

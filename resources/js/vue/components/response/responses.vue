@@ -46,7 +46,11 @@
                 show-request(ref="requestShow", @on-command="onCommand")
 
             .column(v-show="!modeLoading && modeShow")
-                list-response(@on-command="onCommand")
+                list-response(
+                    ref="listResponse"
+                    :response-list-url="responseListUrl"
+                    @on-command="onCommand"
+                    )
 
             .column(v-show="!modeLoading && modeEdit")
                 edit-response(ref="responseEdit", @on-command="onCommand" ,:edit-url="editUrl")
@@ -106,6 +110,11 @@ module.exports = {
             default: null,
         },
 
+        responseListUrl: {
+            type: String,
+            default: null,
+        },
+
         registerUrl: {
             type: String,
             default: null,
@@ -146,12 +155,6 @@ module.exports = {
     },
 
     methods: {
-        /**
-         * onShowResponse
-         */
-        onShowResponse(payload) {
-            console.log("OKOKOKOK");
-        },
         /**
          * On Register response
          */
@@ -207,6 +210,11 @@ module.exports = {
 
                 case ENUMS.COMMAND.CANCEL:
                     this.changeFormMode(null, { pop: true });
+                    break;
+
+                case "SHOW-RESPONSE":
+                    this.changeFormMode(ENUMS.FORM_MODE.SHOW);
+                    this.$refs.listResponse.loadResponseData(data);
                     break;
 
                 // case ENUMS.COMMAND.SHOW:

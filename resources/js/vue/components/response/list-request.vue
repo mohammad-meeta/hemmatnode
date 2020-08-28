@@ -18,7 +18,7 @@
                         span.icon.is-small
                             i.material-icons.icon check_circle
                         span پاسخ
-                    a.button.is-primary.is-rounded(href="#", @click.prevent="onShowResponse(ENUMS.COMMAND.SHOW ,request)")
+                    a.button.is-primary.is-rounded(href="#", @click.prevent="commandClick('SHOW-RESPONSE', request)")
                         span.icon.is-small
                             i.material-icons.icon check_circle
                         span مشاهده پاسخ ها
@@ -83,12 +83,6 @@ module.exports = {
          * @param      {Object}  arg     The argument
          */
         commandClick(arg, data) {
-            this.$emit("on-command", { arg, data });
-        },
-        /**
-         * onShowResponse
-         */
-        onShowResponse(arg, data) {
             this.$emit("on-command", { arg, data });
         },
 

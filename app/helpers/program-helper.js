@@ -23,12 +23,12 @@ ProgramHelper.loadAllProgramData = function loadAllProgramData(dataPaginate) {
 
     return new Promise((resolve, reject) => {
         Program.find(filterQuery, projection, {
-                sort: {
-                    'created_at': -1
-                },
-                skip: skip,
-                limit: pageSize
-            })
+            sort: {
+                'created_at': -1
+            },
+            skip: skip,
+            limit: pageSize
+        })
             .then(res => {
                 resolve(res);
             })
@@ -56,11 +56,11 @@ ProgramHelper.loadAllProgramCountData = function loadAllProgramCountData() {
 /**
  * find Program data result 
  */
-ProgramHelper.loadProgramData = function loadProgramData(programTitle) {
+ProgramHelper.loadProgramData = function loadProgramData(id) {
     const Program = mongoose.model('Program');
 
     const filterQuery = {
-        _id: programTitle
+        _id: id
     };
     const projection = {};
 

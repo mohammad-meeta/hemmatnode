@@ -52,6 +52,10 @@ PugView.viewPath = {
     'project.show': 'pages/project/show.pug',
     'project.edit': 'pages/project/edit.pug',
 
+    /* project */
+    'program.index': 'pages/program/index.pug',
+    'program.create': 'pages/program/register.pug',
+
     /* request */
     'request.index': 'pages/request/index.pug',
     'request.create': 'pages/request/register.pug',

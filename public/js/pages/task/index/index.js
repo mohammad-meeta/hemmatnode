@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 16);
+/******/ 	return __webpack_require__(__webpack_require__.s = 17);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -31932,14 +31932,14 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ 16:
+/***/ 17:
 /*!******************************************************!*\
   !*** multi ./resources/js/pages/task/index/index.js ***!
   \******************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/task/index/index.js */"./resources/js/pages/task/index/index.js");
+module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/pages/task/index/index.js */"./resources/js/pages/task/index/index.js");
 
 
 /***/ })

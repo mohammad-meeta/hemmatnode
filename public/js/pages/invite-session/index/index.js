@@ -330,6 +330,8 @@ module.exports = {
 //
 //
 //
+//
+//
 
 
 module.exports = {
@@ -843,6 +845,16 @@ module.exports = {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 var Buefy = __webpack_require__(/*! buefy */ "./node_modules/buefy/dist/esm/index.js")["default"];
@@ -970,8 +982,12 @@ module.exports = {
      * Load specific user
      */
     loadInviteSessionData: function loadInviteSessionData(data) {
-      var agenda = JSON.parse(data.agenda);
-      var other_user = JSON.parse(data.other_user);
+      var agenda = data.agenda;
+      var other_user = data.other_user;
+      console.log(agenda, other_user); // if (other_user.length == 1) {
+      //     other_user = other_user[0];
+      // }
+
       var temp = {
         _id: data._id,
         dep: data.dep.title,
@@ -1403,12 +1419,8 @@ module.exports = {
      * On commands clicked
      */
     onCommand: function onCommand(payload) {
-      var arg = payload.arg || null;
+      var arg = payload.arg || payload;
       var data = payload.data || {};
-
-      if (null == arg) {
-        arg = payload;
-      }
 
       switch (arg) {
         case ENUMS.COMMAND.NEW:
@@ -2220,6 +2232,14 @@ module.exports = {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -46702,45 +46722,58 @@ var render = function() {
                   "b-field",
                   { attrs: { label: "روش" } },
                   [
-                    _c("b-select", { attrs: { placeholder: "انتخاب روش" } }, [
-                      _c("optgroup", { attrs: { label: "تصمیم گیری" } }, [
-                        _c("option", { attrs: { value: "رای گیری" } }, [
-                          _vm._v("رای گیری")
+                    _c(
+                      "b-select",
+                      {
+                        attrs: { placeholder: "انتخاب روش" },
+                        model: {
+                          value: item.way,
+                          callback: function($$v) {
+                            _vm.$set(item, "way", $$v)
+                          },
+                          expression: "item.way"
+                        }
+                      },
+                      [
+                        _c("optgroup", { attrs: { label: "تصمیم گیری" } }, [
+                          _c("option", { attrs: { value: "رای گیری" } }, [
+                            _vm._v("رای گیری")
+                          ]),
+                          _c("option", { attrs: { value: "رای مخفی" } }, [
+                            _vm._v("رای مخفی")
+                          ]),
+                          _c("option", { attrs: { value: "رای منفی" } }, [
+                            _vm._v("رای منفی")
+                          ]),
+                          _c("option", { attrs: { value: "اجماع" } }, [
+                            _vm._v("اجماع")
+                          ]),
+                          _c(
+                            "option",
+                            { attrs: { value: "تفویز اختیار رئیس" } },
+                            [_vm._v("تفویز اختیار رئیس")]
+                          )
                         ]),
-                        _c("option", { attrs: { value: "رای مخفی" } }, [
-                          _vm._v("رای مخفی")
-                        ]),
-                        _c("option", { attrs: { value: "رای منفی" } }, [
-                          _vm._v("رای منفی")
-                        ]),
-                        _c("option", { attrs: { value: "اجماع" } }, [
-                          _vm._v("اجماع")
-                        ]),
-                        _c(
-                          "option",
-                          { attrs: { value: "تفویز اختیار رئیس" } },
-                          [_vm._v("تفویز اختیار رئیس")]
-                        )
-                      ]),
-                      _c("optgroup", { attrs: { label: "بحث" } }, [
-                        _c(
-                          "option",
-                          { attrs: { value: "ارائه نظرات چرخشی" } },
-                          [_vm._v("ارائه نظرات چرخشی")]
-                        ),
-                        _c("option", { attrs: { value: "ارائه" } }, [
-                          _vm._v("ارائه")
-                        ]),
-                        _c("option", { attrs: { value: "سخنرانی" } }, [
-                          _vm._v("سخنرانی")
-                        ]),
-                        _c(
-                          "option",
-                          { attrs: { value: "ارائه مخالف و موافق" } },
-                          [_vm._v("ارائه مخالف و موافق")]
-                        )
-                      ])
-                    ])
+                        _c("optgroup", { attrs: { label: "بحث" } }, [
+                          _c(
+                            "option",
+                            { attrs: { value: "ارائه نظرات چرخشی" } },
+                            [_vm._v("ارائه نظرات چرخشی")]
+                          ),
+                          _c("option", { attrs: { value: "ارائه" } }, [
+                            _vm._v("ارائه")
+                          ]),
+                          _c("option", { attrs: { value: "سخنرانی" } }, [
+                            _vm._v("سخنرانی")
+                          ]),
+                          _c(
+                            "option",
+                            { attrs: { value: "ارائه مخالف و موافق" } },
+                            [_vm._v("ارائه مخالف و موافق")]
+                          )
+                        ])
+                      ]
+                    )
                   ],
                   1
                 )
@@ -47612,90 +47645,103 @@ var render = function() {
               1
             )
           ]),
-          _c(
-            "div",
-            { staticClass: "field" },
-            [
-              _c("label", { staticClass: "label" }, [_vm._v("حاضرین جلسه")]),
+          _c("div", { staticClass: "field" }, [
+            _c("div", { staticClass: "panel" }, [
+              _c("div", { staticClass: "panel-heading" }, [
+                _vm._v("حاضرین جلسه")
+              ]),
               _c(
-                "b-table",
-                {
-                  attrs: {
-                    data: _vm.users,
-                    columns: _vm.columns,
-                    "checked-rows": _vm.allCheckedRows,
-                    checkable: "",
-                    paginated: _vm.isPaginated,
-                    "per-page": _vm.perPage,
-                    "current-page": _vm.currentPage,
-                    "pagination-simple": _vm.isPaginationSimple,
-                    "pagination-position": _vm.paginationPosition,
-                    "checkbox-position": _vm.checkboxPosition
-                  },
-                  on: {
-                    "update:checkedRows": function($event) {
-                      _vm.allCheckedRows = $event
-                    },
-                    "update:checked-rows": function($event) {
-                      _vm.allCheckedRows = $event
-                    },
-                    "update:currentPage": function($event) {
-                      _vm.currentPage = $event
-                    },
-                    "update:current-page": function($event) {
-                      _vm.currentPage = $event
-                    }
-                  }
-                },
+                "div",
+                { staticClass: "panel-block" },
                 [
-                  _c("template", { slot: "bottom-left" }, [
-                    _vm._v(
-                      "نفرات انتخاب شده : " +
-                        _vm._s(_vm.checkedRows.length) +
-                        " نفر"
-                    )
-                  ])
-                ],
-                2
-              )
-            ],
-            1
-          ),
-          _c("fieldset", [
-            _c("legend", [
-              _vm._v("مدعوین (به غیر از افراد حاضر و سایر اعضاء)")
-            ]),
-            _c(
-              "div",
-              { staticClass: "field" },
-              [
-                _c("multi-text-member", {
-                  ref: "multiTextMember",
-                  model: {
-                    value: _vm.inviteSessionData.other_user,
-                    callback: function($$v) {
-                      _vm.$set(_vm.inviteSessionData, "other_user", $$v)
+                  _c(
+                    "b-table",
+                    {
+                      staticClass: "table is-fullwidth",
+                      attrs: {
+                        data: _vm.users,
+                        columns: _vm.columns,
+                        "checked-rows": _vm.allCheckedRows,
+                        checkable: "",
+                        paginated: _vm.isPaginated,
+                        "per-page": _vm.perPage,
+                        "current-page": _vm.currentPage,
+                        "pagination-simple": _vm.isPaginationSimple,
+                        "pagination-position": _vm.paginationPosition,
+                        "checkbox-position": _vm.checkboxPosition
+                      },
+                      on: {
+                        "update:checkedRows": function($event) {
+                          _vm.allCheckedRows = $event
+                        },
+                        "update:checked-rows": function($event) {
+                          _vm.allCheckedRows = $event
+                        },
+                        "update:currentPage": function($event) {
+                          _vm.currentPage = $event
+                        },
+                        "update:current-page": function($event) {
+                          _vm.currentPage = $event
+                        }
+                      }
                     },
-                    expression: "inviteSessionData.other_user"
-                  }
-                })
-              ],
-              1
-            )
+                    [
+                      _c("template", { slot: "bottom-left" }, [
+                        _vm._v(
+                          "نفرات انتخاب شده : " +
+                            _vm._s(_vm.checkedRows.length) +
+                            " نفر"
+                        )
+                      ])
+                    ],
+                    2
+                  )
+                ],
+                1
+              )
+            ])
           ]),
-          _c("fieldset", [
-            _c("legend", [_vm._v("فایل های ضمیمه")]),
-            _c(
-              "div",
-              { staticClass: "field" },
-              [
-                _c("file-upload", {
-                  ref: "fileUpload",
-                  attrs: { "old-files": _vm.oldFiles }
-                })
-              ],
-              1
-            )
+          _c("div", { staticClass: "field" }, [
+            _c("div", { staticClass: "panel" }, [
+              _c("div", { staticClass: "panel-heading" }, [
+                _vm._v("مدعوین (به غیر از افراد حاضر و سایر اعضاء)")
+              ]),
+              _c(
+                "div",
+                { staticClass: "panel-block" },
+                [
+                  _c("multi-text-member", {
+                    ref: "multiTextMember",
+                    model: {
+                      value: _vm.inviteSessionData.other_user,
+                      callback: function($$v) {
+                        _vm.$set(_vm.inviteSessionData, "other_user", $$v)
+                      },
+                      expression: "inviteSessionData.other_user"
+                    }
+                  })
+                ],
+                1
+              )
+            ])
+          ]),
+          _c("div", { staticClass: "field" }, [
+            _c("div", { staticClass: "panel" }, [
+              _c("div", { staticClass: "panel-heading" }, [
+                _vm._v("فایل های ضمیمه")
+              ]),
+              _c(
+                "div",
+                { staticClass: "panel-block" },
+                [
+                  _c("file-upload", {
+                    ref: "fileUpload",
+                    attrs: { "old-files": _vm.oldFiles }
+                  })
+                ],
+                1
+              )
+            ])
           ]),
           _c("div", { staticClass: "field" }, [
             _c("label", { staticClass: "label" }, [_vm._v("توضیحات")]),
@@ -49451,61 +49497,70 @@ var render = function() {
               1
             )
           ]),
-          _c(
-            "div",
-            { staticClass: "field" },
-            [
-              _c("label", { staticClass: "label" }, [_vm._v("حاضرین جلسه")]),
-              _c(
-                "b-table",
-                {
-                  attrs: {
-                    data: _vm.users,
-                    columns: _vm.columns,
-                    "checked-rows": _vm.checkedRows,
-                    checkable: "",
-                    paginated: _vm.isPaginated,
-                    "per-page": _vm.perPage,
-                    "current-page": _vm.currentPage,
-                    "pagination-simple": _vm.isPaginationSimple,
-                    "pagination-position": _vm.paginationPosition,
-                    "checkbox-position": _vm.checkboxPosition
-                  },
-                  on: {
-                    "update:checkedRows": function($event) {
-                      _vm.checkedRows = $event
-                    },
-                    "update:checked-rows": function($event) {
-                      _vm.checkedRows = $event
-                    },
-                    "update:currentPage": function($event) {
-                      _vm.currentPage = $event
-                    },
-                    "update:current-page": function($event) {
-                      _vm.currentPage = $event
-                    }
-                  }
-                },
-                [
-                  _c("template", { slot: "bottom-left" }, [
-                    _vm._v(
-                      "نفرات انتخاب شده : " +
-                        _vm._s(_vm.checkedRows.length) +
-                        " نفر"
-                    )
-                  ])
-                ],
-                2
-              )
-            ],
-            1
-          ),
-          _c("fieldset", [
-            _c("legend", [
-              _vm._v("مدعوین (به غیر از افراد حاضر و سایر اعضاء)"),
+          _c("div", { staticClass: "field" }, [
+            _c("div", { staticClass: "panel" }, [
+              _c("div", { staticClass: "panel-heading" }, [
+                _vm._v("حاضرین جلسه")
+              ]),
               _c(
                 "div",
-                { staticClass: "field" },
+                { staticClass: "panel-block" },
+                [
+                  _c(
+                    "b-table",
+                    {
+                      staticClass: "table is-fullwidth",
+                      attrs: {
+                        data: _vm.users,
+                        columns: _vm.columns,
+                        "checked-rows": _vm.checkedRows,
+                        checkable: "",
+                        paginated: _vm.isPaginated,
+                        "per-page": _vm.perPage,
+                        "current-page": _vm.currentPage,
+                        "pagination-simple": _vm.isPaginationSimple,
+                        "pagination-position": _vm.paginationPosition,
+                        "checkbox-position": _vm.checkboxPosition
+                      },
+                      on: {
+                        "update:checkedRows": function($event) {
+                          _vm.checkedRows = $event
+                        },
+                        "update:checked-rows": function($event) {
+                          _vm.checkedRows = $event
+                        },
+                        "update:currentPage": function($event) {
+                          _vm.currentPage = $event
+                        },
+                        "update:current-page": function($event) {
+                          _vm.currentPage = $event
+                        }
+                      }
+                    },
+                    [
+                      _c("template", { slot: "bottom-left" }, [
+                        _vm._v(
+                          "نفرات انتخاب شده : " +
+                            _vm._s(_vm.checkedRows.length) +
+                            " نفر"
+                        )
+                      ])
+                    ],
+                    2
+                  )
+                ],
+                1
+              )
+            ])
+          ]),
+          _c("div", { staticClass: "field" }, [
+            _c("div", { staticClass: "panel" }, [
+              _c("div", { staticClass: "panel-heading" }, [
+                _vm._v("مدعوین (به غیر از افراد حاضر و سایر اعضاء)")
+              ]),
+              _c(
+                "div",
+                { staticClass: "panel-block" },
                 [
                   _c("multi-text-member", {
                     model: {
@@ -49521,19 +49576,23 @@ var render = function() {
               )
             ])
           ]),
-          _c("fieldset", [
-            _c("legend", [_vm._v("فایل های ضمیمه")]),
-            _c(
-              "div",
-              { staticClass: "field" },
-              [
-                _c("file-upload", {
-                  ref: "fileUpload",
-                  attrs: { "old-files": _vm.oldFiles }
-                })
-              ],
-              1
-            )
+          _c("div", { staticClass: "field" }, [
+            _c("div", { staticClass: "panel" }, [
+              _c("div", { staticClass: "panel-heading" }, [
+                _vm._v("فایل های ضمیمه")
+              ]),
+              _c(
+                "div",
+                { staticClass: "panel-block" },
+                [
+                  _c("file-upload", {
+                    ref: "fileUpload",
+                    attrs: { "old-files": _vm.oldFiles }
+                  })
+                ],
+                1
+              )
+            ])
           ]),
           _c("div", { staticClass: "field" }, [
             _c("label", { staticClass: "label" }, [_vm._v("توضیحات")]),
@@ -52273,7 +52332,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/pages/invite-session/index/index.js */"./resources/js/pages/invite-session/index/index.js");
+module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/invite-session/index/index.js */"./resources/js/pages/invite-session/index/index.js");
 
 
 /***/ })

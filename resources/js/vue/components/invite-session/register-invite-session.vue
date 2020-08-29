@@ -35,28 +35,36 @@
                     display-format=" jDD/jMM/jYYYY HH:mm" type="datetime" required)
 
             .field
-                label.label حاضرین جلسه
-                b-table(
-                        :data="users"
-                        :columns="columns"
-                        :checked-rows.sync="checkedRows"
-                        checkable
-                        :paginated="isPaginated",
-                        :per-page="perPage",
-                        :current-page.sync="currentPage",
-                        :pagination-simple="isPaginationSimple",
-                        :pagination-position="paginationPosition",
-                        :checkbox-position="checkboxPosition")
-                    template(slot="bottom-left")
-                        | نفرات انتخاب شده : {{ checkedRows.length }} نفر
-            fieldset
-                legend مدعوین (به غیر از افراد حاضر و سایر اعضاء)
-                    .field
+                .panel
+                    .panel-heading
+                        | حاضرین جلسه
+                    .panel-block
+                        b-table(
+                                class="table is-fullwidth"
+                                :data="users"
+                                :columns="columns"
+                                :checked-rows.sync="checkedRows"
+                                checkable
+                                :paginated="isPaginated",
+                                :per-page="perPage",
+                                :current-page.sync="currentPage",
+                                :pagination-simple="isPaginationSimple",
+                                :pagination-position="paginationPosition",
+                                :checkbox-position="checkboxPosition")
+                            template(slot="bottom-left")
+                                | نفرات انتخاب شده : {{ checkedRows.length }} نفر
+            .field
+                .panel
+                    .panel-heading
+                        | مدعوین (به غیر از افراد حاضر و سایر اعضاء)
+                    .panel-block
                         multi-text-member(v-model='inviteSessionData.other_user')
-            fieldset
-                legend فایل های ضمیمه
-                .field
-                    file-upload(ref="fileUpload", :old-files="oldFiles")
+            .field
+                .panel
+                    .panel-heading
+                        | فایل های ضمیمه
+                    .panel-block
+                        file-upload(ref="fileUpload", :old-files="oldFiles")
             .field
                 label.label توضیحات
                 .control

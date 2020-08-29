@@ -9,7 +9,9 @@
                             input.input(type='text', v-model='item.title', @input='updateValue')
                 .column.is-4
                     b-field(label='روش')
-                        b-select(placeholder='انتخاب روش')
+                        b-select(placeholder='انتخاب روش',
+                        v-model="item.way"
+                        )
                             optgroup(label='تصمیم گیری')
                                 option(value='رای گیری') رای گیری
                                 option(value='رای مخفی') رای مخفی

@@ -232,11 +232,9 @@ module.exports = {
          * On commands clicked
          */
         onCommand(payload) {
-            let arg = payload.arg || null;
+            let arg = payload.arg || payload;
             const data = payload.data || {};
-            if (null == arg) {
-                arg = payload;
-            }
+
             switch (arg) {
                 case ENUMS.COMMAND.NEW:
                     this.changeFormMode(ENUMS.FORM_MODE.REGISTER);

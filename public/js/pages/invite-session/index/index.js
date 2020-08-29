@@ -1580,6 +1580,20 @@ module.exports = {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 var ENUMS = __webpack_require__(/*! JS-HELPERS/enums */ "./resources/js/helpers/enums.js");
@@ -1636,11 +1650,9 @@ module.exports = {
     /**
      * Create titles
      */
-    getTitles: function getTitles(extraa) {
-      var extra = extraa || [];
-
-      if (extra.length > 0) {
-        var res = extra.map(function (x) {
+    getTitles: function getTitles(agenda) {
+      if (agenda && agenda.length > 0) {
+        var res = agenda.map(function (x) {
           return x.title;
         }).join("<br/>");
         return res;
@@ -1657,13 +1669,6 @@ module.exports = {
       AxiosHelper.send("get", url, "").then(function (res) {
         var resData = res.data;
         var inviteData = resData.data.data;
-        inviteData.forEach(function (x) {
-          try {
-            x.extra = JSON.parse(x.agenda);
-          } catch (ex) {
-            x.extra = [];
-          }
-        });
         Vue.set(_this, "inviteSessions", inviteData);
         Vue.set(_this, "inviteSessionsCount", inviteData.count);
 
@@ -1709,7 +1714,7 @@ module.exports = {
      * add new inviteSessions data to list data
      */
     addToInviteSessionList: function addToInviteSessionList(payload) {
-      var data = JSON.parse(payload.data.agenda);
+      var data = payload.data.agenda;
 
       if (this.inviteSessions.length > 0) {
         var dep = this.inviteSessions[0].dep;
@@ -1722,7 +1727,7 @@ module.exports = {
           date: payload.data.date,
           body: payload.data.body,
           user_list: payload.data.user_list,
-          other_user: JSON.parse(payload.data.other_user),
+          other_user: payload.data.other_user,
           files: payload.data.files,
           is_active: payload.data.is_active,
           created_at: payload.data.created_at
@@ -1731,8 +1736,8 @@ module.exports = {
       }
     },
     editInviteSessionList: function editInviteSessionList(payload) {
-      var data = JSON.parse(payload.data.data.agenda);
-      var otherUsers = JSON.parse(payload.data.otherUsers);
+      var data = payload.data.data.agenda;
+      var otherUsers = payload.data.otherUsers;
       var editedInviteSessionsData = {
         _id: payload.data.data._id,
         title: payload.data.data.agenda,
@@ -2232,6 +2237,18 @@ module.exports = {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -48318,7 +48335,7 @@ var render = function() {
                     _c("td", [_vm._v(_vm._s(inviteSession.dep.title))]),
                     _c("td", {
                       domProps: {
-                        innerHTML: _vm._s(_vm.getTitles(inviteSession.extra))
+                        innerHTML: _vm._s(_vm.getTitles(inviteSession.agenda))
                       }
                     }),
                     inviteSession.is_active
@@ -52332,7 +52349,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/invite-session/index/index.js */"./resources/js/pages/invite-session/index/index.js");
+module.exports = __webpack_require__(/*! /home/amir/Documents/indesign-sources/hemmatnode/resources/js/pages/invite-session/index/index.js */"./resources/js/pages/invite-session/index/index.js");
 
 
 /***/ })

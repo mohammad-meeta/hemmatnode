@@ -1,91 +1,103 @@
 <template lang="pug">
-    .container-child
-        notification(:notification-type="notificationType",
-                     @on-close="closeNotification",
-                     v-if="showNotification")
+.container-child
+    notification(
+        :notification-type="notificationType",
+        @on-close="closeNotification",
+        v-if="showNotification"
+    )
+        span(v-html="notificationMessage")
 
-            span(v-html="notificationMessage")
+    .column.is-full(v-show="isLoadingMode")
+        h1 در حال بارگذاری
+    .form-small(v-show="! isLoadingMode")
+        .field
+            label.label
+            .control
+                .select.is-primary
+                    select(v-model="inviteSessionData.departments")
+                        option(
+                            v-for="(department, departmentIndex) in departments",
+                            :value="department._id"
+                        ) {{ department.title }}
+        .field
+            .panel
+                .panel-heading
+                    | دستور جلسه
+                .panel-block
+                    multi-text(v-model="inviteSessionData.agenda")
+        .field
+            label.label مکان
+            .control
+                input.input(
+                    type="text",
+                    placeholder="مکان",
+                    v-model="inviteSessionData.place",
+                    required
+                )
 
-        .column.is-full(v-show="isLoadingMode")
-            h1 در حال بارگذاری
-        .form-small(v-show="! isLoadingMode")
+        .field
+            label.label تاریخ
+            .control
+                date-picker(
+                    v-model="inviteSessionData.date",
+                    format="YYYY-MM-DD HH:mm:ss",
+                    display-format=" jDD/jMM/jYYYY HH:mm",
+                    type="datetime",
+                    required
+                )
 
-            .field
-                label.label
-                .control
-                    .select.is-primary
-                        select(v-model="inviteSessionData.departments")
-                            option(v-for='(department, departmentIndex) in departments',
-                                :value="department._id") {{ department.title }}
-            .field
-                .panel
-                    .panel-heading
-                        | دستور جلسه
-                    .panel-block
-                        multi-text(v-model='inviteSessionData.agenda')
-            .field
-                label.label مکان
-                .control
-                    input.input(type='text', placeholder='مکان', v-model='inviteSessionData.place' required)
-
-            .field
-                label.label تاریخ
-                .control
-                    date-picker(v-model='inviteSessionData.date' format="YYYY-MM-DD HH:mm:ss"
-                    display-format=" jDD/jMM/jYYYY HH:mm" type="datetime" required)
-
-            .field
-                .panel
-                    .panel-heading
-                        | حاضرین جلسه
-                    .panel-block
-                        b-table(
-                                class="table is-fullwidth"
-                                :data="users"
-                                :columns="columns"
-                                :checked-rows.sync="checkedRows"
-                                checkable
-                                :paginated="isPaginated",
-                                :per-page="perPage",
-                                :current-page.sync="currentPage",
-                                :pagination-simple="isPaginationSimple",
-                                :pagination-position="paginationPosition",
-                                :checkbox-position="checkboxPosition")
-                            template(slot="bottom-left")
-                                | نفرات انتخاب شده : {{ checkedRows.length }} نفر
-            .field
-                .panel
-                    .panel-heading
-                        | مدعوین (به غیر از افراد حاضر و سایر اعضاء)
-                    .panel-block
-                        multi-text-member(v-model='inviteSessionData.other_user')
-            .field
-                .panel
-                    .panel-heading
-                        | فایل های ضمیمه
-                    .panel-block
-                        file-upload(ref="fileUpload", :old-files="oldFiles")
-            .field
-                label.label توضیحات
-                .control
-                    textarea.textarea(
-                        placeholder="تکالیف حاضرین",
-                        v-model="inviteSessionData.body"
+        .field
+            .panel
+                .panel-heading
+                    | حاضرین جلسه
+                .panel-block
+                    b-table.table.is-fullwidth(
+                        :data="users",
+                        :columns="columns",
+                        :checked-rows.sync="checkedRows",
+                        checkable,
+                        :paginated="isPaginated",
+                        :per-page="perPage",
+                        :current-page.sync="currentPage",
+                        :pagination-simple="isPaginationSimple",
+                        :pagination-position="paginationPosition",
+                        :checkbox-position="checkboxPosition"
                     )
-            .field
-                label.checkbox
-                    input(type="checkbox", v-model="inviteSessionData.isActive")
+                        template(slot="bottom-left")
+                            | نفرات انتخاب شده : {{ checkedRows.length }} نفر
+        .field
+            .panel
+                .panel-heading
+                    | مدعوین (به غیر از افراد حاضر و سایر اعضاء)
+                .panel-block
+                    multi-text-member(v-model="inviteSessionData.other_user")
+        .field
+            .panel
+                .panel-heading
+                    | فایل های ضمیمه
+                .panel-block
+                    file-upload(ref="fileUpload", :old-files="oldFiles")
+        .field
+            label.label توضیحات
+            .control
+                textarea.textarea(
+                    placeholder="تکالیف حاضرین",
+                    v-model="inviteSessionData.body"
+                )
+        .field
+            label.checkbox
+                input(type="checkbox", v-model="inviteSessionData.isActive")
+                |
+                | فعال
+
+        .field.is-grouped
+            .control(v-show="! isLoadingMode")
+                a.button.is-link.is-rounded(
+                    href="#",
+                    @click.prevent="commandClick(ENUMS.COMMAND.SAVE)"
+                )
                     |
-                    | فعال
-
-            .field.is-grouped
-                .control(v-show="! isLoadingMode")
-                    a.button.is-link.is-rounded(
-                        href="#",
-                        @click.prevent="commandClick(ENUMS.COMMAND.SAVE)"
-                    )
-                        |
-                        | ایجاد
+                    | ایجاد
 </template>
 
 <script>
@@ -110,7 +122,7 @@ module.exports = {
         DatePicker: VuePersianDatetimePicker,
         MultiText,
         FileUpload,
-        MultiTextMember
+        MultiTextMember,
     },
 
     data: () => ({
@@ -128,14 +140,14 @@ module.exports = {
                     title: "تلاوت قرآن و معنی",
                     way: "سخنرانی",
                     duration: "5",
-                    provider: "عضو هیات رئیسه"
+                    provider: "عضو هیات رئیسه",
                 },
                 {
                     title: "گزارش کشیک نوروزی سال 1398",
                     way: "سخنرانی",
                     duration: "20",
-                    provider: "عضو هیات رئیسه"
-                }
+                    provider: "عضو هیات رئیسه",
+                },
             ],
             place: null,
             date: null,
@@ -144,7 +156,7 @@ module.exports = {
             deletedOldFiles: [],
             user_list: {},
             other_user: [],
-            isActive: false
+            isActive: false,
         },
 
         checkedRows: [],
@@ -158,45 +170,45 @@ module.exports = {
             {
                 field: "name",
                 label: "نام کاربری",
-                searchable: true
+                searchable: true,
             },
             {
                 field: "profile.first_name",
                 label: "نام",
-                searchable: true
+                searchable: true,
             },
             {
                 field: "profile.last_name",
                 label: "نام خانوادگی",
-                searchable: true
-            }
+                searchable: true,
+            },
         ],
 
         notificationMessage: null,
         notificationType: "is-info",
-        showLoadingFlag: false
+        showLoadingFlag: false,
     }),
 
     props: {
         departmentId: {
             type: String,
-            default: null
+            default: null,
         },
 
         registerUrl: {
             type: String,
-            default: ""
+            default: "",
         },
 
         departmentsUrl: {
             type: String,
-            default: ""
+            default: "",
         },
 
         usersUrl: {
             type: String,
-            default: ""
-        }
+            default: "",
+        },
     },
 
     created() {
@@ -209,8 +221,8 @@ module.exports = {
     },
 
     computed: {
-        isLoadingMode: state => state.showLoadingFlag == true,
-        showNotification: state => state.notificationMessage != null
+        isLoadingMode: (state) => state.showLoadingFlag == true,
+        showNotification: (state) => state.notificationMessage != null,
     },
 
     methods: {
@@ -232,7 +244,7 @@ module.exports = {
          */
         loadDepartments() {
             const url = this.departmentsUrl;
-            AxiosHelper.send("get", url, "").then(res => {
+            AxiosHelper.send("get", url, "").then((res) => {
                 const resData = res.data;
                 const datas = resData.data.data;
                 Vue.set(this, "departments", datas);
@@ -244,7 +256,7 @@ module.exports = {
          */
         loadUsers() {
             const url = this.usersUrl;
-            AxiosHelper.send("get", url, "").then(res => {
+            AxiosHelper.send("get", url, "").then((res) => {
                 const resData = res.data;
                 const datas = resData.data.data;
                 Vue.set(this, "users", datas);
@@ -292,9 +304,9 @@ module.exports = {
 
             const deletedFiles = this.$refs.fileUpload.getDeletedFiles();
             const newFiles = this.$refs.fileUpload.getNewFiles();
-            let newUploaded = newFiles.map(x => x.file);
+            let newUploaded = newFiles.map((x) => x.file);
             Vue.set(this, "files", newUploaded);
-            let deleteUploaded = deletedFiles.map(x => x._id);
+            let deleteUploaded = deletedFiles.map((x) => x._id);
             Vue.set(this, "deletedOldFiles", deleteUploaded);
             let inviteSessionData = {
                 body: this.inviteSessionData.body,
@@ -306,31 +318,31 @@ module.exports = {
                 user_list: [],
                 is_active: this.inviteSessionData.isActive,
                 files: this.files,
-                deletedOldFiles: this.deletedOldFiles
+                deletedOldFiles: this.deletedOldFiles,
             };
-            inviteSessionData.user_list = this.checkedRows.map(x => x._id);
+            inviteSessionData.user_list = this.checkedRows.map((x) => x._id);
 
             this.showLoading();
             const url = this.registerUrl;
 
             AxiosHelper.send("post", url, inviteSessionData, {
                 sendAsFormData: true,
-                filesArray: "files"
+                filesArray: "files",
             })
-                .then(res => {
+                .then((res) => {
                     const data = res.data;
 
                     if (data.success) {
                         this.$emit("on-register", {
                             sender: this,
-                            data:{
-                                data:data,
-                                dep_title: 0
-                            }
+                            data: {
+                                data: data,
+                                dep_title: 0,
+                            },
                         });
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     const data = err.response.data;
                     this.setNotification(data, "is-danger");
                 })
@@ -352,14 +364,14 @@ module.exports = {
 
             const errors = result.validator.errors.all();
             const error = Object.keys(errors)
-                .map(key => errors[key].join("\n"))
+                .map((key) => errors[key].join("\n"))
                 .join("</br>");
 
             console.log(error);
             this.setNotification(error, "is-danger");
             return false;
-        }
-    }
+        },
+    },
 };
 </script>
 

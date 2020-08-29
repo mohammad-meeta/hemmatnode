@@ -18,7 +18,7 @@ InviteSession.index = async function index(req, res, next) {
     res.render(PugView.getView(pageRoute), {
         req,
         pageRoute,
-        departmentId: req.params.department
+        departmentId: req.params.department,
     });
 };
 /**
@@ -31,7 +31,7 @@ InviteSession.paginateInviteSession = async function paginateInviteSession(
 ) {
     const dataPaginate = {
         page: req.params.page,
-        pageSize: req.params.size || 10
+        pageSize: req.params.size || 10,
     };
     const group = req.params.group;
 
@@ -52,8 +52,8 @@ InviteSession.paginateInviteSession = async function paginateInviteSession(
             success: true,
             data: {
                 data: data,
-                count: count
-            }
+                count: count,
+            },
         };
 
         res.status(200)
@@ -75,18 +75,18 @@ InviteSession.show = async function show(req, res, next) {
     const SessionTitle = req.params.sessionData;
     const pageRoute = "invitesession.show";
     InviteSessionHelper.loadInviteSessionData(SessionTitle)
-        .then(data => {
+        .then((data) => {
             const result = {
                 success: true,
-                data: data
+                data: data,
             };
             res.render(PugView.getView(pageRoute), {
                 req,
                 pageRoute,
-                result
+                result,
             });
         })
-        .catch(err => console.error(err));
+        .catch((err) => console.error(err));
 };
 
 /**
@@ -96,7 +96,7 @@ InviteSession.edit = async function edit(req, res, next) {
     const pageRoute = "invitesession.edit";
     res.render(PugView.getView(pageRoute), {
         req,
-        pageRoute
+        pageRoute,
     });
 };
 
@@ -111,16 +111,16 @@ InviteSession.editInviteSessionData = async function editInviteSessionData(
     const title = req.params.sessionData;
 
     InviteSessionHelper.loadInviteSessionData(title)
-        .then(data => {
+        .then((data) => {
             const result = {
                 success: true,
-                data: data
+                data: data,
             };
             res.status(200)
                 .send(result)
                 .end();
         })
-        .catch(err => console.error(err));
+        .catch((err) => console.error(err));
 };
 
 /**
@@ -128,59 +128,54 @@ InviteSession.editInviteSessionData = async function editInviteSessionData(
  */
 InviteSession.update = async function update(req, res, next) {
     let data = {};
-    console.log(JSON.stringify(req.body));
 
-    // const files = req.body.files || [];
-    // let fileList = [];
-    // files.forEach(element => {
-    //     const fileData = element;
-    //     FileHelper.insertFileData(fileData)
-    //         .then(data => {
-    //             console.log(data);
-    //         })
-    //         .catch(err => console.error(err));
-    // });
+    const files = req.body.files || [];
+    let fileList = [];
 
-    // data = {
-    //     "_id": req.body._id,
-    //     "body": req.body.body,
-    //     "agenda": req.body.agenda,
-    //     "place": req.body.place,
-    //     "date": req.body.date,
-    //     "user_list": JSON.parse(req.body.user_list),
-    //     "other_user": req.body.other_user || null,
-    //     "user_id": req.session.auth.userId,
-    //     "is_active": req.body.is_active,
-    //     "department_id": req.body.department_id,
-    //     "files": fileList
-    // };
+    await files.forEach(async (element) => {
+        const fileData = element;
+        await FileHelper.insertFileData(fileData);
+    });
 
-    // InviteSessionHelper.updateInviteSessionData(data)
-    //     .then(data => {
-    //         const result = {
-    //             success: true,
-    //             data: data
-    //         };
-    //         res.status(200)
-    //             .send(result)
-    //             .end();
-    //     })
-    //     .catch(err => console.error(err));
+    data = {
+        _id: req.body._id,
+        body: req.body.body,
+        agenda: JSON.parse(req.body.agenda || "[]"),
+        place: req.body.place,
+        date: req.body.date,
+        user_list: JSON.parse(req.body.user_list),
+        other_user: JSON.parse(req.body.other_user || "[]"),
+        user_id: req.session.auth.userId,
+        is_active: req.body.is_active,
+        department_id: req.body.department_id,
+        files: fileList,
+    };
+
+    let result = await InviteSessionHelper.updateInviteSessionData(data);
+    result = {
+        success: true,
+        data: data,
+    };
+
+    res.status(200)
+        .send(result)
+        .end();
 };
 
 /**
  * delete data dep cat
  */
 InviteSession.destroy = async function destroy(req, res, next) {
-    const data = {
-        _id: req.body._id
+    let data = {
+        _id: req.body._id,
     };
 
-    let data = await InviteSessionHelper.deleteInviteSessionData(data);
+    data = await InviteSessionHelper.deleteInviteSessionData(data);
     const result = {
         success: true,
-        data: data
+        data: data,
     };
+
     res.status(200)
         .send(result)
         .end();
@@ -194,7 +189,7 @@ InviteSession.create = async function create(req, res, next) {
 
     res.render(pageRoute, {
         req,
-        pageRoute
+        pageRoute,
     });
 };
 
@@ -214,7 +209,7 @@ InviteSession.store = async function store(req, res, next) {
 
             const tempFileData = {
                 file_id: data[0]._id,
-                deleted_at: null
+                deleted_at: null,
             };
             fileList.push(tempFileData);
         } catch (err) {
@@ -233,7 +228,7 @@ InviteSession.store = async function store(req, res, next) {
         is_active: req.body.is_active,
         department_id: req.body.department_id,
         status: 0,
-        files: fileList
+        files: fileList,
     };
 
     try {
@@ -242,7 +237,7 @@ InviteSession.store = async function store(req, res, next) {
 
         const result = {
             success: true,
-            data: dataRes
+            data: dataRes,
         };
 
         res.status(200)
@@ -254,7 +249,7 @@ InviteSession.store = async function store(req, res, next) {
         res.status(500)
             .send({
                 success: false,
-                data: "Server error"
+                data: "Server error",
             })
             .end();
     }
@@ -282,7 +277,7 @@ InviteSession.approvesStore = async function approvesStore(req, res, next) {
     }
 
     InviteSessionHelper.insertApproves(approves)
-        .then(dataRes => {
+        .then((dataRes) => {
             for (let index = 0; index < dataRes.length; index++) {
                 approvesArray.push(dataRes[index]["_id"]);
             }
@@ -295,20 +290,20 @@ InviteSession.approvesStore = async function approvesStore(req, res, next) {
                 user_id: req.session.auth.userId,
                 status: req.body.status || 1,
                 approves: approves,
-                signatured: fileList
+                signatured: fileList,
             };
 
             InviteSessionHelper.updateInviteSessionApproves(data)
-                .then(dataRes => {
+                .then((dataRes) => {
                     const result = {
                         success: true,
-                        data: dataRes
+                        data: dataRes,
                     };
                     res.status(200)
                         .send(result)
                         .end();
                 })
-                .catch(err => console.error(err));
+                .catch((err) => console.error(err));
         })
-        .catch(err => console.error(err));
+        .catch((err) => console.error(err));
 };

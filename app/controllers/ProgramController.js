@@ -1,36 +1,39 @@
 'use strict';
 const PugView = use('app/helpers/pug-view');
 const ProgramHelper = use('app/helpers/program-helper');
+const FileHelper = use('app/helpers/file-helper');
 /**
- * Auth controller
+ * Dep cat controller
  */
-function ProgramController() {}
-module.exports = ProgramController;
+function Program() { }
+module.exports = Program;
 
-// /**
-//  * Index route
-//  */
-// ProgramController.index = async function index(req, res, next) {
-//     const pageRoute = 'program.index';
-//     res.render(PugView.getView(pageRoute), {
-//         req,
-//         pageRoute
-//     });
-// };
+/**
+ * Index route
+ */
+Program.index = async function index(req, res, next) {
+    const pageRoute = 'program.index';
+
+    res.render(PugView.getView(pageRoute), {
+        req,
+        pageRoute,
+        departmentId: req.params.department
+    });
+};
 /**
  * paginate route
  */
-ProgramController.paginateProgramData = async function paginateProgramData(req, res, next) {
+Program.paginateProgram = function paginateProgram(req, res, next) {
     const dataPaginate = {
         page: req.params.page,
         pageSize: req.params.size || 10
     };
 
-    ProgramHelper.loadAllProgramCountData()
+    ProgramHelper.loadAllProgramCountData(req)
         .then(data => {
             let count = data.data;
 
-            ProgramHelper.loadAllProgramData(dataPaginate)
+            ProgramHelper.loadAllProgramData(req, dataPaginate)
                 .then(data => {
                     const result = {
                         success: true,
@@ -59,145 +62,108 @@ ProgramController.paginateProgramData = async function paginateProgramData(req, 
                 .send(err)
                 .end();
         });
-
 };
 
+/**
+ * show route
+ */
+/**
+ * load data with id
+ */
+Program.show = async function show(req, res, next) {
+    const Id = req.params.program;
 
-// /**
-//  * show route
-//  */
-// ProgramController.show = async function show(req, res, next) {
-//     const ProgramName = req.params.articleData;
-//     const pageRoute = 'program.show';
-//     ProgramHelper.loadProgramData(ProgramName)
-//         .then(data => {
-//             const result = {
-//                 success: true,
-//                 data: data
-//             };
-//             res.render(PugView.getView(pageRoute), {
-//                 req,
-//                 pageRoute,
-//                 result
-//             });
-//         })
-//         .catch(err => console.error(err));
-// };
+    ProgramHelper.loadProgramData(Id)
 
-// /**
-//  * edit page route
-//  */
-// ProgramController.edit = async function edit(req, res, next) {
-//     const pageRoute = 'program.edit';
-//     res.render(PugView.getView(pageRoute), {
-//         req,
-//         pageRoute
-//     });
-// };
+        .then(data => {
+            const result = {
+                success: true,
+                data: {
+                    data: data,
+                }
+            };
+            res.status(200)
+                .send(result)
+                .end();
+        })
+        .catch(err => console.error(err));
+};
 
-// /**
-//  * return edit data route
-//  */
-// ProgramController.editProgramData = async function editProgramData(req, res, next) {
-//     const ProgramId = req.params.articleData;
-//     ProgramHelper.loadProgramData(ProgramId)
-//         .then(data => {
-//             const result = {
-//                 success: true,
-//                 data: data
-//             };
-//             res.status(200)
-//                 .send(result)
-//                 .end();
-//         })
-//         .catch(err => console.error(err));
-// };
+/**
+ * delete data dep cat
+ */
+Program.destroy = async function destroy(req, res, next) {
+    const data = {
+        "_id": req.body._id
+    };
 
-// /**
-//  * update data Program
-//  */
-// ProgramController.update = async function update(req, res, next) {
+    ProgramHelper.deleteProgramData(data)
+        .then(data => {
+            const result = {
+                success: true,
+                data: data
+            };
+            res.status(200)
+                .send(result)
+                .end();
+        })
+        .catch(err => console.error(err));
+};
 
-//     const data = {
-//         "_id": req.body._id,
-//         "title": req.body.title,
-//         "body": req.body.body,
-//         "user": req.body.user,
-//         "type": req.body.type,
-//         "slug": req.body.slug,
-//         "files": req.body.files || [],
-//         "is_active": req.body.is_active || false
-//     };
+/**
+ * Create route return page
+ */
+Program.create = async function create(req, res, next) {
+    const pageRoute = PugView.getView('program.create');
 
-//     const ProgramUpdate = ProgramHelper.updateProgramData(data)
-//         .then(data => {
-//             const result = {
-//                 success: true,
-//                 data: data
-//             };
-//             res.status(200)
-//                 .send(result)
-//                 .end();
-//         })
-//         .catch(err => console.error(err));
-// };
+    res.render(pageRoute, {
+        req,
+        pageRoute
+    });
+};
 
-// /**
-//  * delete data Program
-//  */
-// ProgramController.destroy = async function destroy(req, res, next) {
-//     const data = {
-//         "_id": req.body._id
-//     };
+/**
+ * store data
+ */
+Program.store = async function store(req, res, next) {
+    const files = req.files || [];
 
-//     const ProgramDelete = ProgramHelper.deleteProgram(data)
-//         .then(data => {
-//             const result = {
-//                 success: true,
-//                 data: data
-//             };
-//             res.status(200)
-//                 .send(result)
-//                 .end();
-//         })
-//         .catch(err => console.error(err));
-// };
+    let fileList = [];
 
-// /**
-//  * Create route return page
-//  */
-// ProgramController.create = async function create(req, res, next) {
-//     const pageRoute = 'program.create';
-//     res.render(PugView.getView(pageRoute), {
-//         req,
-//         pageRoute
-//     });
-// };
+    for (let i = 0; i < files.length; ++i) {
+        try {
+            const el = files[i];
+            el.user_id = req.session.auth.userId;
 
-// /**
-//  * store data Program
-//  */
-// ProgramController.store = async function store(req, res, next) {
+            const data = await FileHelper.insertFileData(el);
 
-//     const data = {
-//         "title": req.body.title,
-//         "body": req.body.body,
-//         "user": req.body.user,
-//         "type": req.body.type,
-//         "slug": req.body.slug,
-//         "files": req.body.files || [],
-//         "is_active": req.body.is_active || false
-//     };
+            const tempFileData = {
+                file_id: data[0]._id,
+                deleted_at: null
+            };
+            fileList.push(tempFileData);
 
-//     const ProgramInsert = ProgramHelper.insertNewProgram(data)
-//         .then(data => {
-//             const result = {
-//                 success: true,
-//                 data: data
-//             };
-//             res.status(200)
-//                 .send(result)
-//                 .end();
-//         })
-//         .catch(err => console.error(err));
-// };
+        } catch (err) {
+            Logger.error(err);
+        }
+    }
+
+    const data = {
+        "title": req.body.title,
+        "user_id": req.session.auth.userId,
+        "is_active": req.body.is_active,
+        "files": fileList
+    };
+
+    ProgramHelper.insertNewProgram(data)
+        .then(dataRes => {
+            const result = {
+                success: true,
+                data: dataRes
+            };
+            res.status(200)
+                .send(result)
+                .end();
+        })
+        .catch(err => console.error(err));
+};

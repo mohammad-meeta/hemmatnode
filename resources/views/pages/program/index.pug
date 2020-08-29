@@ -1,0 +1,15 @@
+extends ../../layout/app.pug
+
+block title
+    | برنامه
+
+block content
+    .container
+        programs(list-url=route('api.program', { page: '$page$', size: '$pageSize$' }),
+            register-url=route('program.store'),
+        )
+
+block scripts
+    script(defer, src=mix('js/pages/program/index/index.js'))
+
+

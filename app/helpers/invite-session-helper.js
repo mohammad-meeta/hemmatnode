@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 /**
  * dep cat controller
  */
-function InviteSessiontHelper() {}
+function InviteSessiontHelper() { }
 module.exports = InviteSessiontHelper;
 
 /**
@@ -233,7 +233,7 @@ InviteSessiontHelper.updateInviteSessionData = async function updateInviteSessio
     const InviteSession = mongoose.model("InviteSession");
 
     let res = await InviteSession.findByIdAndUpdate(data._id, data, {
-        useFindAndModify: false
+        useFindAndModify: false, new: true
     });
 
     return res;

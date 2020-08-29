@@ -15,18 +15,32 @@
                             select(v-model="inviteSessionData.departments")
                                 option(v-for='(department, departmentIndex) in departments',
                                     :value="department._id") {{ department.title }}
-                .field
-                    multi-text(v-model='inviteSessionData.agenda')
+                    .field
+                        .panel
+                            .panel-heading
+                                | دستور جلسه
+                            .panel-block
+                                multi-text(v-model='inviteSessionData.agenda')
                 .field
                     label.label مکان
                     .control
-                        input.input(type='text', placeholder='مکان', v-model='inviteSessionData.place' required)
+                        input.input(
+                            type='text',
+                            placeholder='مکان',
+                            v-model='inviteSessionData.place'
+                            required
+                        )
 
                 .field
                     label.label تاریخ
                     .control
-                        date-picker(v-model='inviteSessionData.date' format="YYYY-MM-DD HH:mm:ss"
-                        display-format=" jDD/jMM/jYYYY HH:mm" type="datetime" required)
+                        date-picker(
+                            v-model='inviteSessionData.date'
+                            format="YYYY-MM-DD HH:mm:ss"
+                            display-format=" jDD/jMM/jYYYY HH:mm"
+                            type="datetime"
+                            required
+                        )
 
                 .field
                     label.label حاضرین جلسه

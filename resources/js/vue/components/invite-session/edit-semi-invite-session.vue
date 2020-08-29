@@ -209,13 +209,6 @@ module.exports = {
         loadInviteSessionData(data) {
             let agenda = data.agenda;
             let other_user = data.other_user;
-
-            console.log(agenda, other_user);
-
-            // if (other_user.length == 1) {
-            //     other_user = other_user[0];
-            // }
-
             let temp = {
                 _id: data._id,
                 dep: data.dep.title,
@@ -354,6 +347,7 @@ module.exports = {
             this.showLoading();
 
             const url = this.editUrl.replace("$id$", inviteSessionData._id);
+            console.log(inviteSessionData);
             AxiosHelper.send("patch", url, inviteSessionData, {
                 sendAsFormData: true,
                 filesArray: "files"

@@ -984,10 +984,6 @@ module.exports = {
     loadInviteSessionData: function loadInviteSessionData(data) {
       var agenda = data.agenda;
       var other_user = data.other_user;
-      console.log(agenda, other_user); // if (other_user.length == 1) {
-      //     other_user = other_user[0];
-      // }
-
       var temp = {
         _id: data._id,
         dep: data.dep.title,
@@ -1137,6 +1133,7 @@ module.exports = {
       });
       this.showLoading();
       var url = this.editUrl.replace("$id$", inviteSessionData._id);
+      console.log(inviteSessionData);
       AxiosHelper.send("patch", url, inviteSessionData, {
         sendAsFormData: true,
         filesArray: "files"
@@ -1909,6 +1906,20 @@ module.exports = {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -48899,24 +48910,31 @@ var render = function() {
                     0
                   )
                 ])
+              ]),
+              _c("div", { staticClass: "field" }, [
+                _c("div", { staticClass: "panel" }, [
+                  _c("div", { staticClass: "panel-heading" }, [
+                    _vm._v("دستور جلسه")
+                  ]),
+                  _c(
+                    "div",
+                    { staticClass: "panel-block" },
+                    [
+                      _c("multi-text", {
+                        model: {
+                          value: _vm.inviteSessionData.agenda,
+                          callback: function($$v) {
+                            _vm.$set(_vm.inviteSessionData, "agenda", $$v)
+                          },
+                          expression: "inviteSessionData.agenda"
+                        }
+                      })
+                    ],
+                    1
+                  )
+                ])
               ])
             ]),
-            _c(
-              "div",
-              { staticClass: "field" },
-              [
-                _c("multi-text", {
-                  model: {
-                    value: _vm.inviteSessionData.agenda,
-                    callback: function($$v) {
-                      _vm.$set(_vm.inviteSessionData, "agenda", $$v)
-                    },
-                    expression: "inviteSessionData.agenda"
-                  }
-                })
-              ],
-              1
-            ),
             _c("div", { staticClass: "field" }, [
               _c("label", { staticClass: "label" }, [_vm._v("مکان")]),
               _c("div", { staticClass: "control" }, [
@@ -52349,7 +52367,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/amir/Documents/indesign-sources/hemmatnode/resources/js/pages/invite-session/index/index.js */"./resources/js/pages/invite-session/index/index.js");
+module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/invite-session/index/index.js */"./resources/js/pages/invite-session/index/index.js");
 
 
 /***/ })

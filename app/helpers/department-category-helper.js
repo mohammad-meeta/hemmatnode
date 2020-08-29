@@ -177,7 +177,7 @@ DepartmentCategoryHelper.updateDepCatData = function updateDepCatData(data) {
     return new Promise((resolve, reject) => {
         const DepartmentCategory = mongoose.model('DepartmentCategory');
         DepartmentCategory.findByIdAndUpdate(data._id, data, {
-                useFindAndModify: false
+                useFindAndModify: false, new: true
             })
             .then(res => {
                 resolve(res);
@@ -196,7 +196,7 @@ DepartmentCategoryHelper.deleteDepCatData = function deleteDepCatData(data) {
         DepartmentCategory.findOneAndUpdate(data._id, {
                 is_active: false
             }, {
-                useFindAndModify: false
+                useFindAndModify: false, new: true
             })
             .then(res => {
                 resolve(res);

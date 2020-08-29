@@ -110,7 +110,7 @@ ProgramHelper.updateProgramData = function updateProgramData(data) {
 ProgramHelper.deleteProgram = function deleteProgram(data) {
     return new Promise((resolve, reject) => {
         const Program = mongoose.model('Program');
-        Program.findByIdAndUpdate(data._id, { is_active: false }, { useFindAndModify: false })
+        Program.findByIdAndUpdate(data._id, { is_active: false }, { useFindAndModify: false , new: true})
             .then(res => {
                 resolve(res);
             })

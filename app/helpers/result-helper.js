@@ -97,7 +97,7 @@ ResultHelper.updateResultData = function updateResultData(data) {
     return new Promise((resolve, reject) => {
         const Result = mongoose.model('Result');
         Result.findByIdAndUpdate(data._id, data, {
-                useFindAndModify: false
+                useFindAndModify: false, new: true
             })
             .then(res => {
                 resolve(res);
@@ -116,7 +116,7 @@ ResultHelper.deleteResultData = function deleteResultData(data) {
         Result.findOneAndUpdate(data._id, {
                 is_active: false
             }, {
-                useFindAndModify: false
+                useFindAndModify: false, new: true
             })
             .then(res => {
                 resolve(res);

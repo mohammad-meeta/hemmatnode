@@ -119,7 +119,7 @@ MemorandumHelper.updateMemorandumData = function updateMemorandumData(data) {
     return new Promise((resolve, reject) => {
         const Memorandum = mongoose.model('Memorandum');
         Memorandum.findByIdAndUpdate(data._id, data, {
-                useFindAndModify: false
+                useFindAndModify: false, new: true
             })
             .then(res => {
                 resolve(res);
@@ -138,7 +138,7 @@ MemorandumHelper.deleteMemorandumData = function deleteMemorandumData(data) {
         Memorandum.findOneAndUpdate(data._id, {
                 is_active: false
             }, {
-                useFindAndModify: false
+                useFindAndModify: false, new: true
             })
             .then(res => {
                 resolve(res);

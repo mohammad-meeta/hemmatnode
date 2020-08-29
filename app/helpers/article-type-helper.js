@@ -89,7 +89,7 @@ ArticleTypeHelper.deleteArticleType = function deleteArticleType(data) {
     return new Promise((resolve, reject) => {
         const ArticleType = mongoose.model('ArticleType');
 
-        ArticleType.findByIdAndUpdate(data._id, { is_active: false }, { useFindAndModify: false })
+        ArticleType.findByIdAndUpdate(data._id, { is_active: false }, { useFindAndModify: false, new: true })
             .then(res => {
                 resolve(res);
             })

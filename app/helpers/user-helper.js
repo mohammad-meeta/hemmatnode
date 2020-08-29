@@ -314,7 +314,7 @@ UserHelper.updateUserData = function updateUserData(data) {
     return new Promise((resolve, reject) => {
         const User = mongoose.model('User');
         User.findByIdAndUpdate(data._id, data, {
-            useFindAndModify: false
+            useFindAndModify: false, new: true
         })
             .then(res => {
                 resolve(res);
@@ -333,7 +333,7 @@ UserHelper.deleteUserData = function deleteUserData(data) {
         User.findOneAndUpdate(data._id, {
             is_active: false
         }, {
-            useFindAndModify: false
+            useFindAndModify: false, new: true
         })
             .then(res => {
                 resolve(res);

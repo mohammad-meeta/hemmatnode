@@ -110,7 +110,7 @@ SectionHelper.updateSectionData = function updateSectionData(data) {
 SectionHelper.deleteSection = function deleteSection(data) {
     return new Promise((resolve, reject) => {
         const Section = mongoose.model('Section');
-        Section.findByIdAndUpdate(data._id, { is_active: false }, { useFindAndModify: false })
+        Section.findByIdAndUpdate(data._id, { is_active: false }, { useFindAndModify: false , new: true})
             .then(res => {
                 resolve(res);
             })

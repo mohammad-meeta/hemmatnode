@@ -93,7 +93,7 @@ RoleHelper.updateRoleData = function updateRoleData(data) {
     return new Promise((resolve, reject) => {
         const Role = mongoose.model('Role');
         Role.findByIdAndUpdate(data._id, data, {
-                useFindAndModify: false
+                useFindAndModify: false, new: true
             })
             .then(res => {
                 resolve(res);
@@ -112,7 +112,7 @@ RoleHelper.deleteRoleData = function deleteRoleData(data) {
         Role.findOneAndUpdate(data._id, {
                 is_active: false
             }, {
-                useFindAndModify: false
+                useFindAndModify: false, new: true
             })
             .then(res => {
                 resolve(res);

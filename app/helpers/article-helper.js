@@ -87,7 +87,7 @@ ArticleHelper.updateArticleData = function updateArticleData(data) {
 ArticleHelper.deleteArticle = function deleteArticle(data) {
     return new Promise((resolve, reject) => {
         const Article = mongoose.model('Article');
-        Article.findByIdAndUpdate(data._id, { is_active: false }, { useFindAndModify: false })
+        Article.findByIdAndUpdate(data._id, { is_active: false }, { useFindAndModify: false , new: true })
             .then(res => {
                 resolve(res);
             })

@@ -101,7 +101,7 @@ ProjecttHelper.updateProjectData = function updateProjectData(data) {
     return new Promise((resolve, reject) => {
         const Project = mongoose.model('Project');
         Project.findByIdAndUpdate(data._id, data, {
-                useFindAndModify: false
+                useFindAndModify: false, new: true
             })
             .then(res => {
                 resolve(res);
@@ -120,7 +120,7 @@ ProjecttHelper.deleteProjectData = function deleteProjectData(data) {
         Project.findOneAndUpdate(data._id, {
                 is_active: false
             }, {
-                useFindAndModify: false
+                useFindAndModify: false, new: true
             })
             .then(res => {
                 resolve(res);

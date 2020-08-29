@@ -189,11 +189,10 @@ module.exports = {
          */
         addToInviteSessionList(payload) {
             const data = payload.data.agenda;
-
             if (this.inviteSessions.length > 0) {
                 const dep = this.inviteSessions[0].dep;
                 const newInviteSessionsData = {
-                    id: payload._id,
+                    _id: payload.data._id,
                     dep: dep,
                     extra: data,
                     agenda: data,

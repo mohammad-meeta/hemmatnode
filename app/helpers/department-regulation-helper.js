@@ -96,7 +96,7 @@ DepartmentRegulationHelper.updateDepartmentRegulationData = function updateDepar
     return new Promise((resolve, reject) => {
         const Department = mongoose.model('DepartmentRegulation');
         Department.findByIdAndUpdate(data._id, data, {
-                useFindAndModify: false
+                useFindAndModify: false, new: true
             })
             .then(res => {
                 resolve(res);
@@ -115,7 +115,7 @@ DepartmentRegulationHelper.deleteDepartmentRegulationData = function deleteDepar
         Department.findOneAndUpdate(data._id, {
                 is_active: false
             }, {
-                useFindAndModify: false
+                useFindAndModify: false, new: true
             })
             .then(res => {
                 resolve(res);

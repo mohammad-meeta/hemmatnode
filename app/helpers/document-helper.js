@@ -96,7 +96,7 @@ DocumentHelper.updateDocumentData = function updateDocumentData(data) {
     return new Promise((resolve, reject) => {
         const Document = mongoose.model('Document');
         Document.findByIdAndUpdate(data._id, data, {
-                useFindAndModify: false
+                useFindAndModify: false, new: true
             })
             .then(res => {
                 resolve(res);
@@ -115,7 +115,7 @@ DocumentHelper.deleteDocumentData = function deleteDocumentData(data) {
         Document.findOneAndUpdate(data._id, {
                 is_active: false
             }, {
-                useFindAndModify: false
+                useFindAndModify: false, new: true
             })
             .then(res => {
                 resolve(res);

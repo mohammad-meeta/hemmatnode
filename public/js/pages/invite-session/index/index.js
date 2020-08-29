@@ -1716,7 +1716,7 @@ module.exports = {
       if (this.inviteSessions.length > 0) {
         var dep = this.inviteSessions[0].dep;
         var newInviteSessionsData = {
-          id: payload._id,
+          _id: payload.data._id,
           dep: dep,
           extra: data,
           agenda: data,

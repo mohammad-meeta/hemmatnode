@@ -248,7 +248,7 @@ InviteSessiontHelper.updateInviteSessionApproves = function updateInviteSessionA
     return new Promise((resolve, reject) => {
         const InviteSession = mongoose.model("InviteSession");
         InviteSession.findByIdAndUpdate(data._id, data, {
-            useFindAndModify: false
+            useFindAndModify: false, new: true
         })
             .then(res => {
                 resolve(res);
@@ -272,7 +272,7 @@ InviteSessiontHelper.deleteInviteSessionData = function deleteInviteSessionData(
                 is_active: false
             },
             {
-                useFindAndModify: false
+                useFindAndModify: false, new: true
             }
         )
             .then(res => {

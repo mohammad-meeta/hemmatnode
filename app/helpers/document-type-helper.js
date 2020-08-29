@@ -96,7 +96,7 @@ DocumentType.updateDocumentTypeData = function updateDocumentTypeData(data) {
     return new Promise((resolve, reject) => {
         const DocumentType = mongoose.model('DocumentType');
         DocumentType.findByIdAndUpdate(data._id, data, {
-                useFindAndModify: false
+                useFindAndModify: false, new: true
             })
             .then(res => {
                 resolve(res);
@@ -115,7 +115,7 @@ DocumentType.deleteDocumentTypeData = function deleteDocumentTypeData(data) {
         DocumentType.findOneAndUpdate(data._id, {
                 is_active: false
             }, {
-                useFindAndModify: false
+                useFindAndModify: false, new: true
             })
             .then(res => {
                 resolve(res);

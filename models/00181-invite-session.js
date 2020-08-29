@@ -50,7 +50,7 @@ Model.model = function model() {
             type: String
         },
         'agenda': {
-            type: String,
+            type: Array,
             required: true
         },
         'place': {

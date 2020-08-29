@@ -5,13 +5,13 @@ const mongoose = require("mongoose");
 /**
  * dep cat controller
  */
-function InviteSessiontHelper() { }
+function InviteSessiontHelper() {}
 module.exports = InviteSessiontHelper;
 
 /**
  * find all dep cat data result
  */
-InviteSessiontHelper.loadAllInviteSessionData = function loadAllInviteSessionData(
+InviteSessiontHelper.loadAllInviteSessionData = async function loadAllInviteSessionData(
     req,
     dataPaginate,
     group
@@ -137,24 +137,23 @@ InviteSessiontHelper.loadAllInviteSessionData = function loadAllInviteSessionDat
         }
     ];
 
-    return new Promise((resolve, reject) => {
-        InviteSession.aggregate(pipeline)
-            .then(res => {
-                resolve(res);
-            })
-            .catch(err => reject(err));
-    });
+    let res = await InviteSession.aggregate(pipeline);
+
+    return res;
 };
 /**
  * find all dep cat count data result
  */
-InviteSessiontHelper.loadAllInviteSessionCountData = function loadAllInviteSessionCountData(req, group) {
+InviteSessiontHelper.loadAllInviteSessionCountData = function loadAllInviteSessionCountData(
+    req,
+    group
+) {
     const InviteSession = mongoose.model("InviteSession");
     const ObjectId = require("mongoose").Types.ObjectId;
     const userId = req.session.auth.userId;
 
     const filterQuery = {
-        "department_id": new ObjectId(group),
+        department_id: new ObjectId(group),
         $or: [
             {
                 user_id: new ObjectId(userId)
@@ -200,19 +199,15 @@ InviteSessiontHelper.loadInviteSessionData = function loadInviteSessionData(
 /**
  * insert dep cat data
  */
-InviteSessiontHelper.insertNewInviteSession = function insertNewInviteSession(
+InviteSessiontHelper.insertNewInviteSession = async function insertNewInviteSession(
     data
 ) {
-    return new Promise((resolve, reject) => {
-        const InviteSession = mongoose.model("InviteSession");
-        const InviteSession1 = new InviteSession(data);
+    const InviteSession = mongoose.model("InviteSession");
+    const inviteSession = new InviteSession(data);
 
-        InviteSession1.save()
-            .then(res => {
-                resolve(res);
-            })
-            .catch(err => reject(err));
-    });
+    let res = await inviteSession.save();
+
+    return res;
 };
 /**
  * insert approves

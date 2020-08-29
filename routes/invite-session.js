@@ -7,7 +7,6 @@ const upload = multer({
 });
 
 const { checkSession } = use("app/helpers/auth-helper");
-
 const { checkAuth, clearAuth } = use("core/helpers/auth-helper");
 
 Router.get("/invite-session/:department?", [

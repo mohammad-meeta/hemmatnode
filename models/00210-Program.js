@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 /**
  * ProgramType model
  */
-function Model() {}
+function Model() { }
 module.exports = Model;
 
 /**
@@ -25,18 +25,37 @@ Model.setup = function setup() {
  * Get model
  */
 Model.model = function model() {
+    const ObjectId = mongoose.Schema.ObjectId;
+
+    const File = new mongoose.Schema({
+        'file_id': {
+            type: ObjectId,
+        },
+        'deleted_at': {
+            type: Date,
+            default: null
+        }
+    });
+
     return {
-        'name': {
+        'title': {
             type: String,
             required: true
         },
         'is_active': {
             type: Boolean,
-            // default: false
+            default: true
+        },
+        'files': {
+            type: [File]
+        },
+        'is_active': {
+            type: Boolean,
+            default: true,
         },
         'user_id': {
-            type: String,
-            // required: true
+            type: ObjectId,
+            required: true
         }
     };
 };

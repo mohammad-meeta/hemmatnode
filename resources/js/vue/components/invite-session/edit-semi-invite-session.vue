@@ -30,29 +30,39 @@
                     date-picker(v-model='inviteSessionData.date' format="YYYY-MM-DD HH:mm:ss"
                     display-format="jDD/jMM/jYYYY HH:mm" type="datetime" required)
 
+
             .field
-                label.label حاضرین جلسه
-                b-table(
-                        :data="users"
-                        :columns="columns"
-                        :checked-rows.sync="allCheckedRows"
-                        checkable
-                        :paginated="isPaginated",
-                        :per-page="perPage",
-                        :current-page.sync="currentPage",
-                        :pagination-simple="isPaginationSimple",
-                        :pagination-position="paginationPosition",
-                        :checkbox-position="checkboxPosition")
-                    template(slot="bottom-left")
-                        | نفرات انتخاب شده : {{ checkedRows.length }} نفر
-            fieldset
-                legend مدعوین (به غیر از افراد حاضر و سایر اعضاء)
-                .field
-                    multi-text-member(ref="multiTextMember" v-model='inviteSessionData.other_user')
-            fieldset
-                legend فایل های ضمیمه
-                .field
-                    file-upload(ref="fileUpload", :old-files="oldFiles")
+                .panel
+                    .panel-heading
+                        | حاضرین جلسه
+                    .panel-block
+                        b-table(
+                                class="table is-fullwidth"
+                                :data="users"
+                                :columns="columns"
+                                :checked-rows.sync="allCheckedRows"
+                                checkable
+                                :paginated="isPaginated",
+                                :per-page="perPage",
+                                :current-page.sync="currentPage",
+                                :pagination-simple="isPaginationSimple",
+                                :pagination-position="paginationPosition",
+                                :checkbox-position="checkboxPosition")
+                            template(slot="bottom-left")
+                                | نفرات انتخاب شده : {{ checkedRows.length }} نفر
+
+            .field
+                .panel
+                    .panel-heading
+                        | مدعوین (به غیر از افراد حاضر و سایر اعضاء)
+                    .panel-block
+                        multi-text-member(ref="multiTextMember" v-model='inviteSessionData.other_user')
+            .field
+                .panel
+                    .panel-heading
+                        | فایل های ضمیمه
+                    .panel-block
+                        file-upload(ref="fileUpload", :old-files="oldFiles")
             .field
                 label.label توضیحات
                 .control
@@ -197,8 +207,8 @@ module.exports = {
          * Load specific user
          */
         loadInviteSessionData(data) {
-            const agenda = JSON.parse(data.agenda);
-            const other_user = JSON.parse(data.other_user);
+            let agenda = data.agenda;
+            let other_user = data.other_user;
             let temp = {
                 _id: data._id,
                 dep: data.dep.title,
@@ -337,6 +347,7 @@ module.exports = {
             this.showLoading();
 
             const url = this.editUrl.replace("$id$", inviteSessionData._id);
+            console.log(inviteSessionData);
             AxiosHelper.send("patch", url, inviteSessionData, {
                 sendAsFormData: true,
                 filesArray: "files"

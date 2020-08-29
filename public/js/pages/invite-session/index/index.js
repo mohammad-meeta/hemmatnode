@@ -1995,6 +1995,24 @@ module.exports = {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 var AxiosHelper = __webpack_require__(/*! JS-HELPERS/axios-helper */ "./resources/js/helpers/axios-helper.js");
@@ -2041,6 +2059,26 @@ module.exports = {
         approv: [],
         other_user: []
       },
+      checkedRows: [],
+      checkboxPosition: "left",
+      isPaginated: true,
+      isPaginationSimple: false,
+      paginationPosition: "bottom",
+      currentPage: 1,
+      perPage: 3,
+      columns: [{
+        field: "name",
+        label: "نام کاربری",
+        searchable: true
+      }, {
+        field: "profile.first_name",
+        label: "نام",
+        searchable: true
+      }, {
+        field: "profile.last_name",
+        label: "نام خانوادگی",
+        searchable: true
+      }],
       notificationMessage: null,
       notificationType: "is-info",
       showLoadingFlag: false
@@ -48991,7 +49029,54 @@ var render = function() {
               )
             ]),
             _c("div", { staticClass: "field" }, [
-              _c("label", { staticClass: "label" }, [_vm._v("حاضرین جلسه")]),
+              _c("div", { staticClass: "panel" }, [
+                _c("div", { staticClass: "panel-heading" }, [
+                  _vm._v("حاضرین جلسه")
+                ]),
+                _c(
+                  "div",
+                  { staticClass: "panel-block" },
+                  [
+                    _c("b-table", {
+                      staticClass: "table is-fullwidth",
+                      attrs: {
+                        data: _vm.users,
+                        columns: _vm.columns,
+                        "checked-rows": _vm.checkedRows,
+                        checkable: "",
+                        paginated: _vm.isPaginated,
+                        "per-page": _vm.perPage,
+                        "current-page": _vm.currentPage,
+                        "pagination-simple": _vm.isPaginationSimple,
+                        "pagination-position": _vm.paginationPosition,
+                        "checkbox-position": _vm.checkboxPosition
+                      },
+                      on: {
+                        "update:checkedRows": function($event) {
+                          _vm.checkedRows = $event
+                        },
+                        "update:checked-rows": function($event) {
+                          _vm.checkedRows = $event
+                        },
+                        "update:currentPage": function($event) {
+                          _vm.currentPage = $event
+                        },
+                        "update:current-page": function($event) {
+                          _vm.currentPage = $event
+                        }
+                      }
+                    }),
+                    _c("template", { slot: "bottom-left" }, [
+                      _vm._v(
+                        "نفرات انتخاب شده : " +
+                          _vm._s(_vm.checkedRows.length) +
+                          " نفر"
+                      )
+                    ])
+                  ],
+                  2
+                )
+              ]),
               _c(
                 "div",
                 { staticClass: "multi-checkboxes" },

@@ -43,7 +43,25 @@
                         )
 
                 .field
-                    label.label حاضرین جلسه
+                    .panel
+                        .panel-heading
+                            | حاضرین جلسه
+                        .panel-block
+                            b-table.table.is-fullwidth(
+                                :data="users",
+                                :columns="columns",
+                                :checked-rows.sync="checkedRows",
+                                checkable,
+                                :paginated="isPaginated",
+                                :per-page="perPage",
+                                :current-page.sync="currentPage",
+                                :pagination-simple="isPaginationSimple",
+                                :pagination-position="paginationPosition",
+                                :checkbox-position="checkboxPosition"
+                            )
+                            template(slot="bottom-left")
+                                | نفرات انتخاب شده : {{ checkedRows.length }} نفر
+
                     .multi-checkboxes
                         label.checkbox.column.is-12(v-for='(user, userIndex) in users')
                             input(type='checkbox', v-model="inviteSessionData.user_list[user._id]", :value="user._id")
@@ -127,6 +145,32 @@ module.exports = {
             approv: [],
             other_user:[]
         },
+
+        checkedRows: [],
+        checkboxPosition: "left",
+        isPaginated: true,
+        isPaginationSimple: false,
+        paginationPosition: "bottom",
+        currentPage: 1,
+        perPage: 3,
+        columns: [
+            {
+                field: "name",
+                label: "نام کاربری",
+                searchable: true,
+            },
+            {
+                field: "profile.first_name",
+                label: "نام",
+                searchable: true,
+            },
+            {
+                field: "profile.last_name",
+                label: "نام خانوادگی",
+                searchable: true,
+            },
+        ],
+
         notificationMessage: null,
         notificationType: "is-info",
         showLoadingFlag: false,

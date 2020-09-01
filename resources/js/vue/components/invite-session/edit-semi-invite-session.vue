@@ -7,13 +7,6 @@
             h1 در حال بارگذاری
         .form-small(v-show="! isLoadingMode")
             .field
-                label.label
-                .control
-                    .select.is-primary
-                        select(v-model="inviteSessionData.department_id")
-                            option(v-for='(department, departmentIndex) in departments',
-                                :value="department._id") {{ department.title }}
-            .field
                 .panel
                     .panel-heading
                         | دستور جلسه
@@ -29,7 +22,6 @@
                 .control
                     date-picker(v-model='inviteSessionData.date' format="YYYY-MM-DD HH:mm:ss"
                     display-format="jDD/jMM/jYYYY HH:mm" type="datetime" required)
-
 
             .field
                 .panel
@@ -64,9 +56,9 @@
                     .panel-block
                         file-upload(ref="fileUpload", :old-files="oldFiles")
             .field
-                label.label توضیحات
+                label.label تکالیف حاضرین
                 .control
-                    textarea.textarea(placeholder='توضیحات', v-model='inviteSessionData.body')
+                    textarea.textarea(placeholder='تکالیف حاضرین', v-model='inviteSessionData.body')
             .field
                 label.checkbox
                     input(type='checkbox', v-model="inviteSessionData.isActive")
@@ -130,7 +122,7 @@ module.exports = {
         isPaginationSimple: false,
         paginationPosition: "bottom",
         currentPage: 1,
-        perPage: 3,
+        perPage: 10,
         columns: [
             {
                 field: "name",

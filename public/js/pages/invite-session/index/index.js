@@ -485,6 +485,56 @@ module.exports = {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 var AxiosHelper = __webpack_require__(/*! JS-HELPERS/axios-helper */ "./resources/js/helpers/axios-helper.js");
@@ -503,6 +553,8 @@ var MultiTextApprov = __webpack_require__(/*! VUE-COMPONENTS/invite-session/mult
 
 var MultiTextMember = __webpack_require__(/*! VUE-COMPONENTS/invite-session/multi-text-member.vue */ "./resources/js/vue/components/invite-session/multi-text-member.vue")["default"];
 
+var FileUpload = __webpack_require__(/*! VUE-COMPONENTS/general/file-upload.vue */ "./resources/js/vue/components/general/file-upload.vue")["default"];
+
 module.exports = {
   name: "EditInviteSession",
   components: {
@@ -510,13 +562,17 @@ module.exports = {
     DatePicker: VuePersianDatetimePicker,
     MultiText: MultiText,
     MultiTextApprov: MultiTextApprov,
-    MultiTextMember: MultiTextMember
+    MultiTextMember: MultiTextMember,
+    FileUpload: FileUpload
   },
   data: function data() {
     return {
       ENUMS: ENUMS,
       departments: [],
       users: [],
+      files: [],
+      deletedOldFiles: [],
+      oldFiles: [],
       inviteSessionData: {
         title: null,
         body: null,
@@ -526,10 +582,56 @@ module.exports = {
         department_id: null,
         files: {},
         user_list: {},
+        present_user_list: {},
         isActive: false,
         intro: null,
         approv: [],
-        other_user: []
+        other_user: [],
+        deletedOldFiles: []
+      },
+      userListTable: {
+        checkedRows: [],
+        checkboxPosition: "left",
+        isPaginated: true,
+        isPaginationSimple: false,
+        paginationPosition: "bottom",
+        currentPage: 1,
+        perPage: 10,
+        columns: [{
+          field: "name",
+          label: "نام کاربری",
+          searchable: true
+        }, {
+          field: "profile.first_name",
+          label: "نام",
+          searchable: true
+        }, {
+          field: "profile.last_name",
+          label: "نام خانوادگی",
+          searchable: true
+        }]
+      },
+      presentUserListTable: {
+        checkedRows: [],
+        checkboxPosition: "left",
+        isPaginated: true,
+        isPaginationSimple: false,
+        paginationPosition: "bottom",
+        currentPage: 1,
+        perPage: 10,
+        columns: [{
+          field: "name",
+          label: "نام کاربری",
+          searchable: true
+        }, {
+          field: "profile.first_name",
+          label: "نام",
+          searchable: true
+        }, {
+          field: "profile.last_name",
+          label: "نام خانوادگی",
+          searchable: true
+        }]
       },
       notificationMessage: null,
       notificationType: "is-info",
@@ -560,6 +662,32 @@ module.exports = {
     this.loadUsers();
   },
   computed: {
+    allUserListCheckedRows: {
+      set: function set(value) {
+        Vue.set(this.userListTable, "checkedRows", value);
+        "";
+      },
+      get: function get() {
+        if (null == this.userListTable.checkedRows) {
+          Vue.set(this.userListTable, "checkedRows", []);
+        }
+
+        return this.userListTable.checkedRows;
+      }
+    },
+    allPresentUserCheckedRows: {
+      set: function set(value) {
+        Vue.set(this.presentUserListTable, "checkedRows", value);
+        "";
+      },
+      get: function get() {
+        if (null == this.presentUserListTable.checkedRows) {
+          Vue.set(this.presentUserListTable, "checkedRows", []);
+        }
+
+        return this.presentUserListTable.checkedRows;
+      }
+    },
     isLoadingMode: function isLoadingMode(state) {
       return state.showLoadingFlag == true;
     },
@@ -568,14 +696,6 @@ module.exports = {
     }
   },
   methods: {
-    /**
-     * Set attachments
-     */
-    setAttachment: function setAttachment(sender) {
-      var files = sender.target.files;
-      Vue.set(this, "files", files);
-    },
-
     /**
      * Load specific invite session
      */
@@ -587,33 +707,27 @@ module.exports = {
         agenda: data.agenda,
         place: data.place,
         date: data.date,
-        department_id: data.department_id,
+        department_id: data.dep._id,
         files: data.files,
         user_list: data.user_list,
+        present_user_list: data.present_user_list,
         isActive: data.is_active,
         approv: data.approv,
         other_user: data.other_user
       };
-
-      try {
-        temp.agenda = JSON.parse(data.agenda);
-      } catch (ex) {
-        temp.agenda = [];
-      }
-
-      try {
-        temp.approv = JSON.parse(data.approv);
-      } catch (ex) {
-        temp.approv = [];
-      }
-
-      try {
-        temp.other_user = JSON.parse(data.other_user);
-      } catch (ex) {
-        temp.other_user = [];
-      }
-
+      Vue.set(this, "oldFiles", data.files);
       Vue.set(this, "inviteSessionData", temp);
+      this.$refs.fileUpload.updateOldFiles(data.files);
+      var userslist = this.inviteSessionData.user_list;
+      var checkedUsers = this.users.filter(function (u) {
+        return userslist.indexOf(u._id) > -1;
+      });
+      Vue.set(this, "allUserListCheckedRows", checkedUsers);
+      var presentUsersList = checkedUsers;
+      var checkedPresentUsers = this.allUserListCheckedRows.filter(function (u) {
+        return presentUsersList.indexOf(u._id) > -1;
+      });
+      Vue.set(this, "allPresentUserCheckedRows", checkedUsers);
     },
 
     /**
@@ -707,17 +821,29 @@ module.exports = {
       }
 
       this.showLoading();
+      var deletedFiles = this.$refs.fileUpload.getDeletedFiles();
+      var newFiles = this.$refs.fileUpload.getNewFiles();
+      var newUploaded = newFiles.map(function (x) {
+        return x.file;
+      });
+      Vue.set(this, "files", newUploaded);
+      var deleteUploaded = deletedFiles.map(function (x) {
+        return x._id;
+      });
+      Vue.set(this, "deletedOldFiles", deleteUploaded);
       var inviteSessionData = {
         _id: this.inviteSessionData._id,
         body: this.inviteSessionData.body,
         agenda: JSON.stringify(this.inviteSessionData.agenda),
         place: this.inviteSessionData.place,
         date: this.inviteSessionData.date,
-        department_id: this.inviteSessionData.departments,
+        department_id: this.inviteSessionData.department_id,
         user_list: this.inviteSessionData.user_list,
         is_active: this.inviteSessionData.isActive,
         approv: JSON.stringify(this.inviteSessionData.approv),
-        other_user: JSON.stringify(this.inviteSessionData.other_user)
+        other_user: JSON.stringify(this.inviteSessionData.other_user),
+        files: this.files,
+        deletedOldFiles: this.deletedOldFiles
       };
       inviteSessionData.files = this.files[0];
       var t = Object.keys(inviteSessionData.user_list).filter(function (key) {
@@ -728,8 +854,12 @@ module.exports = {
       inviteSessionData.user_list = t;
       this.showLoading();
       var url = this.editUrl.replace("$id$", inviteSessionData._id);
-      AxiosHelper.send("patch", url, inviteSessionData).then(function (res) {
-        var data = JSON.parse(res.config.data);
+      AxiosHelper.send("patch", url, inviteSessionData, {
+        sendAsFormData: true,
+        filesArray: "files"
+      }).then(function (res) {
+        //const data = JSON.parse(res.config.data);
+        var data = res.data;
 
         _this3.$emit("on-update", {
           sender: _this3,
@@ -776,14 +906,6 @@ module.exports = {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -913,7 +1035,7 @@ module.exports = {
       isPaginationSimple: false,
       paginationPosition: "bottom",
       currentPage: 1,
-      perPage: 3,
+      perPage: 10,
       columns: [{
         field: "name",
         label: "نام کاربری",
@@ -1995,6 +2117,43 @@ module.exports = {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 var AxiosHelper = __webpack_require__(/*! JS-HELPERS/axios-helper */ "./resources/js/helpers/axios-helper.js");
@@ -2013,6 +2172,8 @@ var MultiTextApprov = __webpack_require__(/*! VUE-COMPONENTS/invite-session/mult
 
 var MultiTextMember = __webpack_require__(/*! VUE-COMPONENTS/invite-session/multi-text-member.vue */ "./resources/js/vue/components/invite-session/multi-text-member.vue")["default"];
 
+var FileUpload = __webpack_require__(/*! VUE-COMPONENTS/general/file-upload.vue */ "./resources/js/vue/components/general/file-upload.vue")["default"];
+
 module.exports = {
   name: "RegisterFullInviteSession",
   components: {
@@ -2020,13 +2181,17 @@ module.exports = {
     DatePicker: VuePersianDatetimePicker,
     MultiText: MultiText,
     MultiTextApprov: MultiTextApprov,
-    MultiTextMember: MultiTextMember
+    MultiTextMember: MultiTextMember,
+    FileUpload: FileUpload
   },
   data: function data() {
     return {
       ENUMS: ENUMS,
       departments: [],
       users: [],
+      files: [],
+      deletedOldFiles: [],
+      oldFiles: [],
       inviteSessionData: {
         title: null,
         body: null,
@@ -2035,11 +2200,57 @@ module.exports = {
         date: null,
         department_id: null,
         files: {},
+        deletedOldFiles: [],
         user_list: {},
+        present_user_list: {},
         isActive: false,
         intro: null,
         approv: [],
         other_user: []
+      },
+      userListTable: {
+        checkedRows: [],
+        checkboxPosition: "left",
+        isPaginated: true,
+        isPaginationSimple: false,
+        paginationPosition: "bottom",
+        currentPage: 1,
+        perPage: 10,
+        columns: [{
+          field: "name",
+          label: "نام کاربری",
+          searchable: true
+        }, {
+          field: "profile.first_name",
+          label: "نام",
+          searchable: true
+        }, {
+          field: "profile.last_name",
+          label: "نام خانوادگی",
+          searchable: true
+        }]
+      },
+      presentUserListTable: {
+        checkedRows: [],
+        checkboxPosition: "left",
+        isPaginated: true,
+        isPaginationSimple: false,
+        paginationPosition: "bottom",
+        currentPage: 1,
+        perPage: 10,
+        columns: [{
+          field: "name",
+          label: "نام کاربری",
+          searchable: true
+        }, {
+          field: "profile.first_name",
+          label: "نام",
+          searchable: true
+        }, {
+          field: "profile.last_name",
+          label: "نام خانوادگی",
+          searchable: true
+        }]
       },
       notificationMessage: null,
       notificationType: "is-info",
@@ -2047,7 +2258,7 @@ module.exports = {
     };
   },
   props: {
-    editUrl: {
+    registerUrl: {
       type: String,
       "default": ""
     },
@@ -2082,14 +2293,6 @@ module.exports = {
   },
   methods: {
     /**
-     * Set attachments
-     */
-    setAttachment: function setAttachment(sender) {
-      var files = sender.target.files;
-      Vue.set(this, "files", files);
-    },
-
-    /**
      * To Persian Date
      */
     toPersianDate: function toPersianDate(date, format, value) {
@@ -2104,7 +2307,7 @@ module.exports = {
     commandClick: function commandClick(arg) {
       switch (arg) {
         case ENUMS.COMMAND.SAVE:
-          this.editUser();
+          this.registerInviteSession();
           break;
       }
     },
@@ -2180,6 +2383,16 @@ module.exports = {
       }
 
       this.showLoading();
+      var deletedFiles = this.$refs.fileUpload.getDeletedFiles();
+      var newFiles = this.$refs.fileUpload.getNewFiles();
+      var newUploaded = newFiles.map(function (x) {
+        return x.file;
+      });
+      Vue.set(this, "files", newUploaded);
+      var deleteUploaded = deletedFiles.map(function (x) {
+        return x._id;
+      });
+      Vue.set(this, "deletedOldFiles", deleteUploaded);
       var inviteSessionData = {
         body: this.inviteSessionData.body,
         agenda: JSON.stringify(this.inviteSessionData.agenda),
@@ -2188,29 +2401,51 @@ module.exports = {
         place: this.inviteSessionData.place,
         date: this.inviteSessionData.date,
         department_id: this.inviteSessionData.departments,
-        user_list: this.inviteSessionData.user_list,
-        is_active: this.inviteSessionData.isActive
+        user_list: [],
+        present_user_list: [],
+        is_active: this.inviteSessionData.isActive,
+        files: this.files,
+        deletedOldFiles: this.deletedOldFiles
       };
-      inviteSessionData.files = this.files[0];
+      inviteSessionData.user_list = this.userListTable.checkedRows.map(function (x) {
+        return x._id;
+      });
+      inviteSessionData.present_user_list = this.presentUserListTable.checkedRows.map(function (x) {
+        return x._id;
+      });
       var t = Object.keys(inviteSessionData.user_list).filter(function (key) {
         return true == inviteSessionData.user_list[key];
       }).map(function (key) {
         return key;
       });
       inviteSessionData.user_list = t;
+      t = Object.keys(inviteSessionData.present_user_list).filter(function (key) {
+        return true == inviteSessionData.present_user_list[key];
+      }).map(function (key) {
+        return key;
+      });
+      inviteSessionData.present_user_list = t;
       this.showLoading();
-      var url = this.editUrl.replace("$id$", inviteSessionData._id);
-      AxiosHelper.send("patch", url, inviteSessionData).then(function (res) {
-        var data = JSON.parse(res.config.data);
+      var url = this.registerUrl;
+      AxiosHelper.send("post", url, inviteSessionData, {
+        sendAsFormData: true,
+        filesArray: "files"
+      }).then(function (res) {
+        var data = res.data;
 
-        _this3.$emit("on-update", {
-          sender: _this3,
-          data: data
-        });
+        if (data.success) {
+          _this3.$emit("on-register", {
+            sender: _this3,
+            data: {
+              data: data,
+              dep_title: 0
+            }
+          });
+        }
       })["catch"](function (err) {
-        console.error(err);
+        var data = err.response.data;
 
-        _this3.setNotification(".خطا در ذخیره جلسه", "is-danger");
+        _this3.setNotification(data, "is-danger");
       }).then(function () {
         return _this3.hideLoading();
       });
@@ -2220,7 +2455,7 @@ module.exports = {
      * Validate invite session data
      */
     validate: function validate() {
-      var result = InviteSessionValidator.validateEdit(this.inviteSessionData);
+      var result = InviteSessionValidator.validate(this.inviteSessionData);
 
       if (result.passes) {
         this.closeNotification();
@@ -2248,15 +2483,6 @@ module.exports = {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -2416,7 +2642,7 @@ module.exports = {
       isPaginationSimple: false,
       paginationPosition: "bottom",
       currentPage: 1,
-      perPage: 3,
+      perPage: 10,
       columns: [{
         field: "name",
         label: "نام کاربری",
@@ -47015,253 +47241,349 @@ var render = function() {
           staticClass: "form-small"
         },
         [
-          _c("div", { staticClass: "field" }, [
-            _c("label", { staticClass: "label" }),
-            _c("div", { staticClass: "control" }, [
-              _c("div", { staticClass: "select is-primary" }, [
+          _c("fieldset", { staticClass: "fieldset" }, [
+            _c("legend", [_vm._v("دعوتنامه")]),
+            _c("div", { staticClass: "field" }, [
+              _c("div", { staticClass: "panel" }, [
+                _c("div", { staticClass: "panel-heading" }, [
+                  _vm._v("دستور جلسه")
+                ]),
                 _c(
-                  "select",
-                  {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.inviteSessionData.department_id,
-                        expression: "inviteSessionData.department_id"
+                  "div",
+                  { staticClass: "panel-block" },
+                  [
+                    _c("multi-text", {
+                      model: {
+                        value: _vm.inviteSessionData.agenda,
+                        callback: function($$v) {
+                          _vm.$set(_vm.inviteSessionData, "agenda", $$v)
+                        },
+                        expression: "inviteSessionData.agenda"
                       }
-                    ],
-                    on: {
-                      change: function($event) {
-                        var $$selectedVal = Array.prototype.filter
-                          .call($event.target.options, function(o) {
-                            return o.selected
-                          })
-                          .map(function(o) {
-                            var val = "_value" in o ? o._value : o.value
-                            return val
-                          })
-                        _vm.$set(
-                          _vm.inviteSessionData,
-                          "department_id",
-                          $event.target.multiple
-                            ? $$selectedVal
-                            : $$selectedVal[0]
-                        )
-                      }
-                    }
-                  },
-                  _vm._l(_vm.departments, function(
-                    department,
-                    departmentIndex
-                  ) {
-                    return _c(
-                      "option",
-                      { domProps: { value: department._id } },
-                      [_vm._v(_vm._s(department.title))]
-                    )
-                  }),
-                  0
+                    })
+                  ],
+                  1
                 )
               ])
-            ])
-          ]),
-          _c(
-            "div",
-            { staticClass: "field" },
-            [
-              _c("multi-text", {
-                model: {
-                  value: _vm.inviteSessionData.agenda,
-                  callback: function($$v) {
-                    _vm.$set(_vm.inviteSessionData, "agenda", $$v)
-                  },
-                  expression: "inviteSessionData.agenda"
-                }
-              })
-            ],
-            1
-          ),
-          _c("div", { staticClass: "field" }, [
-            _c("label", { staticClass: "label" }, [_vm._v("مکان")]),
-            _c("div", { staticClass: "control" }, [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.inviteSessionData.place,
-                    expression: "inviteSessionData.place"
-                  }
-                ],
-                staticClass: "input",
-                attrs: { type: "text", placeholder: "مکان", required: "" },
-                domProps: { value: _vm.inviteSessionData.place },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
+            ]),
+            _c("div", { staticClass: "field" }, [
+              _c("label", { staticClass: "label" }, [_vm._v("مکان")]),
+              _c("div", { staticClass: "control" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.inviteSessionData.place,
+                      expression: "inviteSessionData.place"
                     }
-                    _vm.$set(
-                      _vm.inviteSessionData,
-                      "place",
-                      $event.target.value
-                    )
-                  }
-                }
-              })
-            ])
-          ]),
-          _c("div", { staticClass: "field" }, [
-            _c("label", { staticClass: "label" }, [_vm._v("تاریخ")]),
-            _c(
-              "div",
-              { staticClass: "control" },
-              [
-                _c("date-picker", {
-                  attrs: {
-                    format: "YYYY-MM-DD HH:mm:ss",
-                    "display-format": "jDD/jMM/jYYYY HH:mm",
-                    type: "datetime",
-                    required: ""
-                  },
-                  model: {
-                    value: _vm.inviteSessionData.date,
-                    callback: function($$v) {
-                      _vm.$set(_vm.inviteSessionData, "date", $$v)
-                    },
-                    expression: "inviteSessionData.date"
+                  ],
+                  staticClass: "input",
+                  attrs: { type: "text", placeholder: "مکان", required: "" },
+                  domProps: { value: _vm.inviteSessionData.place },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.inviteSessionData,
+                        "place",
+                        $event.target.value
+                      )
+                    }
                   }
                 })
-              ],
-              1
-            )
-          ]),
-          _c("div", { staticClass: "field" }, [
-            _c("label", { staticClass: "label" }, [_vm._v("حاضرین جلسه")]),
-            _c(
-              "div",
-              { staticClass: "multi-checkboxes" },
-              _vm._l(_vm.users, function(user, userIndex) {
-                return _c("label", { staticClass: "checkbox column is-12" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.inviteSessionData.user_list[user._id],
-                        expression: "inviteSessionData.user_list[user._id]"
-                      }
-                    ],
-                    attrs: { type: "checkbox" },
-                    domProps: {
-                      value: user._id,
-                      checked: Array.isArray(
-                        _vm.inviteSessionData.user_list[user._id]
-                      )
-                        ? _vm._i(
-                            _vm.inviteSessionData.user_list[user._id],
-                            user._id
-                          ) > -1
-                        : _vm.inviteSessionData.user_list[user._id]
+              ])
+            ]),
+            _c("div", { staticClass: "field" }, [
+              _c("label", { staticClass: "label" }, [_vm._v("تاریخ")]),
+              _c(
+                "div",
+                { staticClass: "control" },
+                [
+                  _c("date-picker", {
+                    attrs: {
+                      format: "YYYY-MM-DD HH:mm:ss",
+                      "display-format": "jDD/jMM/jYYYY HH:mm",
+                      type: "datetime",
+                      required: ""
                     },
-                    on: {
-                      change: function($event) {
-                        var $$a = _vm.inviteSessionData.user_list[user._id],
-                          $$el = $event.target,
-                          $$c = $$el.checked ? true : false
-                        if (Array.isArray($$a)) {
-                          var $$v = user._id,
-                            $$i = _vm._i($$a, $$v)
-                          if ($$el.checked) {
-                            $$i < 0 &&
-                              _vm.$set(
-                                _vm.inviteSessionData.user_list,
-                                user._id,
-                                $$a.concat([$$v])
-                              )
-                          } else {
-                            $$i > -1 &&
-                              _vm.$set(
-                                _vm.inviteSessionData.user_list,
-                                user._id,
-                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                              )
-                          }
-                        } else {
-                          _vm.$set(
-                            _vm.inviteSessionData.user_list,
-                            user._id,
-                            $$c
+                    model: {
+                      value: _vm.inviteSessionData.date,
+                      callback: function($$v) {
+                        _vm.$set(_vm.inviteSessionData, "date", $$v)
+                      },
+                      expression: "inviteSessionData.date"
+                    }
+                  })
+                ],
+                1
+              )
+            ]),
+            _c("div", { staticClass: "field" }, [
+              _c("div", { staticClass: "panel" }, [
+                _c("div", { staticClass: "panel-heading" }, [
+                  _vm._v("حاضرین جلسه")
+                ]),
+                _c(
+                  "div",
+                  { staticClass: "panel-block" },
+                  [
+                    _c("b-table", {
+                      staticClass: "table is-fullwidth",
+                      attrs: {
+                        data: _vm.users,
+                        columns: _vm.userListTable.columns,
+                        "checked-rows": _vm.allUserListCheckedRows,
+                        checkable: "",
+                        paginated: _vm.userListTable.isPaginated,
+                        "per-page": _vm.userListTable.perPage,
+                        "current-page": _vm.userListTable.currentPage,
+                        "pagination-simple":
+                          _vm.userListTable.isPaginationSimple,
+                        "pagination-position":
+                          _vm.userListTable.paginationPosition,
+                        "checkbox-position": _vm.userListTable.checkboxPosition
+                      },
+                      on: {
+                        "update:checkedRows": function($event) {
+                          _vm.allUserListCheckedRows = $event
+                        },
+                        "update:checked-rows": function($event) {
+                          _vm.allUserListCheckedRows = $event
+                        },
+                        "update:currentPage": function($event) {
+                          return _vm.$set(
+                            _vm.userListTable,
+                            "currentPage",
+                            $event
+                          )
+                        },
+                        "update:current-page": function($event) {
+                          return _vm.$set(
+                            _vm.userListTable,
+                            "currentPage",
+                            $event
                           )
                         }
                       }
+                    }),
+                    _c("template", { slot: "bottom-left" }, [
+                      _vm._v(
+                        "نفرات انتخاب شده : " +
+                          _vm._s(_vm.userListTable.checkedRows.length) +
+                          " نفر"
+                      )
+                    ])
+                  ],
+                  2
+                )
+              ])
+            ]),
+            _c("div", { staticClass: "field" }, [
+              _c("div", { staticClass: "panel" }, [
+                _c("div", { staticClass: "panel-heading" }, [
+                  _vm._v("مدعوین (به غیر از افراد حاضر و سایر اعضاء)")
+                ]),
+                _c(
+                  "div",
+                  { staticClass: "panel-block" },
+                  [
+                    _c("multi-text-member", {
+                      model: {
+                        value: _vm.inviteSessionData.other_user,
+                        callback: function($$v) {
+                          _vm.$set(_vm.inviteSessionData, "other_user", $$v)
+                        },
+                        expression: "inviteSessionData.other_user"
+                      }
+                    })
+                  ],
+                  1
+                )
+              ])
+            ]),
+            _c("div", { staticClass: "field" }, [
+              _c("div", { staticClass: "panel" }, [
+                _c("div", { staticClass: "panel-heading" }, [
+                  _vm._v("فایل های ضمیمه")
+                ]),
+                _c(
+                  "div",
+                  { staticClass: "panel-block" },
+                  [
+                    _c("file-upload", {
+                      ref: "fileUpload",
+                      attrs: { "old-files": _vm.oldFiles }
+                    })
+                  ],
+                  1
+                )
+              ])
+            ]),
+            _c("div", { staticClass: "field" }, [
+              _c("label", { staticClass: "label" }, [_vm._v("تکالیف حاضرین")]),
+              _c("div", { staticClass: "control" }, [
+                _c("textarea", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.inviteSessionData.body,
+                      expression: "inviteSessionData.body"
                     }
-                  }),
-                  _vm._v(
-                    "  " +
-                      _vm._s(user.name) +
-                      " - " +
-                      _vm._s(user.profile.first_name) +
-                      " " +
-                      _vm._s(user.profile.last_name)
-                  )
-                ])
-              }),
-              0
-            )
-          ]),
-          _c("fieldset", [
-            _c("legend", [_vm._v("مدعوین")]),
-            _c(
-              "div",
-              { staticClass: "field" },
-              [
-                _c("multi-text-member", {
-                  model: {
-                    value: _vm.inviteSessionData.other_user,
-                    callback: function($$v) {
-                      _vm.$set(_vm.inviteSessionData, "other_user", $$v)
-                    },
-                    expression: "inviteSessionData.other_user"
+                  ],
+                  staticClass: "textarea",
+                  attrs: { placeholder: "تکالیف حاضرین" },
+                  domProps: { value: _vm.inviteSessionData.body },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.inviteSessionData,
+                        "body",
+                        $event.target.value
+                      )
+                    }
                   }
                 })
-              ],
-              1
-            )
-          ]),
-          _c("div", { staticClass: "field" }, [
-            _c("label", { staticClass: "checkbox" }, [
-              _c("input", {
-                attrs: { type: "file" },
-                on: { change: _vm.setAttachment }
-              }),
-              _vm._v("  ضمیمه")
+              ])
             ])
           ]),
-          _c("div", { staticClass: "field" }, [
-            _c("label", { staticClass: "label" }, [_vm._v("توضیحات")]),
-            _c("div", { staticClass: "control" }, [
-              _c("textarea", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.inviteSessionData.body,
-                    expression: "inviteSessionData.body"
-                  }
-                ],
-                staticClass: "textarea",
-                attrs: { placeholder: "توضیحات" },
-                domProps: { value: _vm.inviteSessionData.body },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
+          _c("fieldset", { staticClass: "fieldset" }, [
+            _c("legend", [_vm._v("جلسه")]),
+            _c("div", { staticClass: "field" }, [
+              _c("label", { staticClass: "label" }, [_vm._v("خلاصه مذاکرات")]),
+              _c("div", { staticClass: "control" }, [
+                _c("textarea", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.inviteSessionData.intro,
+                      expression: "inviteSessionData.intro"
                     }
-                    _vm.$set(_vm.inviteSessionData, "body", $event.target.value)
+                  ],
+                  staticClass: "textarea",
+                  attrs: { placeholder: "مقدمه" },
+                  domProps: { value: _vm.inviteSessionData.intro },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.inviteSessionData,
+                        "intro",
+                        $event.target.value
+                      )
+                    }
                   }
-                }
-              })
+                })
+              ])
+            ]),
+            _c("div", { staticClass: "field" }, [
+              _c("div", { staticClass: "panel" }, [
+                _c("div", { staticClass: "panel-heading" }, [_vm._v("مصوبات")]),
+                _c(
+                  "div",
+                  { staticClass: "panel-block" },
+                  [
+                    _c("multi-text-approv", {
+                      model: {
+                        value: _vm.inviteSessionData.approv,
+                        callback: function($$v) {
+                          _vm.$set(_vm.inviteSessionData, "approv", $$v)
+                        },
+                        expression: "inviteSessionData.approv"
+                      }
+                    })
+                  ],
+                  1
+                )
+              ])
+            ]),
+            _c("div", { staticClass: "field" }, [
+              _c("div", { staticClass: "panel" }, [
+                _c("div", { staticClass: "panel-heading" }, [
+                  _vm._v(" اعضای حاضر در جلسه")
+                ]),
+                _c(
+                  "div",
+                  { staticClass: "panel-block" },
+                  [
+                    _c("b-table", {
+                      staticClass: "table is-fullwidth",
+                      attrs: {
+                        data: _vm.allUserListCheckedRows,
+                        columns: _vm.presentUserListTable.columns,
+                        "checked-rows": _vm.allPresentUserCheckedRows,
+                        checkable: "",
+                        paginated: _vm.presentUserListTable.isPaginated,
+                        "per-page": _vm.presentUserListTable.perPage,
+                        "current-page": _vm.presentUserListTable.currentPage,
+                        "pagination-simple":
+                          _vm.presentUserListTable.isPaginationSimple,
+                        "pagination-position":
+                          _vm.presentUserListTable.paginationPosition,
+                        "checkbox-position":
+                          _vm.presentUserListTable.checkboxPosition
+                      },
+                      on: {
+                        "update:checkedRows": function($event) {
+                          _vm.allPresentUserCheckedRows = $event
+                        },
+                        "update:checked-rows": function($event) {
+                          _vm.allPresentUserCheckedRows = $event
+                        },
+                        "update:currentPage": function($event) {
+                          return _vm.$set(
+                            _vm.presentUserListTable,
+                            "currentPage",
+                            $event
+                          )
+                        },
+                        "update:current-page": function($event) {
+                          return _vm.$set(
+                            _vm.presentUserListTable,
+                            "currentPage",
+                            $event
+                          )
+                        }
+                      }
+                    }),
+                    _c("template", { slot: "bottom-left" }, [
+                      _vm._v(
+                        "اعضای حاضر شده : " +
+                          _vm._s(_vm.presentUserListTable.checkedRows.length) +
+                          " نفر"
+                      )
+                    ])
+                  ],
+                  2
+                )
+              ])
+            ]),
+            _c("div", { staticClass: "field" }, [
+              _c("div", { staticClass: "panel" }, [
+                _c("div", { staticClass: "panel-heading" }, [
+                  _vm._v("مستندات جلسه")
+                ]),
+                _c(
+                  "div",
+                  { staticClass: "panel-block" },
+                  [
+                    _c("file-upload", {
+                      ref: "fileUpload",
+                      attrs: { "old-files": _vm.oldFiles }
+                    })
+                  ],
+                  1
+                )
+              ])
             ])
           ]),
           _c("div", { staticClass: "field" }, [
@@ -47311,132 +47633,7 @@ var render = function() {
                 }
               }),
               _vm._v("  فعال")
-            ])
-          ]),
-          _c("div", { staticClass: "field" }, [
-            _c("label", { staticClass: "label" }, [_vm._v("مقدمه")]),
-            _c("div", { staticClass: "control" }, [
-              _c("textarea", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.inviteSessionData.intro,
-                    expression: "inviteSessionData.intro"
-                  }
-                ],
-                staticClass: "textarea",
-                attrs: { placeholder: "مقدمه" },
-                domProps: { value: _vm.inviteSessionData.intro },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(
-                      _vm.inviteSessionData,
-                      "intro",
-                      $event.target.value
-                    )
-                  }
-                }
-              })
-            ])
-          ]),
-          _c("fieldset", [
-            _c("legend", [_vm._v("مصوبات")]),
-            _c(
-              "div",
-              { staticClass: "field" },
-              [
-                _c("multi-text-approv", {
-                  model: {
-                    value: _vm.inviteSessionData.approv,
-                    callback: function($$v) {
-                      _vm.$set(_vm.inviteSessionData, "approv", $$v)
-                    },
-                    expression: "inviteSessionData.approv"
-                  }
-                })
-              ],
-              1
-            )
-          ]),
-          _c("div", { staticClass: "field" }, [
-            _c("label", { staticClass: "label" }, [
-              _vm._v("اعضای حاضر در جلسه")
             ]),
-            _c(
-              "div",
-              { staticClass: "multi-checkboxes" },
-              _vm._l(_vm.users, function(user, userIndex) {
-                return _c("label", { staticClass: "checkbox column is-12" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.inviteSessionData.user_list[user._id],
-                        expression: "inviteSessionData.user_list[user._id]"
-                      }
-                    ],
-                    attrs: { type: "checkbox", cehcked: true },
-                    domProps: {
-                      value: user._id,
-                      checked: Array.isArray(
-                        _vm.inviteSessionData.user_list[user._id]
-                      )
-                        ? _vm._i(
-                            _vm.inviteSessionData.user_list[user._id],
-                            user._id
-                          ) > -1
-                        : _vm.inviteSessionData.user_list[user._id]
-                    },
-                    on: {
-                      change: function($event) {
-                        var $$a = _vm.inviteSessionData.user_list[user._id],
-                          $$el = $event.target,
-                          $$c = $$el.checked ? true : false
-                        if (Array.isArray($$a)) {
-                          var $$v = user._id,
-                            $$i = _vm._i($$a, $$v)
-                          if ($$el.checked) {
-                            $$i < 0 &&
-                              _vm.$set(
-                                _vm.inviteSessionData.user_list,
-                                user._id,
-                                $$a.concat([$$v])
-                              )
-                          } else {
-                            $$i > -1 &&
-                              _vm.$set(
-                                _vm.inviteSessionData.user_list,
-                                user._id,
-                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                              )
-                          }
-                        } else {
-                          _vm.$set(
-                            _vm.inviteSessionData.user_list,
-                            user._id,
-                            $$c
-                          )
-                        }
-                      }
-                    }
-                  }),
-                  _vm._v(
-                    "  " +
-                      _vm._s(user.name) +
-                      " - " +
-                      _vm._s(user.profile.first_name) +
-                      " " +
-                      _vm._s(user.profile.last_name)
-                  )
-                ])
-              }),
-              0
-            ),
             _c("div", { staticClass: "field is-grouped" }, [
               _c(
                 "div",
@@ -47545,56 +47742,6 @@ var render = function() {
           staticClass: "form-small"
         },
         [
-          _c("div", { staticClass: "field" }, [
-            _c("label", { staticClass: "label" }),
-            _c("div", { staticClass: "control" }, [
-              _c("div", { staticClass: "select is-primary" }, [
-                _c(
-                  "select",
-                  {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.inviteSessionData.department_id,
-                        expression: "inviteSessionData.department_id"
-                      }
-                    ],
-                    on: {
-                      change: function($event) {
-                        var $$selectedVal = Array.prototype.filter
-                          .call($event.target.options, function(o) {
-                            return o.selected
-                          })
-                          .map(function(o) {
-                            var val = "_value" in o ? o._value : o.value
-                            return val
-                          })
-                        _vm.$set(
-                          _vm.inviteSessionData,
-                          "department_id",
-                          $event.target.multiple
-                            ? $$selectedVal
-                            : $$selectedVal[0]
-                        )
-                      }
-                    }
-                  },
-                  _vm._l(_vm.departments, function(
-                    department,
-                    departmentIndex
-                  ) {
-                    return _c(
-                      "option",
-                      { domProps: { value: department._id } },
-                      [_vm._v(_vm._s(department.title))]
-                    )
-                  }),
-                  0
-                )
-              ])
-            ])
-          ]),
           _c("div", { staticClass: "field" }, [
             _c("div", { staticClass: "panel" }, [
               _c("div", { staticClass: "panel-heading" }, [
@@ -47772,7 +47919,7 @@ var render = function() {
             ])
           ]),
           _c("div", { staticClass: "field" }, [
-            _c("label", { staticClass: "label" }, [_vm._v("توضیحات")]),
+            _c("label", { staticClass: "label" }, [_vm._v("تکالیف حاضرین")]),
             _c("div", { staticClass: "control" }, [
               _c("textarea", {
                 directives: [
@@ -47784,7 +47931,7 @@ var render = function() {
                   }
                 ],
                 staticClass: "textarea",
-                attrs: { placeholder: "توضیحات" },
+                attrs: { placeholder: "تکالیف حاضرین" },
                 domProps: { value: _vm.inviteSessionData.body },
                 on: {
                   input: function($event) {
@@ -48597,7 +48744,7 @@ var render = function() {
             ]),
             _c("div", { staticClass: "column is-4" }, [
               _c("div", { staticClass: "field" }, [
-                _c("label", { staticClass: "label" }, [_vm._v("زمان پیگیری")]),
+                _c("label", { staticClass: "label" }, [_vm._v("مهلت")]),
                 _c("div", { staticClass: "control" }, [
                   _c("input", {
                     directives: [
@@ -48863,76 +49010,26 @@ var render = function() {
           _c("fieldset", { staticClass: "fieldset" }, [
             _c("legend", [_vm._v("دعوتنامه")]),
             _c("div", { staticClass: "field" }, [
-              _c("label", { staticClass: "label" }),
-              _c("div", { staticClass: "control" }, [
-                _c("div", { staticClass: "select is-primary" }, [
-                  _c(
-                    "select",
-                    {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.inviteSessionData.departments,
-                          expression: "inviteSessionData.departments"
-                        }
-                      ],
-                      on: {
-                        change: function($event) {
-                          var $$selectedVal = Array.prototype.filter
-                            .call($event.target.options, function(o) {
-                              return o.selected
-                            })
-                            .map(function(o) {
-                              var val = "_value" in o ? o._value : o.value
-                              return val
-                            })
-                          _vm.$set(
-                            _vm.inviteSessionData,
-                            "departments",
-                            $event.target.multiple
-                              ? $$selectedVal
-                              : $$selectedVal[0]
-                          )
-                        }
+              _c("div", { staticClass: "panel" }, [
+                _c("div", { staticClass: "panel-heading" }, [
+                  _vm._v("دستور جلسه")
+                ]),
+                _c(
+                  "div",
+                  { staticClass: "panel-block" },
+                  [
+                    _c("multi-text", {
+                      model: {
+                        value: _vm.inviteSessionData.agenda,
+                        callback: function($$v) {
+                          _vm.$set(_vm.inviteSessionData, "agenda", $$v)
+                        },
+                        expression: "inviteSessionData.agenda"
                       }
-                    },
-                    _vm._l(_vm.departments, function(
-                      department,
-                      departmentIndex
-                    ) {
-                      return _c(
-                        "option",
-                        { domProps: { value: department._id } },
-                        [_vm._v(_vm._s(department.title))]
-                      )
-                    }),
-                    0
-                  )
-                ])
-              ]),
-              _c("div", { staticClass: "field" }, [
-                _c("div", { staticClass: "panel" }, [
-                  _c("div", { staticClass: "panel-heading" }, [
-                    _vm._v("دستور جلسه")
-                  ]),
-                  _c(
-                    "div",
-                    { staticClass: "panel-block" },
-                    [
-                      _c("multi-text", {
-                        model: {
-                          value: _vm.inviteSessionData.agenda,
-                          callback: function($$v) {
-                            _vm.$set(_vm.inviteSessionData, "agenda", $$v)
-                          },
-                          expression: "inviteSessionData.agenda"
-                        }
-                      })
-                    ],
-                    1
-                  )
-                ])
+                    })
+                  ],
+                  1
+                )
               ])
             ]),
             _c("div", { staticClass: "field" }, [
@@ -48991,109 +49088,116 @@ var render = function() {
               )
             ]),
             _c("div", { staticClass: "field" }, [
-              _c("label", { staticClass: "label" }, [_vm._v("حاضرین جلسه")]),
-              _c(
-                "div",
-                { staticClass: "multi-checkboxes" },
-                _vm._l(_vm.users, function(user, userIndex) {
-                  return _c("label", { staticClass: "checkbox column is-12" }, [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.inviteSessionData.user_list[user._id],
-                          expression: "inviteSessionData.user_list[user._id]"
-                        }
-                      ],
-                      attrs: { type: "checkbox" },
-                      domProps: {
-                        value: user._id,
-                        checked: Array.isArray(
-                          _vm.inviteSessionData.user_list[user._id]
-                        )
-                          ? _vm._i(
-                              _vm.inviteSessionData.user_list[user._id],
-                              user._id
-                            ) > -1
-                          : _vm.inviteSessionData.user_list[user._id]
+              _c("div", { staticClass: "panel" }, [
+                _c("div", { staticClass: "panel-heading" }, [
+                  _vm._v("حاضرین جلسه")
+                ]),
+                _c(
+                  "div",
+                  { staticClass: "panel-block" },
+                  [
+                    _c("b-table", {
+                      staticClass: "table is-fullwidth",
+                      attrs: {
+                        data: _vm.users,
+                        columns: _vm.userListTable.columns,
+                        "checked-rows": _vm.userListTable.checkedRows,
+                        checkable: "",
+                        paginated: _vm.userListTable.isPaginated,
+                        "per-page": _vm.userListTable.perPage,
+                        "current-page": _vm.userListTable.currentPage,
+                        "pagination-simple":
+                          _vm.userListTable.isPaginationSimple,
+                        "pagination-position":
+                          _vm.userListTable.paginationPosition,
+                        "checkbox-position": _vm.userListTable.checkboxPosition
                       },
                       on: {
-                        change: function($event) {
-                          var $$a = _vm.inviteSessionData.user_list[user._id],
-                            $$el = $event.target,
-                            $$c = $$el.checked ? true : false
-                          if (Array.isArray($$a)) {
-                            var $$v = user._id,
-                              $$i = _vm._i($$a, $$v)
-                            if ($$el.checked) {
-                              $$i < 0 &&
-                                _vm.$set(
-                                  _vm.inviteSessionData.user_list,
-                                  user._id,
-                                  $$a.concat([$$v])
-                                )
-                            } else {
-                              $$i > -1 &&
-                                _vm.$set(
-                                  _vm.inviteSessionData.user_list,
-                                  user._id,
-                                  $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                                )
-                            }
-                          } else {
-                            _vm.$set(
-                              _vm.inviteSessionData.user_list,
-                              user._id,
-                              $$c
-                            )
-                          }
+                        "update:checkedRows": function($event) {
+                          return _vm.$set(
+                            _vm.userListTable,
+                            "checkedRows",
+                            $event
+                          )
+                        },
+                        "update:checked-rows": function($event) {
+                          return _vm.$set(
+                            _vm.userListTable,
+                            "checkedRows",
+                            $event
+                          )
+                        },
+                        "update:currentPage": function($event) {
+                          return _vm.$set(
+                            _vm.userListTable,
+                            "currentPage",
+                            $event
+                          )
+                        },
+                        "update:current-page": function($event) {
+                          return _vm.$set(
+                            _vm.userListTable,
+                            "currentPage",
+                            $event
+                          )
                         }
                       }
                     }),
-                    _vm._v(
-                      "  " +
-                        _vm._s(user.name) +
-                        " - " +
-                        _vm._s(user.profile.first_name) +
-                        " " +
-                        _vm._s(user.profile.last_name)
-                    )
-                  ])
-                }),
-                0
-              )
-            ]),
-            _c("fieldset", [
-              _c("legend", [_vm._v("مدعوین")]),
-              _c(
-                "div",
-                { staticClass: "field" },
-                [
-                  _c("multi-text-member", {
-                    model: {
-                      value: _vm.inviteSessionData.other_user,
-                      callback: function($$v) {
-                        _vm.$set(_vm.inviteSessionData, "other_user", $$v)
-                      },
-                      expression: "inviteSessionData.other_user"
-                    }
-                  })
-                ],
-                1
-              )
-            ]),
-            _c("div", { staticClass: "field" }, [
-              _c("label", { staticClass: "checkbox" }, [
-                _c("input", {
-                  attrs: { type: "file" },
-                  on: { change: _vm.setAttachment }
-                }),
-                _vm._v("  ضمیمه")
+                    _c("template", { slot: "bottom-left" }, [
+                      _vm._v(
+                        "نفرات انتخاب شده : " +
+                          _vm._s(_vm.userListTable.checkedRows.length) +
+                          " نفر"
+                      )
+                    ])
+                  ],
+                  2
+                )
               ])
             ]),
             _c("div", { staticClass: "field" }, [
-              _c("label", { staticClass: "label" }, [_vm._v("توضیحات")]),
+              _c("div", { staticClass: "panel" }, [
+                _c("div", { staticClass: "panel-heading" }, [
+                  _vm._v("مدعوین (به غیر از افراد حاضر و سایر اعضاء)")
+                ]),
+                _c(
+                  "div",
+                  { staticClass: "panel-block" },
+                  [
+                    _c("multi-text-member", {
+                      model: {
+                        value: _vm.inviteSessionData.other_user,
+                        callback: function($$v) {
+                          _vm.$set(_vm.inviteSessionData, "other_user", $$v)
+                        },
+                        expression: "inviteSessionData.other_user"
+                      }
+                    })
+                  ],
+                  1
+                )
+              ])
+            ]),
+            _c("div", { staticClass: "field" }, [
+              _c("div", { staticClass: "panel" }, [
+                _c("div", { staticClass: "panel-heading" }, [
+                  _vm._v("فایل های ضمیمه")
+                ]),
+                _c(
+                  "div",
+                  { staticClass: "panel-block" },
+                  [
+                    _c("file-upload", {
+                      ref: "fileUpload",
+                      attrs: { "old-files": _vm.oldFiles }
+                    })
+                  ],
+                  1
+                )
+              ])
+            ]),
+            _c("div", { staticClass: "field" }, [
+              _c("label", { staticClass: "label" }, [_vm._v("تکالیف حاضرین")]),
               _c("div", { staticClass: "control" }, [
                 _c("textarea", {
                   directives: [
@@ -49105,7 +49209,7 @@ var render = function() {
                     }
                   ],
                   staticClass: "textarea",
-                  attrs: { placeholder: "توضیحات" },
+                  attrs: { placeholder: "تکالیف حاضرین" },
                   domProps: { value: _vm.inviteSessionData.body },
                   on: {
                     input: function($event) {
@@ -49120,6 +49224,151 @@ var render = function() {
                     }
                   }
                 })
+              ])
+            ])
+          ]),
+          _c("fieldset", { staticClass: "fieldset" }, [
+            _c("legend", [_vm._v("جلسه")]),
+            _c("div", { staticClass: "field" }, [
+              _c("label", { staticClass: "label" }, [_vm._v("خلاصه مذاکرات")]),
+              _c("div", { staticClass: "control" }, [
+                _c("textarea", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.inviteSessionData.intro,
+                      expression: "inviteSessionData.intro"
+                    }
+                  ],
+                  staticClass: "textarea",
+                  attrs: { placeholder: "خلاصه مذاکرات" },
+                  domProps: { value: _vm.inviteSessionData.intro },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.inviteSessionData,
+                        "intro",
+                        $event.target.value
+                      )
+                    }
+                  }
+                })
+              ]),
+              _c("div", { staticClass: "field" }, [
+                _c("div", { staticClass: "panel" }, [
+                  _c("div", { staticClass: "panel-heading" }, [
+                    _vm._v("مصوبات")
+                  ]),
+                  _c(
+                    "div",
+                    { staticClass: "panel-block" },
+                    [
+                      _c("multi-text-approv", {
+                        model: {
+                          value: _vm.inviteSessionData.approv,
+                          callback: function($$v) {
+                            _vm.$set(_vm.inviteSessionData, "approv", $$v)
+                          },
+                          expression: "inviteSessionData.approv"
+                        }
+                      })
+                    ],
+                    1
+                  )
+                ])
+              ]),
+              _c("div", { staticClass: "field" }, [
+                _c("div", { staticClass: "panel" }, [
+                  _c("div", { staticClass: "panel-heading" }, [
+                    _vm._v(" اعضای حاضر در جلسه")
+                  ]),
+                  _c(
+                    "div",
+                    { staticClass: "panel-block" },
+                    [
+                      _c("b-table", {
+                        staticClass: "table is-fullwidth",
+                        attrs: {
+                          data: _vm.users,
+                          columns: _vm.presentUserListTable.columns,
+                          "checked-rows": _vm.presentUserListTable.checkedRows,
+                          checkable: "",
+                          paginated: _vm.presentUserListTable.isPaginated,
+                          "per-page": _vm.presentUserListTable.perPage,
+                          "current-page": _vm.presentUserListTable.currentPage,
+                          "pagination-simple":
+                            _vm.presentUserListTable.isPaginationSimple,
+                          "pagination-position":
+                            _vm.presentUserListTable.paginationPosition,
+                          "checkbox-position":
+                            _vm.presentUserListTable.checkboxPosition
+                        },
+                        on: {
+                          "update:checkedRows": function($event) {
+                            return _vm.$set(
+                              _vm.presentUserListTable,
+                              "checkedRows",
+                              $event
+                            )
+                          },
+                          "update:checked-rows": function($event) {
+                            return _vm.$set(
+                              _vm.presentUserListTable,
+                              "checkedRows",
+                              $event
+                            )
+                          },
+                          "update:currentPage": function($event) {
+                            return _vm.$set(
+                              _vm.presentUserListTable,
+                              "currentPage",
+                              $event
+                            )
+                          },
+                          "update:current-page": function($event) {
+                            return _vm.$set(
+                              _vm.presentUserListTable,
+                              "currentPage",
+                              $event
+                            )
+                          }
+                        }
+                      }),
+                      _c("template", { slot: "bottom-left" }, [
+                        _vm._v(
+                          "اعضای حاضر شده : " +
+                            _vm._s(
+                              _vm.presentUserListTable.checkedRows.length
+                            ) +
+                            " نفر"
+                        )
+                      ])
+                    ],
+                    2
+                  )
+                ])
+              ]),
+              _c("div", { staticClass: "field" }, [
+                _c("div", { staticClass: "panel" }, [
+                  _c("div", { staticClass: "panel-heading" }, [
+                    _vm._v("مستندات جلسه")
+                  ]),
+                  _c(
+                    "div",
+                    { staticClass: "panel-block" },
+                    [
+                      _c("file-upload", {
+                        ref: "fileUpload",
+                        attrs: { "old-files": _vm.oldFiles }
+                      })
+                    ],
+                    1
+                  )
+                ])
               ])
             ])
           ]),
@@ -49170,132 +49419,7 @@ var render = function() {
                 }
               }),
               _vm._v("  فعال")
-            ])
-          ]),
-          _c("div", { staticClass: "field" }, [
-            _c("label", { staticClass: "label" }, [_vm._v("مقدمه")]),
-            _c("div", { staticClass: "control" }, [
-              _c("textarea", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.inviteSessionData.intro,
-                    expression: "inviteSessionData.intro"
-                  }
-                ],
-                staticClass: "textarea",
-                attrs: { placeholder: "مقدمه" },
-                domProps: { value: _vm.inviteSessionData.intro },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(
-                      _vm.inviteSessionData,
-                      "intro",
-                      $event.target.value
-                    )
-                  }
-                }
-              })
-            ])
-          ]),
-          _c("fieldset", [
-            _c("legend", [_vm._v("مصوبات")]),
-            _c(
-              "div",
-              { staticClass: "field" },
-              [
-                _c("multi-text-approv", {
-                  model: {
-                    value: _vm.inviteSessionData.approv,
-                    callback: function($$v) {
-                      _vm.$set(_vm.inviteSessionData, "approv", $$v)
-                    },
-                    expression: "inviteSessionData.approv"
-                  }
-                })
-              ],
-              1
-            )
-          ]),
-          _c("div", { staticClass: "field" }, [
-            _c("label", { staticClass: "label" }, [
-              _vm._v("اعضای حاضر در جلسه")
             ]),
-            _c(
-              "div",
-              { staticClass: "multi-checkboxes" },
-              _vm._l(_vm.users, function(user, userIndex) {
-                return _c("label", { staticClass: "checkbox column is-12" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.inviteSessionData.user_list[user._id],
-                        expression: "inviteSessionData.user_list[user._id]"
-                      }
-                    ],
-                    attrs: { type: "checkbox", cehcked: true },
-                    domProps: {
-                      value: user._id,
-                      checked: Array.isArray(
-                        _vm.inviteSessionData.user_list[user._id]
-                      )
-                        ? _vm._i(
-                            _vm.inviteSessionData.user_list[user._id],
-                            user._id
-                          ) > -1
-                        : _vm.inviteSessionData.user_list[user._id]
-                    },
-                    on: {
-                      change: function($event) {
-                        var $$a = _vm.inviteSessionData.user_list[user._id],
-                          $$el = $event.target,
-                          $$c = $$el.checked ? true : false
-                        if (Array.isArray($$a)) {
-                          var $$v = user._id,
-                            $$i = _vm._i($$a, $$v)
-                          if ($$el.checked) {
-                            $$i < 0 &&
-                              _vm.$set(
-                                _vm.inviteSessionData.user_list,
-                                user._id,
-                                $$a.concat([$$v])
-                              )
-                          } else {
-                            $$i > -1 &&
-                              _vm.$set(
-                                _vm.inviteSessionData.user_list,
-                                user._id,
-                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                              )
-                          }
-                        } else {
-                          _vm.$set(
-                            _vm.inviteSessionData.user_list,
-                            user._id,
-                            $$c
-                          )
-                        }
-                      }
-                    }
-                  }),
-                  _vm._v(
-                    "  " +
-                      _vm._s(user.name) +
-                      " - " +
-                      _vm._s(user.profile.first_name) +
-                      " " +
-                      _vm._s(user.profile.last_name)
-                  )
-                ])
-              }),
-              0
-            ),
             _c("div", { staticClass: "field is-grouped" }, [
               _c(
                 "div",
@@ -49404,56 +49528,6 @@ var render = function() {
           staticClass: "form-small"
         },
         [
-          _c("div", { staticClass: "field" }, [
-            _c("label", { staticClass: "label" }),
-            _c("div", { staticClass: "control" }, [
-              _c("div", { staticClass: "select is-primary" }, [
-                _c(
-                  "select",
-                  {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.inviteSessionData.departments,
-                        expression: "inviteSessionData.departments"
-                      }
-                    ],
-                    on: {
-                      change: function($event) {
-                        var $$selectedVal = Array.prototype.filter
-                          .call($event.target.options, function(o) {
-                            return o.selected
-                          })
-                          .map(function(o) {
-                            var val = "_value" in o ? o._value : o.value
-                            return val
-                          })
-                        _vm.$set(
-                          _vm.inviteSessionData,
-                          "departments",
-                          $event.target.multiple
-                            ? $$selectedVal
-                            : $$selectedVal[0]
-                        )
-                      }
-                    }
-                  },
-                  _vm._l(_vm.departments, function(
-                    department,
-                    departmentIndex
-                  ) {
-                    return _c(
-                      "option",
-                      { domProps: { value: department._id } },
-                      [_vm._v(_vm._s(department.title))]
-                    )
-                  }),
-                  0
-                )
-              ])
-            ])
-          ]),
           _c("div", { staticClass: "field" }, [
             _c("div", { staticClass: "panel" }, [
               _c("div", { staticClass: "panel-heading" }, [
@@ -49630,7 +49704,7 @@ var render = function() {
             ])
           ]),
           _c("div", { staticClass: "field" }, [
-            _c("label", { staticClass: "label" }, [_vm._v("توضیحات")]),
+            _c("label", { staticClass: "label" }, [_vm._v("تکالیف حاضرین")]),
             _c("div", { staticClass: "control" }, [
               _c("textarea", {
                 directives: [
@@ -52367,7 +52441,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/pages/invite-session/index/index.js */"./resources/js/pages/invite-session/index/index.js");
+module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/invite-session/index/index.js */"./resources/js/pages/invite-session/index/index.js");
 
 
 /***/ })

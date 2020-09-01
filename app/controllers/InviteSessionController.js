@@ -6,7 +6,7 @@ const SMSSender = use("app/helpers/sms-sender-helper");
 /**
  * Dep cat controller
  */
-function InviteSession() {}
+function InviteSession() { }
 module.exports = InviteSession;
 
 /**
@@ -129,37 +129,40 @@ InviteSession.editInviteSessionData = async function editInviteSessionData(
 InviteSession.update = async function update(req, res, next) {
     let data = {};
 
-    const files = req.body.files || [];
-    let fileList = [];
+    console.log(JSON.stringify(req.body, null, 2))
 
-    await files.forEach(async (element) => {
-        const fileData = element;
-        await FileHelper.insertFileData(fileData);
-    });
+    // const files = req.body.files || [];
+    // let fileList = [];
 
-    data = {
-        _id: req.body._id,
-        body: req.body.body,
-        agenda: JSON.parse(req.body.agenda || "[]"),
-        place: req.body.place,
-        date: req.body.date,
-        user_list: JSON.parse(req.body.user_list),
-        other_user: JSON.parse(req.body.other_user || "[]"),
-        user_id: req.session.auth.userId,
-        is_active: req.body.is_active,
-        department_id: req.body.department_id,
-        files: fileList,
-    };
+    // await files.forEach(async (element) => {
+    //     const fileData = element;
+    //     await FileHelper.insertFileData(fileData);
+    // });
 
-    let result = await InviteSessionHelper.updateInviteSessionData(data);
-    result = {
-        success: true,
-        data: data,
-    };
 
-    res.status(200)
-        .send(result)
-        .end();
+    // data = {
+    //     _id: req.body._id,
+    //     body: req.body.body,
+    //     agenda: JSON.parse(req.body.agenda || "[]"),
+    //     place: req.body.place,
+    //     date: req.body.date,
+    //     user_list: JSON.parse(req.body.user_list),
+    //     other_user: JSON.parse(req.body.other_user || "[]"),
+    //     user_id: req.session.auth.userId,
+    //     is_active: req.body.is_active,
+    //     department_id: req.body.department_id,
+    //     files: fileList,
+    // };
+
+    // let result = await InviteSessionHelper.updateInviteSessionData(data);
+    // result = {
+    //     success: true,
+    //     data: data,
+    // };
+
+    // res.status(200)
+    //     .send(result)
+    //     .end();
 };
 
 /**

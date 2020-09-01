@@ -11,15 +11,6 @@
         h1 در حال بارگذاری
     .form-small(v-show="! isLoadingMode")
         .field
-            label.label
-            .control
-                .select.is-primary
-                    select(v-model="inviteSessionData.departments")
-                        option(
-                            v-for="(department, departmentIndex) in departments",
-                            :value="department._id"
-                        ) {{ department.title }}
-        .field
             .panel
                 .panel-heading
                     | دستور جلسه
@@ -78,7 +69,7 @@
                 .panel-block
                     file-upload(ref="fileUpload", :old-files="oldFiles")
         .field
-            label.label توضیحات
+            label.label تکالیف حاضرین
             .control
                 textarea.textarea(
                     placeholder="تکالیف حاضرین",
@@ -165,7 +156,7 @@ module.exports = {
         isPaginationSimple: false,
         paginationPosition: "bottom",
         currentPage: 1,
-        perPage: 3,
+        perPage: 10,
         columns: [
             {
                 field: "name",

@@ -14,7 +14,7 @@
                             input.input(type='text', v-model='item.responsible', @input='updateValue')
                 .column.is-4
                     .field
-                        label.label زمان پیگیری
+                        label.label مهلت
                         .control
                             input.input(type='text', v-model='item.time', @input='updateValue')
                 .column.is-2

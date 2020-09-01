@@ -46620,6 +46620,7 @@ input {
   display: block;
   padding: 1.25rem;
   border: 1px solid #ccc;
+  margin-bottom: 30px;
 }
 
 .fieldset > legend {

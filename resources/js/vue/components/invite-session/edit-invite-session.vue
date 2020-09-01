@@ -6,64 +6,114 @@
         .column.is-full(v-show="isLoadingMode")
             h1 در حال بارگذاری
         .form-small(v-show="! isLoadingMode")
-            .field
-                label.label
-                .control
-                    .select.is-primary
-                        select(v-model="inviteSessionData.department_id")
-                            option(v-for='(department, departmentIndex) in departments',
-                                :value="department._id") {{ department.title }}
-            .field
-                multi-text(v-model='inviteSessionData.agenda')
-            .field
-                label.label مکان
-                .control
-                    input.input(type='text', placeholder='مکان', v-model='inviteSessionData.place' required)
-
-            .field
-                label.label تاریخ
-                .control
-                    date-picker(v-model='inviteSessionData.date' format="YYYY-MM-DD HH:mm:ss"
-                    display-format="jDD/jMM/jYYYY HH:mm" type="datetime" required)
-
-            .field
-                label.label حاضرین جلسه
-                .multi-checkboxes
-                    label.checkbox.column.is-12(v-for='(user, userIndex) in users')
-                        input(type='checkbox', v-model="inviteSessionData.user_list[user._id]", :value="user._id")
-                        |   {{ user.name }} - {{ user.profile.first_name }} {{ user.profile.last_name }}
-            fieldset
-                legend مدعوین
+            fieldset.fieldset
+                legend دعوتنامه
                 .field
-                    multi-text-member(v-model='inviteSessionData.other_user')
-            .field
-                label.checkbox
-                    input(type='file', @change="setAttachment")
-                    |   ضمیمه
-            .field
-                label.label توضیحات
-                .control
-                    textarea.textarea(placeholder='توضیحات', v-model='inviteSessionData.body')
+                    .panel
+                        .panel-heading
+                            | دستور جلسه
+                        .panel-block
+                            multi-text(v-model='inviteSessionData.agenda')
+                .field
+                    label.label مکان
+                    .control
+                        input.input(
+                            type='text',
+                            placeholder='مکان',
+                            v-model='inviteSessionData.place'
+                            required
+                        )
+
+                .field
+                    label.label تاریخ
+                    .control
+                        date-picker(
+                            v-model='inviteSessionData.date'
+                            format="YYYY-MM-DD HH:mm:ss"
+                            display-format="jDD/jMM/jYYYY HH:mm"
+                            type="datetime"
+                            required
+                        )
+
+                .field
+                    .panel
+                        .panel-heading
+                            | حاضرین جلسه
+                        .panel-block
+                            b-table.table.is-fullwidth(
+                                :data="users",
+                                :columns="userListTable.columns",
+                                :checked-rows.sync="allUserListCheckedRows",
+                                checkable,
+                                :paginated="userListTable.isPaginated",
+                                :per-page="userListTable.perPage",
+                                :current-page.sync="userListTable.currentPage",
+                                :pagination-simple="userListTable.isPaginationSimple",
+                                :pagination-position="userListTable.paginationPosition",
+                                :checkbox-position="userListTable.checkboxPosition"
+                            )
+                            template(slot="bottom-left")
+                                | نفرات انتخاب شده : {{ userListTable.checkedRows.length }} نفر
+                .field
+                    .panel
+                        .panel-heading
+                            | مدعوین (به غیر از افراد حاضر و سایر اعضاء)
+                        .panel-block
+                            multi-text-member(v-model='inviteSessionData.other_user')
+                .field
+                    .panel
+                        .panel-heading
+                            | فایل های ضمیمه
+                        .panel-block
+                            file-upload(ref="fileUpload", :old-files="oldFiles")
+                .field
+                    label.label تکالیف حاضرین
+                    .control
+                        textarea.textarea(placeholder='تکالیف حاضرین', v-model='inviteSessionData.body')
+
+
+            fieldset.fieldset
+                legend جلسه
+                .field
+                    label.label خلاصه مذاکرات
+                    .control
+                        textarea.textarea(placeholder='مقدمه', v-model='inviteSessionData.intro')
+                .field
+                    .panel
+                        .panel-heading
+                            | مصوبات
+                        .panel-block
+                            multi-text-approv(v-model='inviteSessionData.approv')
+
+                .field
+                    .panel
+                        .panel-heading
+                            |  اعضای حاضر در جلسه
+                        .panel-block
+                            b-table.table.is-fullwidth(
+                                :data="allUserListCheckedRows",
+                                :columns="presentUserListTable.columns",
+                                :checked-rows.sync="allPresentUserCheckedRows",
+                                checkable,
+                                :paginated="presentUserListTable.isPaginated",
+                                :per-page="presentUserListTable.perPage",
+                                :current-page.sync="presentUserListTable.currentPage",
+                                :pagination-simple="presentUserListTable.isPaginationSimple",
+                                :pagination-position="presentUserListTable.paginationPosition",
+                                :checkbox-position="presentUserListTable.checkboxPosition"
+                            )
+                            template(slot="bottom-left")
+                                | اعضای حاضر شده : {{ presentUserListTable.checkedRows.length }} نفر
+                .field
+                    .panel
+                        .panel-heading
+                            | مستندات جلسه
+                        .panel-block
+                            file-upload(ref="fileUpload", :old-files="oldFiles")
             .field
                 label.checkbox
                     input(type='checkbox', v-model="inviteSessionData.isActive")
                     |   فعال
-
-            .field
-                label.label مقدمه
-                .control
-                    textarea.textarea(placeholder='مقدمه', v-model='inviteSessionData.intro')
-            fieldset
-                legend مصوبات
-                .field
-                    multi-text-approv(v-model='inviteSessionData.approv')
-
-            .field
-                label.label اعضای حاضر در جلسه
-                .multi-checkboxes
-                    label.checkbox.column.is-12(v-for='(user, userIndex) in users')
-                        input(type='checkbox', v-model="inviteSessionData.user_list[user._id]", :value="user._id", :cehcked="true")
-                        |   {{ user.name }} - {{ user.profile.first_name }} {{ user.profile.last_name }}
                 .field.is-grouped
                     .control(v-show="! isLoadingMode")
                         a.button.is-link.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
@@ -81,6 +131,7 @@ const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
 const MultiText = require("VUE-COMPONENTS/general/multi-text.vue").default;
 const MultiTextApprov = require("VUE-COMPONENTS/invite-session/multi-text-approv.vue").default;
 const MultiTextMember = require("VUE-COMPONENTS/invite-session/multi-text-member.vue").default;
+const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 
 module.exports = {
     name: "EditInviteSession",
@@ -89,13 +140,17 @@ module.exports = {
         DatePicker: VuePersianDatetimePicker,
         MultiText,
         MultiTextApprov,
-        MultiTextMember
+        MultiTextMember,
+        FileUpload
     },
 
     data: () => ({
         ENUMS,
         departments: [],
         users: [],
+        files: [],
+        deletedOldFiles: [],
+        oldFiles: [],
         inviteSessionData: {
             title: null,
             body: null,
@@ -105,11 +160,68 @@ module.exports = {
             department_id: null,
             files: {},
             user_list: {},
+            present_user_list: {},
             isActive: false,
             intro: null,
             approv: [],
-            other_user: []
+            other_user: [],
+            deletedOldFiles: []
         },
+
+        userListTable: {
+            checkedRows: [],
+            checkboxPosition: "left",
+            isPaginated: true,
+            isPaginationSimple: false,
+            paginationPosition: "bottom",
+            currentPage: 1,
+            perPage: 10,
+            columns: [
+                {
+                    field: "name",
+                    label: "نام کاربری",
+                    searchable: true,
+                },
+                {
+                    field: "profile.first_name",
+                    label: "نام",
+                    searchable: true,
+                },
+                {
+                    field: "profile.last_name",
+                    label: "نام خانوادگی",
+                    searchable: true,
+                },
+            ],
+        },
+
+        presentUserListTable: {
+            checkedRows: [],
+            checkboxPosition: "left",
+            isPaginated: true,
+            isPaginationSimple: false,
+            paginationPosition: "bottom",
+            currentPage: 1,
+            perPage: 10,
+            columns: [
+                {
+                    field: "name",
+                    label: "نام کاربری",
+                    searchable: true,
+                },
+                {
+                    field: "profile.first_name",
+                    label: "نام",
+                    searchable: true,
+                },
+                {
+                    field: "profile.last_name",
+                    label: "نام خانوادگی",
+                    searchable: true,
+                },
+            ],
+        },
+
         notificationMessage: null,
         notificationType: "is-info",
         showLoadingFlag: false
@@ -145,20 +257,35 @@ module.exports = {
     },
 
     computed: {
+        allUserListCheckedRows: {
+            set: function(value) {
+                Vue.set(this.userListTable, "checkedRows", value);
+                ``;
+            },
+            get: function() {
+                if (null == this.userListTable.checkedRows) {
+                    Vue.set(this.userListTable, "checkedRows", []);
+                }
+                return this.userListTable.checkedRows;
+            }
+        },
+        allPresentUserCheckedRows: {
+            set: function(value) {
+                Vue.set(this.presentUserListTable, "checkedRows", value);
+                ``;
+            },
+            get: function() {
+                if (null == this.presentUserListTable.checkedRows) {
+                    Vue.set(this.presentUserListTable, "checkedRows", []);
+                }
+                return this.presentUserListTable.checkedRows;
+            }
+        },
         isLoadingMode: state => state.showLoadingFlag == true,
         showNotification: state => state.notificationMessage != null
     },
 
     methods: {
-        /**
-         * Set attachments
-         */
-        setAttachment(sender) {
-            const files = sender.target.files;
-
-            Vue.set(this, "files", files);
-        },
-
         /**
          * Load specific invite session
          */
@@ -170,33 +297,29 @@ module.exports = {
                 agenda: data.agenda,
                 place: data.place,
                 date: data.date,
-                department_id: data.department_id,
+                department_id: data.dep._id,
                 files: data.files,
                 user_list: data.user_list,
+                present_user_list: data.present_user_list,
                 isActive: data.is_active,
                 approv: data.approv,
                 other_user: data.other_user
             };
 
-            try {
-                temp.agenda = JSON.parse(data.agenda);
-            } catch (ex) {
-                temp.agenda = [];
-            }
-
-            try {
-                temp.approv = JSON.parse(data.approv);
-            } catch (ex) {
-                temp.approv = [];
-            }
-
-            try {
-                temp.other_user = JSON.parse(data.other_user);
-            } catch (ex) {
-                temp.other_user = [];
-            }
-
+            Vue.set(this, "oldFiles", data.files);
             Vue.set(this, "inviteSessionData", temp);
+            this.$refs.fileUpload.updateOldFiles(data.files);
+
+            const userslist = this.inviteSessionData.user_list;
+            let checkedUsers = this.users.filter(
+                u => userslist.indexOf(u._id) > -1
+            );
+            Vue.set(this, "allUserListCheckedRows", checkedUsers);
+            const presentUsersList = checkedUsers;
+            let checkedPresentUsers = this.allUserListCheckedRows.filter(
+                u => presentUsersList.indexOf(u._id) > -1
+            );
+            Vue.set(this, "allPresentUserCheckedRows", checkedUsers);
         },
 
         /**
@@ -283,18 +406,25 @@ module.exports = {
             }
 
             this.showLoading();
-
+            const deletedFiles = this.$refs.fileUpload.getDeletedFiles();
+            const newFiles = this.$refs.fileUpload.getNewFiles();
+            let newUploaded = newFiles.map(x => x.file);
+            Vue.set(this, "files", newUploaded);
+            let deleteUploaded = deletedFiles.map(x => x._id);
+            Vue.set(this, "deletedOldFiles", deleteUploaded);
             let inviteSessionData = {
                 _id: this.inviteSessionData._id,
                 body: this.inviteSessionData.body,
                 agenda: JSON.stringify(this.inviteSessionData.agenda),
                 place: this.inviteSessionData.place,
                 date: this.inviteSessionData.date,
-                department_id: this.inviteSessionData.departments,
+                department_id: this.inviteSessionData.department_id,
                 user_list: this.inviteSessionData.user_list,
                 is_active: this.inviteSessionData.isActive,
                 approv: JSON.stringify(this.inviteSessionData.approv),
-                other_user: JSON.stringify(this.inviteSessionData.other_user)
+                other_user: JSON.stringify(this.inviteSessionData.other_user),
+                files: this.files,
+                deletedOldFiles: this.deletedOldFiles
             };
 
             inviteSessionData.files = this.files[0];
@@ -307,9 +437,13 @@ module.exports = {
             this.showLoading();
 
             const url = this.editUrl.replace("$id$", inviteSessionData._id);
-            AxiosHelper.send("patch", url, inviteSessionData)
+            AxiosHelper.send("patch", url, inviteSessionData, {
+                sendAsFormData: true,
+                filesArray: "files"
+            })
                 .then(res => {
-                    const data = JSON.parse(res.config.data);
+                    //const data = JSON.parse(res.config.data);
+                    const data = res.data;
                     this.$emit("on-update", {
                         sender: this,
                         data

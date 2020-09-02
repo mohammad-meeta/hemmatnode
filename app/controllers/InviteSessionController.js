@@ -43,7 +43,7 @@ InviteSession.paginateInviteSession = async function paginateInviteSession(
             req,
             group
         );
-        let count = data.data;
+        let count = data;
 
         data = await InviteSessionHelper.loadAllInviteSessionData(
             req,
@@ -58,7 +58,6 @@ InviteSession.paginateInviteSession = async function paginateInviteSession(
                 count: count,
             },
         };
-
         res.status(200)
             .send(result)
             .end();
@@ -155,29 +154,37 @@ InviteSession.update = async function update(req, res, next) {
     const deletedOldFiles = JSON.parse(req.body.deletedOldFiles);
     let oldFiles = JSON.parse(req.body.oldFiles);
 
-    console.log(deletedOldFiles)
-    console.log("***********************************************")
-    console.log(oldFiles)
-    console.log("***********************************************")
-
-    for (let index = 0; index < deletedOldFiles.length; index++) {
-        const index = oldFiles.indexOf(deletedOldFiles[index]);
-        if (index > -1) {
-            oldFiles.splice(index, 1);
-        }
-    }
-
     for (let index = 0; index < oldFiles.length; index++) {
         const element = oldFiles[index];
-
         const tempFileData = {
             file_id: element._id,
             deleted_at: null,
         };
         fileList.push(tempFileData);
-
     }
-    console.log("***********************************************")
+
+    let inviteRes = await InviteSessionHelper.loadInviteSessionData(req.body._id);
+    const InviteSessionFiles = inviteRes.files;
+
+    for (let index = 0; index < InviteSessionFiles.length; index++) {
+        const element = InviteSessionFiles[index];
+        for (let oil = 0; oil < fileList.length; oil++) {
+            const Fele = fileList[oil];
+            if (Fele.file_id == element.file_id) {
+                Fele.deleted_at = element.deleted_at
+            }
+        }
+    }
+
+    for (let index = 0; index < deletedOldFiles.length; index++) {
+        const element = deletedOldFiles[index];
+        for (let oil = 0; oil < fileList.length; oil++) {
+            const Fele = fileList[oil];
+            if (Fele.file_id == element) {
+                Fele.deleted_at = Date()
+            }
+        }
+    }
 
     data = {
         _id: req.body._id,
@@ -192,7 +199,7 @@ InviteSession.update = async function update(req, res, next) {
         department_id: req.body.department_id,
         files: fileList,
     };
-    console.log(JSON.stringify(data, null, 2));
+
     let result = await InviteSessionHelper.updateInviteSessionData(data);
     result = {
         success: true,

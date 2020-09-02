@@ -2173,9 +2173,9 @@ module.exports = {
 //
 //
 //
-//
-//
 
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var AxiosHelper = __webpack_require__(/*! JS-HELPERS/axios-helper */ "./resources/js/helpers/axios-helper.js");
 
@@ -2457,10 +2457,10 @@ module.exports = {
       inviteSessionData.present_user_list = t;
       this.showLoading();
       var url = this.registerUrl;
-      AxiosHelper.send("post", url, inviteSessionData, {
+      AxiosHelper.send("post", url, inviteSessionData, _defineProperty({
         sendAsFormData: true,
         filesArray: "files"
-      }).then(function (res) {
+      }, "filesArray", "signatured")).then(function (res) {
         var data = res.data;
 
         if (data.success) {
@@ -49287,118 +49287,114 @@ var render = function() {
                     }
                   }
                 })
-              ]),
-              _c("div", { staticClass: "field" }, [
-                _c("div", { staticClass: "panel" }, [
-                  _c("div", { staticClass: "panel-heading" }, [
-                    _vm._v("مصوبات")
-                  ]),
-                  _c(
-                    "div",
-                    { staticClass: "panel-block" },
-                    [
-                      _c("multi-text-approv", {
-                        model: {
-                          value: _vm.inviteSessionData.approv,
-                          callback: function($$v) {
-                            _vm.$set(_vm.inviteSessionData, "approv", $$v)
-                          },
-                          expression: "inviteSessionData.approv"
-                        }
-                      })
-                    ],
-                    1
-                  )
-                ])
-              ]),
-              _c("div", { staticClass: "field" }, [
-                _c("div", { staticClass: "panel" }, [
-                  _c("div", { staticClass: "panel-heading" }, [
-                    _vm._v(" اعضای حاضر در جلسه")
-                  ]),
-                  _c(
-                    "div",
-                    { staticClass: "panel-block" },
-                    [
-                      _c("b-table", {
-                        staticClass: "table is-fullwidth",
-                        attrs: {
-                          data: _vm.users,
-                          columns: _vm.presentUserListTable.columns,
-                          "checked-rows": _vm.presentUserListTable.checkedRows,
-                          checkable: "",
-                          paginated: _vm.presentUserListTable.isPaginated,
-                          "per-page": _vm.presentUserListTable.perPage,
-                          "current-page": _vm.presentUserListTable.currentPage,
-                          "pagination-simple":
-                            _vm.presentUserListTable.isPaginationSimple,
-                          "pagination-position":
-                            _vm.presentUserListTable.paginationPosition,
-                          "checkbox-position":
-                            _vm.presentUserListTable.checkboxPosition
+              ])
+            ]),
+            _c("div", { staticClass: "field" }, [
+              _c("div", { staticClass: "panel" }, [
+                _c("div", { staticClass: "panel-heading" }, [_vm._v("مصوبات")]),
+                _c(
+                  "div",
+                  { staticClass: "panel-block" },
+                  [
+                    _c("multi-text-approv", {
+                      model: {
+                        value: _vm.inviteSessionData.approv,
+                        callback: function($$v) {
+                          _vm.$set(_vm.inviteSessionData, "approv", $$v)
                         },
-                        on: {
-                          "update:checkedRows": function($event) {
-                            return _vm.$set(
-                              _vm.presentUserListTable,
-                              "checkedRows",
-                              $event
-                            )
-                          },
-                          "update:checked-rows": function($event) {
-                            return _vm.$set(
-                              _vm.presentUserListTable,
-                              "checkedRows",
-                              $event
-                            )
-                          },
-                          "update:currentPage": function($event) {
-                            return _vm.$set(
-                              _vm.presentUserListTable,
-                              "currentPage",
-                              $event
-                            )
-                          },
-                          "update:current-page": function($event) {
-                            return _vm.$set(
-                              _vm.presentUserListTable,
-                              "currentPage",
-                              $event
-                            )
-                          }
+                        expression: "inviteSessionData.approv"
+                      }
+                    })
+                  ],
+                  1
+                )
+              ])
+            ]),
+            _c("div", { staticClass: "field" }, [
+              _c("div", { staticClass: "panel" }, [
+                _c("div", { staticClass: "panel-heading" }, [
+                  _vm._v(" اعضای حاضر در جلسه")
+                ]),
+                _c(
+                  "div",
+                  { staticClass: "panel-block" },
+                  [
+                    _c("b-table", {
+                      staticClass: "table is-fullwidth",
+                      attrs: {
+                        data: _vm.users,
+                        columns: _vm.presentUserListTable.columns,
+                        "checked-rows": _vm.userListTable.checkedRows,
+                        checkable: "",
+                        paginated: _vm.presentUserListTable.isPaginated,
+                        "per-page": _vm.presentUserListTable.perPage,
+                        "current-page": _vm.presentUserListTable.currentPage,
+                        "pagination-simple":
+                          _vm.presentUserListTable.isPaginationSimple,
+                        "pagination-position":
+                          _vm.presentUserListTable.paginationPosition,
+                        "checkbox-position":
+                          _vm.presentUserListTable.checkboxPosition
+                      },
+                      on: {
+                        "update:checkedRows": function($event) {
+                          return _vm.$set(
+                            _vm.userListTable,
+                            "checkedRows",
+                            $event
+                          )
+                        },
+                        "update:checked-rows": function($event) {
+                          return _vm.$set(
+                            _vm.userListTable,
+                            "checkedRows",
+                            $event
+                          )
+                        },
+                        "update:currentPage": function($event) {
+                          return _vm.$set(
+                            _vm.presentUserListTable,
+                            "currentPage",
+                            $event
+                          )
+                        },
+                        "update:current-page": function($event) {
+                          return _vm.$set(
+                            _vm.presentUserListTable,
+                            "currentPage",
+                            $event
+                          )
                         }
-                      }),
-                      _c("template", { slot: "bottom-left" }, [
-                        _vm._v(
-                          "اعضای حاضر شده : " +
-                            _vm._s(
-                              _vm.presentUserListTable.checkedRows.length
-                            ) +
-                            " نفر"
-                        )
-                      ])
-                    ],
-                    2
-                  )
-                ])
-              ]),
-              _c("div", { staticClass: "field" }, [
-                _c("div", { staticClass: "panel" }, [
-                  _c("div", { staticClass: "panel-heading" }, [
-                    _vm._v("مستندات جلسه")
-                  ]),
-                  _c(
-                    "div",
-                    { staticClass: "panel-block" },
-                    [
-                      _c("file-upload", {
-                        ref: "fileUpload",
-                        attrs: { "old-files": _vm.oldFiles }
-                      })
-                    ],
-                    1
-                  )
-                ])
+                      }
+                    }),
+                    _c("template", { slot: "bottom-left" }, [
+                      _vm._v(
+                        "اعضای حاضر شده : " +
+                          _vm._s(_vm.presentUserListTable.checkedRows.length) +
+                          " نفر"
+                      )
+                    ])
+                  ],
+                  2
+                )
+              ])
+            ]),
+            _c("div", { staticClass: "field" }, [
+              _c("div", { staticClass: "panel" }, [
+                _c("div", { staticClass: "panel-heading" }, [
+                  _vm._v("مستندات جلسه")
+                ]),
+                _c(
+                  "div",
+                  { staticClass: "panel-block" },
+                  [
+                    _c("file-upload", {
+                      ref: "fileUpload",
+                      attrs: { "old-files": _vm.oldFiles }
+                    })
+                  ],
+                  1
+                )
               ])
             ])
           ]),

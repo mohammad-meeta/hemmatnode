@@ -1043,6 +1043,7 @@ module.exports = {
         date: null,
         department_id: null,
         files: {},
+        oldFiles: [],
         user_list: {},
         isActive: false,
         other_user: [],
@@ -1261,6 +1262,7 @@ module.exports = {
         is_active: this.inviteSessionData.isActive,
         other_user: JSON.stringify(this.inviteSessionData.other_user),
         files: this.files,
+        oldFiles: this.oldFiles,
         deletedOldFiles: this.deletedOldFiles
       };
       var t = Object.keys(inviteSessionData.user_list).filter(function (key) {
@@ -52469,7 +52471,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/pages/invite-session/index/index.js */"./resources/js/pages/invite-session/index/index.js");
+module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/invite-session/index/index.js */"./resources/js/pages/invite-session/index/index.js");
 
 
 /***/ })

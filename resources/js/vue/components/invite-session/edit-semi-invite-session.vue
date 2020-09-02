@@ -110,6 +110,7 @@ module.exports = {
             date: null,
             department_id: null,
             files: {},
+            oldFiles: [],
             user_list: {},
             isActive: false,
             other_user: [],
@@ -328,6 +329,7 @@ module.exports = {
                 is_active: this.inviteSessionData.isActive,
                 other_user: JSON.stringify(this.inviteSessionData.other_user),
                 files: this.files,
+                oldFiles: this.oldFiles,
                 deletedOldFiles: this.deletedOldFiles
             };
             let t = Object.keys(inviteSessionData.user_list)

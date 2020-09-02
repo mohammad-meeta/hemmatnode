@@ -571,8 +571,11 @@ module.exports = {
       departments: [],
       users: [],
       files: [],
+      signatured: [],
       deletedOldFiles: [],
+      signaturedDeletedOldFiles: [],
       oldFiles: [],
+      signaturedOldFiles: [],
       inviteSessionData: {
         title: null,
         body: null,
@@ -581,13 +584,15 @@ module.exports = {
         date: null,
         department_id: null,
         files: {},
+        signatured: {},
         user_list: {},
         present_user_list: {},
         isActive: false,
         intro: null,
         approv: [],
         other_user: [],
-        deletedOldFiles: []
+        deletedOldFiles: [],
+        signaturedDeletedOldFiles: []
       },
       userListTable: {
         checkedRows: [],
@@ -709,6 +714,7 @@ module.exports = {
         date: data.date,
         department_id: data.dep._id,
         files: data.files,
+        signatured: data.signatured,
         user_list: data.user_list,
         present_user_list: data.present_user_list,
         isActive: data.is_active,
@@ -716,8 +722,10 @@ module.exports = {
         other_user: data.other_user
       };
       Vue.set(this, "oldFiles", data.files);
+      Vue.set(this, "signaturedOldFiles", data.signatured);
       Vue.set(this, "inviteSessionData", temp);
       this.$refs.fileUpload.updateOldFiles(data.files);
+      this.$refs.fileUpload.updateOldFiles(data.signatured);
       var userslist = this.inviteSessionData.user_list;
       var checkedUsers = this.users.filter(function (u) {
         return userslist.indexOf(u._id) > -1;
@@ -831,6 +839,16 @@ module.exports = {
         return x._id;
       });
       Vue.set(this, "deletedOldFiles", deleteUploaded);
+      var signaturedDeletedFiles = this.$refs.fileUpload.getDeletedFiles();
+      var newSignaturedFiles = this.$refs.fileUpload.getNewFiles();
+      var newSignaturedUploaded = newSignaturedFiles.map(function (x) {
+        return x.file;
+      });
+      Vue.set(this, "signaturedFiles", newSignaturedUploaded);
+      var signaturedDeleteUploaded = signaturedDeletedFiles.map(function (x) {
+        return x._id;
+      });
+      Vue.set(this, "signaturedDeletedOldFiles", signaturedDeleteUploaded);
       var inviteSessionData = {
         _id: this.inviteSessionData._id,
         body: this.inviteSessionData.body,
@@ -843,9 +861,10 @@ module.exports = {
         approv: JSON.stringify(this.inviteSessionData.approv),
         other_user: JSON.stringify(this.inviteSessionData.other_user),
         files: this.files,
-        deletedOldFiles: this.deletedOldFiles
+        signaturedFiles: this.signaturedFiles,
+        deletedOldFiles: this.deletedOldFiles,
+        signaturedDeletedOldFiles: this.signaturedDeletedOldFiles
       };
-      inviteSessionData.files = this.files[0];
       var t = Object.keys(inviteSessionData.user_list).filter(function (key) {
         return true == inviteSessionData.user_list[key];
       }).map(function (key) {
@@ -854,7 +873,7 @@ module.exports = {
       inviteSessionData.user_list = t;
       this.showLoading();
       var url = this.editUrl.replace("$id$", inviteSessionData._id);
-      AxiosHelper.send("patch", url, inviteSessionData, {
+      AxiosHelper.send("post", url, inviteSessionData, {
         sendAsFormData: true,
         filesArray: "files"
       }).then(function (res) {
@@ -1256,7 +1275,7 @@ module.exports = {
       this.showLoading();
       var url = this.editUrl.replace("$id$", inviteSessionData._id);
       console.log(inviteSessionData);
-      AxiosHelper.send("patch", url, inviteSessionData, {
+      AxiosHelper.send("post", url, inviteSessionData, {
         sendAsFormData: true,
         filesArray: "files"
       }).then(function (res) {
@@ -2190,8 +2209,10 @@ module.exports = {
       departments: [],
       users: [],
       files: [],
+      signatured: [],
       deletedOldFiles: [],
       oldFiles: [],
+      signaturedOldFiles: [],
       inviteSessionData: {
         title: null,
         body: null,
@@ -2200,6 +2221,7 @@ module.exports = {
         date: null,
         department_id: null,
         files: {},
+        signatured: {},
         deletedOldFiles: [],
         user_list: {},
         present_user_list: {},
@@ -2393,6 +2415,11 @@ module.exports = {
         return x._id;
       });
       Vue.set(this, "deletedOldFiles", deleteUploaded);
+      var newSignaturedFiles = this.$refs.fileUpload.getNewFiles();
+      var newSignaturedUploaded = newSignaturedFiles.map(function (x) {
+        return x.file;
+      });
+      Vue.set(this, "signatured", newSignaturedUploaded);
       var inviteSessionData = {
         body: this.inviteSessionData.body,
         agenda: JSON.stringify(this.inviteSessionData.agenda),
@@ -2405,6 +2432,7 @@ module.exports = {
         present_user_list: [],
         is_active: this.inviteSessionData.isActive,
         files: this.files,
+        signatured: this.signatured,
         deletedOldFiles: this.deletedOldFiles
       };
       inviteSessionData.user_list = this.userListTable.checkedRows.map(function (x) {
@@ -47578,7 +47606,7 @@ var render = function() {
                   [
                     _c("file-upload", {
                       ref: "fileUpload",
-                      attrs: { "old-files": _vm.oldFiles }
+                      attrs: { "old-files": _vm.signaturedOldFiles }
                     })
                   ],
                   1
@@ -49189,7 +49217,7 @@ var render = function() {
                   [
                     _c("file-upload", {
                       ref: "fileUpload",
-                      attrs: { "old-files": _vm.oldFiles }
+                      attrs: { "old-files": _vm.signaturedOldFiles }
                     })
                   ],
                   1

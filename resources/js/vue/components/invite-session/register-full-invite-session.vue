@@ -66,7 +66,7 @@
                         .panel-heading
                             | فایل های ضمیمه
                         .panel-block
-                            file-upload(ref="fileUpload", :old-files="oldFiles")
+                            file-upload(ref="fileUpload", :old-files="signaturedOldFiles")
                 .field
                     label.label تکالیف حاضرین
                     .control
@@ -153,8 +153,10 @@ module.exports = {
         departments: [],
         users: [],
         files: [],
+        signatured: [],
         deletedOldFiles: [],
         oldFiles: [],
+        signaturedOldFiles: [],
         inviteSessionData: {
             title: null,
             body: null,
@@ -163,6 +165,7 @@ module.exports = {
             date: null,
             department_id: null,
             files: {},
+            signatured: {},
             deletedOldFiles: [],
             user_list: {},
             present_user_list: {},
@@ -360,6 +363,11 @@ module.exports = {
             Vue.set(this, "files", newUploaded);
             let deleteUploaded = deletedFiles.map((x) => x._id);
             Vue.set(this, "deletedOldFiles", deleteUploaded);
+
+            const newSignaturedFiles = this.$refs.fileUpload.getNewFiles();
+            let newSignaturedUploaded = newSignaturedFiles.map((x) => x.file);
+            Vue.set(this, "signatured", newSignaturedUploaded);
+
             let inviteSessionData = {
                 body: this.inviteSessionData.body,
                 agenda: JSON.stringify(this.inviteSessionData.agenda),
@@ -372,6 +380,7 @@ module.exports = {
                 present_user_list: [],
                 is_active: this.inviteSessionData.isActive,
                 files: this.files,
+                signatured: this.signatured,
                 deletedOldFiles: this.deletedOldFiles
             };
             inviteSessionData.user_list = this.userListTable.checkedRows.map((x) => x._id);

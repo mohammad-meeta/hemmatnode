@@ -1,4 +1,7 @@
 "use strict";
+
+const { Console } = require("winston/lib/winston/transports");
+
 const PugView = use("app/helpers/pug-view");
 const InviteSessionHelper = use("app/helpers/invite-session-helper");
 const FileHelper = use("app/helpers/file-helper");
@@ -129,40 +132,76 @@ InviteSession.editInviteSessionData = async function editInviteSessionData(
 InviteSession.update = async function update(req, res, next) {
     let data = {};
 
-    console.log(JSON.stringify(req.body, null, 2))
+    const files = req.files || [];
+    let fileList = [];
 
-    // const files = req.body.files || [];
-    // let fileList = [];
+    for (let i = 0; i < files.length; ++i) {
+        try {
+            const el = files[i];
+            el.user_id = req.session.auth.userId;
 
-    // await files.forEach(async (element) => {
-    //     const fileData = element;
-    //     await FileHelper.insertFileData(fileData);
-    // });
+            const data = await FileHelper.insertFileData(el);
 
+            const tempFileData = {
+                file_id: data[0]._id,
+                deleted_at: null,
+            };
+            fileList.push(tempFileData);
+        } catch (err) {
+            Logger.error(err);
+        }
+    }
 
-    // data = {
-    //     _id: req.body._id,
-    //     body: req.body.body,
-    //     agenda: JSON.parse(req.body.agenda || "[]"),
-    //     place: req.body.place,
-    //     date: req.body.date,
-    //     user_list: JSON.parse(req.body.user_list),
-    //     other_user: JSON.parse(req.body.other_user || "[]"),
-    //     user_id: req.session.auth.userId,
-    //     is_active: req.body.is_active,
-    //     department_id: req.body.department_id,
-    //     files: fileList,
-    // };
+    const deletedOldFiles = JSON.parse(req.body.deletedOldFiles);
+    let oldFiles = JSON.parse(req.body.oldFiles);
 
-    // let result = await InviteSessionHelper.updateInviteSessionData(data);
-    // result = {
-    //     success: true,
-    //     data: data,
-    // };
+    console.log(deletedOldFiles)
+    console.log("***********************************************")
+    console.log(oldFiles)
+    console.log("***********************************************")
 
-    // res.status(200)
-    //     .send(result)
-    //     .end();
+    for (let index = 0; index < deletedOldFiles.length; index++) {
+        const index = oldFiles.indexOf(deletedOldFiles[index]);
+        if (index > -1) {
+            oldFiles.splice(index, 1);
+        }
+    }
+
+    for (let index = 0; index < oldFiles.length; index++) {
+        const element = oldFiles[index];
+
+        const tempFileData = {
+            file_id: element._id,
+            deleted_at: null,
+        };
+        fileList.push(tempFileData);
+
+    }
+    console.log("***********************************************")
+
+    data = {
+        _id: req.body._id,
+        body: req.body.body,
+        agenda: JSON.parse(req.body.agenda || "[]"),
+        place: req.body.place,
+        date: req.body.date,
+        user_list: JSON.parse(req.body.user_list),
+        other_user: JSON.parse(req.body.other_user || "[]"),
+        user_id: req.session.auth.userId,
+        is_active: req.body.is_active,
+        department_id: req.body.department_id,
+        files: fileList,
+    };
+    console.log(JSON.stringify(data, null, 2));
+    let result = await InviteSessionHelper.updateInviteSessionData(data);
+    result = {
+        success: true,
+        data: data,
+    };
+
+    res.status(200)
+        .send(result)
+        .end();
 };
 
 /**

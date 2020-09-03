@@ -1149,6 +1149,10 @@ module.exports = {
 //
 //
 //
+//
+//
+//
+//
 
 
 var AxiosHelper = __webpack_require__(/*! JS-HELPERS/axios-helper */ "./resources/js/helpers/axios-helper.js");
@@ -30914,9 +30918,8 @@ var render = function() {
               [
                 _c("date-picker", {
                   attrs: {
-                    format: "YYYY",
+                    type: "year",
                     "display-format": "jYYYY",
-                    type: "datetime",
                     required: ""
                   },
                   model: {
@@ -33411,7 +33414,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/pages/memorandum/index/index.js */"./resources/js/pages/memorandum/index/index.js");
+module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/memorandum/index/index.js */"./resources/js/pages/memorandum/index/index.js");
 
 
 /***/ })

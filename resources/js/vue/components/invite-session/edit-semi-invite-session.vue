@@ -123,7 +123,7 @@ module.exports = {
         isPaginationSimple: false,
         paginationPosition: "bottom",
         currentPage: 1,
-        perPage: 10,
+        perPage: 3,
         columns: [
             {
                 field: "name",

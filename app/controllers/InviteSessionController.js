@@ -152,28 +152,13 @@ InviteSession.update = async function update(req, res, next) {
     }
 
     const deletedOldFiles = JSON.parse(req.body.deletedOldFiles);
-    let oldFiles = JSON.parse(req.body.oldFiles);
-
-    for (let index = 0; index < oldFiles.length; index++) {
-        const element = oldFiles[index];
-        const tempFileData = {
-            file_id: element._id,
-            deleted_at: null,
-        };
-        fileList.push(tempFileData);
-    }
 
     let inviteRes = await InviteSessionHelper.loadInviteSessionData(req.body._id);
     const InviteSessionFiles = inviteRes.files;
 
     for (let index = 0; index < InviteSessionFiles.length; index++) {
         const element = InviteSessionFiles[index];
-        for (let oil = 0; oil < fileList.length; oil++) {
-            const Fele = fileList[oil];
-            if (Fele.file_id == element.file_id) {
-                Fele.deleted_at = element.deleted_at
-            }
-        }
+        fileList.push(element)
     }
 
     for (let index = 0; index < deletedOldFiles.length; index++) {

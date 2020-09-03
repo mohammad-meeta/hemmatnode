@@ -1,6 +1,7 @@
 "use strict";
 
 const mongoose = require("mongoose");
+const { index } = require("../controllers/InviteSessionController");
 
 /**
  * dep cat controller
@@ -78,11 +79,22 @@ InviteSessiontHelper.loadAllInviteSessionData = async function loadAllInviteSess
                 "file.path": 0,
             }
         },
+        // {
+        //     $unwind: {
+        //         path: "$files",
+        //         preserveNullAndEmptyArrays: true
+        //     }
+        // },
+        // {
+        //     $match: {
+        //         "files.deleted_at": { $eq: null }
+        //     }
+        // },
         {
             $group: {
                 _id: "$_id",
                 oldFiles: {
-                    $last: "$files"
+                    $push: "$files"
                 },
                 files: {
                     $push: "$file"
@@ -126,65 +138,6 @@ InviteSessiontHelper.loadAllInviteSessionData = async function loadAllInviteSess
             }
         },
         {
-            $unwind: {
-                path: "$oldFiles",
-                preserveNullAndEmptyArrays: true
-            }
-        },
-        {
-            $match: {
-                "oldFiles.deleted_at": { $eq: null }
-            }
-        },
-        {
-            $group: {
-                _id: "$_id",
-                oldFiles: {
-                    $last: "$oldFiles"
-                },
-                files: {
-                    $last: "$files"
-                },
-                user_list: {
-                    $last: "$user_list"
-                },
-                is_active: {
-                    $last: "$is_active"
-                },
-                other_user: {
-                    $last: "$other_user"
-                },
-                approves: {
-                    $last: "$approves"
-                },
-                present_user: {
-                    $last: "$present_user"
-                },
-                status: {
-                    $last: "$status"
-                },
-                body: {
-                    $last: "$body"
-                },
-                agenda: {
-                    $last: "$agenda"
-                },
-                place: {
-                    $last: "$place"
-                },
-                date: {
-                    $last: "$date"
-                },
-                created_at: {
-                    $last: "$created_at"
-                },
-                dep: {
-                    $last: "$dep"
-                }
-            }
-        },
-
-        {
             $sort: {
                 created_at: -1
             }
@@ -198,6 +151,28 @@ InviteSessiontHelper.loadAllInviteSessionData = async function loadAllInviteSess
     ];
 
     let res = await InviteSession.aggregate(pipeline);
+    for (let resI = 0; resI < res.length; resI++) {
+
+        let oldFiles = res[resI].oldFiles;
+        let files = res[0].files;
+        let deleted = [];
+        for (let index = 0; index < files.length; index++) {
+            const element = files[index];
+            for (let index2 = 0; index2 < oldFiles.length; index2++) {
+                const element2 = oldFiles[index2];
+                if (String(element["_id"]) == String(element2["file_id"]) && element2["deleted_at"] != null) {
+                    deleted.push(element["_id"])
+                }
+            }
+        }
+        for (let index3 = 0; index3 < deleted.length; index3++) {
+            const element = deleted[index3];
+            const indexF = files.findIndex(x => String(x._id) == String(element));
+            if (indexF >= -1) {
+                files.splice(indexF, 1)
+            }
+        }
+    }
     return res;
 };
 /**

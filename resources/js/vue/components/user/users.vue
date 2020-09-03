@@ -52,6 +52,7 @@
 <script>
 "use strict";
 
+const Buefy = require("buefy").default;
 const Routes = require("JS-CORE/routes");
 const ENUMS = require("JS-HELPERS/enums");
 const Loading = require("VUE-COMPONENTS/general/loading.vue").default;

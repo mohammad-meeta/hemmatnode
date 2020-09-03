@@ -21,8 +21,12 @@
             .field
                 label.label سال
                 .control
-                    date-picker(v-model='memorandumData.date' format="YYYY"
-                    display-format="jYYYY" type="datetime" required)
+                    date-picker(
+                        v-model='memorandumData.date'
+                        type="year"
+                        display-format="jYYYY"
+                        required
+                    )
 
             .field
                 label.label مقدمه و اهداف تفاهم نامه

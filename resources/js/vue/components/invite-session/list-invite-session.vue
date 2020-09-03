@@ -59,24 +59,15 @@
         aria-previous-label="Previous page",
         aria-page-label="Page",
         aria-current-label="Current page"
+        @change="loadInviteSessions(pagination.current)"
     )
 
-    paginate(
-        :page-count="pageCount",
-        :click-handler="paginatorClick",
-        :prev-text="'Prev'",
-        :next-text="'Next'",
-        :container-class="'pagination-list'"
-    )
 </template>
 
 <script>
 "use strict";
 
 const ENUMS = require("JS-HELPERS/enums");
-
-const Paginate = require("vuejs-paginate");
-Vue.component("paginate", Paginate);
 
 module.exports = {
     props: {
@@ -95,9 +86,9 @@ module.exports = {
         departmentData: null,
         ENUMS,
         pagination: {
-            total: 200,
-            current: 10,
-            perPage: 10,
+            total: 0,
+            current: 1,
+            perPage: 50,
             rangeBefore: 3,
             rangeAfter: 1,
             order: "",
@@ -118,7 +109,6 @@ module.exports = {
             },
         ],
         inviteSessionsCount: 0,
-        pageCount: 0,
     }),
 
     computed: {
@@ -148,11 +138,9 @@ module.exports = {
             AxiosHelper.send("get", url, "").then((res) => {
                 const resData = res.data;
                 const inviteData = resData.data.data;
-
                 Vue.set(this, "inviteSessions", inviteData);
-                Vue.set(this, "inviteSessionsCount", inviteData.count);
-
-                this.paginator();
+                Vue.set(this, "inviteSessionsCount", resData.data.count);
+                Vue.set(this.pagination, "total", resData.data.count);
             });
         },
 
@@ -172,13 +160,7 @@ module.exports = {
             return DateHelper.toPersianDateLong(date);
         },
 
-        /**
-         * Paginator
-         */
-        paginator() {
-            let pageCount = Math.ceil(this.inviteSessionsCount / 50);
-            Vue.set(this, "pageCount", pageCount);
-        },
+
         /**
          * paginator click link
          */

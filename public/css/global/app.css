@@ -46599,6 +46599,11 @@ table.text-center td {
   margin-right: calc(-0.5em - 1px);
 }
 
+.pagination-next,
+.pagination-previous {
+  transform: scale(-1, 1);
+}
+
 /*.button .icon:last-child:not(:first-child) {
     margin-left: 0.25em;
     margin-right: 0.25em;

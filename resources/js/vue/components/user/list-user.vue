@@ -34,11 +34,24 @@
                             i.material-icons.icon swap_horizontal_circle
                         span مشاهده
 
-    paginate(:page-count='pageCount',
-        :click-handler='paginatorClick',
-        :prev-text="'Prev'",
-        :next-text="'Next'",
-        :container-class="'pagination-list'")
+    b-pagination(
+        :total="pagination.total",
+        :current.sync="pagination.current",
+        :range-before="pagination.rangeBefore",
+        :range-after="pagination.rangeAfter",
+        :order="pagination.order",
+        :size="pagination.size",
+        :simple="pagination.isSimple",
+        :rounded="pagination.isRounded",
+        :per-page="pagination.perPage",
+        :icon-prev="pagination.prevIcon",
+        :icon-next="pagination.nextIcon",
+        aria-next-label="Next page",
+        aria-previous-label="Previous page",
+        aria-page-label="Page",
+        aria-current-label="Current page"
+        @change="loadUsers(pagination.current)"
+    )
 </template>
 
 <script>
@@ -46,8 +59,6 @@
 
 const ENUMS = require("JS-HELPERS/enums");
 
-const Paginate = require("vuejs-paginate");
-Vue.component("paginate", Paginate);
 module.exports = {
     props: {
         listUrl: {
@@ -58,9 +69,21 @@ module.exports = {
 
     data: () => ({
         ENUMS,
+        pagination: {
+            total: 0,
+            current: 1,
+            perPage: 2,
+            rangeBefore: 3,
+            rangeAfter: 1,
+            order: "",
+            size: "",
+            isSimple: false,
+            isRounded: false,
+            prevIcon: "chevron-left",
+            nextIcon: "chevron-right",
+        },
         users: [],
-        usersCount: 0,
-        pageCount: 0
+        usersCount: 0
     }),
 
     computed: {
@@ -73,13 +96,12 @@ module.exports = {
          */
         loadUsers(pageId) {
             let url = this.listUrl.replace("$page$", pageId);
-            url = url.replace("$pageSize$", 50);
+            url = url.replace("$pageSize$", 2);
             AxiosHelper.send("get", url, "").then(res => {
                 const resData = res.data;
                 Vue.set(this, "users", resData.data.data);
                 Vue.set(this, "usersCount", resData.data.count);
-
-                this.paginator();
+                Vue.set(this.pagination, "total", resData.data.count);
             });
         },
 
@@ -100,19 +122,6 @@ module.exports = {
         },
 
         /**
-         * Paginator
-         */
-        paginator() {
-            let pageCount = Math.ceil(this.usersCount / 50);
-            Vue.set(this, "pageCount", pageCount);
-        },
-        /**
-         * paginator click link
-         */
-        paginatorClick(id) {
-            this.loadUsers(id);
-        },
-        /**
          * add new user data to list data
          */
         addToUserList(payload) {
@@ -129,7 +138,6 @@ module.exports = {
                 is_active: payload.data.is_active,
                 createdAt: payload.data.createdAt
             };
-
             this.users.unshift(newUserData);
         },
 

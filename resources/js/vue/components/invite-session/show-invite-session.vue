@@ -69,7 +69,7 @@ module.exports = {
             department_id: null,
             files: {},
             user_list: {},
-            isActive: false
+            is_active: false
         },
         showLoadingFlag: false
     }),
@@ -95,7 +95,7 @@ module.exports = {
                 files: data.files,
                 roles: data.roles,
                 user_list: data.user_list,
-                isActive: data.is_active
+                is_active: data.is_active
             };
 
             try {

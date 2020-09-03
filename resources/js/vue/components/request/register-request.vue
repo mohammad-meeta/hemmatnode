@@ -36,7 +36,7 @@
                         |   ضمیمه
                 .field
                     label.checkbox
-                        input(type='checkbox', v-model="requestData.isActive")
+                        input(type='checkbox', v-model="requestData.is_active")
                         |   فعال
 
                 .field.is-grouped
@@ -73,7 +73,7 @@ module.exports = {
             requestDate: null,
             deadline: null,
             files: {},
-            isActive: false,
+            is_active: false,
         },
 
         notificationMessage: null,
@@ -165,7 +165,7 @@ module.exports = {
 
             requestData.files = this.files[0];
             requestData.departmentId = this.departmentId;
-            
+
             this.showLoading();
 
             const url = this.registerUrl;

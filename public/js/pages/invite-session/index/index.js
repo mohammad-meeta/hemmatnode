@@ -587,7 +587,7 @@ module.exports = {
         signatured: {},
         user_list: {},
         present_user_list: {},
-        isActive: false,
+        is_active: false,
         intro: null,
         approv: [],
         other_user: [],
@@ -717,7 +717,7 @@ module.exports = {
         signatured: data.signatured,
         user_list: data.user_list,
         present_user_list: data.present_user_list,
-        isActive: data.is_active,
+        is_active: data.is_active,
         approv: data.approv,
         other_user: data.other_user
       };
@@ -857,7 +857,7 @@ module.exports = {
         date: this.inviteSessionData.date,
         department_id: this.inviteSessionData.department_id,
         user_list: this.inviteSessionData.user_list,
-        is_active: this.inviteSessionData.isActive,
+        is_active: this.inviteSessionData.is_active,
         approv: JSON.stringify(this.inviteSessionData.approv),
         other_user: JSON.stringify(this.inviteSessionData.other_user),
         files: this.files,
@@ -1019,7 +1019,7 @@ var MultiTextMember = __webpack_require__(/*! VUE-COMPONENTS/invite-session/mult
 var FileUpload = __webpack_require__(/*! VUE-COMPONENTS/general/file-upload.vue */ "./resources/js/vue/components/general/file-upload.vue")["default"];
 
 module.exports = {
-  name: "EditInviteeSssion",
+  name: "EditSemiInviteSession",
   components: {
     Notification: Notification,
     DatePicker: VuePersianDatetimePicker,
@@ -1045,7 +1045,7 @@ module.exports = {
         files: {},
         oldFiles: [],
         user_list: {},
-        isActive: false,
+        is_active: false,
         other_user: [],
         deletedOldFiles: []
       },
@@ -1137,7 +1137,7 @@ module.exports = {
         files: data.files,
         roles: data.roles,
         user_list: data.user_list,
-        isActive: data.is_active,
+        is_active: data.is_active,
         other_user: other_user
       };
       Vue.set(this, "oldFiles", data.files);
@@ -1259,7 +1259,7 @@ module.exports = {
         date: this.inviteSessionData.date,
         department_id: this.inviteSessionData.department_id,
         user_list: this.inviteSessionData.user_list,
-        is_active: this.inviteSessionData.isActive,
+        is_active: this.inviteSessionData.is_active,
         other_user: JSON.stringify(this.inviteSessionData.other_user),
         files: this.files,
         oldFiles: this.oldFiles,
@@ -1276,7 +1276,6 @@ module.exports = {
       });
       this.showLoading();
       var url = this.editUrl.replace("$id$", inviteSessionData._id);
-      console.log(inviteSessionData);
       AxiosHelper.send("post", url, inviteSessionData, {
         sendAsFormData: true,
         filesArray: "files"
@@ -1763,7 +1762,6 @@ module.exports = {
       inviteSessions: [{
         is_active: null,
         agenda: null,
-        extra: null,
         dep: {
           title: null
         }
@@ -1842,7 +1840,6 @@ module.exports = {
         var newInviteSessionsData = {
           _id: payload.data._id,
           dep: dep,
-          extra: data,
           agenda: data,
           place: payload.data.place,
           date: payload.data.date,
@@ -1858,25 +1855,31 @@ module.exports = {
     },
     editInviteSessionList: function editInviteSessionList(payload) {
       var data = payload.data.data.agenda;
-      var otherUsers = payload.data.otherUsers;
+      console.log(payload);
       var editedInviteSessionsData = {
         _id: payload.data.data._id,
         title: payload.data.data.agenda,
         agenda: data,
-        extra: data,
         place: payload.data.data.place,
-        date: payload.data.date,
-        body: payload.data.body,
-        user_list: payload.data.user_list,
-        oldFiles: payload.data.files,
+        date: payload.data.data.date,
+        body: payload.data.data.body,
+        user_list: payload.data.data.user_list,
+        oldFiles: payload.data.data.files,
         is_active: payload.data.data.is_active,
         created_at: payload.data.data.created_at
       };
+      console.log(editedInviteSessionsData.is_active);
       var foundIndex = this.inviteSessions.findIndex(function (x) {
         return x._id == editedInviteSessionsData._id;
       });
       this.inviteSessions[foundIndex].agenda = editedInviteSessionsData.agenda;
+      this.inviteSessions[foundIndex].place = editedInviteSessionsData.place;
+      this.inviteSessions[foundIndex].date = editedInviteSessionsData.date;
+      this.inviteSessions[foundIndex].body = editedInviteSessionsData.body;
+      this.inviteSessions[foundIndex].user_list = editedInviteSessionsData.user_list;
+      this.inviteSessions[foundIndex].files = editedInviteSessionsData.oldFiles;
       this.inviteSessions[foundIndex].is_active = editedInviteSessionsData.is_active;
+      console.log(this.inviteSessions[foundIndex]);
     }
   }
 };
@@ -2208,7 +2211,7 @@ module.exports = {
         deletedOldFiles: [],
         user_list: {},
         present_user_list: {},
-        isActive: false,
+        is_active: false,
         intro: null,
         approv: [],
         other_user: []
@@ -2413,7 +2416,7 @@ module.exports = {
         department_id: this.inviteSessionData.departments,
         user_list: [],
         present_user_list: [],
-        is_active: this.inviteSessionData.isActive,
+        is_active: this.inviteSessionData.is_active,
         files: this.files,
         signatured: this.signatured,
         deletedOldFiles: this.deletedOldFiles
@@ -2645,7 +2648,7 @@ module.exports = {
         deletedOldFiles: [],
         user_list: {},
         other_user: [],
-        isActive: false
+        is_active: false
       },
       checkedRows: [],
       checkboxPosition: "left",
@@ -2807,7 +2810,7 @@ module.exports = {
         date: this.inviteSessionData.date,
         department_id: this.inviteSessionData.departments,
         user_list: [],
-        is_active: this.inviteSessionData.isActive,
+        is_active: this.inviteSessionData.is_active,
         files: this.files,
         deletedOldFiles: this.deletedOldFiles
       };
@@ -2942,7 +2945,7 @@ module.exports = {
         department_id: null,
         files: {},
         user_list: {},
-        isActive: false
+        is_active: false
       },
       showLoadingFlag: false
     };
@@ -2971,7 +2974,7 @@ module.exports = {
         files: data.files,
         roles: data.roles,
         user_list: data.user_list,
-        isActive: data.is_active
+        is_active: data.is_active
       };
 
       try {
@@ -46878,7 +46881,7 @@ var render = function() {
               [_vm._v("×")]
             ),
             _c("label", [_vm._v(_vm._s(_vm.humanFileSize(file.file.size)))]),
-            _c("label", [_vm._v(_vm._s(file.file.originalname))])
+            _c("label", [_vm._v(_vm._s(file.file.name))])
           ])
         }),
         0
@@ -47604,19 +47607,19 @@ var render = function() {
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.inviteSessionData.isActive,
-                    expression: "inviteSessionData.isActive"
+                    value: _vm.inviteSessionData.is_active,
+                    expression: "inviteSessionData.is_active"
                   }
                 ],
                 attrs: { type: "checkbox" },
                 domProps: {
-                  checked: Array.isArray(_vm.inviteSessionData.isActive)
-                    ? _vm._i(_vm.inviteSessionData.isActive, null) > -1
-                    : _vm.inviteSessionData.isActive
+                  checked: Array.isArray(_vm.inviteSessionData.is_active)
+                    ? _vm._i(_vm.inviteSessionData.is_active, null) > -1
+                    : _vm.inviteSessionData.is_active
                 },
                 on: {
                   change: function($event) {
-                    var $$a = _vm.inviteSessionData.isActive,
+                    var $$a = _vm.inviteSessionData.is_active,
                       $$el = $event.target,
                       $$c = $$el.checked ? true : false
                     if (Array.isArray($$a)) {
@@ -47626,19 +47629,19 @@ var render = function() {
                         $$i < 0 &&
                           _vm.$set(
                             _vm.inviteSessionData,
-                            "isActive",
+                            "is_active",
                             $$a.concat([$$v])
                           )
                       } else {
                         $$i > -1 &&
                           _vm.$set(
                             _vm.inviteSessionData,
-                            "isActive",
+                            "is_active",
                             $$a.slice(0, $$i).concat($$a.slice($$i + 1))
                           )
                       }
                     } else {
-                      _vm.$set(_vm.inviteSessionData, "isActive", $$c)
+                      _vm.$set(_vm.inviteSessionData, "is_active", $$c)
                     }
                   }
                 }
@@ -47962,19 +47965,19 @@ var render = function() {
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.inviteSessionData.isActive,
-                    expression: "inviteSessionData.isActive"
+                    value: _vm.inviteSessionData.is_active,
+                    expression: "inviteSessionData.is_active"
                   }
                 ],
                 attrs: { type: "checkbox" },
                 domProps: {
-                  checked: Array.isArray(_vm.inviteSessionData.isActive)
-                    ? _vm._i(_vm.inviteSessionData.isActive, null) > -1
-                    : _vm.inviteSessionData.isActive
+                  checked: Array.isArray(_vm.inviteSessionData.is_active)
+                    ? _vm._i(_vm.inviteSessionData.is_active, null) > -1
+                    : _vm.inviteSessionData.is_active
                 },
                 on: {
                   change: function($event) {
-                    var $$a = _vm.inviteSessionData.isActive,
+                    var $$a = _vm.inviteSessionData.is_active,
                       $$el = $event.target,
                       $$c = $$el.checked ? true : false
                     if (Array.isArray($$a)) {
@@ -47984,19 +47987,19 @@ var render = function() {
                         $$i < 0 &&
                           _vm.$set(
                             _vm.inviteSessionData,
-                            "isActive",
+                            "is_active",
                             $$a.concat([$$v])
                           )
                       } else {
                         $$i > -1 &&
                           _vm.$set(
                             _vm.inviteSessionData,
-                            "isActive",
+                            "is_active",
                             $$a.slice(0, $$i).concat($$a.slice($$i + 1))
                           )
                       }
                     } else {
-                      _vm.$set(_vm.inviteSessionData, "isActive", $$c)
+                      _vm.$set(_vm.inviteSessionData, "is_active", $$c)
                     }
                   }
                 }
@@ -49380,19 +49383,19 @@ var render = function() {
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.inviteSessionData.isActive,
-                    expression: "inviteSessionData.isActive"
+                    value: _vm.inviteSessionData.is_active,
+                    expression: "inviteSessionData.is_active"
                   }
                 ],
                 attrs: { type: "checkbox" },
                 domProps: {
-                  checked: Array.isArray(_vm.inviteSessionData.isActive)
-                    ? _vm._i(_vm.inviteSessionData.isActive, null) > -1
-                    : _vm.inviteSessionData.isActive
+                  checked: Array.isArray(_vm.inviteSessionData.is_active)
+                    ? _vm._i(_vm.inviteSessionData.is_active, null) > -1
+                    : _vm.inviteSessionData.is_active
                 },
                 on: {
                   change: function($event) {
-                    var $$a = _vm.inviteSessionData.isActive,
+                    var $$a = _vm.inviteSessionData.is_active,
                       $$el = $event.target,
                       $$c = $$el.checked ? true : false
                     if (Array.isArray($$a)) {
@@ -49402,19 +49405,19 @@ var render = function() {
                         $$i < 0 &&
                           _vm.$set(
                             _vm.inviteSessionData,
-                            "isActive",
+                            "is_active",
                             $$a.concat([$$v])
                           )
                       } else {
                         $$i > -1 &&
                           _vm.$set(
                             _vm.inviteSessionData,
-                            "isActive",
+                            "is_active",
                             $$a.slice(0, $$i).concat($$a.slice($$i + 1))
                           )
                       }
                     } else {
-                      _vm.$set(_vm.inviteSessionData, "isActive", $$c)
+                      _vm.$set(_vm.inviteSessionData, "is_active", $$c)
                     }
                   }
                 }
@@ -49737,19 +49740,19 @@ var render = function() {
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.inviteSessionData.isActive,
-                    expression: "inviteSessionData.isActive"
+                    value: _vm.inviteSessionData.is_active,
+                    expression: "inviteSessionData.is_active"
                   }
                 ],
                 attrs: { type: "checkbox" },
                 domProps: {
-                  checked: Array.isArray(_vm.inviteSessionData.isActive)
-                    ? _vm._i(_vm.inviteSessionData.isActive, null) > -1
-                    : _vm.inviteSessionData.isActive
+                  checked: Array.isArray(_vm.inviteSessionData.is_active)
+                    ? _vm._i(_vm.inviteSessionData.is_active, null) > -1
+                    : _vm.inviteSessionData.is_active
                 },
                 on: {
                   change: function($event) {
-                    var $$a = _vm.inviteSessionData.isActive,
+                    var $$a = _vm.inviteSessionData.is_active,
                       $$el = $event.target,
                       $$c = $$el.checked ? true : false
                     if (Array.isArray($$a)) {
@@ -49759,19 +49762,19 @@ var render = function() {
                         $$i < 0 &&
                           _vm.$set(
                             _vm.inviteSessionData,
-                            "isActive",
+                            "is_active",
                             $$a.concat([$$v])
                           )
                       } else {
                         $$i > -1 &&
                           _vm.$set(
                             _vm.inviteSessionData,
-                            "isActive",
+                            "is_active",
                             $$a.slice(0, $$i).concat($$a.slice($$i + 1))
                           )
                       }
                     } else {
-                      _vm.$set(_vm.inviteSessionData, "isActive", $$c)
+                      _vm.$set(_vm.inviteSessionData, "is_active", $$c)
                     }
                   }
                 }

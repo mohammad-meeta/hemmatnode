@@ -549,7 +549,7 @@ module.exports = {
       sections: [],
       departmentCategoryData: {
         title: null,
-        isActive: false
+        is_active: false
       },
       notificationMessage: null,
       notificationType: "is-info",
@@ -651,7 +651,7 @@ module.exports = {
       var departmentCategoryData = {
         title: this.departmentCategoryData.title,
         section_id: this.departmentCategoryData.sections,
-        is_active: this.departmentCategoryData.isActive
+        is_active: this.departmentCategoryData.is_active
       };
       this.showLoading();
       var url = this.registerUrl;
@@ -7963,19 +7963,19 @@ var render = function() {
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.departmentCategoryData.isActive,
-                    expression: "departmentCategoryData.isActive"
+                    value: _vm.departmentCategoryData.is_active,
+                    expression: "departmentCategoryData.is_active"
                   }
                 ],
                 attrs: { type: "checkbox" },
                 domProps: {
-                  checked: Array.isArray(_vm.departmentCategoryData.isActive)
-                    ? _vm._i(_vm.departmentCategoryData.isActive, null) > -1
-                    : _vm.departmentCategoryData.isActive
+                  checked: Array.isArray(_vm.departmentCategoryData.is_active)
+                    ? _vm._i(_vm.departmentCategoryData.is_active, null) > -1
+                    : _vm.departmentCategoryData.is_active
                 },
                 on: {
                   change: function($event) {
-                    var $$a = _vm.departmentCategoryData.isActive,
+                    var $$a = _vm.departmentCategoryData.is_active,
                       $$el = $event.target,
                       $$c = $$el.checked ? true : false
                     if (Array.isArray($$a)) {
@@ -7985,19 +7985,19 @@ var render = function() {
                         $$i < 0 &&
                           _vm.$set(
                             _vm.departmentCategoryData,
-                            "isActive",
+                            "is_active",
                             $$a.concat([$$v])
                           )
                       } else {
                         $$i > -1 &&
                           _vm.$set(
                             _vm.departmentCategoryData,
-                            "isActive",
+                            "is_active",
                             $$a.slice(0, $$i).concat($$a.slice($$i + 1))
                           )
                       }
                     } else {
-                      _vm.$set(_vm.departmentCategoryData, "isActive", $$c)
+                      _vm.$set(_vm.departmentCategoryData, "is_active", $$c)
                     }
                   }
                 }

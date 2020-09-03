@@ -36,7 +36,7 @@
 
             .field
                 label.checkbox
-                    input(type='checkbox', v-model="departmentData.isActive")
+                    input(type='checkbox', v-model="departmentData.is_active")
                     |   فعال
 
             .field.is-grouped
@@ -72,7 +72,7 @@ module.exports = {
             department_category_id: null,
             references: null,
             files: {},
-            isActive: false
+            is_active: false
         },
 
         notificationMessage: null,
@@ -207,7 +207,7 @@ module.exports = {
                 department_category_id: this.departmentData
                     .departmentCategories,
                 references: this.departmentData.department,
-                is_active: this.departmentData.isActive
+                is_active: this.departmentData.is_active
             };
 
             departmentData.files = this.files[0];

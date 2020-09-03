@@ -61,7 +61,7 @@
                     textarea.textarea(placeholder='تکالیف حاضرین', v-model='inviteSessionData.body')
             .field
                 label.checkbox
-                    input(type='checkbox', v-model="inviteSessionData.isActive")
+                    input(type='checkbox', v-model="inviteSessionData.is_active")
                     |   فعال
                 .field.is-grouped
                     .control(v-show="! isLoadingMode")
@@ -86,7 +86,7 @@ const MultiTextMember = require("VUE-COMPONENTS/invite-session/multi-text-member
 const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 
 module.exports = {
-    name: "EditInviteeSssion",
+    name: "EditSemiInviteSession",
     components: {
         Notification,
         DatePicker: VuePersianDatetimePicker,
@@ -112,7 +112,7 @@ module.exports = {
             files: {},
             oldFiles: [],
             user_list: {},
-            isActive: false,
+            is_active: false,
             other_user: [],
             deletedOldFiles: []
         },
@@ -213,7 +213,7 @@ module.exports = {
                 files: data.files,
                 roles: data.roles,
                 user_list: data.user_list,
-                isActive: data.is_active,
+                is_active: data.is_active,
                 other_user: other_user
             };
             Vue.set(this, "oldFiles", data.files);
@@ -326,7 +326,7 @@ module.exports = {
                 date: this.inviteSessionData.date,
                 department_id: this.inviteSessionData.department_id,
                 user_list: this.inviteSessionData.user_list,
-                is_active: this.inviteSessionData.isActive,
+                is_active: this.inviteSessionData.is_active,
                 other_user: JSON.stringify(this.inviteSessionData.other_user),
                 files: this.files,
                 oldFiles: this.oldFiles,
@@ -341,7 +341,6 @@ module.exports = {
             this.showLoading();
 
             const url = this.editUrl.replace("$id$", inviteSessionData._id);
-            console.log(inviteSessionData);
             AxiosHelper.send("post", url, inviteSessionData, {
                 sendAsFormData: true,
                 filesArray: "files"

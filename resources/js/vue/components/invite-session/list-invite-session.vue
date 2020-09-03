@@ -102,7 +102,6 @@ module.exports = {
             {
                 is_active: null,
                 agenda: null,
-                extra: null,
                 dep: {
                     title: null,
                 },
@@ -177,7 +176,6 @@ module.exports = {
                 const newInviteSessionsData = {
                     _id: payload.data._id,
                     dep: dep,
-                    extra: data,
                     agenda: data,
                     place: payload.data.place,
                     date: payload.data.date,
@@ -194,28 +192,38 @@ module.exports = {
 
         editInviteSessionList(payload) {
             const data = payload.data.data.agenda;
-            const otherUsers = payload.data.otherUsers;
+            console.log(payload)
             const editedInviteSessionsData = {
                 _id: payload.data.data._id,
                 title: payload.data.data.agenda,
                 agenda: data,
-                extra: data,
                 place: payload.data.data.place,
-                date: payload.data.date,
-                body: payload.data.body,
-                user_list: payload.data.user_list,
-                oldFiles: payload.data.files,
+                date: payload.data.data.date,
+                body: payload.data.data.body,
+                user_list: payload.data.data.user_list,
+                oldFiles: payload.data.data.files,
                 is_active: payload.data.data.is_active,
                 created_at: payload.data.data.created_at,
             };
-
+            console.log(editedInviteSessionsData.is_active);
             let foundIndex = this.inviteSessions.findIndex(
                 (x) => x._id == editedInviteSessionsData._id
             );
             this.inviteSessions[foundIndex].agenda =
                 editedInviteSessionsData.agenda;
+            this.inviteSessions[foundIndex].place =
+                editedInviteSessionsData.place;
+            this.inviteSessions[foundIndex].date =
+                editedInviteSessionsData.date;
+            this.inviteSessions[foundIndex].body =
+                editedInviteSessionsData.body;
+            this.inviteSessions[foundIndex].user_list =
+                editedInviteSessionsData.user_list;
+            this.inviteSessions[foundIndex].files =
+                editedInviteSessionsData.oldFiles;
             this.inviteSessions[foundIndex].is_active =
                 editedInviteSessionsData.is_active;
+            console.log(this.inviteSessions[foundIndex]);
         },
     },
 };

@@ -53,7 +53,7 @@
                         |   ضمیمه
                 .field
                     label.checkbox
-                        input(type='checkbox', v-model="responseData.isActive")
+                        input(type='checkbox', v-model="responseData.is_active")
                         |   فعال
 
                 .field.is-grouped
@@ -91,7 +91,7 @@ module.exports = {
             deadline: null,
             result: null,
             files: {},
-            isActive: false,
+            is_active: false,
         },
 
         notificationMessage: null,

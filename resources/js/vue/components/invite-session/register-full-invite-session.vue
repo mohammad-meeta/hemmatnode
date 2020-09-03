@@ -112,7 +112,7 @@
 
             .field
                 label.checkbox
-                    input(type='checkbox', v-model="inviteSessionData.isActive")
+                    input(type='checkbox', v-model="inviteSessionData.is_active")
                     |   فعال
                 .field.is-grouped
                     .control(v-show="! isLoadingMode")
@@ -167,7 +167,7 @@ module.exports = {
             deletedOldFiles: [],
             user_list: {},
             present_user_list: {},
-            isActive: false,
+            is_active: false,
             intro: null,
             approv: [],
             other_user:[]
@@ -376,7 +376,7 @@ module.exports = {
                 department_id: this.inviteSessionData.departments,
                 user_list: [],
                 present_user_list: [],
-                is_active: this.inviteSessionData.isActive,
+                is_active: this.inviteSessionData.is_active,
                 files: this.files,
                 signatured: this.signatured,
                 deletedOldFiles: this.deletedOldFiles

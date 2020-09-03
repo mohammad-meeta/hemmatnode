@@ -33,7 +33,7 @@ module.exports = {
             body: null,
             department_id: null,
             files: {},
-            isActive: false
+            is_active: false
         },
         showLoadingFlag: false
     }),
@@ -54,7 +54,7 @@ module.exports = {
                 body: data.body,
                 department_id: data.department_id,
                 files: data.files,
-                isActive: data.is_active
+                is_active: data.is_active
             };
             Vue.set(this, "regulationData", temp);
         },

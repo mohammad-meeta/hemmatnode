@@ -313,7 +313,7 @@ Response.store = async function store(req, res, next) {
         "deadline": req.body.deadline,
         "result": req.body.result,
         "user_id": req.session.auth.userId,
-        "is_active": req.body.isActive,
+        "is_active": req.body.is_active,
         "files": fileList
     };
 

@@ -56,6 +56,10 @@ Model.model = function model() {
         'user_id': {
             type: ObjectId,
             required: true
+        },
+        'department_id': {
+            type: ObjectId,
+            required: true
         }
     };
 };

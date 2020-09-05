@@ -6,70 +6,78 @@
         .column.is-full(v-show="isLoadingMode")
             h1 در حال بارگذاری
         .form-small(v-show="! isLoadingMode")
-            .fieldset
-                legend مشخصات برنامه
-                .field
-                    label.label نام برنامه
-                    .control
-                        input.input(type='text', placeholder='نام برنامه', autofocus, v-model='programData.title' required)
             .field
-                label.checkbox
-                    input(type='file', @change="setAttachment")
-                    |   ضمیمه
+                label.label نام
+                .control
+                    input.input(type='text', placeholder='نام', v-model='programData.title' required)
+
+            .field
+                .panel
+                    .panel-heading
+                        | فایل های ضمیمه
+                    .panel-block
+                        file-upload(ref="fileUpload", :old-files="oldFiles")
             .field
                 label.checkbox
                     input(type='checkbox', v-model="programData.isActive")
                     |   فعال
-            .field.is-grouped
-                .control(v-show="! isLoadingMode")
-                    a.button.is-link.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
-                        |   ایجاد
-
+                .field.is-grouped
+                    .control(v-show="! isLoadingMode")
+                        a.button.is-link.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
+                            |   ویرایش
 </template>
 
 <script>
 "use strict";
 
+const Buefy = require("buefy").default;
 const AxiosHelper = require("JS-HELPERS/axios-helper");
-const ENUMS = require("JS-HELPERS/enums");
 const ProgramValidator = require("JS-VALIDATORS/program-register-validator");
+const ENUMS = require("JS-HELPERS/enums");
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
+const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 
 module.exports = {
-    name: "RegisterProgram",
-
+    name: "EditProgram",
     components: {
+        FileUpload,
         Notification,
     },
 
     data: () => ({
         ENUMS,
+        files: [],
+        deletedOldFiles: [],
+        oldFiles: [],
         programData: {
             title: null,
-            files: {},
-            isActive: true,
             department_id: null,
+            files: {},
+            oldFiles: [],
+            isActive: false,
+            deletedOldFiles: [],
         },
 
         notificationMessage: null,
         notificationType: "is-info",
         showLoadingFlag: false,
-        files: [],
     }),
 
     props: {
+        editUrl: {
+            type: String,
+            default: "",
+        },
+
         departmentId: {
             type: String,
             default: null,
         },
-        registerUrl: {
-            type: String,
-            default: "",
-        },
     },
-    created() {
-        this.programData.departmentId = this.departmentId;
-    },
+
+    created() {},
+
+    mounted() {},
 
     computed: {
         isLoadingMode: (state) => state.showLoadingFlag == true,
@@ -78,12 +86,20 @@ module.exports = {
 
     methods: {
         /**
-         * Set attachments
+         * Load specific user
          */
-        setAttachment(sender) {
-            const files = sender.target.files;
-
-            Vue.set(this, "files", files);
+        loadProgramData(data) {
+            let temp = {
+                _id: data._id,
+                // dep: data.dep.title,
+                title: data.title,
+                department_id: data.department_id,
+                files: data.files,
+                isActive: data.is_active,
+            };
+            Vue.set(this, "oldFiles", data.files);
+            Vue.set(this, "programData", temp);
+            this.$refs.fileUpload.updateOldFiles(data.files);
         },
 
         /**
@@ -94,7 +110,7 @@ module.exports = {
         commandClick(arg) {
             switch (arg) {
                 case ENUMS.COMMAND.SAVE:
-                    this.registerProgram();
+                    this.EditProgram();
                     break;
             }
         },
@@ -129,46 +145,59 @@ module.exports = {
         },
 
         /**
-         * Register new program
+         * Edit program
          */
-        registerProgram() {
+        EditProgram() {
             const isValid = this.validate();
 
             if (!isValid) {
                 return;
             }
-            let programData = this.programData;
-
-            programData.files = this.files[0];
 
             this.showLoading();
 
-            const url = this.registerUrl;
+            const deletedFiles = this.$refs.fileUpload.getDeletedFiles();
+            const newFiles = this.$refs.fileUpload.getNewFiles();
+            let newUploaded = newFiles.map((x) => x.file);
+            Vue.set(this, "files", newUploaded);
+            let deleteUploaded = deletedFiles.map((x) => x._id);
+            Vue.set(this, "deletedOldFiles", deleteUploaded);
+            let programData = {
+                _id: this.programData._id,
+                title: this.programData.title,
+                department_id: this.programData.department_id,
+                is_active: this.programData.isActive,
+                files: this.files,
+                oldFiles: this.oldFiles,
+                deletedOldFiles: this.deletedOldFiles,
+            };
+            this.showLoading();
 
+            const url = this.editUrl.replace("$id$", programData._id);
             AxiosHelper.send("post", url, programData, {
                 sendAsFormData: true,
+                filesArray: "files",
             })
                 .then((res) => {
+                    //const data = JSON.parse(res.config.data);
                     const data = res.data;
-                    if (data.success) {
-                        this.$emit("on-register", {
-                            sender: this,
-                            data,
-                        });
-                    }
+                    this.$emit("on-update", {
+                        sender: this,
+                        data,
+                    });
                 })
                 .catch((err) => {
-                    const data = err.response.data;
-                    this.setNotification(data, "is-danger");
+                    console.error(err);
+                    this.setNotification(".خطا در ذخیره جلسه", "is-danger");
                 })
                 .then(() => this.hideLoading());
         },
 
         /**
-         * Validate new program data
+         * Validate
          */
         validate() {
-            const result = ProgramValidator.validate(this.programData);
+            const result = ProgramValidator.validateEdit(this.programData);
 
             if (result.passes) {
                 this.closeNotification();

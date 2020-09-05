@@ -1,7 +1,6 @@
 "use strict";
 
 const mongoose = require("mongoose");
-const { index } = require("../controllers/InviteSessionController");
 
 /**
  * dep cat controller
@@ -154,7 +153,7 @@ InviteSessiontHelper.loadAllInviteSessionData = async function loadAllInviteSess
     for (let resI = 0; resI < res.length; resI++) {
 
         let oldFiles = res[resI].oldFiles;
-        let files = res[0].files;
+        let files = res[resI].files;
         let deleted = [];
         for (let index = 0; index < files.length; index++) {
             const element = files[index];
@@ -173,8 +172,21 @@ InviteSessiontHelper.loadAllInviteSessionData = async function loadAllInviteSess
             }
         }
     }
+
+    for (let i = 0; i < res.length; i++) {
+        for (let k = 0; k < res[i].files.length; k++) {
+            res[i].files[k] = {
+                "_id": res[i].files[k]._id,
+                "fieldname": res[i].files[k].fieldname,
+                "name": res[i].files[k].originalname,
+                "filename": res[i].files[k].filename,
+                "size": res[i].files[k].size,
+            };
+        }
+    }
     return res;
 };
+
 /**
  * find all dep cat count data result
  */

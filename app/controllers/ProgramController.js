@@ -152,6 +152,7 @@ Program.store = async function store(req, res, next) {
         "title": req.body.title,
         "user_id": req.session.auth.userId,
         "is_active": req.body.is_active,
+        "department_id": req.body.departmentId,
         "files": fileList
     };
 
@@ -166,4 +167,70 @@ Program.store = async function store(req, res, next) {
                 .end();
         })
         .catch(err => console.error(err));
+};
+
+/**
+ * update data
+ */
+Program.update = async function update(req, res, next) {
+    let data = {};
+
+    const files = req.files || [];
+    let fileList = [];
+
+    for (let i = 0; i < files.length; ++i) {
+        try {
+            const el = files[i];
+            el.user_id = req.session.auth.userId;
+
+            const data = await FileHelper.insertFileData(el);
+
+            const tempFileData = {
+                file_id: data[0]._id,
+                deleted_at: null,
+            };
+            fileList.push(tempFileData);
+        } catch (err) {
+            Logger.error(err);
+        }
+    }
+
+    const deletedOldFiles = JSON.parse(req.body.deletedOldFiles);
+
+    let programRes = await ProgramHelper.loadProgramData(req.body._id);
+    const ProgramFiles = programRes.files;
+
+    for (let index = 0; index < ProgramFiles.length; index++) {
+        const element = ProgramFiles[index];
+        fileList.push(element)
+    }
+
+    for (let index = 0; index < deletedOldFiles.length; index++) {
+        const element = deletedOldFiles[index];
+        for (let oil = 0; oil < fileList.length; oil++) {
+            const Fele = fileList[oil];
+            if (Fele.file_id == element) {
+                Fele.deleted_at = Date()
+            }
+        }
+    }
+
+    data = {
+        "_id": req.body._id,
+        "title": req.body.title,
+        "user_id": req.session.auth.userId,
+        "is_active": req.body.is_active,
+        "department_id": req.body.departmentId,
+        "files": fileList
+    };
+
+    let result = await ProgramHelper.updateProgramData(data);
+    result = {
+        success: true,
+        data: data,
+    };
+
+    res.status(200)
+        .send(result)
+        .end();
 };

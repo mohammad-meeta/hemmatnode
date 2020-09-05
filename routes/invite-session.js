@@ -40,8 +40,9 @@ Router.post("/invite-session/:department?", [
     "InviteSession@store"
 ]).as("invitesession.store");
 
-Router.get("/invite-session/approves/:session?", [
+Router.post("/invite-session/approves/:session?", [
     upload.array("files"),
+    upload.array("signatured"),
     checkSession,
     Rule.canAsync("user.permision", "invitesession.approves.store"),
     "InviteSession@approvesStore"

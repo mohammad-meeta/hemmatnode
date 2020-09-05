@@ -9,7 +9,7 @@
                             input.input(type='text', v-model='item.title', @input='updateValue')
                 .column.is-2
                     .field
-                        label.label بودجه
+                        label.label بودجه (میلیون ریال)
                         .control
                             input.input(type='number', v-model='item.budget', @input='updateValue')
                 .column.is-4

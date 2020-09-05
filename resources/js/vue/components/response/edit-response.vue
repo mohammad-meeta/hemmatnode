@@ -43,7 +43,7 @@
                         |   ضمیمه
                 .field
                     label.checkbox
-                        input(type='checkbox', v-model="responseData.isActive")
+                        input(type='checkbox', v-model="responseData.is_active")
                         |   فعال
 
                 .field.is-grouped
@@ -80,7 +80,7 @@ module.exports = {
             deadline: null,
             result: null,
             files: {},
-            isActive: false,
+            is_active: false,
         },
         department: null,
         request: null,
@@ -127,7 +127,7 @@ module.exports = {
                 requestId: data.request_id,
                 deadline: data.deadline,
                 files: {},
-                isActive: data.is_active,
+                is_active: data.is_active,
             };
             Vue.set(this, "department", data.dep.title);
             Vue.set(this, "request", data.req.title);
@@ -204,7 +204,7 @@ module.exports = {
                 request_id: this.responseData.requestId,
                 deadline: this.responseData.deadline,
                 result: this.responseData.result,
-                is_active: this.responseData.isActive,
+                is_active: this.responseData.is_active,
             };
             response.files = this.files;
 

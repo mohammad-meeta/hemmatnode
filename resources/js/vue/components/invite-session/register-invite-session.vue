@@ -77,7 +77,7 @@
                 )
         .field
             label.checkbox
-                input(type="checkbox", v-model="inviteSessionData.isActive")
+                input(type="checkbox", v-model="inviteSessionData.is_active")
                 |
                 | فعال
 
@@ -147,7 +147,7 @@ module.exports = {
             deletedOldFiles: [],
             user_list: {},
             other_user: [],
-            isActive: false,
+            is_active: false,
         },
 
         checkedRows: [],
@@ -307,7 +307,7 @@ module.exports = {
                 date: this.inviteSessionData.date,
                 department_id: this.inviteSessionData.departments,
                 user_list: [],
-                is_active: this.inviteSessionData.isActive,
+                is_active: this.inviteSessionData.is_active,
                 files: this.files,
                 deletedOldFiles: this.deletedOldFiles,
             };

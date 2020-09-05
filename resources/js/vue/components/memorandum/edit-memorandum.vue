@@ -45,7 +45,7 @@
 
             .field
                 label.checkbox
-                    input(type='checkbox', v-model="memorandumData.isActive")
+                    input(type='checkbox', v-model="memorandumData.is_active")
                     |   فعال
 
             .field.is-grouped
@@ -87,7 +87,7 @@ module.exports = {
             department_id: null,
             files: {},
             user_list: {},
-            isActive: false
+            is_active: false
         },
 
         notificationMessage: null,
@@ -151,7 +151,7 @@ module.exports = {
                 date: data.date,
                 department_id: data.department_id,
                 files: data.files,
-                isActive: data.is_active
+                is_active: data.is_active
             };
 
             try {
@@ -252,7 +252,7 @@ module.exports = {
                 conditions: this.memorandumData.conditions,
                 date: this.memorandumData.date,
                 department_id: this.memorandumData.departments,
-                is_active: this.memorandumData.isActive
+                is_active: this.memorandumData.is_active
             };
             memorandumData.files = this.files[0];
             this.showLoading();

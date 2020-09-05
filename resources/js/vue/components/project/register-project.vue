@@ -109,7 +109,7 @@
                     |   ضمیمه
             .field
                 label.checkbox
-                    input(type='checkbox', v-model="projectData.isActive")
+                    input(type='checkbox', v-model="projectData.is_active")
                     |   فعال
             .field.is-grouped
                 .control(v-show="! isLoadingMode")
@@ -159,7 +159,7 @@ module.exports = {
             refree: null,
             monitoring_comment: null,
             files: {},
-            isActive: false
+            is_active: false
         },
 
         notificationMessage: null,

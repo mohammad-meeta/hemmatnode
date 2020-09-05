@@ -112,7 +112,7 @@
                             file-upload(ref="fileUpload", :old-files="signaturedOldFiles")
             .field
                 label.checkbox
-                    input(type='checkbox', v-model="inviteSessionData.isActive")
+                    input(type='checkbox', v-model="inviteSessionData.is_active")
                     |   فعال
                 .field.is-grouped
                     .control(v-show="! isLoadingMode")
@@ -165,7 +165,7 @@ module.exports = {
             signatured: {},
             user_list: {},
             present_user_list: {},
-            isActive: false,
+            is_active: false,
             intro: null,
             approv: [],
             other_user: [],
@@ -307,7 +307,7 @@ module.exports = {
                 signatured: data.signatured,
                 user_list: data.user_list,
                 present_user_list: data.present_user_list,
-                isActive: data.is_active,
+                is_active: data.is_active,
                 approv: data.approv,
                 other_user: data.other_user
             };
@@ -434,7 +434,7 @@ module.exports = {
                 date: this.inviteSessionData.date,
                 department_id: this.inviteSessionData.department_id,
                 user_list: this.inviteSessionData.user_list,
-                is_active: this.inviteSessionData.isActive,
+                is_active: this.inviteSessionData.is_active,
                 approv: JSON.stringify(this.inviteSessionData.approv),
                 other_user: JSON.stringify(this.inviteSessionData.other_user),
                 files: this.files,

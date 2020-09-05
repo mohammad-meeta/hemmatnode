@@ -50,7 +50,7 @@ module.exports = {
             date: null,
             department_id: null,
             files: {},
-            isActive: false
+            is_active: false
         },
         showLoadingFlag: false
     }),
@@ -74,7 +74,7 @@ module.exports = {
                 department_id: data.department_id,
                 files: data.files,
                 projects: data.projects,
-                isActive: data.is_active
+                is_active: data.is_active
             };
             Vue.set(this, "memorandumData", temp);
         },

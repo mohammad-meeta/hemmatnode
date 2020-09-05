@@ -130,7 +130,7 @@ module.exports = {
         title: null,
         department_category_id: null,
         files: {},
-        isActive: false
+        is_active: false
       },
       accessLink: [],
       showLoadingFlag: false

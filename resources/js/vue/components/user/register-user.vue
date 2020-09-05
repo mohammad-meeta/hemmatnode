@@ -55,7 +55,7 @@
                     |   {{ role.name }}
             .field
                 label.checkbox
-                    input(type='checkbox', v-model="userData.isActive")
+                    input(type='checkbox', v-model="userData.is_active")
                     |   فعال
             .field.is-grouped
                 .control(v-show="! isLoadingMode")
@@ -97,7 +97,7 @@ module.exports = {
             cellphone: null,
             files: [],
             deletedOldFiles: [],
-            isActive: false,
+            is_active: false,
             role_group_role: [],
             role_group_group: null,
         },
@@ -226,7 +226,7 @@ module.exports = {
                 cellphone: this.userData.cellphone,
                 role_group_role: this.userData.role_group_role,
                 role_group_group: this.userData.role_group_group,
-                is_active: this.userData.isActive,
+                is_active: this.userData.is_active,
                 files: this.files,
                 deletedOldFiles: this.deletedOldFiles
             };

@@ -428,7 +428,7 @@ module.exports = {
         cellphone: null,
         files: [],
         deletedOldFiles: [],
-        isActive: false,
+        is_active: false,
         role_group_role: [],
         role_group_group: null
       },
@@ -483,7 +483,7 @@ module.exports = {
         role_group_role: JSON.parse(data.role_group_role),
         role_group_group: data.role_group_group,
         files: _.cloneDeep(data.files),
-        isActive: data.is_active
+        is_active: data.is_active
       };
       Vue.set(this, "oldFiles", temp.files);
       Vue.set(this, "userData", temp);
@@ -583,7 +583,7 @@ module.exports = {
         cellphone: this.userData.cellphone,
         role_group_role: this.userData.role_group_role,
         role_group_group: this.userData.role_group_group,
-        is_active: this.userData.isActive,
+        is_active: this.userData.is_active,
         files: this.files,
         deletedOldFiles: this.deletedOldFiles
       };
@@ -925,7 +925,7 @@ module.exports = {
         cellphone: null,
         files: [],
         deletedOldFiles: [],
-        isActive: false,
+        is_active: false,
         role_group_role: [],
         role_group_group: null
       },
@@ -1064,7 +1064,7 @@ module.exports = {
         cellphone: this.userData.cellphone,
         role_group_role: this.userData.role_group_role,
         role_group_group: this.userData.role_group_group,
-        is_active: this.userData.isActive,
+        is_active: this.userData.is_active,
         files: this.files,
         deletedOldFiles: this.deletedOldFiles
       };
@@ -1159,7 +1159,7 @@ module.exports = {
         nationCode: null,
         cellphone: null,
         roles: {},
-        isActive: false
+        is_active: false
       },
       showLoadingFlag: false
     };
@@ -1187,7 +1187,7 @@ module.exports = {
         nationCode: data.profile.nation_code,
         cellphone: data.cellphone,
         roles: data.roles,
-        isActive: data.is_active
+        is_active: data.is_active
       };
       console.log(temp);
       Vue.set(this, "userData", temp);
@@ -41004,7 +41004,7 @@ var render = function() {
               [_vm._v("×")]
             ),
             _c("label", [_vm._v(_vm._s(_vm.humanFileSize(file.file.size)))]),
-            _c("label", [_vm._v(_vm._s(file.file.originalname))])
+            _c("label", [_vm._v(_vm._s(file.file.name))])
           ])
         }),
         0
@@ -41519,19 +41519,19 @@ var render = function() {
                     {
                       name: "model",
                       rawName: "v-model",
-                      value: _vm.userData.isActive,
-                      expression: "userData.isActive"
+                      value: _vm.userData.is_active,
+                      expression: "userData.is_active"
                     }
                   ],
                   attrs: { type: "checkbox" },
                   domProps: {
-                    checked: Array.isArray(_vm.userData.isActive)
-                      ? _vm._i(_vm.userData.isActive, null) > -1
-                      : _vm.userData.isActive
+                    checked: Array.isArray(_vm.userData.is_active)
+                      ? _vm._i(_vm.userData.is_active, null) > -1
+                      : _vm.userData.is_active
                   },
                   on: {
                     change: function($event) {
-                      var $$a = _vm.userData.isActive,
+                      var $$a = _vm.userData.is_active,
                         $$el = $event.target,
                         $$c = $$el.checked ? true : false
                       if (Array.isArray($$a)) {
@@ -41541,19 +41541,19 @@ var render = function() {
                           $$i < 0 &&
                             _vm.$set(
                               _vm.userData,
-                              "isActive",
+                              "is_active",
                               $$a.concat([$$v])
                             )
                         } else {
                           $$i > -1 &&
                             _vm.$set(
                               _vm.userData,
-                              "isActive",
+                              "is_active",
                               $$a.slice(0, $$i).concat($$a.slice($$i + 1))
                             )
                         }
                       } else {
-                        _vm.$set(_vm.userData, "isActive", $$c)
+                        _vm.$set(_vm.userData, "is_active", $$c)
                       }
                     }
                   }
@@ -42195,19 +42195,19 @@ var render = function() {
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.userData.isActive,
-                    expression: "userData.isActive"
+                    value: _vm.userData.is_active,
+                    expression: "userData.is_active"
                   }
                 ],
                 attrs: { type: "checkbox" },
                 domProps: {
-                  checked: Array.isArray(_vm.userData.isActive)
-                    ? _vm._i(_vm.userData.isActive, null) > -1
-                    : _vm.userData.isActive
+                  checked: Array.isArray(_vm.userData.is_active)
+                    ? _vm._i(_vm.userData.is_active, null) > -1
+                    : _vm.userData.is_active
                 },
                 on: {
                   change: function($event) {
-                    var $$a = _vm.userData.isActive,
+                    var $$a = _vm.userData.is_active,
                       $$el = $event.target,
                       $$c = $$el.checked ? true : false
                     if (Array.isArray($$a)) {
@@ -42215,17 +42215,17 @@ var render = function() {
                         $$i = _vm._i($$a, $$v)
                       if ($$el.checked) {
                         $$i < 0 &&
-                          _vm.$set(_vm.userData, "isActive", $$a.concat([$$v]))
+                          _vm.$set(_vm.userData, "is_active", $$a.concat([$$v]))
                       } else {
                         $$i > -1 &&
                           _vm.$set(
                             _vm.userData,
-                            "isActive",
+                            "is_active",
                             $$a.slice(0, $$i).concat($$a.slice($$i + 1))
                           )
                       }
                     } else {
-                      _vm.$set(_vm.userData, "isActive", $$c)
+                      _vm.$set(_vm.userData, "is_active", $$c)
                     }
                   }
                 }

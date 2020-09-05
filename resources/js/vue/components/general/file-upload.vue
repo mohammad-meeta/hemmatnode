@@ -9,7 +9,7 @@
                 li(v-for="(file, index) in fileList", style="dir: ltr;")
                     button.button.is-danger(@click.prevent="removeFile(file)") &times;
                     label {{ humanFileSize(file.file.size) }}
-                    label {{ file.file.originalname }}
+                    label {{ file.file.name }}
 
 </template>
 

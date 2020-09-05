@@ -50,7 +50,7 @@ module.exports = {
             refree: null,
             monitoring_comment: null,
             files: {},
-            isActive: false
+            is_active: false
         },
         showLoadingFlag: false
     }),
@@ -94,7 +94,7 @@ module.exports = {
             refree: data.refree,
             monitoring_comment: data.monitoring_comment,
             files: {},
-                isActive: data.is_active
+                is_active: data.is_active
             };
             console.log(temp);
             Vue.set(this, "projectData", temp);

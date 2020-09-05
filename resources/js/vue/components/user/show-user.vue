@@ -31,7 +31,7 @@ module.exports = {
             nationCode: null,
             cellphone: null,
             roles: {},
-            isActive: false
+            is_active: false
         },
         showLoadingFlag: false
     }),
@@ -56,7 +56,7 @@ module.exports = {
                 nationCode: data.profile.nation_code,
                 cellphone: data.cellphone,
                 roles: data.roles,
-                isActive: data.is_active
+                is_active: data.is_active
             };
             console.log(temp);
             Vue.set(this, "userData", temp);

@@ -18,7 +18,7 @@
                     |   ضمیمه
             .field
                 label.checkbox
-                    input(type='checkbox', v-model="programData.isActive")
+                    input(type='checkbox', v-model="programData.is_active")
                     |   فعال
             .field.is-grouped
                 .control(v-show="! isLoadingMode")
@@ -47,7 +47,7 @@ module.exports = {
         programData: {
             title: null,
             files: {},
-            isActive: true,
+            is_active: true,
         },
 
         notificationMessage: null,
@@ -57,10 +57,17 @@ module.exports = {
     }),
 
     props: {
+        departmentId: {
+            type: String,
+            default: null,
+        },
         registerUrl: {
             type: String,
             default: "",
         },
+    },
+    created() {
+        this.programData.departmentId = this.departmentId;
     },
 
     computed: {
@@ -131,13 +138,12 @@ module.exports = {
             }
             let programData = this.programData;
 
-            console.log(programData);
             programData.files = this.files[0];
 
             this.showLoading();
 
             const url = this.registerUrl;
-            
+
             AxiosHelper.send("post", url, programData, {
                 sendAsFormData: true,
             })

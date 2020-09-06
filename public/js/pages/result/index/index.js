@@ -376,7 +376,7 @@ module.exports = {
         cast: null,
         deadline: null,
         files: [],
-        isActive: false
+        is_active: false
       },
       notificationMessage: null,
       notificationType: "is-info",
@@ -29378,19 +29378,19 @@ var render = function() {
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.resultData.isActive,
-                    expression: "resultData.isActive"
+                    value: _vm.resultData.is_active,
+                    expression: "resultData.is_active"
                   }
                 ],
                 attrs: { type: "checkbox" },
                 domProps: {
-                  checked: Array.isArray(_vm.resultData.isActive)
-                    ? _vm._i(_vm.resultData.isActive, null) > -1
-                    : _vm.resultData.isActive
+                  checked: Array.isArray(_vm.resultData.is_active)
+                    ? _vm._i(_vm.resultData.is_active, null) > -1
+                    : _vm.resultData.is_active
                 },
                 on: {
                   change: function($event) {
-                    var $$a = _vm.resultData.isActive,
+                    var $$a = _vm.resultData.is_active,
                       $$el = $event.target,
                       $$c = $$el.checked ? true : false
                     if (Array.isArray($$a)) {
@@ -29400,19 +29400,19 @@ var render = function() {
                         $$i < 0 &&
                           _vm.$set(
                             _vm.resultData,
-                            "isActive",
+                            "is_active",
                             $$a.concat([$$v])
                           )
                       } else {
                         $$i > -1 &&
                           _vm.$set(
                             _vm.resultData,
-                            "isActive",
+                            "is_active",
                             $$a.slice(0, $$i).concat($$a.slice($$i + 1))
                           )
                       }
                     } else {
-                      _vm.$set(_vm.resultData, "isActive", $$c)
+                      _vm.$set(_vm.resultData, "is_active", $$c)
                     }
                   }
                 }
@@ -31589,7 +31589,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/result/index/index.js */"./resources/js/pages/result/index/index.js");
+module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/pages/result/index/index.js */"./resources/js/pages/result/index/index.js");
 
 
 /***/ })

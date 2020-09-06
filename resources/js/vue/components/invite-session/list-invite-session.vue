@@ -59,24 +59,15 @@
         aria-previous-label="Previous page",
         aria-page-label="Page",
         aria-current-label="Current page"
+        @change="loadInviteSessions(pagination.current)"
     )
 
-    paginate(
-        :page-count="pageCount",
-        :click-handler="paginatorClick",
-        :prev-text="'Prev'",
-        :next-text="'Next'",
-        :container-class="'pagination-list'"
-    )
 </template>
 
 <script>
 "use strict";
 
 const ENUMS = require("JS-HELPERS/enums");
-
-const Paginate = require("vuejs-paginate");
-Vue.component("paginate", Paginate);
 
 module.exports = {
     props: {
@@ -95,9 +86,9 @@ module.exports = {
         departmentData: null,
         ENUMS,
         pagination: {
-            total: 200,
-            current: 10,
-            perPage: 10,
+            total: 0,
+            current: 1,
+            perPage: 50,
             rangeBefore: 3,
             rangeAfter: 1,
             order: "",
@@ -111,14 +102,12 @@ module.exports = {
             {
                 is_active: null,
                 agenda: null,
-                extra: null,
                 dep: {
                     title: null,
                 },
             },
         ],
         inviteSessionsCount: 0,
-        pageCount: 0,
     }),
 
     computed: {
@@ -148,11 +137,9 @@ module.exports = {
             AxiosHelper.send("get", url, "").then((res) => {
                 const resData = res.data;
                 const inviteData = resData.data.data;
-
                 Vue.set(this, "inviteSessions", inviteData);
-                Vue.set(this, "inviteSessionsCount", inviteData.count);
-
-                this.paginator();
+                Vue.set(this, "inviteSessionsCount", resData.data.count);
+                Vue.set(this.pagination, "total", resData.data.count);
             });
         },
 
@@ -172,13 +159,7 @@ module.exports = {
             return DateHelper.toPersianDateLong(date);
         },
 
-        /**
-         * Paginator
-         */
-        paginator() {
-            let pageCount = Math.ceil(this.inviteSessionsCount / 50);
-            Vue.set(this, "pageCount", pageCount);
-        },
+
         /**
          * paginator click link
          */
@@ -195,7 +176,6 @@ module.exports = {
                 const newInviteSessionsData = {
                     _id: payload.data._id,
                     dep: dep,
-                    extra: data,
                     agenda: data,
                     place: payload.data.place,
                     date: payload.data.date,
@@ -212,28 +192,38 @@ module.exports = {
 
         editInviteSessionList(payload) {
             const data = payload.data.data.agenda;
-            const otherUsers = payload.data.otherUsers;
+            console.log(payload)
             const editedInviteSessionsData = {
                 _id: payload.data.data._id,
                 title: payload.data.data.agenda,
                 agenda: data,
-                extra: data,
                 place: payload.data.data.place,
-                date: payload.data.date,
-                body: payload.data.body,
-                user_list: payload.data.user_list,
-                oldFiles: payload.data.files,
+                date: payload.data.data.date,
+                body: payload.data.data.body,
+                user_list: payload.data.data.user_list,
+                oldFiles: payload.data.data.files,
                 is_active: payload.data.data.is_active,
                 created_at: payload.data.data.created_at,
             };
-
+            console.log(editedInviteSessionsData.is_active);
             let foundIndex = this.inviteSessions.findIndex(
                 (x) => x._id == editedInviteSessionsData._id
             );
             this.inviteSessions[foundIndex].agenda =
                 editedInviteSessionsData.agenda;
+            this.inviteSessions[foundIndex].place =
+                editedInviteSessionsData.place;
+            this.inviteSessions[foundIndex].date =
+                editedInviteSessionsData.date;
+            this.inviteSessions[foundIndex].body =
+                editedInviteSessionsData.body;
+            this.inviteSessions[foundIndex].user_list =
+                editedInviteSessionsData.user_list;
+            this.inviteSessions[foundIndex].files =
+                editedInviteSessionsData.oldFiles;
             this.inviteSessions[foundIndex].is_active =
                 editedInviteSessionsData.is_active;
+            console.log(this.inviteSessions[foundIndex]);
         },
     },
 };

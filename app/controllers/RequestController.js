@@ -222,7 +222,7 @@ Request.store = async function store(req, res, next) {
         "description": req.body.description,
         "department_id": req.body.departmentId,
         "user_id": req.session.auth.userId,
-        "is_active": req.body.isActive,
+        "is_active": req.body.is_active,
         "request_date": req.body.requestDate,
         "deadline": req.body.deadline,
         "files": fileList

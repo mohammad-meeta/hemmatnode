@@ -1,4 +1,7 @@
 "use strict";
+
+const { Console } = require("winston/lib/winston/transports");
+
 const PugView = use("app/helpers/pug-view");
 const InviteSessionHelper = use("app/helpers/invite-session-helper");
 const FileHelper = use("app/helpers/file-helper");
@@ -40,7 +43,7 @@ InviteSession.paginateInviteSession = async function paginateInviteSession(
             req,
             group
         );
-        let count = data.data;
+        let count = data;
 
         data = await InviteSessionHelper.loadAllInviteSessionData(
             req,
@@ -55,7 +58,6 @@ InviteSession.paginateInviteSession = async function paginateInviteSession(
                 count: count,
             },
         };
-
         res.status(200)
             .send(result)
             .end();
@@ -129,40 +131,72 @@ InviteSession.editInviteSessionData = async function editInviteSessionData(
 InviteSession.update = async function update(req, res, next) {
     let data = {};
 
-    console.log(JSON.stringify(req.body, null, 2))
+    const files = req.files || [];
+    let fileList = [];
 
-    // const files = req.body.files || [];
-    // let fileList = [];
+    for (let i = 0; i < files.length; ++i) {
+        try {
+            const el = files[i];
+            el.user_id = req.session.auth.userId;
 
-    // await files.forEach(async (element) => {
-    //     const fileData = element;
-    //     await FileHelper.insertFileData(fileData);
-    // });
+            const data = await FileHelper.insertFileData(el);
 
+            const tempFileData = {
+                file_id: data[0]._id,
+                deleted_at: null,
+            };
+            fileList.push(tempFileData);
+        } catch (err) {
+            Logger.error(err);
+        }
+    }
 
-    // data = {
-    //     _id: req.body._id,
-    //     body: req.body.body,
-    //     agenda: JSON.parse(req.body.agenda || "[]"),
-    //     place: req.body.place,
-    //     date: req.body.date,
-    //     user_list: JSON.parse(req.body.user_list),
-    //     other_user: JSON.parse(req.body.other_user || "[]"),
-    //     user_id: req.session.auth.userId,
-    //     is_active: req.body.is_active,
-    //     department_id: req.body.department_id,
-    //     files: fileList,
-    // };
+    const deletedOldFiles = JSON.parse(req.body.deletedOldFiles);
 
-    // let result = await InviteSessionHelper.updateInviteSessionData(data);
-    // result = {
-    //     success: true,
-    //     data: data,
-    // };
+    let inviteRes = await InviteSessionHelper.loadInviteSessionData(req.body._id);
+    const InviteSessionFiles = inviteRes.files;
 
-    // res.status(200)
-    //     .send(result)
-    //     .end();
+    for (let index = 0; index < InviteSessionFiles.length; index++) {
+        const element = InviteSessionFiles[index];
+        fileList.push(element)
+    }
+
+    for (let index = 0; index < deletedOldFiles.length; index++) {
+        const element = deletedOldFiles[index];
+        for (let oil = 0; oil < fileList.length; oil++) {
+            const Fele = fileList[oil];
+            if (Fele.file_id == element) {
+                Fele.deleted_at = Date()
+            }
+        }
+    }
+
+    data = {
+        _id: req.body._id,
+        body: req.body.body,
+        agenda: JSON.parse(req.body.agenda || "[]"),
+        place: req.body.place,
+        date: req.body.date,
+        user_list: JSON.parse(req.body.user_list),
+        other_user: JSON.parse(req.body.other_user || "[]"),
+        approves: JSON.parse(req.body.approves || "[]"),
+        present_user: JSON.parse(req.body.present_user || "[]"),
+        status: req.body.status || 0,
+        user_id: req.session.auth.userId,
+        is_active: req.body.is_active,
+        department_id: req.body.department_id,
+        files: fileList,
+    };
+
+    let result = await InviteSessionHelper.updateInviteSessionData(data);
+    result = {
+        success: true,
+        data: data,
+    };
+
+    res.status(200)
+        .send(result)
+        .end();
 };
 
 /**
@@ -262,6 +296,7 @@ InviteSession.store = async function store(req, res, next) {
  */
 InviteSession.approvesStore = async function approvesStore(req, res, next) {
     const approves = JSON.parse(req.body.approves);
+    console.log(approves)
     let approvesArray = [];
 
     const files = req.files || [];
@@ -279,34 +314,49 @@ InviteSession.approvesStore = async function approvesStore(req, res, next) {
         }
     }
 
-    InviteSessionHelper.insertApproves(approves)
-        .then((dataRes) => {
-            for (let index = 0; index < dataRes.length; index++) {
-                approvesArray.push(dataRes[index]["_id"]);
-            }
+    const signatured = req.signatured || [];
+    let signaturedList = [];
+    for (let i = 0; i < signatured.length; ++i) {
+        try {
+            const el = signatured[i];
+            el.user_id = req.session.auth.userId;
 
-            const data = {
-                _id: req.body._id,
-                introduction: req.body.introduction,
-                user_list_present: req.body.user_list_present,
-                other_user: req.body.other_user,
-                user_id: req.session.auth.userId,
-                status: req.body.status || 1,
-                approves: approves,
-                signatured: fileList,
-            };
+            const data = await FileHelper.insertFileData(el);
+            signaturedList.push(data[0]._id);
+        } catch (err) {
+            Logger.error(err);
+        }
+    }
 
-            InviteSessionHelper.updateInviteSessionApproves(data)
-                .then((dataRes) => {
-                    const result = {
-                        success: true,
-                        data: dataRes,
-                    };
-                    res.status(200)
-                        .send(result)
-                        .end();
-                })
-                .catch((err) => console.error(err));
-        })
-        .catch((err) => console.error(err));
+    // InviteSessionHelper.insertApproves(approves)
+    //     .then((dataRes) => {
+    //         for (let index = 0; index < dataRes.length; index++) {
+    //             approvesArray.push(dataRes[index]["_id"]);
+    //         }
+
+    //         const data = {
+    //             _id: req.body._id,
+    //             introduction: req.body.introduction,
+    //             user_list_present: req.body.user_list_present,
+    //             other_user: req.body.other_user,
+    //             user_id: req.session.auth.userId,
+    //             status: req.body.status || 1,
+    //             approves: approves,
+    //             files: fileList,
+    //             signatured: signaturedList,
+    //         };
+
+    //         InviteSessionHelper.updateInviteSessionApproves(data)
+    //             .then((dataRes) => {
+    //                 const result = {
+    //                     success: true,
+    //                     data: dataRes,
+    //                 };
+    //                 res.status(200)
+    //                     .send(result)
+    //                     .end();
+    //             })
+    //             .catch((err) => console.error(err));
+    //     })
+    //     .catch((err) => console.error(err));
 };

@@ -40,8 +40,9 @@ Router.post("/invite-session/:department?", [
     "InviteSession@store"
 ]).as("invitesession.store");
 
-Router.get("/invite-session/approves/:session?", [
+Router.post("/invite-session/approves/:session?", [
     upload.array("files"),
+    upload.array("signatured"),
     checkSession,
     Rule.canAsync("user.permision", "invitesession.approves.store"),
     "InviteSession@approvesStore"
@@ -59,7 +60,7 @@ Router.get("/api/invite-session/:invitesession/edit", [
     "InviteSession@editInviteSessionData"
 ]).as("api.invitesession.edit");
 
-Router.patch("/invite-session/:id", [
+Router.post("/invite-session/:id/edit", [
     upload.array("files"),
     checkSession,
     Rule.canAsync("user.permision", "invitesession.update"),

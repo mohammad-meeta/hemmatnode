@@ -19,6 +19,14 @@
                             i.material-icons.icon swap_horizontal_circle
                         span مشاهده
 
+                    a.button.is-primary.is-rounded(
+                        href="#",
+                        @click.prevent="commandClick(ENUMS.COMMAND.EDIT, program)"
+                    )
+                        span.icon.is-small
+                            i.material-icons.icon check_circle
+                        span ویرایش برنامه
+
     paginate(:page-count='pageCount',
         :click-handler='paginatorClick',
         :prev-text="'Prev'",
@@ -110,6 +118,19 @@ module.exports = {
             };
 
             this.programs.unshift(newProgramData);
+        },
+        editProgramList(payload) {
+            const editedProgramData = {
+                _id: payload.data.data._id,
+                title: payload.data.data.title,
+                is_active: payload.data.data.is_active,
+                created_at: payload.data.data.created_at,
+            };
+
+            let foundIndex = this.programs.findIndex(
+                (x) => x._id == editedProgramData._id
+            );
+            Vue.set(this.programs, foundIndex, editedProgramData);
         },
     },
 };

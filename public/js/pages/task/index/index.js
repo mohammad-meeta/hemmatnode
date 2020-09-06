@@ -407,7 +407,7 @@ module.exports = {
         weight: null,
         parent: null,
         files: {},
-        isActive: false,
+        is_active: false,
         status: {},
         user_list: {}
       },
@@ -543,7 +543,7 @@ module.exports = {
         description: this.taskData.description,
         weight: this.taskData.weight,
         parent: this.taskData.parents,
-        is_active: this.taskData.isActive
+        is_active: this.taskData.is_active
       };
       console.log(taskData);
       taskData.files = this.files[0];
@@ -29732,19 +29732,19 @@ var render = function() {
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.taskData.isActive,
-                    expression: "taskData.isActive"
+                    value: _vm.taskData.is_active,
+                    expression: "taskData.is_active"
                   }
                 ],
                 attrs: { type: "checkbox" },
                 domProps: {
-                  checked: Array.isArray(_vm.taskData.isActive)
-                    ? _vm._i(_vm.taskData.isActive, null) > -1
-                    : _vm.taskData.isActive
+                  checked: Array.isArray(_vm.taskData.is_active)
+                    ? _vm._i(_vm.taskData.is_active, null) > -1
+                    : _vm.taskData.is_active
                 },
                 on: {
                   change: function($event) {
-                    var $$a = _vm.taskData.isActive,
+                    var $$a = _vm.taskData.is_active,
                       $$el = $event.target,
                       $$c = $$el.checked ? true : false
                     if (Array.isArray($$a)) {
@@ -29752,17 +29752,17 @@ var render = function() {
                         $$i = _vm._i($$a, $$v)
                       if ($$el.checked) {
                         $$i < 0 &&
-                          _vm.$set(_vm.taskData, "isActive", $$a.concat([$$v]))
+                          _vm.$set(_vm.taskData, "is_active", $$a.concat([$$v]))
                       } else {
                         $$i > -1 &&
                           _vm.$set(
                             _vm.taskData,
-                            "isActive",
+                            "is_active",
                             $$a.slice(0, $$i).concat($$a.slice($$i + 1))
                           )
                       }
                     } else {
-                      _vm.$set(_vm.taskData, "isActive", $$c)
+                      _vm.$set(_vm.taskData, "is_active", $$c)
                     }
                   }
                 }
@@ -31939,7 +31939,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/task/index/index.js */"./resources/js/pages/task/index/index.js");
+module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/pages/task/index/index.js */"./resources/js/pages/task/index/index.js");
 
 
 /***/ })

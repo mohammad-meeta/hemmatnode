@@ -6,94 +6,78 @@
         .column.is-full(v-show="isLoadingMode")
             h1 در حال بارگذاری
         .form-small(v-show="! isLoadingMode")
-            .fieldset
-                legend مشخصات طلب همکاری
-                .field
-                    label.label عنوان طلب همکاری
-                    .control
-                        input.input(type='text', placeholder='عنوان طلب همکاری', autofocus, v-model='requestData.title' required)
+            .field
+                label.label نام
+                .control
+                    input.input(type='text', placeholder='نام', v-model='programData.title' required)
 
-                .field
-                    label.label شرح
-                    .control
-                        textarea.textarea(placeholder='شرح', v-model='requestData.description')
-
-                .field
-                    label.label تاریخ
-                    .control
-                        date-picker(v-model='requestData.requestDate' format="YYYY-MM-DD HH:mm:ss"
-                        display-format=" jDD/jMM/jYYYY HH:mm" type="datetime" required)
-
-                .field
-                    label.label تاریخ
-                    .control
-                        date-picker(v-model='requestData.deadline' format="YYYY-MM-DD HH:mm:ss"
-                        display-format=" jDD/jMM/jYYYY HH:mm" type="datetime" required)
-
-                .field
-                    label.checkbox
-                        input(type='file', @change="setAttachment")
-                        |   ضمیمه
-                .field
-                    label.checkbox
-                        input(type='checkbox', v-model="requestData.is_active")
-                        |   فعال
-
+            .field
+                .panel
+                    .panel-heading
+                        | فایل های ضمیمه
+                    .panel-block
+                        file-upload(ref="fileUpload", :old-files="oldFiles")
+            .field
+                label.checkbox
+                    input(type='checkbox', v-model="programData.isActive")
+                    |   فعال
                 .field.is-grouped
                     .control(v-show="! isLoadingMode")
                         a.button.is-link.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
-                            |   ایجاد
-
+                            |   ویرایش
 </template>
 
 <script>
 "use strict";
 
+const Buefy = require("buefy").default;
 const AxiosHelper = require("JS-HELPERS/axios-helper");
+const ProgramValidator = require("JS-VALIDATORS/program-register-validator");
 const ENUMS = require("JS-HELPERS/enums");
-const RequestValidator = require("JS-VALIDATORS/request-register-validator");
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
-const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
+const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 
 module.exports = {
-    name: "RegisterRequest",
-
+    name: "EditProgram",
     components: {
+        FileUpload,
         Notification,
-        DatePicker: VuePersianDatetimePicker,
     },
 
     data: () => ({
         ENUMS,
-        programs: [],
-        requestData: {
+        files: [],
+        deletedOldFiles: [],
+        oldFiles: [],
+        programData: {
             title: null,
-            description: null,
-            departmentId: null,
-            requestDate: null,
-            deadline: null,
+            department_id: null,
             files: {},
-            is_active: false,
+            oldFiles: [],
+            isActive: false,
+            deletedOldFiles: [],
         },
 
         notificationMessage: null,
         notificationType: "is-info",
         showLoadingFlag: false,
-        files: [],
     }),
 
     props: {
-        registerUrl: {
+        editUrl: {
             type: String,
             default: "",
         },
+
         departmentId: {
             type: String,
-            default: "",
+            default: null,
         },
     },
 
     created() {},
+
+    mounted() {},
 
     computed: {
         isLoadingMode: (state) => state.showLoadingFlag == true,
@@ -102,12 +86,20 @@ module.exports = {
 
     methods: {
         /**
-         * Set attachments
+         * Load specific user
          */
-        setAttachment(sender) {
-            const files = sender.target.files;
-
-            Vue.set(this, "files", files);
+        loadProgramData(data) {
+            let temp = {
+                _id: data._id,
+                // dep: data.dep.title,
+                title: data.title,
+                department_id: data.department_id,
+                files: data.files,
+                isActive: data.is_active,
+            };
+            Vue.set(this, "oldFiles", data.files);
+            Vue.set(this, "programData", temp);
+            this.$refs.fileUpload.updateOldFiles(data.files);
         },
 
         /**
@@ -118,7 +110,7 @@ module.exports = {
         commandClick(arg) {
             switch (arg) {
                 case ENUMS.COMMAND.SAVE:
-                    this.registerRequest();
+                    this.EditProgram();
                     break;
             }
         },
@@ -153,47 +145,59 @@ module.exports = {
         },
 
         /**
-         * Register new request
+         * Edit program
          */
-        registerRequest() {
+        EditProgram() {
             const isValid = this.validate();
 
             if (!isValid) {
                 return;
             }
-            let requestData = this.requestData;
-
-            requestData.files = this.files[0];
-            requestData.departmentId = this.departmentId;
 
             this.showLoading();
 
-            const url = this.registerUrl;
-            console.log(requestData);
-            AxiosHelper.send("post", url, requestData, {
+            const deletedFiles = this.$refs.fileUpload.getDeletedFiles();
+            const newFiles = this.$refs.fileUpload.getNewFiles();
+            let newUploaded = newFiles.map((x) => x.file);
+            Vue.set(this, "files", newUploaded);
+            let deleteUploaded = deletedFiles.map((x) => x._id);
+            Vue.set(this, "deletedOldFiles", deleteUploaded);
+            let programData = {
+                _id: this.programData._id,
+                title: this.programData.title,
+                department_id: this.programData.department_id,
+                is_active: this.programData.isActive,
+                files: this.files,
+                oldFiles: this.oldFiles,
+                deletedOldFiles: this.deletedOldFiles,
+            };
+            this.showLoading();
+
+            const url = this.editUrl.replace("$id$", programData._id);
+            AxiosHelper.send("post", url, programData, {
                 sendAsFormData: true,
+                filesArray: "files",
             })
                 .then((res) => {
+                    //const data = JSON.parse(res.config.data);
                     const data = res.data;
-                    if (data.success) {
-                        this.$emit("on-register", {
-                            sender: this,
-                            data,
-                        });
-                    }
+                    this.$emit("on-update", {
+                        sender: this,
+                        data,
+                    });
                 })
                 .catch((err) => {
-                    const data = err.response.data;
-                    this.setNotification(data, "is-danger");
+                    console.error(err);
+                    this.setNotification(".خطا در ذخیره جلسه", "is-danger");
                 })
                 .then(() => this.hideLoading());
         },
 
         /**
-         * Validate new request data
+         * Validate
          */
         validate() {
-            const result = RequestValidator.validate(this.requestData);
+            const result = ProgramValidator.validateEdit(this.programData);
 
             if (result.passes) {
                 this.closeNotification();

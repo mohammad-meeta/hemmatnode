@@ -571,8 +571,11 @@ module.exports = {
       departments: [],
       users: [],
       files: [],
+      signatured: [],
       deletedOldFiles: [],
+      signaturedDeletedOldFiles: [],
       oldFiles: [],
+      signaturedOldFiles: [],
       inviteSessionData: {
         title: null,
         body: null,
@@ -581,13 +584,15 @@ module.exports = {
         date: null,
         department_id: null,
         files: {},
+        signatured: {},
         user_list: {},
         present_user_list: {},
-        isActive: false,
+        is_active: false,
         intro: null,
         approv: [],
         other_user: [],
-        deletedOldFiles: []
+        deletedOldFiles: [],
+        signaturedDeletedOldFiles: []
       },
       userListTable: {
         checkedRows: [],
@@ -709,15 +714,18 @@ module.exports = {
         date: data.date,
         department_id: data.dep._id,
         files: data.files,
+        signatured: data.signatured,
         user_list: data.user_list,
         present_user_list: data.present_user_list,
-        isActive: data.is_active,
+        is_active: data.is_active,
         approv: data.approv,
         other_user: data.other_user
       };
       Vue.set(this, "oldFiles", data.files);
+      Vue.set(this, "signaturedOldFiles", data.signatured);
       Vue.set(this, "inviteSessionData", temp);
       this.$refs.fileUpload.updateOldFiles(data.files);
+      this.$refs.fileUpload.updateOldFiles(data.signatured);
       var userslist = this.inviteSessionData.user_list;
       var checkedUsers = this.users.filter(function (u) {
         return userslist.indexOf(u._id) > -1;
@@ -831,6 +839,16 @@ module.exports = {
         return x._id;
       });
       Vue.set(this, "deletedOldFiles", deleteUploaded);
+      var signaturedDeletedFiles = this.$refs.fileUpload.getDeletedFiles();
+      var newSignaturedFiles = this.$refs.fileUpload.getNewFiles();
+      var newSignaturedUploaded = newSignaturedFiles.map(function (x) {
+        return x.file;
+      });
+      Vue.set(this, "signaturedFiles", newSignaturedUploaded);
+      var signaturedDeleteUploaded = signaturedDeletedFiles.map(function (x) {
+        return x._id;
+      });
+      Vue.set(this, "signaturedDeletedOldFiles", signaturedDeleteUploaded);
       var inviteSessionData = {
         _id: this.inviteSessionData._id,
         body: this.inviteSessionData.body,
@@ -839,13 +857,14 @@ module.exports = {
         date: this.inviteSessionData.date,
         department_id: this.inviteSessionData.department_id,
         user_list: this.inviteSessionData.user_list,
-        is_active: this.inviteSessionData.isActive,
+        is_active: this.inviteSessionData.is_active,
         approv: JSON.stringify(this.inviteSessionData.approv),
         other_user: JSON.stringify(this.inviteSessionData.other_user),
         files: this.files,
-        deletedOldFiles: this.deletedOldFiles
+        signaturedFiles: this.signaturedFiles,
+        deletedOldFiles: this.deletedOldFiles,
+        signaturedDeletedOldFiles: this.signaturedDeletedOldFiles
       };
-      inviteSessionData.files = this.files[0];
       var t = Object.keys(inviteSessionData.user_list).filter(function (key) {
         return true == inviteSessionData.user_list[key];
       }).map(function (key) {
@@ -854,7 +873,7 @@ module.exports = {
       inviteSessionData.user_list = t;
       this.showLoading();
       var url = this.editUrl.replace("$id$", inviteSessionData._id);
-      AxiosHelper.send("patch", url, inviteSessionData, {
+      AxiosHelper.send("post", url, inviteSessionData, {
         sendAsFormData: true,
         filesArray: "files"
       }).then(function (res) {
@@ -1000,7 +1019,7 @@ var MultiTextMember = __webpack_require__(/*! VUE-COMPONENTS/invite-session/mult
 var FileUpload = __webpack_require__(/*! VUE-COMPONENTS/general/file-upload.vue */ "./resources/js/vue/components/general/file-upload.vue")["default"];
 
 module.exports = {
-  name: "EditInviteeSssion",
+  name: "EditSemiInviteSession",
   components: {
     Notification: Notification,
     DatePicker: VuePersianDatetimePicker,
@@ -1024,8 +1043,9 @@ module.exports = {
         date: null,
         department_id: null,
         files: {},
+        oldFiles: [],
         user_list: {},
-        isActive: false,
+        is_active: false,
         other_user: [],
         deletedOldFiles: []
       },
@@ -1035,7 +1055,7 @@ module.exports = {
       isPaginationSimple: false,
       paginationPosition: "bottom",
       currentPage: 1,
-      perPage: 10,
+      perPage: 3,
       columns: [{
         field: "name",
         label: "نام کاربری",
@@ -1117,7 +1137,7 @@ module.exports = {
         files: data.files,
         roles: data.roles,
         user_list: data.user_list,
-        isActive: data.is_active,
+        is_active: data.is_active,
         other_user: other_user
       };
       Vue.set(this, "oldFiles", data.files);
@@ -1239,9 +1259,10 @@ module.exports = {
         date: this.inviteSessionData.date,
         department_id: this.inviteSessionData.department_id,
         user_list: this.inviteSessionData.user_list,
-        is_active: this.inviteSessionData.isActive,
+        is_active: this.inviteSessionData.is_active,
         other_user: JSON.stringify(this.inviteSessionData.other_user),
         files: this.files,
+        oldFiles: this.oldFiles,
         deletedOldFiles: this.deletedOldFiles
       };
       var t = Object.keys(inviteSessionData.user_list).filter(function (key) {
@@ -1255,8 +1276,7 @@ module.exports = {
       });
       this.showLoading();
       var url = this.editUrl.replace("$id$", inviteSessionData._id);
-      console.log(inviteSessionData);
-      AxiosHelper.send("patch", url, inviteSessionData, {
+      AxiosHelper.send("post", url, inviteSessionData, {
         sendAsFormData: true,
         filesArray: "files"
       }).then(function (res) {
@@ -1707,19 +1727,10 @@ module.exports = {
 //
 //
 //
-//
-//
-//
-//
-//
-//
 
 
 var ENUMS = __webpack_require__(/*! JS-HELPERS/enums */ "./resources/js/helpers/enums.js");
 
-var Paginate = __webpack_require__(/*! vuejs-paginate */ "./node_modules/vuejs-paginate/dist/index.js");
-
-Vue.component("paginate", Paginate);
 module.exports = {
   props: {
     listUrl: {
@@ -1736,9 +1747,9 @@ module.exports = {
       departmentData: null,
       ENUMS: ENUMS,
       pagination: {
-        total: 200,
-        current: 10,
-        perPage: 10,
+        total: 0,
+        current: 1,
+        perPage: 50,
         rangeBefore: 3,
         rangeAfter: 1,
         order: "",
@@ -1751,13 +1762,11 @@ module.exports = {
       inviteSessions: [{
         is_active: null,
         agenda: null,
-        extra: null,
         dep: {
           title: null
         }
       }],
-      inviteSessionsCount: 0,
-      pageCount: 0
+      inviteSessionsCount: 0
     };
   },
   computed: {
@@ -1789,9 +1798,8 @@ module.exports = {
         var resData = res.data;
         var inviteData = resData.data.data;
         Vue.set(_this, "inviteSessions", inviteData);
-        Vue.set(_this, "inviteSessionsCount", inviteData.count);
-
-        _this.paginator();
+        Vue.set(_this, "inviteSessionsCount", resData.data.count);
+        Vue.set(_this.pagination, "total", resData.data.count);
       });
     },
 
@@ -1815,14 +1823,6 @@ module.exports = {
     },
 
     /**
-     * Paginator
-     */
-    paginator: function paginator() {
-      var pageCount = Math.ceil(this.inviteSessionsCount / 50);
-      Vue.set(this, "pageCount", pageCount);
-    },
-
-    /**
      * paginator click link
      */
     paginatorClick: function paginatorClick(id) {
@@ -1840,7 +1840,6 @@ module.exports = {
         var newInviteSessionsData = {
           _id: payload.data._id,
           dep: dep,
-          extra: data,
           agenda: data,
           place: payload.data.place,
           date: payload.data.date,
@@ -1856,25 +1855,31 @@ module.exports = {
     },
     editInviteSessionList: function editInviteSessionList(payload) {
       var data = payload.data.data.agenda;
-      var otherUsers = payload.data.otherUsers;
+      console.log(payload);
       var editedInviteSessionsData = {
         _id: payload.data.data._id,
         title: payload.data.data.agenda,
         agenda: data,
-        extra: data,
         place: payload.data.data.place,
-        date: payload.data.date,
-        body: payload.data.body,
-        user_list: payload.data.user_list,
-        oldFiles: payload.data.files,
+        date: payload.data.data.date,
+        body: payload.data.data.body,
+        user_list: payload.data.data.user_list,
+        oldFiles: payload.data.data.files,
         is_active: payload.data.data.is_active,
         created_at: payload.data.data.created_at
       };
+      console.log(editedInviteSessionsData.is_active);
       var foundIndex = this.inviteSessions.findIndex(function (x) {
         return x._id == editedInviteSessionsData._id;
       });
       this.inviteSessions[foundIndex].agenda = editedInviteSessionsData.agenda;
+      this.inviteSessions[foundIndex].place = editedInviteSessionsData.place;
+      this.inviteSessions[foundIndex].date = editedInviteSessionsData.date;
+      this.inviteSessions[foundIndex].body = editedInviteSessionsData.body;
+      this.inviteSessions[foundIndex].user_list = editedInviteSessionsData.user_list;
+      this.inviteSessions[foundIndex].files = editedInviteSessionsData.oldFiles;
       this.inviteSessions[foundIndex].is_active = editedInviteSessionsData.is_active;
+      console.log(this.inviteSessions[foundIndex]);
     }
   }
 };
@@ -2152,9 +2157,9 @@ module.exports = {
 //
 //
 //
-//
-//
 
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var AxiosHelper = __webpack_require__(/*! JS-HELPERS/axios-helper */ "./resources/js/helpers/axios-helper.js");
 
@@ -2190,8 +2195,10 @@ module.exports = {
       departments: [],
       users: [],
       files: [],
+      signatured: [],
       deletedOldFiles: [],
       oldFiles: [],
+      signaturedOldFiles: [],
       inviteSessionData: {
         title: null,
         body: null,
@@ -2200,10 +2207,11 @@ module.exports = {
         date: null,
         department_id: null,
         files: {},
+        signatured: {},
         deletedOldFiles: [],
         user_list: {},
         present_user_list: {},
-        isActive: false,
+        is_active: false,
         intro: null,
         approv: [],
         other_user: []
@@ -2393,6 +2401,11 @@ module.exports = {
         return x._id;
       });
       Vue.set(this, "deletedOldFiles", deleteUploaded);
+      var newSignaturedFiles = this.$refs.fileUpload.getNewFiles();
+      var newSignaturedUploaded = newSignaturedFiles.map(function (x) {
+        return x.file;
+      });
+      Vue.set(this, "signatured", newSignaturedUploaded);
       var inviteSessionData = {
         body: this.inviteSessionData.body,
         agenda: JSON.stringify(this.inviteSessionData.agenda),
@@ -2403,8 +2416,9 @@ module.exports = {
         department_id: this.inviteSessionData.departments,
         user_list: [],
         present_user_list: [],
-        is_active: this.inviteSessionData.isActive,
+        is_active: this.inviteSessionData.is_active,
         files: this.files,
+        signatured: this.signatured,
         deletedOldFiles: this.deletedOldFiles
       };
       inviteSessionData.user_list = this.userListTable.checkedRows.map(function (x) {
@@ -2427,10 +2441,10 @@ module.exports = {
       inviteSessionData.present_user_list = t;
       this.showLoading();
       var url = this.registerUrl;
-      AxiosHelper.send("post", url, inviteSessionData, {
+      AxiosHelper.send("post", url, inviteSessionData, _defineProperty({
         sendAsFormData: true,
         filesArray: "files"
-      }).then(function (res) {
+      }, "filesArray", "signatured")).then(function (res) {
         var data = res.data;
 
         if (data.success) {
@@ -2634,7 +2648,7 @@ module.exports = {
         deletedOldFiles: [],
         user_list: {},
         other_user: [],
-        isActive: false
+        is_active: false
       },
       checkedRows: [],
       checkboxPosition: "left",
@@ -2796,7 +2810,7 @@ module.exports = {
         date: this.inviteSessionData.date,
         department_id: this.inviteSessionData.departments,
         user_list: [],
-        is_active: this.inviteSessionData.isActive,
+        is_active: this.inviteSessionData.is_active,
         files: this.files,
         deletedOldFiles: this.deletedOldFiles
       };
@@ -2931,7 +2945,7 @@ module.exports = {
         department_id: null,
         files: {},
         user_list: {},
-        isActive: false
+        is_active: false
       },
       showLoadingFlag: false
     };
@@ -2960,7 +2974,7 @@ module.exports = {
         files: data.files,
         roles: data.roles,
         user_list: data.user_list,
-        isActive: data.is_active
+        is_active: data.is_active
       };
 
       try {
@@ -46867,7 +46881,7 @@ var render = function() {
               [_vm._v("×")]
             ),
             _c("label", [_vm._v(_vm._s(_vm.humanFileSize(file.file.size)))]),
-            _c("label", [_vm._v(_vm._s(file.file.originalname))])
+            _c("label", [_vm._v(_vm._s(file.file.name))])
           ])
         }),
         0
@@ -47578,7 +47592,7 @@ var render = function() {
                   [
                     _c("file-upload", {
                       ref: "fileUpload",
-                      attrs: { "old-files": _vm.oldFiles }
+                      attrs: { "old-files": _vm.signaturedOldFiles }
                     })
                   ],
                   1
@@ -47593,19 +47607,19 @@ var render = function() {
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.inviteSessionData.isActive,
-                    expression: "inviteSessionData.isActive"
+                    value: _vm.inviteSessionData.is_active,
+                    expression: "inviteSessionData.is_active"
                   }
                 ],
                 attrs: { type: "checkbox" },
                 domProps: {
-                  checked: Array.isArray(_vm.inviteSessionData.isActive)
-                    ? _vm._i(_vm.inviteSessionData.isActive, null) > -1
-                    : _vm.inviteSessionData.isActive
+                  checked: Array.isArray(_vm.inviteSessionData.is_active)
+                    ? _vm._i(_vm.inviteSessionData.is_active, null) > -1
+                    : _vm.inviteSessionData.is_active
                 },
                 on: {
                   change: function($event) {
-                    var $$a = _vm.inviteSessionData.isActive,
+                    var $$a = _vm.inviteSessionData.is_active,
                       $$el = $event.target,
                       $$c = $$el.checked ? true : false
                     if (Array.isArray($$a)) {
@@ -47615,19 +47629,19 @@ var render = function() {
                         $$i < 0 &&
                           _vm.$set(
                             _vm.inviteSessionData,
-                            "isActive",
+                            "is_active",
                             $$a.concat([$$v])
                           )
                       } else {
                         $$i > -1 &&
                           _vm.$set(
                             _vm.inviteSessionData,
-                            "isActive",
+                            "is_active",
                             $$a.slice(0, $$i).concat($$a.slice($$i + 1))
                           )
                       }
                     } else {
-                      _vm.$set(_vm.inviteSessionData, "isActive", $$c)
+                      _vm.$set(_vm.inviteSessionData, "is_active", $$c)
                     }
                   }
                 }
@@ -47951,19 +47965,19 @@ var render = function() {
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.inviteSessionData.isActive,
-                    expression: "inviteSessionData.isActive"
+                    value: _vm.inviteSessionData.is_active,
+                    expression: "inviteSessionData.is_active"
                   }
                 ],
                 attrs: { type: "checkbox" },
                 domProps: {
-                  checked: Array.isArray(_vm.inviteSessionData.isActive)
-                    ? _vm._i(_vm.inviteSessionData.isActive, null) > -1
-                    : _vm.inviteSessionData.isActive
+                  checked: Array.isArray(_vm.inviteSessionData.is_active)
+                    ? _vm._i(_vm.inviteSessionData.is_active, null) > -1
+                    : _vm.inviteSessionData.is_active
                 },
                 on: {
                   change: function($event) {
-                    var $$a = _vm.inviteSessionData.isActive,
+                    var $$a = _vm.inviteSessionData.is_active,
                       $$el = $event.target,
                       $$c = $$el.checked ? true : false
                     if (Array.isArray($$a)) {
@@ -47973,19 +47987,19 @@ var render = function() {
                         $$i < 0 &&
                           _vm.$set(
                             _vm.inviteSessionData,
-                            "isActive",
+                            "is_active",
                             $$a.concat([$$v])
                           )
                       } else {
                         $$i > -1 &&
                           _vm.$set(
                             _vm.inviteSessionData,
-                            "isActive",
+                            "is_active",
                             $$a.slice(0, $$i).concat($$a.slice($$i + 1))
                           )
                       }
                     } else {
-                      _vm.$set(_vm.inviteSessionData, "isActive", $$c)
+                      _vm.$set(_vm.inviteSessionData, "is_active", $$c)
                     }
                   }
                 }
@@ -48594,16 +48608,10 @@ var render = function() {
         on: {
           "update:current": function($event) {
             return _vm.$set(_vm.pagination, "current", $event)
+          },
+          change: function($event) {
+            return _vm.loadInviteSessions(_vm.pagination.current)
           }
-        }
-      }),
-      _c("paginate", {
-        attrs: {
-          "page-count": _vm.pageCount,
-          "click-handler": _vm.paginatorClick,
-          "prev-text": "Prev",
-          "next-text": "Next",
-          "container-class": "pagination-list"
         }
       })
     ],
@@ -49189,7 +49197,7 @@ var render = function() {
                   [
                     _c("file-upload", {
                       ref: "fileUpload",
-                      attrs: { "old-files": _vm.oldFiles }
+                      attrs: { "old-files": _vm.signaturedOldFiles }
                     })
                   ],
                   1
@@ -49257,118 +49265,114 @@ var render = function() {
                     }
                   }
                 })
-              ]),
-              _c("div", { staticClass: "field" }, [
-                _c("div", { staticClass: "panel" }, [
-                  _c("div", { staticClass: "panel-heading" }, [
-                    _vm._v("مصوبات")
-                  ]),
-                  _c(
-                    "div",
-                    { staticClass: "panel-block" },
-                    [
-                      _c("multi-text-approv", {
-                        model: {
-                          value: _vm.inviteSessionData.approv,
-                          callback: function($$v) {
-                            _vm.$set(_vm.inviteSessionData, "approv", $$v)
-                          },
-                          expression: "inviteSessionData.approv"
-                        }
-                      })
-                    ],
-                    1
-                  )
-                ])
-              ]),
-              _c("div", { staticClass: "field" }, [
-                _c("div", { staticClass: "panel" }, [
-                  _c("div", { staticClass: "panel-heading" }, [
-                    _vm._v(" اعضای حاضر در جلسه")
-                  ]),
-                  _c(
-                    "div",
-                    { staticClass: "panel-block" },
-                    [
-                      _c("b-table", {
-                        staticClass: "table is-fullwidth",
-                        attrs: {
-                          data: _vm.users,
-                          columns: _vm.presentUserListTable.columns,
-                          "checked-rows": _vm.presentUserListTable.checkedRows,
-                          checkable: "",
-                          paginated: _vm.presentUserListTable.isPaginated,
-                          "per-page": _vm.presentUserListTable.perPage,
-                          "current-page": _vm.presentUserListTable.currentPage,
-                          "pagination-simple":
-                            _vm.presentUserListTable.isPaginationSimple,
-                          "pagination-position":
-                            _vm.presentUserListTable.paginationPosition,
-                          "checkbox-position":
-                            _vm.presentUserListTable.checkboxPosition
+              ])
+            ]),
+            _c("div", { staticClass: "field" }, [
+              _c("div", { staticClass: "panel" }, [
+                _c("div", { staticClass: "panel-heading" }, [_vm._v("مصوبات")]),
+                _c(
+                  "div",
+                  { staticClass: "panel-block" },
+                  [
+                    _c("multi-text-approv", {
+                      model: {
+                        value: _vm.inviteSessionData.approv,
+                        callback: function($$v) {
+                          _vm.$set(_vm.inviteSessionData, "approv", $$v)
                         },
-                        on: {
-                          "update:checkedRows": function($event) {
-                            return _vm.$set(
-                              _vm.presentUserListTable,
-                              "checkedRows",
-                              $event
-                            )
-                          },
-                          "update:checked-rows": function($event) {
-                            return _vm.$set(
-                              _vm.presentUserListTable,
-                              "checkedRows",
-                              $event
-                            )
-                          },
-                          "update:currentPage": function($event) {
-                            return _vm.$set(
-                              _vm.presentUserListTable,
-                              "currentPage",
-                              $event
-                            )
-                          },
-                          "update:current-page": function($event) {
-                            return _vm.$set(
-                              _vm.presentUserListTable,
-                              "currentPage",
-                              $event
-                            )
-                          }
+                        expression: "inviteSessionData.approv"
+                      }
+                    })
+                  ],
+                  1
+                )
+              ])
+            ]),
+            _c("div", { staticClass: "field" }, [
+              _c("div", { staticClass: "panel" }, [
+                _c("div", { staticClass: "panel-heading" }, [
+                  _vm._v(" اعضای حاضر در جلسه")
+                ]),
+                _c(
+                  "div",
+                  { staticClass: "panel-block" },
+                  [
+                    _c("b-table", {
+                      staticClass: "table is-fullwidth",
+                      attrs: {
+                        data: _vm.users,
+                        columns: _vm.presentUserListTable.columns,
+                        "checked-rows": _vm.userListTable.checkedRows,
+                        checkable: "",
+                        paginated: _vm.presentUserListTable.isPaginated,
+                        "per-page": _vm.presentUserListTable.perPage,
+                        "current-page": _vm.presentUserListTable.currentPage,
+                        "pagination-simple":
+                          _vm.presentUserListTable.isPaginationSimple,
+                        "pagination-position":
+                          _vm.presentUserListTable.paginationPosition,
+                        "checkbox-position":
+                          _vm.presentUserListTable.checkboxPosition
+                      },
+                      on: {
+                        "update:checkedRows": function($event) {
+                          return _vm.$set(
+                            _vm.userListTable,
+                            "checkedRows",
+                            $event
+                          )
+                        },
+                        "update:checked-rows": function($event) {
+                          return _vm.$set(
+                            _vm.userListTable,
+                            "checkedRows",
+                            $event
+                          )
+                        },
+                        "update:currentPage": function($event) {
+                          return _vm.$set(
+                            _vm.presentUserListTable,
+                            "currentPage",
+                            $event
+                          )
+                        },
+                        "update:current-page": function($event) {
+                          return _vm.$set(
+                            _vm.presentUserListTable,
+                            "currentPage",
+                            $event
+                          )
                         }
-                      }),
-                      _c("template", { slot: "bottom-left" }, [
-                        _vm._v(
-                          "اعضای حاضر شده : " +
-                            _vm._s(
-                              _vm.presentUserListTable.checkedRows.length
-                            ) +
-                            " نفر"
-                        )
-                      ])
-                    ],
-                    2
-                  )
-                ])
-              ]),
-              _c("div", { staticClass: "field" }, [
-                _c("div", { staticClass: "panel" }, [
-                  _c("div", { staticClass: "panel-heading" }, [
-                    _vm._v("مستندات جلسه")
-                  ]),
-                  _c(
-                    "div",
-                    { staticClass: "panel-block" },
-                    [
-                      _c("file-upload", {
-                        ref: "fileUpload",
-                        attrs: { "old-files": _vm.oldFiles }
-                      })
-                    ],
-                    1
-                  )
-                ])
+                      }
+                    }),
+                    _c("template", { slot: "bottom-left" }, [
+                      _vm._v(
+                        "اعضای حاضر شده : " +
+                          _vm._s(_vm.presentUserListTable.checkedRows.length) +
+                          " نفر"
+                      )
+                    ])
+                  ],
+                  2
+                )
+              ])
+            ]),
+            _c("div", { staticClass: "field" }, [
+              _c("div", { staticClass: "panel" }, [
+                _c("div", { staticClass: "panel-heading" }, [
+                  _vm._v("مستندات جلسه")
+                ]),
+                _c(
+                  "div",
+                  { staticClass: "panel-block" },
+                  [
+                    _c("file-upload", {
+                      ref: "fileUpload",
+                      attrs: { "old-files": _vm.oldFiles }
+                    })
+                  ],
+                  1
+                )
               ])
             ])
           ]),
@@ -49379,19 +49383,19 @@ var render = function() {
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.inviteSessionData.isActive,
-                    expression: "inviteSessionData.isActive"
+                    value: _vm.inviteSessionData.is_active,
+                    expression: "inviteSessionData.is_active"
                   }
                 ],
                 attrs: { type: "checkbox" },
                 domProps: {
-                  checked: Array.isArray(_vm.inviteSessionData.isActive)
-                    ? _vm._i(_vm.inviteSessionData.isActive, null) > -1
-                    : _vm.inviteSessionData.isActive
+                  checked: Array.isArray(_vm.inviteSessionData.is_active)
+                    ? _vm._i(_vm.inviteSessionData.is_active, null) > -1
+                    : _vm.inviteSessionData.is_active
                 },
                 on: {
                   change: function($event) {
-                    var $$a = _vm.inviteSessionData.isActive,
+                    var $$a = _vm.inviteSessionData.is_active,
                       $$el = $event.target,
                       $$c = $$el.checked ? true : false
                     if (Array.isArray($$a)) {
@@ -49401,19 +49405,19 @@ var render = function() {
                         $$i < 0 &&
                           _vm.$set(
                             _vm.inviteSessionData,
-                            "isActive",
+                            "is_active",
                             $$a.concat([$$v])
                           )
                       } else {
                         $$i > -1 &&
                           _vm.$set(
                             _vm.inviteSessionData,
-                            "isActive",
+                            "is_active",
                             $$a.slice(0, $$i).concat($$a.slice($$i + 1))
                           )
                       }
                     } else {
-                      _vm.$set(_vm.inviteSessionData, "isActive", $$c)
+                      _vm.$set(_vm.inviteSessionData, "is_active", $$c)
                     }
                   }
                 }
@@ -49736,19 +49740,19 @@ var render = function() {
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.inviteSessionData.isActive,
-                    expression: "inviteSessionData.isActive"
+                    value: _vm.inviteSessionData.is_active,
+                    expression: "inviteSessionData.is_active"
                   }
                 ],
                 attrs: { type: "checkbox" },
                 domProps: {
-                  checked: Array.isArray(_vm.inviteSessionData.isActive)
-                    ? _vm._i(_vm.inviteSessionData.isActive, null) > -1
-                    : _vm.inviteSessionData.isActive
+                  checked: Array.isArray(_vm.inviteSessionData.is_active)
+                    ? _vm._i(_vm.inviteSessionData.is_active, null) > -1
+                    : _vm.inviteSessionData.is_active
                 },
                 on: {
                   change: function($event) {
-                    var $$a = _vm.inviteSessionData.isActive,
+                    var $$a = _vm.inviteSessionData.is_active,
                       $$el = $event.target,
                       $$c = $$el.checked ? true : false
                     if (Array.isArray($$a)) {
@@ -49758,19 +49762,19 @@ var render = function() {
                         $$i < 0 &&
                           _vm.$set(
                             _vm.inviteSessionData,
-                            "isActive",
+                            "is_active",
                             $$a.concat([$$v])
                           )
                       } else {
                         $$i > -1 &&
                           _vm.$set(
                             _vm.inviteSessionData,
-                            "isActive",
+                            "is_active",
                             $$a.slice(0, $$i).concat($$a.slice($$i + 1))
                           )
                       }
                     } else {
-                      _vm.$set(_vm.inviteSessionData, "isActive", $$c)
+                      _vm.$set(_vm.inviteSessionData, "is_active", $$c)
                     }
                   }
                 }
@@ -51025,17 +51029,6 @@ function mod(a, b) {
   return a - ~~(a / b) * b
 }
 
-
-/***/ }),
-
-/***/ "./node_modules/vuejs-paginate/dist/index.js":
-/*!***************************************************!*\
-  !*** ./node_modules/vuejs-paginate/dist/index.js ***!
-  \***************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-!function(e,t){ true?module.exports=t():undefined}(this,function(){return function(e){function t(s){if(n[s])return n[s].exports;var a=n[s]={exports:{},id:s,loaded:!1};return e[s].call(a.exports,a,a.exports,t),a.loaded=!0,a.exports}var n={};return t.m=e,t.c=n,t.p="",t(0)}([function(e,t,n){"use strict";function s(e){return e&&e.__esModule?e:{default:e}}var a=n(1),i=s(a);e.exports=i.default},function(e,t,n){n(2);var s=n(6)(n(7),n(8),"data-v-82963a40",null);e.exports=s.exports},function(e,t,n){var s=n(3);"string"==typeof s&&(s=[[e.id,s,""]]);n(5)(s,{});s.locals&&(e.exports=s.locals)},function(e,t,n){t=e.exports=n(4)(),t.push([e.id,"a[data-v-82963a40]{cursor:pointer}",""])},function(e,t){e.exports=function(){var e=[];return e.toString=function(){for(var e=[],t=0;t<this.length;t++){var n=this[t];n[2]?e.push("@media "+n[2]+"{"+n[1]+"}"):e.push(n[1])}return e.join("")},e.i=function(t,n){"string"==typeof t&&(t=[[null,t,""]]);for(var s={},a=0;a<this.length;a++){var i=this[a][0];"number"==typeof i&&(s[i]=!0)}for(a=0;a<t.length;a++){var r=t[a];"number"==typeof r[0]&&s[r[0]]||(n&&!r[2]?r[2]=n:n&&(r[2]="("+r[2]+") and ("+n+")"),e.push(r))}},e}},function(e,t,n){function s(e,t){for(var n=0;n<e.length;n++){var s=e[n],a=c[s.id];if(a){a.refs++;for(var i=0;i<a.parts.length;i++)a.parts[i](s.parts[i]);for(;i<s.parts.length;i++)a.parts.push(l(s.parts[i],t))}else{for(var r=[],i=0;i<s.parts.length;i++)r.push(l(s.parts[i],t));c[s.id]={id:s.id,refs:1,parts:r}}}}function a(e){for(var t=[],n={},s=0;s<e.length;s++){var a=e[s],i=a[0],r=a[1],o=a[2],l=a[3],u={css:r,media:o,sourceMap:l};n[i]?n[i].parts.push(u):t.push(n[i]={id:i,parts:[u]})}return t}function i(e,t){var n=g(),s=C[C.length-1];if("top"===e.insertAt)s?s.nextSibling?n.insertBefore(t,s.nextSibling):n.appendChild(t):n.insertBefore(t,n.firstChild),C.push(t);else{if("bottom"!==e.insertAt)throw new Error("Invalid value for parameter 'insertAt'. Must be 'top' or 'bottom'.");n.appendChild(t)}}function r(e){e.parentNode.removeChild(e);var t=C.indexOf(e);t>=0&&C.splice(t,1)}function o(e){var t=document.createElement("style");return t.type="text/css",i(e,t),t}function l(e,t){var n,s,a;if(t.singleton){var i=v++;n=h||(h=o(t)),s=u.bind(null,n,i,!1),a=u.bind(null,n,i,!0)}else n=o(t),s=d.bind(null,n),a=function(){r(n)};return s(e),function(t){if(t){if(t.css===e.css&&t.media===e.media&&t.sourceMap===e.sourceMap)return;s(e=t)}else a()}}function u(e,t,n,s){var a=n?"":s.css;if(e.styleSheet)e.styleSheet.cssText=b(t,a);else{var i=document.createTextNode(a),r=e.childNodes;r[t]&&e.removeChild(r[t]),r.length?e.insertBefore(i,r[t]):e.appendChild(i)}}function d(e,t){var n=t.css,s=t.media,a=t.sourceMap;if(s&&e.setAttribute("media",s),a&&(n+="\n/*# sourceURL="+a.sources[0]+" */",n+="\n/*# sourceMappingURL=data:application/json;base64,"+btoa(unescape(encodeURIComponent(JSON.stringify(a))))+" */"),e.styleSheet)e.styleSheet.cssText=n;else{for(;e.firstChild;)e.removeChild(e.firstChild);e.appendChild(document.createTextNode(n))}}var c={},p=function(e){var t;return function(){return"undefined"==typeof t&&(t=e.apply(this,arguments)),t}},f=p(function(){return/msie [6-9]\b/.test(window.navigator.userAgent.toLowerCase())}),g=p(function(){return document.head||document.getElementsByTagName("head")[0]}),h=null,v=0,C=[];e.exports=function(e,t){t=t||{},"undefined"==typeof t.singleton&&(t.singleton=f()),"undefined"==typeof t.insertAt&&(t.insertAt="bottom");var n=a(e);return s(n,t),function(e){for(var i=[],r=0;r<n.length;r++){var o=n[r],l=c[o.id];l.refs--,i.push(l)}if(e){var u=a(e);s(u,t)}for(var r=0;r<i.length;r++){var l=i[r];if(0===l.refs){for(var d=0;d<l.parts.length;d++)l.parts[d]();delete c[l.id]}}}};var b=function(){var e=[];return function(t,n){return e[t]=n,e.filter(Boolean).join("\n")}}()},function(e,t){e.exports=function(e,t,n,s){var a,i=e=e||{},r=typeof e.default;"object"!==r&&"function"!==r||(a=e,i=e.default);var o="function"==typeof i?i.options:i;if(t&&(o.render=t.render,o.staticRenderFns=t.staticRenderFns),n&&(o._scopeId=n),s){var l=o.computed||(o.computed={});Object.keys(s).forEach(function(e){var t=s[e];l[e]=function(){return t}})}return{esModule:a,exports:i,options:o}}},function(e,t){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.default={props:{value:{type:Number},pageCount:{type:Number,required:!0},forcePage:{type:Number},clickHandler:{type:Function,default:function(){}},pageRange:{type:Number,default:3},marginPages:{type:Number,default:1},prevText:{type:String,default:"Prev"},nextText:{type:String,default:"Next"},breakViewText:{type:String,default:"…"},containerClass:{type:String},pageClass:{type:String},pageLinkClass:{type:String},prevClass:{type:String},prevLinkClass:{type:String},nextClass:{type:String},nextLinkClass:{type:String},breakViewClass:{type:String},breakViewLinkClass:{type:String},activeClass:{type:String,default:"active"},disabledClass:{type:String,default:"disabled"},noLiSurround:{type:Boolean,default:!1},firstLastButton:{type:Boolean,default:!1},firstButtonText:{type:String,default:"First"},lastButtonText:{type:String,default:"Last"},hidePrevNext:{type:Boolean,default:!1}},beforeUpdate:function(){void 0!==this.forcePage&&this.forcePage!==this.selected&&(this.selected=this.forcePage)},computed:{selected:{get:function(){return this.value||this.innerValue},set:function(e){this.innerValue=e}},pages:function(){var e=this,t={};if(this.pageCount<=this.pageRange)for(var n=0;n<this.pageCount;n++){var s={index:n,content:n+1,selected:n===this.selected-1};t[n]=s}else{for(var a=Math.floor(this.pageRange/2),i=function(n){var s={index:n,content:n+1,selected:n===e.selected-1};t[n]=s},r=function(e){var n={disabled:!0,breakView:!0};t[e]=n},o=0;o<this.marginPages;o++)i(o);var l=0;this.selected-a>0&&(l=this.selected-1-a);var u=l+this.pageRange-1;u>=this.pageCount&&(u=this.pageCount-1,l=u-this.pageRange+1);for(var d=l;d<=u&&d<=this.pageCount-1;d++)i(d);l>this.marginPages&&r(l-1),u+1<this.pageCount-this.marginPages&&r(u+1);for(var c=this.pageCount-1;c>=this.pageCount-this.marginPages;c--)i(c)}return t}},data:function(){return{innerValue:1}},methods:{handlePageSelected:function(e){this.selected!==e&&(this.innerValue=e,this.$emit("input",e),this.clickHandler(e))},prevPage:function(){this.selected<=1||this.handlePageSelected(this.selected-1)},nextPage:function(){this.selected>=this.pageCount||this.handlePageSelected(this.selected+1)},firstPageSelected:function(){return 1===this.selected},lastPageSelected:function(){return this.selected===this.pageCount||0===this.pageCount},selectFirstPage:function(){this.selected<=1||this.handlePageSelected(1)},selectLastPage:function(){this.selected>=this.pageCount||this.handlePageSelected(this.pageCount)}}}},function(e,t){e.exports={render:function(){var e=this,t=e.$createElement,n=e._self._c||t;return e.noLiSurround?n("div",{class:e.containerClass},[e.firstLastButton?n("a",{class:[e.pageLinkClass,e.firstPageSelected()?e.disabledClass:""],attrs:{tabindex:"0"},domProps:{innerHTML:e._s(e.firstButtonText)},on:{click:function(t){e.selectFirstPage()},keyup:function(t){return"button"in t||!e._k(t.keyCode,"enter",13)?void e.selectFirstPage():null}}}):e._e(),e._v(" "),e.firstPageSelected()&&e.hidePrevNext?e._e():n("a",{class:[e.prevLinkClass,e.firstPageSelected()?e.disabledClass:""],attrs:{tabindex:"0"},domProps:{innerHTML:e._s(e.prevText)},on:{click:function(t){e.prevPage()},keyup:function(t){return"button"in t||!e._k(t.keyCode,"enter",13)?void e.prevPage():null}}}),e._v(" "),e._l(e.pages,function(t){return[t.breakView?n("a",{class:[e.pageLinkClass,e.breakViewLinkClass,t.disabled?e.disabledClass:""],attrs:{tabindex:"0"}},[e._t("breakViewContent",[e._v(e._s(e.breakViewText))])],2):t.disabled?n("a",{class:[e.pageLinkClass,t.selected?e.activeClass:"",e.disabledClass],attrs:{tabindex:"0"}},[e._v(e._s(t.content))]):n("a",{class:[e.pageLinkClass,t.selected?e.activeClass:""],attrs:{tabindex:"0"},on:{click:function(n){e.handlePageSelected(t.index+1)},keyup:function(n){return"button"in n||!e._k(n.keyCode,"enter",13)?void e.handlePageSelected(t.index+1):null}}},[e._v(e._s(t.content))])]}),e._v(" "),e.lastPageSelected()&&e.hidePrevNext?e._e():n("a",{class:[e.nextLinkClass,e.lastPageSelected()?e.disabledClass:""],attrs:{tabindex:"0"},domProps:{innerHTML:e._s(e.nextText)},on:{click:function(t){e.nextPage()},keyup:function(t){return"button"in t||!e._k(t.keyCode,"enter",13)?void e.nextPage():null}}}),e._v(" "),e.firstLastButton?n("a",{class:[e.pageLinkClass,e.lastPageSelected()?e.disabledClass:""],attrs:{tabindex:"0"},domProps:{innerHTML:e._s(e.lastButtonText)},on:{click:function(t){e.selectLastPage()},keyup:function(t){return"button"in t||!e._k(t.keyCode,"enter",13)?void e.selectLastPage():null}}}):e._e()],2):n("ul",{class:e.containerClass},[e.firstLastButton?n("li",{class:[e.pageClass,e.firstPageSelected()?e.disabledClass:""]},[n("a",{class:e.pageLinkClass,attrs:{tabindex:e.firstPageSelected()?-1:0},domProps:{innerHTML:e._s(e.firstButtonText)},on:{click:function(t){e.selectFirstPage()},keyup:function(t){return"button"in t||!e._k(t.keyCode,"enter",13)?void e.selectFirstPage():null}}})]):e._e(),e._v(" "),e.firstPageSelected()&&e.hidePrevNext?e._e():n("li",{class:[e.prevClass,e.firstPageSelected()?e.disabledClass:""]},[n("a",{class:e.prevLinkClass,attrs:{tabindex:e.firstPageSelected()?-1:0},domProps:{innerHTML:e._s(e.prevText)},on:{click:function(t){e.prevPage()},keyup:function(t){return"button"in t||!e._k(t.keyCode,"enter",13)?void e.prevPage():null}}})]),e._v(" "),e._l(e.pages,function(t){return n("li",{class:[e.pageClass,t.selected?e.activeClass:"",t.disabled?e.disabledClass:"",t.breakView?e.breakViewClass:""]},[t.breakView?n("a",{class:[e.pageLinkClass,e.breakViewLinkClass],attrs:{tabindex:"0"}},[e._t("breakViewContent",[e._v(e._s(e.breakViewText))])],2):t.disabled?n("a",{class:e.pageLinkClass,attrs:{tabindex:"0"}},[e._v(e._s(t.content))]):n("a",{class:e.pageLinkClass,attrs:{tabindex:"0"},on:{click:function(n){e.handlePageSelected(t.index+1)},keyup:function(n){return"button"in n||!e._k(n.keyCode,"enter",13)?void e.handlePageSelected(t.index+1):null}}},[e._v(e._s(t.content))])])}),e._v(" "),e.lastPageSelected()&&e.hidePrevNext?e._e():n("li",{class:[e.nextClass,e.lastPageSelected()?e.disabledClass:""]},[n("a",{class:e.nextLinkClass,attrs:{tabindex:e.lastPageSelected()?-1:0},domProps:{innerHTML:e._s(e.nextText)},on:{click:function(t){e.nextPage()},keyup:function(t){return"button"in t||!e._k(t.keyCode,"enter",13)?void e.nextPage():null}}})]),e._v(" "),e.firstLastButton?n("li",{class:[e.pageClass,e.lastPageSelected()?e.disabledClass:""]},[n("a",{class:e.pageLinkClass,attrs:{tabindex:e.lastPageSelected()?-1:0},domProps:{innerHTML:e._s(e.lastButtonText)},on:{click:function(t){e.selectLastPage()},keyup:function(t){return"button"in t||!e._k(t.keyCode,"enter",13)?void e.selectLastPage():null}}})]):e._e()],2)},staticRenderFns:[]}}])});
 
 /***/ }),
 
@@ -52441,7 +52434,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/invite-session/index/index.js */"./resources/js/pages/invite-session/index/index.js");
+module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/pages/invite-session/index/index.js */"./resources/js/pages/invite-session/index/index.js");
 
 
 /***/ })

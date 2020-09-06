@@ -15,12 +15,12 @@ const {
     clearAuth
 } = use('core/helpers/auth-helper');
 
-Router.get('/programs', [
+Router.get('/program/:department', [
     checkSession,
     Rule.canAsync('user.permision', 'program.index'),
     'Program@index'
 ])
-    .as('prgram.index');
+    .as('program.index');
 
 Router.get('/api/programs/:page/:size?', [
     checkSession,
@@ -44,6 +44,14 @@ Router.post('/program', [
     'Program@store'
 ])
     .as('program.store');
+
+Router.post("/program/:id/edit", [
+    upload.array("files"),
+    checkSession,
+    Rule.canAsync("user.permision", "program.update"),
+    // validator.validate,
+    "Program@update"
+]).as("program.update");
 
 Router.get('/program/:program', [
     checkSession,

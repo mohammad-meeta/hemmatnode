@@ -718,7 +718,7 @@ module.exports = {
         refree: null,
         monitoring_comment: null,
         files: {},
-        isActive: false
+        is_active: false
       },
       notificationMessage: null,
       notificationType: "is-info",
@@ -934,7 +934,7 @@ module.exports = {
         refree: null,
         monitoring_comment: null,
         files: {},
-        isActive: false
+        is_active: false
       },
       showLoadingFlag: false
     };
@@ -982,7 +982,7 @@ module.exports = {
         refree: data.refree,
         monitoring_comment: data.monitoring_comment,
         files: {},
-        isActive: data.is_active
+        is_active: data.is_active
       };
       console.log(temp);
       Vue.set(this, "projectData", temp);
@@ -8968,19 +8968,19 @@ var render = function() {
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.projectData.isActive,
-                    expression: "projectData.isActive"
+                    value: _vm.projectData.is_active,
+                    expression: "projectData.is_active"
                   }
                 ],
                 attrs: { type: "checkbox" },
                 domProps: {
-                  checked: Array.isArray(_vm.projectData.isActive)
-                    ? _vm._i(_vm.projectData.isActive, null) > -1
-                    : _vm.projectData.isActive
+                  checked: Array.isArray(_vm.projectData.is_active)
+                    ? _vm._i(_vm.projectData.is_active, null) > -1
+                    : _vm.projectData.is_active
                 },
                 on: {
                   change: function($event) {
-                    var $$a = _vm.projectData.isActive,
+                    var $$a = _vm.projectData.is_active,
                       $$el = $event.target,
                       $$c = $$el.checked ? true : false
                     if (Array.isArray($$a)) {
@@ -8990,19 +8990,19 @@ var render = function() {
                         $$i < 0 &&
                           _vm.$set(
                             _vm.projectData,
-                            "isActive",
+                            "is_active",
                             $$a.concat([$$v])
                           )
                       } else {
                         $$i > -1 &&
                           _vm.$set(
                             _vm.projectData,
-                            "isActive",
+                            "is_active",
                             $$a.slice(0, $$i).concat($$a.slice($$i + 1))
                           )
                       }
                     } else {
-                      _vm.$set(_vm.projectData, "isActive", $$c)
+                      _vm.$set(_vm.projectData, "is_active", $$c)
                     }
                   }
                 }
@@ -10136,7 +10136,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/project/index/index.js */"./resources/js/pages/project/index/index.js");
+module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/pages/project/index/index.js */"./resources/js/pages/project/index/index.js");
 
 
 /***/ })

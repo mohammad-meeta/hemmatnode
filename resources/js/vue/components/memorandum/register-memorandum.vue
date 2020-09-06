@@ -21,8 +21,12 @@
             .field
                 label.label سال
                 .control
-                    date-picker(v-model='memorandumData.date' format="YYYY"
-                    display-format="jYYYY" type="datetime" required)
+                    date-picker(
+                        v-model='memorandumData.date'
+                        type="year"
+                        display-format="jYYYY"
+                        required
+                    )
 
             .field
                 label.label مقدمه و اهداف تفاهم نامه
@@ -45,7 +49,7 @@
 
             .field
                 label.checkbox
-                    input(type='checkbox', v-model="memorandumData.isActive")
+                    input(type='checkbox', v-model="memorandumData.is_active")
                     |   فعال
 
             .field.is-grouped
@@ -87,7 +91,7 @@ module.exports = {
             department_id: null,
             files: {},
             user_list: {},
-            isActive: false
+            is_active: false
         },
 
         notificationMessage: null,
@@ -223,7 +227,7 @@ module.exports = {
                 conditions: this.memorandumData.conditions,
                 date: this.memorandumData.date,
                 department_id: this.memorandumData.departments,
-                is_active: this.memorandumData.isActive
+                is_active: this.memorandumData.is_active
             };
             console.log(this.files);
             memorandumData.files = this.files[0];

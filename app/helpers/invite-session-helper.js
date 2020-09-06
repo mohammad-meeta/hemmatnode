@@ -72,17 +72,29 @@ InviteSessiontHelper.loadAllInviteSessionData = async function loadAllInviteSess
         {
             $project: {
                 "file.encoding": 0,
-                "file.fieldname": 0,
                 "file.mimetype": 0,
                 "file.destination": 0,
                 "file.user_id": 0,
                 "file.path": 0,
-                "file.filename": 0
             }
         },
+        // {
+        //     $unwind: {
+        //         path: "$files",
+        //         preserveNullAndEmptyArrays: true
+        //     }
+        // },
+        // {
+        //     $match: {
+        //         "files.deleted_at": { $eq: null }
+        //     }
+        // },
         {
             $group: {
                 _id: "$_id",
+                oldFiles: {
+                    $push: "$files"
+                },
                 files: {
                     $push: "$file"
                 },
@@ -138,9 +150,43 @@ InviteSessiontHelper.loadAllInviteSessionData = async function loadAllInviteSess
     ];
 
     let res = await InviteSession.aggregate(pipeline);
+    for (let resI = 0; resI < res.length; resI++) {
 
+        let oldFiles = res[resI].oldFiles;
+        let files = res[resI].files;
+        let deleted = [];
+        for (let index = 0; index < files.length; index++) {
+            const element = files[index];
+            for (let index2 = 0; index2 < oldFiles.length; index2++) {
+                const element2 = oldFiles[index2];
+                if (String(element["_id"]) == String(element2["file_id"]) && element2["deleted_at"] != null) {
+                    deleted.push(element["_id"])
+                }
+            }
+        }
+        for (let index3 = 0; index3 < deleted.length; index3++) {
+            const element = deleted[index3];
+            const indexF = files.findIndex(x => String(x._id) == String(element));
+            if (indexF >= -1) {
+                files.splice(indexF, 1)
+            }
+        }
+    }
+
+    for (let i = 0; i < res.length; i++) {
+        for (let k = 0; k < res[i].files.length; k++) {
+            res[i].files[k] = {
+                "_id": res[i].files[k]._id,
+                "fieldname": res[i].files[k].fieldname,
+                "name": res[i].files[k].originalname,
+                "filename": res[i].files[k].filename,
+                "size": res[i].files[k].size,
+            };
+        }
+    }
     return res;
 };
+
 /**
  * find all dep cat count data result
  */
@@ -177,12 +223,12 @@ InviteSessiontHelper.loadAllInviteSessionCountData = function loadAllInviteSessi
  * find dep cat data result
  */
 InviteSessiontHelper.loadInviteSessionData = function loadInviteSessionData(
-    title
+    _id
 ) {
     const InviteSession = mongoose.model("InviteSession");
 
     const filterQuery = {
-        title: title
+        _id: _id
     };
 
     const projection = {};

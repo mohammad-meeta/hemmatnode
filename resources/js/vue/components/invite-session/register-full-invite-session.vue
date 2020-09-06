@@ -54,7 +54,6 @@
                             )
                             template(slot="bottom-left")
                                 | نفرات انتخاب شده : {{ userListTable.checkedRows.length }} نفر
-
                 .field
                     .panel
                         .panel-heading
@@ -66,55 +65,54 @@
                         .panel-heading
                             | فایل های ضمیمه
                         .panel-block
-                            file-upload(ref="fileUpload", :old-files="oldFiles")
+                            file-upload(ref="fileUpload", :old-files="signaturedOldFiles")
                 .field
                     label.label تکالیف حاضرین
                     .control
                         textarea.textarea(placeholder='تکالیف حاضرین', v-model='inviteSessionData.body')
-
             fieldset.fieldset
                 legend جلسه
                 .field
                     label.label خلاصه مذاکرات
                     .control
                         textarea.textarea(placeholder='خلاصه مذاکرات', v-model='inviteSessionData.intro')
-                    .field
-                        .panel
-                            .panel-heading
-                                | مصوبات
-                            .panel-block
-                                multi-text-approv(v-model='inviteSessionData.approv')
+                .field
+                    .panel
+                        .panel-heading
+                            | مصوبات
+                        .panel-block
+                            multi-text-approv(v-model='inviteSessionData.approv')
 
-                    .field
-                        .panel
-                            .panel-heading
-                                |  اعضای حاضر در جلسه
-                            .panel-block
-                                b-table.table.is-fullwidth(
-                                    :data="users",
-                                    :columns="presentUserListTable.columns",
-                                    :checked-rows.sync="presentUserListTable.checkedRows",
-                                    checkable,
-                                    :paginated="presentUserListTable.isPaginated",
-                                    :per-page="presentUserListTable.perPage",
-                                    :current-page.sync="presentUserListTable.currentPage",
-                                    :pagination-simple="presentUserListTable.isPaginationSimple",
-                                    :pagination-position="presentUserListTable.paginationPosition",
-                                    :checkbox-position="presentUserListTable.checkboxPosition"
-                                )
-                                template(slot="bottom-left")
-                                    | اعضای حاضر شده : {{ presentUserListTable.checkedRows.length }} نفر
+                .field
+                    .panel
+                        .panel-heading
+                            |  اعضای حاضر در جلسه
+                        .panel-block
+                            b-table.table.is-fullwidth(
+                                :data="users",
+                                :columns="presentUserListTable.columns",
+                                :checked-rows.sync="userListTable.checkedRows",
+                                checkable,
+                                :paginated="presentUserListTable.isPaginated",
+                                :per-page="presentUserListTable.perPage",
+                                :current-page.sync="presentUserListTable.currentPage",
+                                :pagination-simple="presentUserListTable.isPaginationSimple",
+                                :pagination-position="presentUserListTable.paginationPosition",
+                                :checkbox-position="presentUserListTable.checkboxPosition"
+                            )
+                            template(slot="bottom-left")
+                                | اعضای حاضر شده : {{ presentUserListTable.checkedRows.length }} نفر
 
-                    .field
-                        .panel
-                            .panel-heading
-                                | مستندات جلسه
-                            .panel-block
-                                file-upload(ref="fileUpload", :old-files="oldFiles")
+                .field
+                    .panel
+                        .panel-heading
+                            | مستندات جلسه
+                        .panel-block
+                            file-upload(ref="fileUpload", :old-files="oldFiles")
 
             .field
                 label.checkbox
-                    input(type='checkbox', v-model="inviteSessionData.isActive")
+                    input(type='checkbox', v-model="inviteSessionData.is_active")
                     |   فعال
                 .field.is-grouped
                     .control(v-show="! isLoadingMode")
@@ -153,8 +151,10 @@ module.exports = {
         departments: [],
         users: [],
         files: [],
+        signatured: [],
         deletedOldFiles: [],
         oldFiles: [],
+        signaturedOldFiles: [],
         inviteSessionData: {
             title: null,
             body: null,
@@ -163,10 +163,11 @@ module.exports = {
             date: null,
             department_id: null,
             files: {},
+            signatured: {},
             deletedOldFiles: [],
             user_list: {},
             present_user_list: {},
-            isActive: false,
+            is_active: false,
             intro: null,
             approv: [],
             other_user:[]
@@ -360,6 +361,11 @@ module.exports = {
             Vue.set(this, "files", newUploaded);
             let deleteUploaded = deletedFiles.map((x) => x._id);
             Vue.set(this, "deletedOldFiles", deleteUploaded);
+
+            const newSignaturedFiles = this.$refs.fileUpload.getNewFiles();
+            let newSignaturedUploaded = newSignaturedFiles.map((x) => x.file);
+            Vue.set(this, "signatured", newSignaturedUploaded);
+
             let inviteSessionData = {
                 body: this.inviteSessionData.body,
                 agenda: JSON.stringify(this.inviteSessionData.agenda),
@@ -370,8 +376,9 @@ module.exports = {
                 department_id: this.inviteSessionData.departments,
                 user_list: [],
                 present_user_list: [],
-                is_active: this.inviteSessionData.isActive,
+                is_active: this.inviteSessionData.is_active,
                 files: this.files,
+                signatured: this.signatured,
                 deletedOldFiles: this.deletedOldFiles
             };
             inviteSessionData.user_list = this.userListTable.checkedRows.map((x) => x._id);
@@ -392,6 +399,7 @@ module.exports = {
             AxiosHelper.send("post", url, inviteSessionData, {
                 sendAsFormData: true,
                 filesArray: "files",
+                filesArray: "signatured",
             })
                 .then((res) => {
                     const data = res.data;

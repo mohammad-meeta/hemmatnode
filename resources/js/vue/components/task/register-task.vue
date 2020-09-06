@@ -68,7 +68,7 @@
                     input.input(type='text', placeholder='امتیاز', autofocus, v-model='taskData.execution_rank' required)
             .field
                 label.checkbox
-                    input(type='checkbox', v-model="taskData.isActive")
+                    input(type='checkbox', v-model="taskData.is_active")
                     |   فعال
 
             .field.is-grouped
@@ -105,7 +105,7 @@ module.exports = {
             weight: null,
             parent: null,
             files: {},
-            isActive: false,
+            is_active: false,
             status: {},
             user_list: {}
         },
@@ -236,7 +236,7 @@ module.exports = {
                 description: this.taskData.description,
                 weight: this.taskData.weight,
                 parent: this.taskData.parents,
-                is_active: this.taskData.isActive
+                is_active: this.taskData.is_active
             };
             console.log(taskData);
             taskData.files = this.files[0];

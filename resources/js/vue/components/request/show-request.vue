@@ -42,7 +42,7 @@ module.exports = {
             requestDate: null,
             deadline: null,
             files: {},
-            isActive: false,
+            is_active: false,
         },
 
         showLoadingFlag: false,
@@ -66,7 +66,7 @@ module.exports = {
                 requestDate: data.request_date,
                 deadline: data.deadline,
                 files: {},
-                isActive: data.is_active,
+                is_active: data.is_active,
             };
             Vue.set(this, "requestData", temp);
         },

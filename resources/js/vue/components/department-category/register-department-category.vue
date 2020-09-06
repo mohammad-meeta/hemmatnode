@@ -19,7 +19,7 @@
                                 :value="section._id") {{ section.title }}
             .field
                 label.checkbox
-                    input(type='checkbox', v-model="departmentCategoryData.isActive")
+                    input(type='checkbox', v-model="departmentCategoryData.is_active")
                     |   فعال
             .field.is-grouped
                 .control(v-show="! isLoadingMode")
@@ -47,7 +47,7 @@ module.exports = {
         sections: [],
         departmentCategoryData: {
             title: null,
-            isActive: false
+            is_active: false
         },
 
         notificationMessage: null,
@@ -147,7 +147,7 @@ module.exports = {
                 title: this.departmentCategoryData.title,
                 section_id: this.departmentCategoryData
                     .sections,
-                is_active: this.departmentCategoryData.isActive
+                is_active: this.departmentCategoryData.is_active
             };
 
             this.showLoading();

@@ -241,7 +241,7 @@ module.exports = {
         department_id: null,
         files: {},
         user_list: {},
-        isActive: false
+        is_active: false
       },
       notificationMessage: null,
       notificationType: "is-info",
@@ -301,7 +301,7 @@ module.exports = {
         date: data.date,
         department_id: data.department_id,
         files: data.files,
-        isActive: data.is_active
+        is_active: data.is_active
       };
 
       try {
@@ -411,7 +411,7 @@ module.exports = {
         conditions: this.memorandumData.conditions,
         date: this.memorandumData.date,
         department_id: this.memorandumData.departments,
-        is_active: this.memorandumData.isActive
+        is_active: this.memorandumData.is_active
       };
       memorandumData.files = this.files[0];
       this.showLoading();
@@ -1149,6 +1149,10 @@ module.exports = {
 //
 //
 //
+//
+//
+//
+//
 
 
 var AxiosHelper = __webpack_require__(/*! JS-HELPERS/axios-helper */ "./resources/js/helpers/axios-helper.js");
@@ -1184,7 +1188,7 @@ module.exports = {
         department_id: null,
         files: {},
         user_list: {},
-        isActive: false
+        is_active: false
       },
       notificationMessage: null,
       notificationType: "is-info",
@@ -1324,7 +1328,7 @@ module.exports = {
         conditions: this.memorandumData.conditions,
         date: this.memorandumData.date,
         department_id: this.memorandumData.departments,
-        is_active: this.memorandumData.isActive
+        is_active: this.memorandumData.is_active
       };
       console.log(this.files);
       memorandumData.files = this.files[0];
@@ -1434,7 +1438,7 @@ module.exports = {
         date: null,
         department_id: null,
         files: {},
-        isActive: false
+        is_active: false
       },
       showLoadingFlag: false
     };
@@ -1461,7 +1465,7 @@ module.exports = {
         department_id: data.department_id,
         files: data.files,
         projects: data.projects,
-        isActive: data.is_active
+        is_active: data.is_active
       };
       Vue.set(this, "memorandumData", temp);
     },
@@ -29969,19 +29973,19 @@ var render = function() {
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.memorandumData.isActive,
-                    expression: "memorandumData.isActive"
+                    value: _vm.memorandumData.is_active,
+                    expression: "memorandumData.is_active"
                   }
                 ],
                 attrs: { type: "checkbox" },
                 domProps: {
-                  checked: Array.isArray(_vm.memorandumData.isActive)
-                    ? _vm._i(_vm.memorandumData.isActive, null) > -1
-                    : _vm.memorandumData.isActive
+                  checked: Array.isArray(_vm.memorandumData.is_active)
+                    ? _vm._i(_vm.memorandumData.is_active, null) > -1
+                    : _vm.memorandumData.is_active
                 },
                 on: {
                   change: function($event) {
-                    var $$a = _vm.memorandumData.isActive,
+                    var $$a = _vm.memorandumData.is_active,
                       $$el = $event.target,
                       $$c = $$el.checked ? true : false
                     if (Array.isArray($$a)) {
@@ -29991,19 +29995,19 @@ var render = function() {
                         $$i < 0 &&
                           _vm.$set(
                             _vm.memorandumData,
-                            "isActive",
+                            "is_active",
                             $$a.concat([$$v])
                           )
                       } else {
                         $$i > -1 &&
                           _vm.$set(
                             _vm.memorandumData,
-                            "isActive",
+                            "is_active",
                             $$a.slice(0, $$i).concat($$a.slice($$i + 1))
                           )
                       }
                     } else {
-                      _vm.$set(_vm.memorandumData, "isActive", $$c)
+                      _vm.$set(_vm.memorandumData, "is_active", $$c)
                     }
                   }
                 }
@@ -30538,7 +30542,9 @@ var render = function() {
             ]),
             _c("div", { staticClass: "column is-2" }, [
               _c("div", { staticClass: "field" }, [
-                _c("label", { staticClass: "label" }, [_vm._v("بودجه")]),
+                _c("label", { staticClass: "label" }, [
+                  _vm._v("بودجه (میلیون ریال)")
+                ]),
                 _c("div", { staticClass: "control" }, [
                   _c("input", {
                     directives: [
@@ -30914,9 +30920,8 @@ var render = function() {
               [
                 _c("date-picker", {
                   attrs: {
-                    format: "YYYY",
+                    type: "year",
                     "display-format": "jYYYY",
-                    type: "datetime",
                     required: ""
                   },
                   model: {
@@ -31026,19 +31031,19 @@ var render = function() {
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.memorandumData.isActive,
-                    expression: "memorandumData.isActive"
+                    value: _vm.memorandumData.is_active,
+                    expression: "memorandumData.is_active"
                   }
                 ],
                 attrs: { type: "checkbox" },
                 domProps: {
-                  checked: Array.isArray(_vm.memorandumData.isActive)
-                    ? _vm._i(_vm.memorandumData.isActive, null) > -1
-                    : _vm.memorandumData.isActive
+                  checked: Array.isArray(_vm.memorandumData.is_active)
+                    ? _vm._i(_vm.memorandumData.is_active, null) > -1
+                    : _vm.memorandumData.is_active
                 },
                 on: {
                   change: function($event) {
-                    var $$a = _vm.memorandumData.isActive,
+                    var $$a = _vm.memorandumData.is_active,
                       $$el = $event.target,
                       $$c = $$el.checked ? true : false
                     if (Array.isArray($$a)) {
@@ -31048,19 +31053,19 @@ var render = function() {
                         $$i < 0 &&
                           _vm.$set(
                             _vm.memorandumData,
-                            "isActive",
+                            "is_active",
                             $$a.concat([$$v])
                           )
                       } else {
                         $$i > -1 &&
                           _vm.$set(
                             _vm.memorandumData,
-                            "isActive",
+                            "is_active",
                             $$a.slice(0, $$i).concat($$a.slice($$i + 1))
                           )
                       }
                     } else {
-                      _vm.$set(_vm.memorandumData, "isActive", $$c)
+                      _vm.$set(_vm.memorandumData, "is_active", $$c)
                     }
                   }
                 }
@@ -33411,7 +33416,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/memorandum/index/index.js */"./resources/js/pages/memorandum/index/index.js");
+module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/pages/memorandum/index/index.js */"./resources/js/pages/memorandum/index/index.js");
 
 
 /***/ })

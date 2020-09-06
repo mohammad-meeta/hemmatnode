@@ -74,7 +74,7 @@ UserHelper.loadAllUserData = function loadAllUserData(dataPaginate) {
         },
         {
             $sort: {
-                created_at: -1
+                createdAt: -1
             }
         },
         {

@@ -34,7 +34,15 @@
                 register-program(ref="programRegister", @on-command="onCommand",
                   @on-register="onProgramRegister"
                   :register-url="registerUrl",
+                  :department-id="departmentId"
                   )
+
+            .column(v-show="!modeLoading && modeEdit")
+                edit-program(ref="programEdit", @on-command="onCommand",
+                @on-update="onProgramUpdate"
+                :edit-url="editUrl"
+                :department-id="departmentId"
+                )
 
             .column(v-show="!modeLoading && modeShow")
                 show-program(ref="programShow", @on-command="onCommand")
@@ -48,6 +56,7 @@ const ENUMS = require("JS-HELPERS/enums");
 const Loading = require("VUE-COMPONENTS/general/loading.vue").default;
 const RegisterProgram = require("VUE-COMPONENTS/program/register-program.vue")
     .default;
+const EditProgram = require("VUE-COMPONENTS/program/edit-program.vue").default;
 const ListProgram = require("VUE-COMPONENTS/program/list-program.vue").default;
 const ShowProgram = require("VUE-COMPONENTS/program/show-program.vue").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
@@ -59,6 +68,7 @@ module.exports = {
         Loading,
         ListProgram,
         RegisterProgram,
+        EditProgram,
         ShowProgram,
         Notification,
     },
@@ -72,6 +82,11 @@ module.exports = {
     }),
 
     props: {
+        departmentId: {
+            type: String,
+            default: null,
+        },
+
         title: {
             type: String,
             default: null,
@@ -122,6 +137,15 @@ module.exports = {
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
             this.setNotification(".برنامه با موفقیت ذخیره شد", "is-success");
         },
+        /**
+         * On Update
+         */
+        onProgramUpdate(payload) {
+            this.$refs.programList.editProgramList(payload);
+            this.changeFormMode(ENUMS.FORM_MODE.LIST);
+
+            this.setNotification(".جلسه با موفقیت ویرایش شد", "is-success");
+        },
 
         /**
          * On commands clicked
@@ -140,6 +164,12 @@ module.exports = {
                 case ENUMS.COMMAND.REGISTER:
                     /* TODO: REGISTER NEW  */
                     console.log("REGISTER NEW Program", arg);
+                    break;
+
+                case ENUMS.COMMAND.EDIT:
+                    /* TODO: Edit InviteSession */
+                    this.$refs.programEdit.loadProgramData(data);
+                    this.changeFormMode(ENUMS.FORM_MODE.EDIT);
                     break;
 
                 case ENUMS.COMMAND.CANCEL:

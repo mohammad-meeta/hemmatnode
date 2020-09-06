@@ -130,6 +130,8 @@ table.text-center td {
     margin-right: calc(-0.5em - 1px);
 }
 
+.pagination-next , .pagination-previous{ -moz-transform: scale(-1, 1); -webkit-transform: scale(-1, 1); -o-transform: scale(-1, 1); -ms-transform: scale(-1, 1); transform: scale(-1, 1); }
+
 /*.button .icon:last-child:not(:first-child) {
     margin-left: 0.25em;
     margin-right: 0.25em;

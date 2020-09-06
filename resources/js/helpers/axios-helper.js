@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 /**
  * Axios Helper class
@@ -9,10 +9,10 @@ module.exports = AxiosHelper;
 /**
  * To GraphQL object
  */
-AxiosHelper.toGQL = function toGQL(query = '', variables = {}) {
+AxiosHelper.toGQL = function toGQL(query = "", variables = {}) {
     return {
         query,
-        variables
+        variables,
     };
 };
 
@@ -20,18 +20,25 @@ AxiosHelper.toGQL = function toGQL(query = '', variables = {}) {
  * Send ajax request
  */
 AxiosHelper.send = function send(method, url, data = {}, options) {
-    const FormData = require('form-data');
+    const FormData = require("form-data");
 
     let postData;
     data = data || {};
 
     /* Setup options */
-    options = _.merge({
-        headers: [],
-        useCookie: true,
-        sendAsFormData: false,
-        filesArray: null
-    }, options);
+    options = _.merge(
+        {
+            headers: [],
+            useCookie: true,
+            sendAsFormData: false,
+            filesArray: [],
+        },
+        options
+    );
+
+    if (!Array.isArray(options.filesArray)) {
+        options.filesArray = [options.filesArray];
+    }
 
     /* Check form-data flag */
     if (true == options.sendAsFormData) {
@@ -39,41 +46,39 @@ AxiosHelper.send = function send(method, url, data = {}, options) {
         const formData = new FormData();
 
         /* Set new data */
-        Object.keys(data)
-            .forEach(key => {
-                let itemData = data[key];
+        Object.keys(data).forEach((key) => {
+            let itemData = data[key];
 
-                if (itemData == null) {
-                    return;
+            if (itemData == null) {
+                return;
+            }
+
+            /* Add array of files */
+            if (options.filesArray.indexOf(key) > -1) {
+                for (let i = 0; i < itemData.length; ++i) {
+                    const file = itemData[i];
+
+                    formData.append(key, file);
                 }
-
-                /* Add array of files */
-                if (options.filesArray == key) {
-                    for (let i = 0; i < itemData.length; ++i) {
-                        const file = itemData[i];
-
-                        formData.append(key, file);
-                    };
-                }
+            } else {
                 /* Add object */
-                else {
-                    if (Array.isArray(itemData)) {
-                        itemData = JSON.stringify(itemData);
-                    }
-
-                    formData.append(key, itemData);
+                if (Array.isArray(itemData)) {
+                    itemData = JSON.stringify(itemData);
                 }
-            });
+
+                formData.append(key, itemData);
+            }
+        });
 
         postData = formData;
 
         /* Setup header */
-        options.headers['content-type'] = 'multipart/form-data';
+        options.headers["content-type"] = "multipart/form-data";
     } else {
         postData = data;
 
         if (options.jsonRequest || true) {
-            options.headers['content-type'] = 'application/json';
+            options.headers["content-type"] = "application/json";
         }
     }
 
@@ -81,28 +86,31 @@ AxiosHelper.send = function send(method, url, data = {}, options) {
         method,
         withCredentials: options.useCookie,
         baseURL: options.baseURL,
-        headers: options.headers
+        headers: options.headers,
     };
 
     if (null != postData.getHeaders) {
-        config['headers'] = postData.getHeaders();
+        config["headers"] = postData.getHeaders();
     }
 
     /* Add CSRF token */
-    const csrf = options.csrfToken ||
-        (document.querySelector('meta[name="csrf-token"]') || {
-            content: ''
-        }).content;
+    const csrf =
+        options.csrfToken ||
+        (
+            document.querySelector('meta[name="csrf-token"]') || {
+                content: "",
+            }
+        ).content;
 
-    axios.defaults.headers.common['X-CSRF-TOKEN'] =
-        options.headers['x-xsrf-token'] =
-        options.headers['x-csrf-token'] =
-        options.headers['xsrf-token'] =
-        options.headers['csrf-token'] = csrf;
+    axios.defaults.headers.common["X-CSRF-TOKEN"] = options.headers[
+        "x-xsrf-token"
+    ] = options.headers["x-csrf-token"] = options.headers[
+        "xsrf-token"
+    ] = options.headers["csrf-token"] = csrf;
 
     /* Add bearer token */
     if (null != options.token) {
-        config.headers['authorization'] = `Bearer ${options.token}`;
+        config.headers["authorization"] = `Bearer ${options.token}`;
     }
 
     /* Create axios instance */
@@ -112,10 +120,8 @@ AxiosHelper.send = function send(method, url, data = {}, options) {
 };
 
 /* Add standard restful request types */
-const types = [
-    'get', 'head', 'post', 'patch', 'put', 'options', 'link'
-];
-types.forEach(type => {
+const types = ["get", "head", "post", "patch", "put", "options", "link"];
+types.forEach((type) => {
     AxiosHelper[type] = function send(method, url, data, options) {
         return AxiosHelper.send(type, method, url, data, options);
     };

@@ -63,12 +63,12 @@ InviteSessiontHelper.loadAllInviteSessionData = async function loadAllInviteSess
                 as: "file"
             }
         },
-        {
-            $unwind: {
-                path: "$file",
-                preserveNullAndEmptyArrays: true
-            }
-        },
+        // {
+        //     $unwind: {
+        //         path: "$file",
+        //         preserveNullAndEmptyArrays: true
+        //     }
+        // },
         {
             $project: {
                 "file.encoding": 0,
@@ -78,17 +78,35 @@ InviteSessiontHelper.loadAllInviteSessionData = async function loadAllInviteSess
                 "file.path": 0,
             }
         },
+        {
+            $unwind: {
+                path: "$signatured",
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $lookup: {
+                from: "files",
+                localField: "signatured.file_id",
+                foreignField: "_id",
+                as: "signatured"
+            }
+        },
         // {
         //     $unwind: {
-        //         path: "$files",
+        //         path: "$signatured",
         //         preserveNullAndEmptyArrays: true
         //     }
         // },
-        // {
-        //     $match: {
-        //         "files.deleted_at": { $eq: null }
-        //     }
-        // },
+        {
+            $project: {
+                "signatured.encoding": 0,
+                "signatured.mimetype": 0,
+                "signatured.destination": 0,
+                "signatured.user_id": 0,
+                "signatured.path": 0,
+            }
+        },
         {
             $group: {
                 _id: "$_id",
@@ -97,6 +115,9 @@ InviteSessiontHelper.loadAllInviteSessionData = async function loadAllInviteSess
                 },
                 files: {
                     $push: "$file"
+                },
+                signatured: {
+                    $push: "$signatured"
                 },
                 user_list: {
                     $last: "$user_list"

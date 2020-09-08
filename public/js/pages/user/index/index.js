@@ -41004,7 +41004,7 @@ var render = function() {
               [_vm._v("×")]
             ),
             _c("label", [_vm._v(_vm._s(_vm.humanFileSize(file.file.size)))]),
-            _c("label", [_vm._v(_vm._s(file.file.originalname))])
+            _c("label", [_vm._v(_vm._s(file.file.name))])
           ])
         }),
         0
@@ -43852,7 +43852,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/pages/user/index/index.js */"./resources/js/pages/user/index/index.js");
+module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/user/index/index.js */"./resources/js/pages/user/index/index.js");
 
 
 /***/ })

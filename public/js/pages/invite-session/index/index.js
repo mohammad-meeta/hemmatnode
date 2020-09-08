@@ -555,6 +555,8 @@ var MultiTextMember = __webpack_require__(/*! VUE-COMPONENTS/invite-session/mult
 
 var FileUpload = __webpack_require__(/*! VUE-COMPONENTS/general/file-upload.vue */ "./resources/js/vue/components/general/file-upload.vue")["default"];
 
+var FileUploadSignatured = __webpack_require__(/*! VUE-COMPONENTS/general/file-upload.vue */ "./resources/js/vue/components/general/file-upload.vue")["default"];
+
 module.exports = {
   name: "EditInviteSession",
   components: {
@@ -563,7 +565,8 @@ module.exports = {
     MultiText: MultiText,
     MultiTextApprov: MultiTextApprov,
     MultiTextMember: MultiTextMember,
-    FileUpload: FileUpload
+    FileUpload: FileUpload,
+    FileUploadSignatured: FileUploadSignatured
   },
   data: function data() {
     return {
@@ -584,6 +587,8 @@ module.exports = {
         date: null,
         department_id: null,
         files: {},
+        oldFiles: [],
+        signaturedOldFiles: [],
         signatured: {},
         user_list: {},
         present_user: {},
@@ -724,10 +729,10 @@ module.exports = {
         status: 1
       };
       Vue.set(this, "oldFiles", data.files);
+      this.$refs.fileUpload.updateOldFiles(data.files);
       Vue.set(this, "signaturedOldFiles", data.signatured);
+      this.$refs.fileUploadSignatured.updateOldFiles(data.signatured);
       Vue.set(this, "inviteSessionData", temp);
-      this.$refs.fileUpload.updateOldFiles(data.files); //this.$refs.fileUpload.updateOldFiles(data.signatured);
-
       var userslist = this.inviteSessionData.user_list;
       var checkedUsers = this.users.filter(function (u) {
         return userslist.indexOf(u._id) > -1;
@@ -866,6 +871,7 @@ module.exports = {
         files: this.files,
         signaturedFiles: this.signaturedFiles,
         deletedOldFiles: this.deletedOldFiles,
+        signatured: this.signatured,
         signaturedDeletedOldFiles: this.signaturedDeletedOldFiles,
         intro: this.inviteSessionData.intro,
         status: this.inviteSessionData.status
@@ -46925,7 +46931,7 @@ var render = function() {
               [_vm._v("×")]
             ),
             _c("label", [_vm._v(_vm._s(_vm.humanFileSize(file.file.size)))]),
-            _c("label", [_vm._v(_vm._s(file.file.originalname))])
+            _c("label", [_vm._v(_vm._s(file.file.name))])
           ])
         }),
         0
@@ -47634,8 +47640,8 @@ var render = function() {
                   "div",
                   { staticClass: "panel-block" },
                   [
-                    _c("file-upload", {
-                      ref: "fileUpload",
+                    _c("file-upload-signatured", {
+                      ref: "fileUploadSignatured",
                       attrs: { "old-files": _vm.signaturedOldFiles }
                     })
                   ],
@@ -52442,7 +52448,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/pages/invite-session/index/index.js */"./resources/js/pages/invite-session/index/index.js");
+module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/invite-session/index/index.js */"./resources/js/pages/invite-session/index/index.js");
 
 
 /***/ })

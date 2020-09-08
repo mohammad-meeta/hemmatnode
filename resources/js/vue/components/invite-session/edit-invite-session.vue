@@ -166,6 +166,7 @@ module.exports = {
             user_list: {},
             present_user_list: {},
             is_active: false,
+            status: 1,
             intro: null,
             approv: [],
             other_user: [],
@@ -316,7 +317,7 @@ module.exports = {
             Vue.set(this, "signaturedOldFiles", data.signatured);
             Vue.set(this, "inviteSessionData", temp);
             this.$refs.fileUpload.updateOldFiles(data.files);
-            this.$refs.fileUpload.updateOldFiles(data.signatured);
+            //this.$refs.fileUpload.updateOldFiles(data.signatured);
             const userslist = this.inviteSessionData.user_list;
             let checkedUsers = this.users.filter(
                 u => userslist.indexOf(u._id) > -1
@@ -440,7 +441,8 @@ module.exports = {
                 files: this.files,
                 signaturedFiles: this.signaturedFiles,
                 deletedOldFiles: this.deletedOldFiles,
-                signaturedDeletedOldFiles: this.signaturedDeletedOldFiles
+                signaturedDeletedOldFiles: this.signaturedDeletedOldFiles,
+                intro: this.inviteSessionData.intro
             };
 
             let t = Object.keys(inviteSessionData.user_list)
@@ -451,6 +453,7 @@ module.exports = {
             this.showLoading();
 
             const url = this.editUrl.replace("$id$", inviteSessionData._id);
+            console.log(inviteSessionData);
             AxiosHelper.send("post", url, inviteSessionData, {
                 sendAsFormData: true,
                 filesArray: "files"

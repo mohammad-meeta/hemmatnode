@@ -41004,7 +41004,7 @@ var render = function() {
               [_vm._v("×")]
             ),
             _c("label", [_vm._v(_vm._s(_vm.humanFileSize(file.file.size)))]),
-            _c("label", [_vm._v(_vm._s(file.file.name))])
+            _c("label", [_vm._v(_vm._s(file.file.originalname))])
           ])
         }),
         0

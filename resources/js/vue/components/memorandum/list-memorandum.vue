@@ -11,7 +11,10 @@
         tbody
             tr(v-for='memorandum in memorandums', :key='memorandum.id')
                 td {{ memorandum.title }}
-                td {{ memorandum.is_active }}
+                td(v-if="memorandum.is_active")
+                    | فعال
+                td(v-if="!memorandum.is_active")
+                    | غیر فعال
                 td {{ toPersianDate(memorandum.created_at) }}
                 td.function-links
                     a.button.is-primary.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.EDIT, memorandum)")
@@ -23,11 +26,24 @@
                             i.material-icons.icon swap_horizontal_circle
                         span مشاهده
 
-    paginate(:page-count='pageCount',
-        :click-handler='paginatorClick',
-        :prev-text="'Prev'",
-        :next-text="'Next'",
-        :container-class="'pagination-list'")
+    b-pagination(
+        :total="pagination.total",
+        :current.sync="pagination.current",
+        :range-before="pagination.rangeBefore",
+        :range-after="pagination.rangeAfter",
+        :order="pagination.order",
+        :size="pagination.size",
+        :simple="pagination.isSimple",
+        :rounded="pagination.isRounded",
+        :per-page="pagination.perPage",
+        :icon-prev="pagination.prevIcon",
+        :icon-next="pagination.nextIcon",
+        aria-next-label="Next page",
+        aria-previous-label="Previous page",
+        aria-page-label="Page",
+        aria-current-label="Current page"
+        @change="loadMemorandums(pagination.current)"
+    )
 </template>
 
 <script>
@@ -53,7 +69,28 @@ module.exports = {
     data: () => ({
         departmentData: null,
         ENUMS,
-        memorandums: [],
+        pagination: {
+            total: 0,
+            current: 1,
+            perPage: 50,
+            rangeBefore: 3,
+            rangeAfter: 1,
+            order: "",
+            size: "",
+            isSimple: false,
+            isRounded: false,
+            prevIcon: "chevron-left",
+            nextIcon: "chevron-right",
+        },
+        memorandums: [
+            {
+                is_active: null,
+                title: null,
+                dep: {
+                    title: null,
+                },
+            },
+        ],
         memorandumsCount: 0,
         pageCount: 0
     }),
@@ -63,14 +100,6 @@ module.exports = {
     },
 
     methods: {
-        /**
-         * Create titles
-         */
-        getTitles(extra) {
-            let res = extra.map(x => x.title).join("<br/>");
-
-            return res;
-        },
 
         /**
          * Load memorandums
@@ -85,8 +114,7 @@ module.exports = {
 
                 Vue.set(this, "memorandums", resData.data.data);
                 Vue.set(this, "memorandumsCount", resData.data.count);
-
-                this.paginator();
+                Vue.set(this.pagination, "total", resData.data.count);
             });
         },
 
@@ -107,47 +135,63 @@ module.exports = {
         },
 
         /**
-         * Paginator
-         */
-        paginator() {
-            let pageCount = Math.ceil(this.memorandumsCount / 50);
-            Vue.set(this, "pageCount", pageCount);
-        },
-        /**
          * paginator click link
          */
         paginatorClick(id) {
             this.loadMemorandums(id);
         },
+
         /**
          * add new memorandums data to list data
          */
         addToMemorandumList(payload) {
-            const newMemorandumsData = {
-                _id: payload._id,
-                agenda: payload.agrnda,
-                is_active: payload.is_active,
-                created_at: payload.created_at
-            };
-
-            this.memorandums.unshift(newMemorandumsData);
+            if (this.memorandums.length > 0) {
+                const dep = this.memorandums[0].dep;
+                const newMemorandumsData = {
+                    _id: payload._id,
+                    project: payload.data.project,
+                    title: payload.title,
+                    is_active: payload.is_active,
+                    created_at: payload.created_at,
+                    date: payload.data.date,
+                    body: payload.data.body,
+                    body: payload.data.conditions,
+                    files: payload.data.files,
+                };
+                this.memorandums.unshift(newMemorandumsData);
+            }
         },
 
         editInMemorandumsList(payload) {
             const editedMemorandumsData = {
-                _id: payload._id,
-                title: payload.agenda,
+                _id: payload.data._id,
+                project: payload.data.project,
+                title: payload.title,
                 is_active: payload.is_active,
-                created_at: payload.created_at
+                date: payload.data.date,
+                body: payload.data.body,
+                body: payload.data.conditions,
+                oldFiles: payload.data.data.files,
+                created_at: payload.created_at,
             };
 
             let foundIndex = this.memorandums.findIndex(
                 x => x._id == editedMemorandumsData._id
             );
-            this.memorandums[foundIndex].agenda =
-                editedMemorandumsData.agenda;
+            this.memorandums[foundIndex].title =
+                editedMemorandumsData.title;
+            this.memorandums[foundIndex].project =
+                editedMemorandumsData.project;
+            this.memorandums[foundIndex].date =
+                editedMemorandumsData.date;
+            this.memorandums[foundIndex].body =
+                editedMemorandumsData.body;
+            this.memorandums[foundIndex].conditions =
+                editedMemorandumsData.conditions;
             this.memorandums[foundIndex].is_active =
                 editedMemorandumsData.is_active;
+            this.memorandums[foundIndex].files =
+                editedMemorandumsData.oldFiles;
         }
     }
 };

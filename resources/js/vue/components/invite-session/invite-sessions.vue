@@ -20,12 +20,7 @@
                     span.icon.is-small
                         i.material-icons.icon check_circle
                     span ایجاد دعوتنامه
-            .column.is-one-fifth(v-show="modeList")
-                a.button.is-primary.is-rounded(href="#",
-                @click.prevent="commandClick(ENUMS.COMMAND.NEWSESSION)")
-                    span.icon.is-small
-                        i.material-icons.icon check_circle
-                    span ایجاد صورتجلسه
+
             .column.is-one-fifth(v-show="!modeList")
                 a.button.is-warning.is-rounded(href="#",
                 @click.prevent="commandClick(ENUMS.COMMAND.CANCEL)")

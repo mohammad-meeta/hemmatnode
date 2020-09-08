@@ -114,7 +114,8 @@ module.exports = {
             user_list: {},
             is_active: false,
             other_user: [],
-            deletedOldFiles: []
+            deletedOldFiles: [],
+            status: 0
         },
 
         checkedRows: [],
@@ -217,6 +218,7 @@ module.exports = {
                 other_user: other_user
             };
             Vue.set(this, "oldFiles", data.files);
+
             Vue.set(this, "inviteSessionData", temp);
             this.$refs.fileUpload.updateOldFiles(data.files);
 

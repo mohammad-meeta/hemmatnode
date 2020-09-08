@@ -192,7 +192,6 @@ module.exports = {
 
         editInviteSessionList(payload) {
             const data = payload.data.data.agenda;
-            console.log(payload)
             const editedInviteSessionsData = {
                 _id: payload.data.data._id,
                 title: payload.data.data.agenda,
@@ -205,7 +204,6 @@ module.exports = {
                 is_active: payload.data.data.is_active,
                 created_at: payload.data.data.created_at,
             };
-            console.log(editedInviteSessionsData.is_active);
             let foundIndex = this.inviteSessions.findIndex(
                 (x) => x._id == editedInviteSessionsData._id
             );
@@ -221,8 +219,13 @@ module.exports = {
                 editedInviteSessionsData.user_list;
             this.inviteSessions[foundIndex].files =
                 editedInviteSessionsData.oldFiles;
-            this.inviteSessions[foundIndex].is_active =
-                editedInviteSessionsData.is_active;
+            if(editedInviteSessionsData.is_active == "false") {
+                this.inviteSessions[foundIndex].is_active = false;
+            }
+            else {
+                this.inviteSessions[foundIndex].is_active = true;
+            }
+
             console.log(this.inviteSessions[foundIndex]);
         },
     },

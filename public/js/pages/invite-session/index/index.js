@@ -588,6 +588,7 @@ module.exports = {
         user_list: {},
         present_user_list: {},
         is_active: false,
+        status: 1,
         intro: null,
         approv: [],
         other_user: [],
@@ -724,8 +725,8 @@ module.exports = {
       Vue.set(this, "oldFiles", data.files);
       Vue.set(this, "signaturedOldFiles", data.signatured);
       Vue.set(this, "inviteSessionData", temp);
-      this.$refs.fileUpload.updateOldFiles(data.files);
-      this.$refs.fileUpload.updateOldFiles(data.signatured);
+      this.$refs.fileUpload.updateOldFiles(data.files); //this.$refs.fileUpload.updateOldFiles(data.signatured);
+
       var userslist = this.inviteSessionData.user_list;
       var checkedUsers = this.users.filter(function (u) {
         return userslist.indexOf(u._id) > -1;
@@ -863,7 +864,8 @@ module.exports = {
         files: this.files,
         signaturedFiles: this.signaturedFiles,
         deletedOldFiles: this.deletedOldFiles,
-        signaturedDeletedOldFiles: this.signaturedDeletedOldFiles
+        signaturedDeletedOldFiles: this.signaturedDeletedOldFiles,
+        intro: this.inviteSessionData.intro
       };
       var t = Object.keys(inviteSessionData.user_list).filter(function (key) {
         return true == inviteSessionData.user_list[key];
@@ -873,6 +875,7 @@ module.exports = {
       inviteSessionData.user_list = t;
       this.showLoading();
       var url = this.editUrl.replace("$id$", inviteSessionData._id);
+      console.log(inviteSessionData);
       AxiosHelper.send("post", url, inviteSessionData, {
         sendAsFormData: true,
         filesArray: "files"
@@ -1047,7 +1050,8 @@ module.exports = {
         user_list: {},
         is_active: false,
         other_user: [],
-        deletedOldFiles: []
+        deletedOldFiles: [],
+        status: 0
       },
       checkedRows: [],
       checkboxPosition: "left",
@@ -1328,11 +1332,6 @@ module.exports = {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-//
-//
-//
-//
-//
 //
 //
 //
@@ -1855,7 +1854,6 @@ module.exports = {
     },
     editInviteSessionList: function editInviteSessionList(payload) {
       var data = payload.data.data.agenda;
-      console.log(payload);
       var editedInviteSessionsData = {
         _id: payload.data.data._id,
         title: payload.data.data.agenda,
@@ -1868,7 +1866,6 @@ module.exports = {
         is_active: payload.data.data.is_active,
         created_at: payload.data.data.created_at
       };
-      console.log(editedInviteSessionsData.is_active);
       var foundIndex = this.inviteSessions.findIndex(function (x) {
         return x._id == editedInviteSessionsData._id;
       });
@@ -1878,7 +1875,13 @@ module.exports = {
       this.inviteSessions[foundIndex].body = editedInviteSessionsData.body;
       this.inviteSessions[foundIndex].user_list = editedInviteSessionsData.user_list;
       this.inviteSessions[foundIndex].files = editedInviteSessionsData.oldFiles;
-      this.inviteSessions[foundIndex].is_active = editedInviteSessionsData.is_active;
+
+      if (editedInviteSessionsData.is_active == "false") {
+        this.inviteSessions[foundIndex].is_active = false;
+      } else {
+        this.inviteSessions[foundIndex].is_active = true;
+      }
+
       console.log(this.inviteSessions[foundIndex]);
     }
   }
@@ -2212,6 +2215,7 @@ module.exports = {
         user_list: {},
         present_user_list: {},
         is_active: false,
+        status: 1,
         intro: null,
         approv: [],
         other_user: []
@@ -2648,7 +2652,8 @@ module.exports = {
         deletedOldFiles: [],
         user_list: {},
         other_user: [],
-        is_active: false
+        is_active: false,
+        status: 0
       },
       checkedRows: [],
       checkboxPosition: "left",
@@ -2694,6 +2699,7 @@ module.exports = {
     }
   },
   created: function created() {
+    this.clearFormData();
     this.loadDepartments();
     this.loadUsers();
   },
@@ -2841,6 +2847,7 @@ module.exports = {
       }).then(function () {
         return _this3.hideLoading();
       });
+      this.clearFormData();
     },
 
     /**
@@ -2861,6 +2868,28 @@ module.exports = {
       console.log(error);
       this.setNotification(error, "is-danger");
       return false;
+    },
+
+    /**
+     * clear form data
+     */
+    clearFormData: function clearFormData() {
+      this.inviteSessionData = {
+        title: null,
+        body: null,
+        agenda: [],
+        place: null,
+        date: null,
+        files: [],
+        deletedOldFiles: [],
+        user_list: {},
+        other_user: [],
+        is_active: false
+      };
+      this.checkedRows = [];
+      this.files = [];
+      this.deletedOldFiles = [];
+      this.oldFiles = [];
     }
   }
 };
@@ -46881,7 +46910,7 @@ var render = function() {
               [_vm._v("×")]
             ),
             _c("label", [_vm._v(_vm._s(_vm.humanFileSize(file.file.size)))]),
-            _c("label", [_vm._v(_vm._s(file.file.name))])
+            _c("label", [_vm._v(_vm._s(file.file.originalname))])
           ])
         }),
         0
@@ -48214,36 +48243,6 @@ var render = function() {
               {
                 name: "show",
                 rawName: "v-show",
-                value: _vm.modeList,
-                expression: "modeList"
-              }
-            ],
-            staticClass: "column is-one-fifth"
-          },
-          [
-            _c(
-              "a",
-              {
-                staticClass: "button is-primary is-rounded",
-                attrs: { href: "#" },
-                on: {
-                  click: function($event) {
-                    $event.preventDefault()
-                    return _vm.commandClick(_vm.ENUMS.COMMAND.NEWSESSION)
-                  }
-                }
-              },
-              [_vm._m(1), _c("span", [_vm._v("ایجاد صورتجلسه")])]
-            )
-          ]
-        ),
-        _c(
-          "div",
-          {
-            directives: [
-              {
-                name: "show",
-                rawName: "v-show",
                 value: !_vm.modeList,
                 expression: "!modeList"
               }
@@ -48263,7 +48262,7 @@ var render = function() {
                   }
                 }
               },
-              [_vm._m(2), _c("span", [_vm._v("بازگشت")])]
+              [_vm._m(1), _c("span", [_vm._v("بازگشت")])]
             )
           ]
         )
@@ -48441,14 +48440,6 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("span", { staticClass: "icon is-small" }, [
-      _c("i", { staticClass: "material-icons icon" }, [_vm._v("check_circle")])
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement

@@ -148,6 +148,7 @@ module.exports = {
             user_list: {},
             other_user: [],
             is_active: false,
+            status: 0
         },
 
         checkedRows: [],
@@ -203,6 +204,7 @@ module.exports = {
     },
 
     created() {
+        this.clearFormData();
         this.loadDepartments();
         this.loadUsers();
     },
@@ -338,6 +340,7 @@ module.exports = {
                     this.setNotification(data, "is-danger");
                 })
                 .then(() => this.hideLoading());
+                this.clearFormData();
         },
 
         /**
@@ -362,6 +365,27 @@ module.exports = {
             this.setNotification(error, "is-danger");
             return false;
         },
+        /**
+         * clear form data
+         */
+        clearFormData() {
+            this.inviteSessionData = {
+                title: null,
+                body: null,
+                agenda: [],
+                place: null,
+                date: null,
+                files: [],
+                deletedOldFiles: [],
+                user_list: {},
+                other_user: [],
+                is_active: false
+            };
+            this.checkedRows = [];
+            this.files = [];
+            this.deletedOldFiles = [];
+            this.oldFiles = [];
+        }
     },
 };
 </script>

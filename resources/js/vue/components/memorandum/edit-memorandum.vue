@@ -10,7 +10,7 @@
                 label.label
                 .control
                     .select.is-primary
-                        select(v-model="memorandumData.departments")
+                        select(v-model="memorandumData.department_id")
                             option(v-for='(department, departmentIndex) in departments',
                                 :value="department._id") {{ department.title }}
             .field
@@ -149,7 +149,7 @@ module.exports = {
                 project: data.project,
                 conditions: data.conditions,
                 date: data.date,
-                department_id: data.department_id,
+                department_id: data.dep._id,
                 files: data.files,
                 is_active: data.is_active
             };

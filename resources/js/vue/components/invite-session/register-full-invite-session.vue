@@ -168,6 +168,7 @@ module.exports = {
             user_list: {},
             present_user_list: {},
             is_active: false,
+            status: 1,
             intro: null,
             approv: [],
             other_user:[]

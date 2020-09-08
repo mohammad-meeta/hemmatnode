@@ -43,9 +43,11 @@
                     textarea.textarea(placeholder='شرایط اجرای تفاهم نامه', v-model='memorandumData.conditions')
 
             .field
-                label.checkbox
-                    input(type='file', @change="setAttachment")
-                    |   ضمیمه
+                .panel
+                    .panel-heading
+                        | فایل های ضمیمه
+                    .panel-block
+                        file-upload(ref="fileUpload", :old-files="oldFiles")
 
             .field
                 label.checkbox
@@ -68,6 +70,7 @@ const MemorandumValidator = require("JS-VALIDATORS/memorandum-register-validator
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
 const MultiTextProject = require("VUE-COMPONENTS/memorandum/multi-text-project.vue").default;
+const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 
 module.exports = {
     name: "RegisterMemorandum",
@@ -75,13 +78,17 @@ module.exports = {
     components: {
         Notification,
         DatePicker: VuePersianDatetimePicker,
-        MultiTextProject
+        MultiTextProject,
+        FileUpload
     },
 
     data: () => ({
         ENUMS,
         departments: [],
         users: [],
+        files: [],
+        deletedOldFiles: [],
+        oldFiles: [],
         memorandumData: {
             title: null,
             body: null,
@@ -90,7 +97,7 @@ module.exports = {
             date: null,
             department_id: null,
             files: {},
-            user_list: {},
+            deletedOldFiles: [],
             is_active: false
         },
 
@@ -220,6 +227,13 @@ module.exports = {
             if (!isValid) {
                 return;
             }
+
+            const deletedFiles = this.$refs.fileUpload.getDeletedFiles();
+            const newFiles = this.$refs.fileUpload.getNewFiles();
+            let newUploaded = newFiles.map((x) => x.file);
+            Vue.set(this, "files", newUploaded);
+            let deleteUploaded = deletedFiles.map((x) => x._id);
+            Vue.set(this, "deletedOldFiles", deleteUploaded);
             let memorandumData = {
                 title: this.memorandumData.title,
                 project: JSON.stringify(this.memorandumData.project),
@@ -227,32 +241,38 @@ module.exports = {
                 conditions: this.memorandumData.conditions,
                 date: this.memorandumData.date,
                 department_id: this.memorandumData.departments,
-                is_active: this.memorandumData.is_active
+                is_active: this.memorandumData.is_active,
+                files: this.files,
+                deletedOldFiles: this.deletedOldFiles,
             };
-            console.log(this.files);
             memorandumData.files = this.files[0];
 
             this.showLoading();
 
             const url = this.registerUrl;
-            console.log(memorandumData);
-            AxiosHelper.send("post", url, memorandumData, {
-                sendAsFormData: true
+           AxiosHelper.send("post", url, memorandumData, {
+                sendAsFormData: true,
+                filesArray: "files",
             })
-                .then(res => {
+                .then((res) => {
                     const data = res.data;
+
                     if (data.success) {
                         this.$emit("on-register", {
                             sender: this,
-                            data
+                            data: {
+                                data: data,
+                                dep_title: 0,
+                            },
                         });
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     const data = err.response.data;
                     this.setNotification(data, "is-danger");
                 })
                 .then(() => this.hideLoading());
+                this.clearFormData();
         },
 
         /**
@@ -274,6 +294,25 @@ module.exports = {
             console.log(error);
             this.setNotification(error, "is-danger");
             return false;
+        },
+
+        /**
+         * clear form data
+         */
+        clearFormData() {
+            this.inviteSessionData = {
+                title: null,
+                body: null,
+                project: [],
+                conditions: null,
+                date: null,
+                files: [],
+                deletedOldFiles: [],
+                is_active: false
+            };
+            this.files = [];
+            this.deletedOldFiles = [];
+            this.oldFiles = [];
         }
     }
 };

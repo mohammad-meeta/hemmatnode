@@ -130,9 +130,23 @@ InviteSession.editInviteSessionData = async function editInviteSessionData(
  */
 InviteSession.update = async function update(req, res, next) {
     let data = {};
-
     const files = req.files || [];
     let fileList = [];
+
+    const signatured = req.signatured || [];
+    let signaturedList = [];
+    for (let i = 0; i < signatured.length; ++i) {
+        try {
+            const el = signatured[i];
+            el.user_id = req.session.auth.userId;
+
+            const data = await FileHelper.insertFileData(el);
+            signaturedList.push(data[0]._id);
+        } catch (err) {
+            Logger.error(err);
+        }
+    }
+
 
     for (let i = 0; i < files.length; ++i) {
         try {
@@ -151,14 +165,31 @@ InviteSession.update = async function update(req, res, next) {
         }
     }
 
-    const deletedOldFiles = JSON.parse(req.body.deletedOldFiles);
+    const deletedOldFiles = JSON.parse(req.body.deletedOldFiles || null) || [];
+    const signaturedDeletedOldFiles = JSON.parse(req.body.signaturedDeletedOldFiles || null) || [];
 
     let inviteRes = await InviteSessionHelper.loadInviteSessionData(req.body._id);
-    const InviteSessionFiles = inviteRes.files;
+    const InviteSessionFiles = (inviteRes || {}).files || [];
+    const InviteSessionSignaturedFiles = (inviteRes || {}).signatured || [];
 
     for (let index = 0; index < InviteSessionFiles.length; index++) {
         const element = InviteSessionFiles[index];
         fileList.push(element)
+    }
+
+    for (let index = 0; index < InviteSessionSignaturedFiles.length; index++) {
+        const element = InviteSessionSignaturedFiles[index];
+        signaturedList.push(element)
+    }
+
+    for (let index = 0; index < signaturedDeletedOldFiles.length; index++) {
+        const element = signaturedDeletedOldFiles[index];
+        for (let oil = 0; oil < signaturedList.length; oil++) {
+            const Fele = signaturedList[oil];
+            if (Fele.file_id == element) {
+                Fele.deleted_at = Date()
+            }
+        }
     }
 
     for (let index = 0; index < deletedOldFiles.length; index++) {
@@ -179,14 +210,16 @@ InviteSession.update = async function update(req, res, next) {
         date: req.body.date,
         user_list: JSON.parse(req.body.user_list),
         other_user: JSON.parse(req.body.other_user || "[]"),
-        approves: JSON.parse(req.body.approves || "[]"),
+        approves: JSON.parse(req.body.approv || "[]"),
         present_user: JSON.parse(req.body.present_user || "[]"),
         status: req.body.status || 0,
         user_id: req.session.auth.userId,
         is_active: req.body.is_active,
         department_id: req.body.department_id,
         files: fileList,
+        signatured: signaturedList
     };
+
 
     let result = await InviteSessionHelper.updateInviteSessionData(data);
     result = {

@@ -110,10 +110,25 @@ ProgramHelper.updateProgramData = function updateProgramData(data) {
 ProgramHelper.deleteProgram = function deleteProgram(data) {
     return new Promise((resolve, reject) => {
         const Program = mongoose.model('Program');
-        Program.findByIdAndUpdate(data._id, { is_active: false }, { useFindAndModify: false , new: true})
+        Program.findByIdAndUpdate(data._id, { is_active: false }, { useFindAndModify: false, new: true })
             .then(res => {
                 resolve(res);
             })
             .catch(err => reject(err));
     });
+};
+
+/**
+ * update
+ */
+ProgramHelper.updateProgramData = async function updateProgramData(
+    data
+) {
+    const Program = mongoose.model("Program");
+
+    let res = await Program.findByIdAndUpdate(data._id, data, {
+        useFindAndModify: false, new: true
+    });
+
+    return res;
 };

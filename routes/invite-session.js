@@ -61,7 +61,7 @@ Router.get("/api/invite-session/:invitesession/edit", [
 ]).as("api.invitesession.edit");
 
 Router.post("/invite-session/:id/edit", [
-    upload.array("files"),
+    upload.array(["files", "signatured"]),
     checkSession,
     Rule.canAsync("user.permision", "invitesession.update"),
     // validator.validate,

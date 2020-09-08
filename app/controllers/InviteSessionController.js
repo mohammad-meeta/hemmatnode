@@ -135,9 +135,6 @@ InviteSession.update = async function update(req, res, next) {
 
     const signatured = req.signatured || [];
     let signaturedList = [];
-    console.log(req)
-    console.log("**********************************************************")
-    console.log(req.files, req.signatured)
     for (let i = 0; i < signatured.length; ++i) {
         try {
             const el = signatured[i];

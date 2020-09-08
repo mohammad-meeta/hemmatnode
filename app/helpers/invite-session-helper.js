@@ -63,12 +63,12 @@ InviteSessiontHelper.loadAllInviteSessionData = async function loadAllInviteSess
                 as: "file"
             }
         },
-        // {
-        //     $unwind: {
-        //         path: "$file",
-        //         preserveNullAndEmptyArrays: true
-        //     }
-        // },
+        {
+            $unwind: {
+                path: "$file",
+                preserveNullAndEmptyArrays: true
+            }
+        },
         {
             $project: {
                 "file.encoding": 0,
@@ -92,12 +92,12 @@ InviteSessiontHelper.loadAllInviteSessionData = async function loadAllInviteSess
                 as: "signatured"
             }
         },
-        // {
-        //     $unwind: {
-        //         path: "$signatured",
-        //         preserveNullAndEmptyArrays: true
-        //     }
-        // },
+        {
+            $unwind: {
+                path: "$signatured",
+                preserveNullAndEmptyArrays: true
+            }
+        },
         {
             $project: {
                 "signatured.encoding": 0,

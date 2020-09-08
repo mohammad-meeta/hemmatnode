@@ -62,9 +62,9 @@ Router.get("/api/invite-session/:invitesession/edit", [
 
 Router.post("/invite-session/:id/edit", [
     upload.fields([{
-        name: 'files'
+        name: 'files', maxCount: 10
     }, {
-        name: 'signatured'
+        name: 'signatured', maxCount: 10
     }]),
     checkSession,
     Rule.canAsync("user.permision", "invitesession.update"),

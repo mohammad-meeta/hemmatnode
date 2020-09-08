@@ -21,13 +21,21 @@
             .field
                 label.label سال
                 .control
-                    date-picker(v-model='memorandumData.date' format="YYYY"
-                    display-format="jYYYY" type="datetime" required)
+                    date-picker(
+                        v-model='memorandumData.date'
+                        display-format="jYYYY"
+                        type="year"
+                        required
+                    )
 
             .field
                 label.label مقدمه و اهداف تفاهم نامه
                 .control
-                    textarea.textarea(placeholder='مقدمه', v-model='memorandumData.body')
+                    textarea.textarea(
+                        placeholder='مقدمه',
+                        v-model='memorandumData.body'
+                    )
+
             fieldset
                 legend پروژه ها
                 .field
@@ -39,9 +47,11 @@
                     textarea.textarea(placeholder='شرایط اجرای تفاهم نامه', v-model='memorandumData.conditions')
 
             .field
-                label.checkbox
-                    input(type='file', @change="setAttachment")
-                    |   ضمیمه
+                .panel
+                    .panel-heading
+                        | فایل های ضمیمه
+                    .panel-block
+                        file-upload(ref="fileUpload", :old-files="oldFiles")
 
             .field
                 label.checkbox
@@ -64,6 +74,7 @@ const MemorandumValidator = require("JS-VALIDATORS/memorandum-register-validator
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
 const MultiTextProject = require("VUE-COMPONENTS/memorandum/multi-text-project.vue").default;
+const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 
 module.exports = {
     name: "RegisterMemorandum",
@@ -71,13 +82,17 @@ module.exports = {
     components: {
         Notification,
         DatePicker: VuePersianDatetimePicker,
-        MultiTextProject
+        MultiTextProject,
+        FileUpload,
     },
 
     data: () => ({
         ENUMS,
         departments: [],
         users: [],
+        files: [],
+        deletedOldFiles: [],
+        oldFiles: [],
         memorandumData: {
             title: null,
             body: null,
@@ -86,6 +101,8 @@ module.exports = {
             date: null,
             department_id: null,
             files: {},
+            oldFiles: [],
+            deletedOldFiles: [],
             user_list: {},
             is_active: false
         },
@@ -129,14 +146,7 @@ module.exports = {
     },
 
     methods: {
-        /**
-         * Set attachments
-         */
-        setAttachment(sender) {
-            const files = sender.target.files;
 
-            Vue.set(this, "files", files);
-        },
 
         /**
          * Load specific invite session
@@ -145,6 +155,7 @@ module.exports = {
             const temp = {
                 _id: data._id,
                 dep: data.dep.title,
+                title: data.title,
                 body: data.body,
                 project: data.project,
                 conditions: data.conditions,
@@ -153,12 +164,8 @@ module.exports = {
                 files: data.files,
                 is_active: data.is_active
             };
-
-            try {
-                temp.project = JSON.parse(data.project);
-            } catch (ex) {
-                temp.project = [];
-            }
+            Vue.set(this, "oldFiles", data.files);
+            this.$refs.fileUpload.updateOldFiles(data.files);
 
             Vue.set(this, "memorandumData", temp);
         },
@@ -244,6 +251,12 @@ module.exports = {
             if (!isValid) {
                 return;
             }
+            const deletedFiles = this.$refs.fileUpload.getDeletedFiles();
+            const newFiles = this.$refs.fileUpload.getNewFiles();
+            let newUploaded = newFiles.map(x => x.file);
+            Vue.set(this, "files", newUploaded);
+            let deleteUploaded = deletedFiles.map(x => x._id);
+            Vue.set(this, "deletedOldFiles", deleteUploaded);
             let memorandumData = {
                 _id: this.memorandumData._id,
                 title: this.memorandumData.title,
@@ -252,9 +265,11 @@ module.exports = {
                 conditions: this.memorandumData.conditions,
                 date: this.memorandumData.date,
                 department_id: this.memorandumData.departments,
-                is_active: this.memorandumData.is_active
+                is_active: this.memorandumData.is_active,
+                files: this.files,
+                oldFiles: this.oldFiles,
+                deletedOldFiles: this.deletedOldFiles
             };
-            memorandumData.files = this.files[0];
             this.showLoading();
             const url = this.editUrl.replace("$id$", memorandumData._id);
             AxiosHelper.send("patch", url, memorandumData, {

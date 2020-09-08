@@ -586,7 +586,7 @@ module.exports = {
         files: {},
         signatured: {},
         user_list: {},
-        present_user_list: {},
+        present_user: {},
         is_active: false,
         status: 1,
         intro: null,
@@ -717,10 +717,11 @@ module.exports = {
         files: data.files,
         signatured: data.signatured,
         user_list: data.user_list,
-        present_user_list: data.present_user_list,
+        present_user: data.present_user,
         is_active: data.is_active,
         approv: data.approv,
-        other_user: data.other_user
+        other_user: data.other_user,
+        status: 1
       };
       Vue.set(this, "oldFiles", data.files);
       Vue.set(this, "signaturedOldFiles", data.signatured);
@@ -861,11 +862,13 @@ module.exports = {
         is_active: this.inviteSessionData.is_active,
         approv: JSON.stringify(this.inviteSessionData.approv),
         other_user: JSON.stringify(this.inviteSessionData.other_user),
+        present_user: this.inviteSessionData.present_user,
         files: this.files,
         signaturedFiles: this.signaturedFiles,
         deletedOldFiles: this.deletedOldFiles,
         signaturedDeletedOldFiles: this.signaturedDeletedOldFiles,
-        intro: this.inviteSessionData.intro
+        intro: this.inviteSessionData.intro,
+        status: this.inviteSessionData.status
       };
       var t = Object.keys(inviteSessionData.user_list).filter(function (key) {
         return true == inviteSessionData.user_list[key];
@@ -873,6 +876,18 @@ module.exports = {
         return key;
       });
       inviteSessionData.user_list = t;
+      inviteSessionData.user_list = this.userListTable.checkedRows.map(function (x) {
+        return x._id;
+      });
+      var p = Object.keys(inviteSessionData.present_user).filter(function (key) {
+        return true == inviteSessionData.present_user[key];
+      }).map(function (key) {
+        return key;
+      });
+      inviteSessionData.present_user = p;
+      inviteSessionData.present_user = this.presentUserListTable.checkedRows.map(function (x) {
+        return x._id;
+      });
       this.showLoading();
       var url = this.editUrl.replace("$id$", inviteSessionData._id);
       console.log(inviteSessionData);
@@ -51137,7 +51152,7 @@ module.exports = AxiosHelper;
  */
 
 AxiosHelper.toGQL = function toGQL() {
-  var query = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  var query = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
   var variables = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   return {
     query: query,
@@ -51163,9 +51178,14 @@ AxiosHelper.send = function send(method, url) {
     headers: [],
     useCookie: true,
     sendAsFormData: false,
-    filesArray: null
+    filesArray: []
   }, options);
+
+  if (!Array.isArray(options.filesArray)) {
+    options.filesArray = [options.filesArray];
+  }
   /* Check form-data flag */
+
 
   if (true == options.sendAsFormData) {
     /* Setup form-data */
@@ -51181,32 +51201,29 @@ AxiosHelper.send = function send(method, url) {
       /* Add array of files */
 
 
-      if (options.filesArray == key) {
+      if (options.filesArray.indexOf(key) > -1) {
         for (var i = 0; i < itemData.length; ++i) {
           var file = itemData[i];
           formData.append(key, file);
         }
-
-        ;
-      }
-      /* Add object */
-      else {
-          if (Array.isArray(itemData)) {
-            itemData = JSON.stringify(itemData);
-          }
-
-          formData.append(key, itemData);
+      } else {
+        /* Add object */
+        if (Array.isArray(itemData)) {
+          itemData = JSON.stringify(itemData);
         }
+
+        formData.append(key, itemData);
+      }
     });
     postData = formData;
     /* Setup header */
 
-    options.headers['content-type'] = 'multipart/form-data';
+    options.headers["content-type"] = "multipart/form-data";
   } else {
     postData = data;
 
     if (options.jsonRequest || true) {
-      options.headers['content-type'] = 'application/json';
+      options.headers["content-type"] = "application/json";
     }
   }
 
@@ -51218,19 +51235,19 @@ AxiosHelper.send = function send(method, url) {
   };
 
   if (null != postData.getHeaders) {
-    config['headers'] = postData.getHeaders();
+    config["headers"] = postData.getHeaders();
   }
   /* Add CSRF token */
 
 
   var csrf = options.csrfToken || (document.querySelector('meta[name="csrf-token"]') || {
-    content: ''
+    content: ""
   }).content;
-  axios.defaults.headers.common['X-CSRF-TOKEN'] = options.headers['x-xsrf-token'] = options.headers['x-csrf-token'] = options.headers['xsrf-token'] = options.headers['csrf-token'] = csrf;
+  axios.defaults.headers.common["X-CSRF-TOKEN"] = options.headers["x-xsrf-token"] = options.headers["x-csrf-token"] = options.headers["xsrf-token"] = options.headers["csrf-token"] = csrf;
   /* Add bearer token */
 
   if (null != options.token) {
-    config.headers['authorization'] = "Bearer ".concat(options.token);
+    config.headers["authorization"] = "Bearer ".concat(options.token);
   }
   /* Create axios instance */
 
@@ -51241,7 +51258,7 @@ AxiosHelper.send = function send(method, url) {
 /* Add standard restful request types */
 
 
-var types = ['get', 'head', 'post', 'patch', 'put', 'options', 'link'];
+var types = ["get", "head", "post", "patch", "put", "options", "link"];
 types.forEach(function (type) {
   AxiosHelper[type] = function send(method, url, data, options) {
     return AxiosHelper.send(type, method, url, data, options);
@@ -52425,7 +52442,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/pages/invite-session/index/index.js */"./resources/js/pages/invite-session/index/index.js");
+module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/invite-session/index/index.js */"./resources/js/pages/invite-session/index/index.js");
 
 
 /***/ })

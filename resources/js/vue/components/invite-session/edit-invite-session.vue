@@ -164,7 +164,7 @@ module.exports = {
             files: {},
             signatured: {},
             user_list: {},
-            present_user_list: {},
+            present_user: {},
             is_active: false,
             status: 1,
             intro: null,
@@ -307,10 +307,11 @@ module.exports = {
                 files: data.files,
                 signatured: data.signatured,
                 user_list: data.user_list,
-                present_user_list: data.present_user_list,
+                present_user: data.present_user,
                 is_active: data.is_active,
                 approv: data.approv,
-                other_user: data.other_user
+                other_user: data.other_user,
+                status: 1
             };
 
             Vue.set(this, "oldFiles", data.files);
@@ -438,11 +439,13 @@ module.exports = {
                 is_active: this.inviteSessionData.is_active,
                 approv: JSON.stringify(this.inviteSessionData.approv),
                 other_user: JSON.stringify(this.inviteSessionData.other_user),
+                present_user: this.inviteSessionData.present_user,
                 files: this.files,
                 signaturedFiles: this.signaturedFiles,
                 deletedOldFiles: this.deletedOldFiles,
                 signaturedDeletedOldFiles: this.signaturedDeletedOldFiles,
-                intro: this.inviteSessionData.intro
+                intro: this.inviteSessionData.intro,
+                status: this.inviteSessionData.status
             };
 
             let t = Object.keys(inviteSessionData.user_list)
@@ -450,6 +453,14 @@ module.exports = {
                 .map(key => key);
 
             inviteSessionData.user_list = t;
+            inviteSessionData.user_list = this.userListTable.checkedRows.map(x => x._id);
+
+            let p = Object.keys(inviteSessionData.present_user)
+                .filter(key => true == inviteSessionData.present_user[key])
+                .map(key => key);
+
+            inviteSessionData.present_user = p;
+            inviteSessionData.present_user = this.presentUserListTable.checkedRows.map(x => x._id);
             this.showLoading();
 
             const url = this.editUrl.replace("$id$", inviteSessionData._id);

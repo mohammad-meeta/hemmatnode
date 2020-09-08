@@ -380,7 +380,19 @@ module.exports = {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var AxiosHelper = __webpack_require__(/*! JS-HELPERS/axios-helper */ "./resources/js/helpers/axios-helper.js");
 
@@ -394,18 +406,24 @@ var VuePersianDatetimePicker = __webpack_require__(/*! vue-persian-datetime-pick
 
 var MultiTextProject = __webpack_require__(/*! VUE-COMPONENTS/memorandum/multi-text-project.vue */ "./resources/js/vue/components/memorandum/multi-text-project.vue")["default"];
 
+var FileUpload = __webpack_require__(/*! VUE-COMPONENTS/general/file-upload.vue */ "./resources/js/vue/components/general/file-upload.vue")["default"];
+
 module.exports = {
   name: "RegisterMemorandum",
   components: {
     Notification: Notification,
     DatePicker: VuePersianDatetimePicker,
-    MultiTextProject: MultiTextProject
+    MultiTextProject: MultiTextProject,
+    FileUpload: FileUpload
   },
   data: function data() {
-    return {
+    return _defineProperty({
       ENUMS: ENUMS,
       departments: [],
       users: [],
+      files: [],
+      deletedOldFiles: [],
+      oldFiles: [],
       memorandumData: {
         title: null,
         body: null,
@@ -414,14 +432,15 @@ module.exports = {
         date: null,
         department_id: null,
         files: {},
+        oldFiles: [],
+        deletedOldFiles: [],
         user_list: {},
         is_active: false
       },
       notificationMessage: null,
       notificationType: "is-info",
-      showLoadingFlag: false,
-      files: []
-    };
+      showLoadingFlag: false
+    }, "files", []);
   },
   props: {
     departmentId: {
@@ -455,20 +474,13 @@ module.exports = {
   },
   methods: {
     /**
-     * Set attachments
-     */
-    setAttachment: function setAttachment(sender) {
-      var files = sender.target.files;
-      Vue.set(this, "files", files);
-    },
-
-    /**
      * Load specific invite session
      */
     loadMemorandumData: function loadMemorandumData(data) {
       var temp = {
         _id: data._id,
         dep: data.dep.title,
+        title: data.title,
         body: data.body,
         project: data.project,
         conditions: data.conditions,
@@ -477,13 +489,8 @@ module.exports = {
         files: data.files,
         is_active: data.is_active
       };
-
-      try {
-        temp.project = JSON.parse(data.project);
-      } catch (ex) {
-        temp.project = [];
-      }
-
+      Vue.set(this, "oldFiles", data.files);
+      this.$refs.fileUpload.updateOldFiles(data.files);
       Vue.set(this, "memorandumData", temp);
     },
 
@@ -577,6 +584,16 @@ module.exports = {
         return;
       }
 
+      var deletedFiles = this.$refs.fileUpload.getDeletedFiles();
+      var newFiles = this.$refs.fileUpload.getNewFiles();
+      var newUploaded = newFiles.map(function (x) {
+        return x.file;
+      });
+      Vue.set(this, "files", newUploaded);
+      var deleteUploaded = deletedFiles.map(function (x) {
+        return x._id;
+      });
+      Vue.set(this, "deletedOldFiles", deleteUploaded);
       var memorandumData = {
         _id: this.memorandumData._id,
         title: this.memorandumData.title,
@@ -585,9 +602,11 @@ module.exports = {
         conditions: this.memorandumData.conditions,
         date: this.memorandumData.date,
         department_id: this.memorandumData.departments,
-        is_active: this.memorandumData.is_active
+        is_active: this.memorandumData.is_active,
+        files: this.files,
+        oldFiles: this.oldFiles,
+        deletedOldFiles: this.deletedOldFiles
       };
-      memorandumData.files = this.files[0];
       this.showLoading();
       var url = this.editUrl.replace("$id$", memorandumData._id);
       AxiosHelper.send("patch", url, memorandumData, {
@@ -45853,9 +45872,8 @@ var render = function() {
               [
                 _c("date-picker", {
                   attrs: {
-                    format: "YYYY",
                     "display-format": "jYYYY",
-                    type: "datetime",
+                    type: "year",
                     required: ""
                   },
                   model: {
@@ -45950,12 +45968,21 @@ var render = function() {
             ])
           ]),
           _c("div", { staticClass: "field" }, [
-            _c("label", { staticClass: "checkbox" }, [
-              _c("input", {
-                attrs: { type: "file" },
-                on: { change: _vm.setAttachment }
-              }),
-              _vm._v("  ضمیمه")
+            _c("div", { staticClass: "panel" }, [
+              _c("div", { staticClass: "panel-heading" }, [
+                _vm._v("فایل های ضمیمه")
+              ]),
+              _c(
+                "div",
+                { staticClass: "panel-block" },
+                [
+                  _c("file-upload", {
+                    ref: "fileUpload",
+                    attrs: { "old-files": _vm.oldFiles }
+                  })
+                ],
+                1
+              )
             ])
           ]),
           _c("div", { staticClass: "field" }, [
@@ -48437,7 +48464,7 @@ module.exports = AxiosHelper;
  */
 
 AxiosHelper.toGQL = function toGQL() {
-  var query = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  var query = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
   var variables = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   return {
     query: query,
@@ -48463,9 +48490,14 @@ AxiosHelper.send = function send(method, url) {
     headers: [],
     useCookie: true,
     sendAsFormData: false,
-    filesArray: null
+    filesArray: []
   }, options);
+
+  if (!Array.isArray(options.filesArray)) {
+    options.filesArray = [options.filesArray];
+  }
   /* Check form-data flag */
+
 
   if (true == options.sendAsFormData) {
     /* Setup form-data */
@@ -48481,32 +48513,29 @@ AxiosHelper.send = function send(method, url) {
       /* Add array of files */
 
 
-      if (options.filesArray == key) {
+      if (options.filesArray.indexOf(key) > -1) {
         for (var i = 0; i < itemData.length; ++i) {
           var file = itemData[i];
           formData.append(key, file);
         }
-
-        ;
-      }
-      /* Add object */
-      else {
-          if (Array.isArray(itemData)) {
-            itemData = JSON.stringify(itemData);
-          }
-
-          formData.append(key, itemData);
+      } else {
+        /* Add object */
+        if (Array.isArray(itemData)) {
+          itemData = JSON.stringify(itemData);
         }
+
+        formData.append(key, itemData);
+      }
     });
     postData = formData;
     /* Setup header */
 
-    options.headers['content-type'] = 'multipart/form-data';
+    options.headers["content-type"] = "multipart/form-data";
   } else {
     postData = data;
 
     if (options.jsonRequest || true) {
-      options.headers['content-type'] = 'application/json';
+      options.headers["content-type"] = "application/json";
     }
   }
 
@@ -48518,19 +48547,19 @@ AxiosHelper.send = function send(method, url) {
   };
 
   if (null != postData.getHeaders) {
-    config['headers'] = postData.getHeaders();
+    config["headers"] = postData.getHeaders();
   }
   /* Add CSRF token */
 
 
   var csrf = options.csrfToken || (document.querySelector('meta[name="csrf-token"]') || {
-    content: ''
+    content: ""
   }).content;
-  axios.defaults.headers.common['X-CSRF-TOKEN'] = options.headers['x-xsrf-token'] = options.headers['x-csrf-token'] = options.headers['xsrf-token'] = options.headers['csrf-token'] = csrf;
+  axios.defaults.headers.common["X-CSRF-TOKEN"] = options.headers["x-xsrf-token"] = options.headers["x-csrf-token"] = options.headers["xsrf-token"] = options.headers["csrf-token"] = csrf;
   /* Add bearer token */
 
   if (null != options.token) {
-    config.headers['authorization'] = "Bearer ".concat(options.token);
+    config.headers["authorization"] = "Bearer ".concat(options.token);
   }
   /* Create axios instance */
 
@@ -48541,7 +48570,7 @@ AxiosHelper.send = function send(method, url) {
 /* Add standard restful request types */
 
 
-var types = ['get', 'head', 'post', 'patch', 'put', 'options', 'link'];
+var types = ["get", "head", "post", "patch", "put", "options", "link"];
 types.forEach(function (type) {
   AxiosHelper[type] = function send(method, url, data, options) {
     return AxiosHelper.send(type, method, url, data, options);
@@ -49509,7 +49538,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/pages/memorandum/index/index.js */"./resources/js/pages/memorandum/index/index.js");
+module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/memorandum/index/index.js */"./resources/js/pages/memorandum/index/index.js");
 
 
 /***/ })

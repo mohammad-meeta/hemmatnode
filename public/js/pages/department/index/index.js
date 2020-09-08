@@ -8812,7 +8812,7 @@ module.exports = AxiosHelper;
  */
 
 AxiosHelper.toGQL = function toGQL() {
-  var query = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  var query = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
   var variables = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   return {
     query: query,
@@ -8838,9 +8838,14 @@ AxiosHelper.send = function send(method, url) {
     headers: [],
     useCookie: true,
     sendAsFormData: false,
-    filesArray: null
+    filesArray: []
   }, options);
+
+  if (!Array.isArray(options.filesArray)) {
+    options.filesArray = [options.filesArray];
+  }
   /* Check form-data flag */
+
 
   if (true == options.sendAsFormData) {
     /* Setup form-data */
@@ -8856,32 +8861,29 @@ AxiosHelper.send = function send(method, url) {
       /* Add array of files */
 
 
-      if (options.filesArray == key) {
+      if (options.filesArray.indexOf(key) > -1) {
         for (var i = 0; i < itemData.length; ++i) {
           var file = itemData[i];
           formData.append(key, file);
         }
-
-        ;
-      }
-      /* Add object */
-      else {
-          if (Array.isArray(itemData)) {
-            itemData = JSON.stringify(itemData);
-          }
-
-          formData.append(key, itemData);
+      } else {
+        /* Add object */
+        if (Array.isArray(itemData)) {
+          itemData = JSON.stringify(itemData);
         }
+
+        formData.append(key, itemData);
+      }
     });
     postData = formData;
     /* Setup header */
 
-    options.headers['content-type'] = 'multipart/form-data';
+    options.headers["content-type"] = "multipart/form-data";
   } else {
     postData = data;
 
     if (options.jsonRequest || true) {
-      options.headers['content-type'] = 'application/json';
+      options.headers["content-type"] = "application/json";
     }
   }
 
@@ -8893,19 +8895,19 @@ AxiosHelper.send = function send(method, url) {
   };
 
   if (null != postData.getHeaders) {
-    config['headers'] = postData.getHeaders();
+    config["headers"] = postData.getHeaders();
   }
   /* Add CSRF token */
 
 
   var csrf = options.csrfToken || (document.querySelector('meta[name="csrf-token"]') || {
-    content: ''
+    content: ""
   }).content;
-  axios.defaults.headers.common['X-CSRF-TOKEN'] = options.headers['x-xsrf-token'] = options.headers['x-csrf-token'] = options.headers['xsrf-token'] = options.headers['csrf-token'] = csrf;
+  axios.defaults.headers.common["X-CSRF-TOKEN"] = options.headers["x-xsrf-token"] = options.headers["x-csrf-token"] = options.headers["xsrf-token"] = options.headers["csrf-token"] = csrf;
   /* Add bearer token */
 
   if (null != options.token) {
-    config.headers['authorization'] = "Bearer ".concat(options.token);
+    config.headers["authorization"] = "Bearer ".concat(options.token);
   }
   /* Create axios instance */
 
@@ -8916,7 +8918,7 @@ AxiosHelper.send = function send(method, url) {
 /* Add standard restful request types */
 
 
-var types = ['get', 'head', 'post', 'patch', 'put', 'options', 'link'];
+var types = ["get", "head", "post", "patch", "put", "options", "link"];
 types.forEach(function (type) {
   AxiosHelper[type] = function send(method, url, data, options) {
     return AxiosHelper.send(type, method, url, data, options);
@@ -9608,7 +9610,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/pages/department/index/index.js */"./resources/js/pages/department/index/index.js");
+module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/department/index/index.js */"./resources/js/pages/department/index/index.js");
 
 
 /***/ })

@@ -1,7 +1,7 @@
+dump.rdb
 public/
 uploads/
 logs/
 node_modules/
 .env
 db/
-dump.rdb

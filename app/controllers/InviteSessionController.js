@@ -130,10 +130,10 @@ InviteSession.editInviteSessionData = async function editInviteSessionData(
  */
 InviteSession.update = async function update(req, res, next) {
     let data = {};
-    const files = req.files || [];
+    const files = req.files.files || [];
     let fileList = [];
 
-    const signatured = req.signatured || [];
+    const signatured = req.files.signatured || [];
     let signaturedList = [];
     for (let i = 0; i < signatured.length; ++i) {
         try {
@@ -204,7 +204,6 @@ InviteSession.update = async function update(req, res, next) {
 
     data = {
         _id: req.body._id,
-        intro: req.body.intro,
         body: req.body.body,
         agenda: JSON.parse(req.body.agenda || "[]"),
         place: req.body.place,
@@ -221,11 +220,10 @@ InviteSession.update = async function update(req, res, next) {
         signatured: signaturedList
     };
 
-
-    let result = await InviteSessionHelper.updateInviteSessionData(data);
-    result = {
+    let result2 = await InviteSessionHelper.updateInviteSessionData(data);
+    let result = {
         success: true,
-        data: data,
+        data: result2,
     };
 
     res.status(200)

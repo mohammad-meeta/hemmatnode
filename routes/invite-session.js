@@ -42,7 +42,6 @@ Router.post("/invite-session/:department?", [
 
 Router.post("/invite-session/approves/:session?", [
     upload.array("files"),
-    upload.array("signatured"),
     checkSession,
     Rule.canAsync("user.permision", "invitesession.approves.store"),
     "InviteSession@approvesStore"
@@ -62,9 +61,9 @@ Router.get("/api/invite-session/:invitesession/edit", [
 
 Router.post("/invite-session/:id/edit", [
     upload.fields([{
-        name: 'files', maxCount: 10
+        name: 'files'
     }, {
-        name: 'signatured', maxCount: 10
+        name: 'signatured'
     }]),
     checkSession,
     Rule.canAsync("user.permision", "invitesession.update"),

@@ -434,6 +434,7 @@ InviteSessiontHelper.updateInviteSessionData = async function updateInviteSessio
         }
     ];
     let res2 = await InviteSession.aggregate(pipeline);
+
     for (let res2I = 0; res2I < res2.length; res2I++) {
 
         let oldFiles = res2[res2I].oldFiles;
@@ -444,7 +445,7 @@ InviteSessiontHelper.updateInviteSessionData = async function updateInviteSessio
             for (let index2 = 0; index2 < oldFiles.length; index2++) {
                 const element2 = oldFiles[index2];
                 if (String(element["_id"]) == String(element2["file_id"]) && element2["deleted_at"] != null) {
-                    deleted.push(element["_id"])
+                    deleted.push(element["_id"]);
                 }
             }
         }
@@ -452,7 +453,7 @@ InviteSessiontHelper.updateInviteSessionData = async function updateInviteSessio
             const element = deleted[index3];
             const indexF = files.findIndex(x => String(x._id) == String(element));
             if (indexF >= -1) {
-                files.splice(indexF, 1)
+                files.splice(indexF, 1);
             }
         }
     }
@@ -468,7 +469,6 @@ InviteSessiontHelper.updateInviteSessionData = async function updateInviteSessio
             };
         }
     }
-
     return res2;
 };
 

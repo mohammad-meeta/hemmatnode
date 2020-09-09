@@ -1,6 +1,6 @@
 <template lang="pug">
-    .multi-text#multi-text-template
-        .form-itemsbox(v-for='(item, index) in values')
+    .multi-text#multi-text-approves
+        .form-itemsbox(v-for='(item, index) in value')
             .columns.is-multiline
                 .column.is-12
                     .field
@@ -31,11 +31,14 @@ module.exports = {
     name: "MultiTextApprov",
 
     data: () => ({
-        values: null
+        values: []
     }),
 
     props: {
-        value: null
+        value: {
+            type: Array,
+            default: () => []
+        }
     },
 
     created() {
@@ -44,22 +47,21 @@ module.exports = {
 
     methods: {
         setValue() {
-            var v = Array.from(this.value);
-            this.values = v;
+            Vue.set(this, "values", this.value);
         },
 
         updateValue: function() {
-            this.$emit("input", this.values);
+            this.$emit("input", this.value);
         },
 
         deleteValue: function(index) {
-            this.values.splice(index, 1);
-            this.$emit('input', this.values);
+            this.value.splice(index, 1);
+            this.$emit('input', this.value);
         },
 
         addValue: function() {
-            this.values.push({});
-            this.$emit('input', this.values);
+            this.value.push({});
+            this.$emit('input', this.value);
         },
     }
 };

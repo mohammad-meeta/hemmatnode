@@ -225,8 +225,6 @@ module.exports = {
             else {
                 this.inviteSessions[foundIndex].is_active = true;
             }
-
-            console.log(this.inviteSessions[foundIndex]);
         },
     },
 };

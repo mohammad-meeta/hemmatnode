@@ -209,7 +209,6 @@ var uuidV4 = __webpack_require__(/*! uuid */ "./node_modules/uuid/index.js").v4;
           file: files[i],
           is_deleted: false
         };
-        console.log(obj);
         Vue.set(this.files, this.files.length, obj);
       }
     },

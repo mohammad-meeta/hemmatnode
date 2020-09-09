@@ -209,7 +209,6 @@ var uuidV4 = __webpack_require__(/*! uuid */ "./node_modules/uuid/index.js").v4;
           file: files[i],
           is_deleted: false
         };
-        console.log(obj);
         Vue.set(this.files, this.files.length, obj);
       }
     },
@@ -724,8 +723,9 @@ module.exports = {
         user_list: data.user_list,
         present_user: data.present_user,
         is_active: data.is_active,
-        approv: data.approv,
+        approv: data.approves,
         other_user: data.other_user,
+        intro: data.intro,
         status: 1
       };
       Vue.set(this, "oldFiles", data.files);
@@ -846,12 +846,12 @@ module.exports = {
         return x._id;
       });
       Vue.set(this, "deletedOldFiles", deleteUploaded);
-      var signaturedDeletedFiles = this.$refs.fileUpload.getDeletedFiles();
-      var newSignaturedFiles = this.$refs.fileUpload.getNewFiles();
+      var signaturedDeletedFiles = this.$refs.fileUploadSignatured.getDeletedFiles();
+      var newSignaturedFiles = this.$refs.fileUploadSignatured.getNewFiles();
       var newSignaturedUploaded = newSignaturedFiles.map(function (x) {
         return x.file;
       });
-      Vue.set(this, "signaturedFiles", newSignaturedUploaded);
+      Vue.set(this, "signatured", newSignaturedUploaded);
       var signaturedDeleteUploaded = signaturedDeletedFiles.map(function (x) {
         return x._id;
       });
@@ -869,7 +869,7 @@ module.exports = {
         other_user: JSON.stringify(this.inviteSessionData.other_user),
         present_user: this.inviteSessionData.present_user,
         files: this.files,
-        signaturedFiles: this.signaturedFiles,
+        signaturedFiles: this.signatured,
         deletedOldFiles: this.deletedOldFiles,
         signatured: this.signatured,
         signaturedDeletedOldFiles: this.signaturedDeletedOldFiles,
@@ -896,10 +896,9 @@ module.exports = {
       });
       this.showLoading();
       var url = this.editUrl.replace("$id$", inviteSessionData._id);
-      console.log(inviteSessionData);
       AxiosHelper.send("post", url, inviteSessionData, {
         sendAsFormData: true,
-        filesArray: "files"
+        filesArray: ["files", "signatured"]
       }).then(function (res) {
         //const data = JSON.parse(res.config.data);
         var data = res.data;
@@ -1902,8 +1901,6 @@ module.exports = {
       } else {
         this.inviteSessions[foundIndex].is_active = true;
       }
-
-      console.log(this.inviteSessions[foundIndex]);
     }
   }
 };
@@ -1950,30 +1947,34 @@ module.exports = {
   name: "MultiTextApprov",
   data: function data() {
     return {
-      values: null
+      values: []
     };
   },
   props: {
-    value: null
+    value: {
+      type: Array,
+      "default": function _default() {
+        return [];
+      }
+    }
   },
   created: function created() {
     this.setValue();
   },
   methods: {
     setValue: function setValue() {
-      var v = Array.from(this.value);
-      this.values = v;
+      Vue.set(this, "values", this.value);
     },
     updateValue: function updateValue() {
-      this.$emit("input", this.values);
+      this.$emit("input", this.value);
     },
     deleteValue: function deleteValue(index) {
-      this.values.splice(index, 1);
-      this.$emit('input', this.values);
+      this.value.splice(index, 1);
+      this.$emit('input', this.value);
     },
     addValue: function addValue() {
-      this.values.push({});
-      this.$emit('input', this.values);
+      this.value.push({});
+      this.$emit('input', this.value);
     }
   }
 };
@@ -48695,9 +48696,9 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "multi-text", attrs: { id: "multi-text-template" } },
+    { staticClass: "multi-text", attrs: { id: "multi-text-approves" } },
     [
-      _vm._l(_vm.values, function(item, index) {
+      _vm._l(_vm.value, function(item, index) {
         return _c("div", { staticClass: "form-itemsbox" }, [
           _c("div", { staticClass: "columns is-multiline" }, [
             _c("div", { staticClass: "column is-12" }, [

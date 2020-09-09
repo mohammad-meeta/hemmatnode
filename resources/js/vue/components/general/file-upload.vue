@@ -97,7 +97,6 @@ export default {
                     file: files[i],
                     is_deleted: false
                 };
-                console.log(obj);
                 Vue.set(this.files, this.files.length, obj);
             }
         },

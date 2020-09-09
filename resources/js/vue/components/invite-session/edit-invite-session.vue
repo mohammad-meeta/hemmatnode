@@ -316,8 +316,9 @@ module.exports = {
                 user_list: data.user_list,
                 present_user: data.present_user,
                 is_active: data.is_active,
-                approv: data.approv,
+                approv: data.approves,
                 other_user: data.other_user,
+                intro: data.intro,
                 status: 1
             };
             Vue.set(this, "oldFiles", data.files);
@@ -325,7 +326,6 @@ module.exports = {
 
             Vue.set(this, "signaturedOldFiles", data.signatured);
             this.$refs.fileUploadSignatured.updateOldFiles(data.signatured);
-
             Vue.set(this, "inviteSessionData", temp);
             const userslist = this.inviteSessionData.user_list;
             let checkedUsers = this.users.filter(
@@ -430,10 +430,10 @@ module.exports = {
             let deleteUploaded = deletedFiles.map(x => x._id);
             Vue.set(this, "deletedOldFiles", deleteUploaded);
 
-            const signaturedDeletedFiles = this.$refs.fileUpload.getDeletedFiles();
-            const newSignaturedFiles = this.$refs.fileUpload.getNewFiles();
+            const signaturedDeletedFiles = this.$refs.fileUploadSignatured.getDeletedFiles();
+            const newSignaturedFiles = this.$refs.fileUploadSignatured.getNewFiles();
             let newSignaturedUploaded = newSignaturedFiles.map(x => x.file);
-            Vue.set(this, "signaturedFiles", newSignaturedUploaded);
+            Vue.set(this, "signatured", newSignaturedUploaded);
             let signaturedDeleteUploaded = signaturedDeletedFiles.map(
                 x => x._id
             );
@@ -455,7 +455,7 @@ module.exports = {
                 other_user: JSON.stringify(this.inviteSessionData.other_user),
                 present_user: this.inviteSessionData.present_user,
                 files: this.files,
-                signaturedFiles: this.signaturedFiles,
+                signaturedFiles: this.signatured,
                 deletedOldFiles: this.deletedOldFiles,
                 signatured: this.signatured,
                 signaturedDeletedOldFiles: this.signaturedDeletedOldFiles,
@@ -481,12 +481,10 @@ module.exports = {
                 x => x._id
             );
             this.showLoading();
-
             const url = this.editUrl.replace("$id$", inviteSessionData._id);
-            console.log(inviteSessionData);
             AxiosHelper.send("post", url, inviteSessionData, {
                 sendAsFormData: true,
-                filesArray: "files"
+                filesArray: ["files", "signatured"]
             })
                 .then(res => {
                     //const data = JSON.parse(res.config.data);

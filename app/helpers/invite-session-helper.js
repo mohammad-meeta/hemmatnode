@@ -60,22 +60,77 @@ InviteSessiontHelper.loadAllInviteSessionData = async function loadAllInviteSess
                 from: "files",
                 localField: "files.file_id",
                 foreignField: "_id",
-                as: "file"
+                as: "ffile"
             }
         },
         {
             $unwind: {
-                path: "$file",
+                path: "$ffile",
                 preserveNullAndEmptyArrays: true
             }
         },
         {
             $project: {
-                "file.encoding": 0,
-                "file.mimetype": 0,
-                "file.destination": 0,
-                "file.user_id": 0,
-                "file.path": 0,
+                "ffile.encoding": 0,
+                "ffile.mimetype": 0,
+                "ffile.destination": 0,
+                "ffile.user_id": 0,
+                "ffile.path": 0,
+            }
+        },
+
+
+        {
+            $group: {
+                _id: "$_id",
+                intro: {
+                    $last: "$intro"
+                },
+                oldFiles: {
+                    $push: "$files"
+                },
+                ffiles: {
+                    $push: "$ffile"
+                },
+                signatured: {
+                    $last: "$signatured"
+                },
+                user_list: {
+                    $last: "$user_list"
+                },
+                is_active: {
+                    $last: "$is_active"
+                },
+                other_user: {
+                    $last: "$other_user"
+                },
+                approves: {
+                    $last: "$approves"
+                },
+                present_user: {
+                    $last: "$present_user"
+                },
+                status: {
+                    $last: "$status"
+                },
+                body: {
+                    $last: "$body"
+                },
+                agenda: {
+                    $last: "$agenda"
+                },
+                place: {
+                    $last: "$place"
+                },
+                date: {
+                    $last: "$date"
+                },
+                created_at: {
+                    $last: "$created_at"
+                },
+                dep: {
+                    $last: "$dep"
+                }
             }
         },
         {
@@ -89,22 +144,22 @@ InviteSessiontHelper.loadAllInviteSessionData = async function loadAllInviteSess
                 from: "files",
                 localField: "signatured.file_id",
                 foreignField: "_id",
-                as: "signatured"
+                as: "fsignatured"
             }
         },
         {
             $unwind: {
-                path: "$signatured",
+                path: "$fsignatured",
                 preserveNullAndEmptyArrays: true
             }
         },
         {
             $project: {
-                "signatured.encoding": 0,
-                "signatured.mimetype": 0,
-                "signatured.destination": 0,
-                "signatured.user_id": 0,
-                "signatured.path": 0,
+                "fsignatured.encoding": 0,
+                "fsignatured.mimetype": 0,
+                "fsignatured.destination": 0,
+                "fsignatured.user_id": 0,
+                "fsignatured.path": 0,
             }
         },
         {
@@ -114,13 +169,16 @@ InviteSessiontHelper.loadAllInviteSessionData = async function loadAllInviteSess
                     $last: "$intro"
                 },
                 oldFiles: {
-                    $push: "$files"
+                    $last: "$oldFiles"
+                },
+                oldSignatured: {
+                    $last: "$signatured"
                 },
                 files: {
-                    $push: "$file"
+                    $last: "$ffiles"
                 },
                 signatured: {
-                    $push: "$signatured"
+                    $push: "$fsignatured"
                 },
                 user_list: {
                     $last: "$user_list"
@@ -188,11 +246,33 @@ InviteSessiontHelper.loadAllInviteSessionData = async function loadAllInviteSess
                 }
             }
         }
+
+        let oldSignatured = res[resI].oldSignatured;
+        let signaturedF = res[resI].signatured;
+        let deletedSig = [];
+        for (let index = 0; index < signaturedF.length; index++) {
+            const element = signaturedF[index];
+            for (let index2 = 0; index2 < oldSignatured.length; index2++) {
+                const element2 = oldSignatured[index2];
+                if (String(element["_id"]) == String(element2["file_id"]) && element2["deleted_at"] != null) {
+                    deletedSig.push(element["_id"])
+                }
+            }
+        }
+
         for (let index3 = 0; index3 < deleted.length; index3++) {
             const element = deleted[index3];
             const indexF = files.findIndex(x => String(x._id) == String(element));
             if (indexF >= -1) {
                 files.splice(indexF, 1)
+            }
+        }
+
+        for (let index3 = 0; index3 < deletedSig.length; index3++) {
+            const element = deletedSig[index3];
+            const indexF = signaturedF.findIndex(x => String(x._id) == String(element));
+            if (indexF >= -1) {
+                signaturedF.splice(indexF, 1)
             }
         }
     }
@@ -205,6 +285,17 @@ InviteSessiontHelper.loadAllInviteSessionData = async function loadAllInviteSess
                 "name": res[i].files[k].originalname,
                 "filename": res[i].files[k].filename,
                 "size": res[i].files[k].size,
+            };
+        }
+    }
+    for (let i = 0; i < res.length; i++) {
+        for (let k = 0; k < res[i].signatured.length; k++) {
+            res[i].signatured[k] = {
+                "_id": res[i].signatured[k]._id,
+                "fieldname": res[i].signatured[k].fieldname,
+                "name": res[i].signatured[k].originalname,
+                "filename": res[i].signatured[k].filename,
+                "size": res[i].signatured[k].size,
             };
         }
     }
@@ -275,12 +366,12 @@ InviteSessiontHelper.insertNewInviteSession = async function insertNewInviteSess
     const InviteSession = mongoose.model("InviteSession");
     const inviteSession = new InviteSession(data);
 
-    let res = await inviteSession.save();
+    let res2 = await inviteSession.save();
 
     const pipeline = [
         {
             $match: {
-                _id: res._id,
+                _id: res2._id,
             }
         },
         {
@@ -305,53 +396,26 @@ InviteSessiontHelper.insertNewInviteSession = async function insertNewInviteSess
                 from: "files",
                 localField: "files.file_id",
                 foreignField: "_id",
-                as: "file"
+                as: "ffile"
             }
         },
         {
             $unwind: {
-                path: "$file",
+                path: "$ffile",
                 preserveNullAndEmptyArrays: true
             }
         },
         {
             $project: {
-                "file.encoding": 0,
-                "file.mimetype": 0,
-                "file.destination": 0,
-                "file.user_id": 0,
-                "file.path": 0,
+                "ffile.encoding": 0,
+                "ffile.mimetype": 0,
+                "ffile.destination": 0,
+                "ffile.user_id": 0,
+                "ffile.path": 0,
             }
         },
-        {
-            $unwind: {
-                path: "$signatured",
-                preserveNullAndEmptyArrays: true
-            }
-        },
-        {
-            $lookup: {
-                from: "files",
-                localField: "signatured.file_id",
-                foreignField: "_id",
-                as: "signatured"
-            }
-        },
-        {
-            $unwind: {
-                path: "$signatured",
-                preserveNullAndEmptyArrays: true
-            }
-        },
-        {
-            $project: {
-                "signatured.encoding": 0,
-                "signatured.mimetype": 0,
-                "signatured.destination": 0,
-                "signatured.user_id": 0,
-                "signatured.path": 0,
-            }
-        },
+
+
         {
             $group: {
                 _id: "$_id",
@@ -361,11 +425,11 @@ InviteSessiontHelper.insertNewInviteSession = async function insertNewInviteSess
                 oldFiles: {
                     $push: "$files"
                 },
-                files: {
-                    $push: "$file"
+                ffiles: {
+                    $push: "$ffile"
                 },
                 signatured: {
-                    $push: "$signatured"
+                    $last: "$signatured"
                 },
                 user_list: {
                     $last: "$user_list"
@@ -404,45 +468,174 @@ InviteSessiontHelper.insertNewInviteSession = async function insertNewInviteSess
                     $last: "$dep"
                 }
             }
+        },
+        {
+            $unwind: {
+                path: "$signatured",
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $lookup: {
+                from: "files",
+                localField: "signatured.file_id",
+                foreignField: "_id",
+                as: "fsignatured"
+            }
+        },
+        {
+            $unwind: {
+                path: "$fsignatured",
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $project: {
+                "fsignatured.encoding": 0,
+                "fsignatured.mimetype": 0,
+                "fsignatured.destination": 0,
+                "fsignatured.user_id": 0,
+                "fsignatured.path": 0,
+            }
+        },
+        {
+            $group: {
+                _id: "$_id",
+                intro: {
+                    $last: "$intro"
+                },
+                oldFiles: {
+                    $last: "$oldFiles"
+                },
+                oldSignatured: {
+                    $last: "$signatured"
+                },
+                files: {
+                    $last: "$ffiles"
+                },
+                signatured: {
+                    $push: "$fsignatured"
+                },
+                user_list: {
+                    $last: "$user_list"
+                },
+                is_active: {
+                    $last: "$is_active"
+                },
+                other_user: {
+                    $last: "$other_user"
+                },
+                approves: {
+                    $last: "$approves"
+                },
+                present_user: {
+                    $last: "$present_user"
+                },
+                status: {
+                    $last: "$status"
+                },
+                body: {
+                    $last: "$body"
+                },
+                agenda: {
+                    $last: "$agenda"
+                },
+                place: {
+                    $last: "$place"
+                },
+                date: {
+                    $last: "$date"
+                },
+                created_at: {
+                    $last: "$created_at"
+                },
+                dep: {
+                    $last: "$dep"
+                }
+            }
+        },
+        {
+            $sort: {
+                created_at: -1
+            }
+        },
+        {
+            $skip: skip
+        },
+        {
+            $limit: pageSize
         }
     ];
-    let res2 = await InviteSession.aggregate(pipeline);
 
-    for (let res2I = 0; res2I < res2.length; res2I++) {
+    let res = await InviteSession.aggregate(pipeline);
+    for (let resI = 0; resI < res.length; resI++) {
 
-        let oldFiles = res2[res2I].oldFiles;
-        let files = res2[res2I].files;
+        let oldFiles = res[resI].oldFiles;
+        let files = res[resI].files;
         let deleted = [];
         for (let index = 0; index < files.length; index++) {
             const element = files[index];
             for (let index2 = 0; index2 < oldFiles.length; index2++) {
                 const element2 = oldFiles[index2];
                 if (String(element["_id"]) == String(element2["file_id"]) && element2["deleted_at"] != null) {
-                    deleted.push(element["_id"]);
+                    deleted.push(element["_id"])
                 }
             }
         }
+
+        let oldSignatured = res[resI].oldSignatured;
+        let signaturedF = res[resI].signatured;
+        let deletedSig = [];
+        for (let index = 0; index < signaturedF.length; index++) {
+            const element = signaturedF[index];
+            for (let index2 = 0; index2 < oldSignatured.length; index2++) {
+                const element2 = oldSignatured[index2];
+                if (String(element["_id"]) == String(element2["file_id"]) && element2["deleted_at"] != null) {
+                    deletedSig.push(element["_id"])
+                }
+            }
+        }
+
         for (let index3 = 0; index3 < deleted.length; index3++) {
             const element = deleted[index3];
             const indexF = files.findIndex(x => String(x._id) == String(element));
             if (indexF >= -1) {
-                files.splice(indexF, 1);
+                files.splice(indexF, 1)
+            }
+        }
+
+        for (let index3 = 0; index3 < deletedSig.length; index3++) {
+            const element = deletedSig[index3];
+            const indexF = signaturedF.findIndex(x => String(x._id) == String(element));
+            if (indexF >= -1) {
+                signaturedF.splice(indexF, 1)
             }
         }
     }
 
-    for (let i = 0; i < res2.length; i++) {
-        for (let k = 0; k < res2[i].files.length; k++) {
-            res2[i].files[k] = {
-                "_id": res2[i].files[k]._id,
-                "fieldname": res2[i].files[k].fieldname,
-                "name": res2[i].files[k].originalname,
-                "filename": res2[i].files[k].filename,
-                "size": res2[i].files[k].size,
+    for (let i = 0; i < res.length; i++) {
+        for (let k = 0; k < res[i].files.length; k++) {
+            res[i].files[k] = {
+                "_id": res[i].files[k]._id,
+                "fieldname": res[i].files[k].fieldname,
+                "name": res[i].files[k].originalname,
+                "filename": res[i].files[k].filename,
+                "size": res[i].files[k].size,
             };
         }
     }
-    return res2[0];
+    for (let i = 0; i < res.length; i++) {
+        for (let k = 0; k < res[i].signatured.length; k++) {
+            res[i].signatured[k] = {
+                "_id": res[i].signatured[k]._id,
+                "fieldname": res[i].signatured[k].fieldname,
+                "name": res[i].signatured[k].originalname,
+                "filename": res[i].signatured[k].filename,
+                "size": res[i].signatured[k].size,
+            };
+        }
+    }
+    return res[0];
 };
 /**
  * insert approves
@@ -465,14 +658,14 @@ InviteSessiontHelper.insertApproves = function insertApproves(data) {
 InviteSessiontHelper.updateInviteSessionData = async function updateInviteSessionData(data) {
     const InviteSession = mongoose.model("InviteSession");
 
-    let res = await InviteSession.findByIdAndUpdate(data._id, data, {
+    let res2 = await InviteSession.findByIdAndUpdate(data._id, data, {
         useFindAndModify: false, new: true
     });
 
     const pipeline = [
         {
             $match: {
-                _id: res._id,
+                _id: res2._id,
             }
         },
         {
@@ -497,53 +690,26 @@ InviteSessiontHelper.updateInviteSessionData = async function updateInviteSessio
                 from: "files",
                 localField: "files.file_id",
                 foreignField: "_id",
-                as: "file"
+                as: "ffile"
             }
         },
         {
             $unwind: {
-                path: "$file",
+                path: "$ffile",
                 preserveNullAndEmptyArrays: true
             }
         },
         {
             $project: {
-                "file.encoding": 0,
-                "file.mimetype": 0,
-                "file.destination": 0,
-                "file.user_id": 0,
-                "file.path": 0,
+                "ffile.encoding": 0,
+                "ffile.mimetype": 0,
+                "ffile.destination": 0,
+                "ffile.user_id": 0,
+                "ffile.path": 0,
             }
         },
-        {
-            $unwind: {
-                path: "$signatured",
-                preserveNullAndEmptyArrays: true
-            }
-        },
-        {
-            $lookup: {
-                from: "files",
-                localField: "signatured.file_id",
-                foreignField: "_id",
-                as: "signatured"
-            }
-        },
-        {
-            $unwind: {
-                path: "$signatured",
-                preserveNullAndEmptyArrays: true
-            }
-        },
-        {
-            $project: {
-                "signatured.encoding": 0,
-                "signatured.mimetype": 0,
-                "signatured.destination": 0,
-                "signatured.user_id": 0,
-                "signatured.path": 0,
-            }
-        },
+
+
         {
             $group: {
                 _id: "$_id",
@@ -553,11 +719,11 @@ InviteSessiontHelper.updateInviteSessionData = async function updateInviteSessio
                 oldFiles: {
                     $push: "$files"
                 },
-                files: {
-                    $push: "$file"
+                ffiles: {
+                    $push: "$ffile"
                 },
                 signatured: {
-                    $push: "$signatured"
+                    $last: "$signatured"
                 },
                 user_list: {
                     $last: "$user_list"
@@ -596,45 +762,174 @@ InviteSessiontHelper.updateInviteSessionData = async function updateInviteSessio
                     $last: "$dep"
                 }
             }
+        },
+        {
+            $unwind: {
+                path: "$signatured",
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $lookup: {
+                from: "files",
+                localField: "signatured.file_id",
+                foreignField: "_id",
+                as: "fsignatured"
+            }
+        },
+        {
+            $unwind: {
+                path: "$fsignatured",
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $project: {
+                "fsignatured.encoding": 0,
+                "fsignatured.mimetype": 0,
+                "fsignatured.destination": 0,
+                "fsignatured.user_id": 0,
+                "fsignatured.path": 0,
+            }
+        },
+        {
+            $group: {
+                _id: "$_id",
+                intro: {
+                    $last: "$intro"
+                },
+                oldFiles: {
+                    $last: "$oldFiles"
+                },
+                oldSignatured: {
+                    $last: "$signatured"
+                },
+                files: {
+                    $last: "$ffiles"
+                },
+                signatured: {
+                    $push: "$fsignatured"
+                },
+                user_list: {
+                    $last: "$user_list"
+                },
+                is_active: {
+                    $last: "$is_active"
+                },
+                other_user: {
+                    $last: "$other_user"
+                },
+                approves: {
+                    $last: "$approves"
+                },
+                present_user: {
+                    $last: "$present_user"
+                },
+                status: {
+                    $last: "$status"
+                },
+                body: {
+                    $last: "$body"
+                },
+                agenda: {
+                    $last: "$agenda"
+                },
+                place: {
+                    $last: "$place"
+                },
+                date: {
+                    $last: "$date"
+                },
+                created_at: {
+                    $last: "$created_at"
+                },
+                dep: {
+                    $last: "$dep"
+                }
+            }
+        },
+        {
+            $sort: {
+                created_at: -1
+            }
+        },
+        {
+            $skip: skip
+        },
+        {
+            $limit: pageSize
         }
     ];
-    let res2 = await InviteSession.aggregate(pipeline);
 
-    for (let res2I = 0; res2I < res2.length; res2I++) {
+    let res = await InviteSession.aggregate(pipeline);
+    for (let resI = 0; resI < res.length; resI++) {
 
-        let oldFiles = res2[res2I].oldFiles;
-        let files = res2[res2I].files;
+        let oldFiles = res[resI].oldFiles;
+        let files = res[resI].files;
         let deleted = [];
         for (let index = 0; index < files.length; index++) {
             const element = files[index];
             for (let index2 = 0; index2 < oldFiles.length; index2++) {
                 const element2 = oldFiles[index2];
                 if (String(element["_id"]) == String(element2["file_id"]) && element2["deleted_at"] != null) {
-                    deleted.push(element["_id"]);
+                    deleted.push(element["_id"])
                 }
             }
         }
+
+        let oldSignatured = res[resI].oldSignatured;
+        let signaturedF = res[resI].signatured;
+        let deletedSig = [];
+        for (let index = 0; index < signaturedF.length; index++) {
+            const element = signaturedF[index];
+            for (let index2 = 0; index2 < oldSignatured.length; index2++) {
+                const element2 = oldSignatured[index2];
+                if (String(element["_id"]) == String(element2["file_id"]) && element2["deleted_at"] != null) {
+                    deletedSig.push(element["_id"])
+                }
+            }
+        }
+
         for (let index3 = 0; index3 < deleted.length; index3++) {
             const element = deleted[index3];
             const indexF = files.findIndex(x => String(x._id) == String(element));
             if (indexF >= -1) {
-                files.splice(indexF, 1);
+                files.splice(indexF, 1)
+            }
+        }
+
+        for (let index3 = 0; index3 < deletedSig.length; index3++) {
+            const element = deletedSig[index3];
+            const indexF = signaturedF.findIndex(x => String(x._id) == String(element));
+            if (indexF >= -1) {
+                signaturedF.splice(indexF, 1)
             }
         }
     }
 
-    for (let i = 0; i < res2.length; i++) {
-        for (let k = 0; k < res2[i].files.length; k++) {
-            res2[i].files[k] = {
-                "_id": res2[i].files[k]._id,
-                "fieldname": res2[i].files[k].fieldname,
-                "name": res2[i].files[k].originalname,
-                "filename": res2[i].files[k].filename,
-                "size": res2[i].files[k].size,
+    for (let i = 0; i < res.length; i++) {
+        for (let k = 0; k < res[i].files.length; k++) {
+            res[i].files[k] = {
+                "_id": res[i].files[k]._id,
+                "fieldname": res[i].files[k].fieldname,
+                "name": res[i].files[k].originalname,
+                "filename": res[i].files[k].filename,
+                "size": res[i].files[k].size,
             };
         }
     }
-    return res2[0];
+    for (let i = 0; i < res.length; i++) {
+        for (let k = 0; k < res[i].signatured.length; k++) {
+            res[i].signatured[k] = {
+                "_id": res[i].signatured[k]._id,
+                "fieldname": res[i].signatured[k].fieldname,
+                "name": res[i].signatured[k].originalname,
+                "filename": res[i].signatured[k].filename,
+                "size": res[i].signatured[k].size,
+            };
+        }
+    }
+    return res[0];
 };
 
 /**

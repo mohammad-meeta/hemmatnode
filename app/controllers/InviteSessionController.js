@@ -1,7 +1,5 @@
 "use strict";
 
-const { Console } = require("winston/lib/winston/transports");
-
 const PugView = use("app/helpers/pug-view");
 const InviteSessionHelper = use("app/helpers/invite-session-helper");
 const FileHelper = use("app/helpers/file-helper");
@@ -135,18 +133,23 @@ InviteSession.update = async function update(req, res, next) {
 
     const signatured = req.files.signatured || [];
     let signaturedList = [];
+
     for (let i = 0; i < signatured.length; ++i) {
         try {
             const el = signatured[i];
             el.user_id = req.session.auth.userId;
 
             const data = await FileHelper.insertFileData(el);
-            signaturedList.push(data[0]._id);
+            const tempFileData = {
+                file_id: data[0]._id,
+                deleted_at: null,
+            };
+
+            signaturedList.push(tempFileData);
         } catch (err) {
             Logger.error(err);
         }
     }
-
 
     for (let i = 0; i < files.length; ++i) {
         try {

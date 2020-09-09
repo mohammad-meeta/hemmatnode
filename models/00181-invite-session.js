@@ -79,7 +79,7 @@ Model.model = function model() {
         'other_user': {
             type: Array
         },
-        'introduction': {
+        'intro': {
             type: String,
             required: false
         },

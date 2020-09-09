@@ -204,6 +204,7 @@ InviteSession.update = async function update(req, res, next) {
 
     data = {
         _id: req.body._id,
+        intro: req.body.intro,
         body: req.body.body,
         agenda: JSON.parse(req.body.agenda || "[]"),
         place: req.body.place,

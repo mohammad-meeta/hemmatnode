@@ -22,7 +22,7 @@ Router.get('/program/:department', [
 ])
     .as('program.index');
 
-Router.get('/api/programs/:page/:size?', [
+Router.get('/api/memorandum/:group/:page/:size?', [
     checkSession,
     Rule.canAsync('user.permision', 'api.program'),
     'Program@paginateProgram'

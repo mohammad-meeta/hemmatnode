@@ -22,7 +22,7 @@ Router.get('/memorandum/:department?', [
 ])
     .as('memorandum.index');
 
-Router.get('/api/memorandum/:group/:page/:size?/', [
+Router.get('/api/memorandum/:group/:page/:size?', [
     checkSession,
     'Memorandum@paginateMemorandum'
 ])

@@ -33,7 +33,7 @@ Program.paginateProgram = function paginateProgram(req, res, next) {
         .then(data => {
             let count = data.data;
 
-            ProgramHelper.loadAllProgramData(req, dataPaginate)
+            ProgramHelper.loadAllProgramData(req, dataPaginate, group)
                 .then(data => {
                     const result = {
                         success: true,
@@ -174,8 +174,7 @@ Program.store = async function store(req, res, next) {
  */
 Program.update = async function update(req, res, next) {
     let data = {};
-
-    const files = req.files || [];
+    const files = req.files.files || [];
     let fileList = [];
 
     for (let i = 0; i < files.length; ++i) {
@@ -195,13 +194,13 @@ Program.update = async function update(req, res, next) {
         }
     }
 
-    const deletedOldFiles = JSON.parse(req.body.deletedOldFiles);
+    const deletedOldFiles = JSON.parse(req.body.deletedOldFiles || null) || [];
 
     let programRes = await ProgramHelper.loadProgramData(req.body._id);
-    const ProgramFiles = programRes.files;
+    const programLFiles = (programRes || {}).files || [];
 
-    for (let index = 0; index < ProgramFiles.length; index++) {
-        const element = ProgramFiles[index];
+    for (let index = 0; index < programLFiles.length; index++) {
+        const element = programLFiles[index];
         fileList.push(element)
     }
 
@@ -225,12 +224,12 @@ Program.update = async function update(req, res, next) {
     };
 
     let result = await ProgramHelper.updateProgramData(data);
-    result = {
+    result2 = {
         success: true,
-        data: data,
+        data: result,
     };
 
     res.status(200)
-        .send(result)
+        .send(result2)
         .end();
 };

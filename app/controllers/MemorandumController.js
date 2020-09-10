@@ -7,7 +7,7 @@ const ResultHelper = use('app/helpers/result-helper')
 /**
  * Dep cat controller
  */
-function Memorandum() {}
+function Memorandum() { }
 module.exports = Memorandum;
 
 /**
@@ -36,7 +36,7 @@ Memorandum.paginateMemorandum = function paginateMemorandum(req, res, next) {
         .then(data => {
             let count = data.data;
 
-            MemorandumHelper.loadAllMemorandumData(dataPaginate, group)
+            MemorandumHelper.loadAllMemorandumData(req, dataPaginate, group)
                 .then(data => {
                     const result = {
                         success: true,
@@ -103,9 +103,9 @@ Memorandum.edit = async function edit(req, res, next) {
  * return edit data route
  */
 Memorandum.editMemorandumData = async function editMemorandumData(req, res, next) {
-    const title = req.params.sessionData;
+    const id = req.params.sessionData;
 
-    MemorandumHelper.loadMemorandumData(title)
+    MemorandumHelper.loadMemorandumData(id)
         .then(data => {
             const result = {
                 success: true,
@@ -123,17 +123,45 @@ Memorandum.editMemorandumData = async function editMemorandumData(req, res, next
  */
 Memorandum.update = async function update(req, res, next) {
     let data = {};
-    const files = req.body.files || [];
-
+    const files = req.files.files || [];
     let fileList = [];
-    files.forEach(element => {
-        const fileData = element;
-        FileHelper.insertFileData(fileData)
-            .then(data => {
-                console.log(data);
-            })
-            .catch(err => console.error(err));
-    });
+
+    for (let i = 0; i < files.length; ++i) {
+        try {
+            const el = files[i];
+            el.user_id = req.session.auth.userId;
+
+            const data = await FileHelper.insertFileData(el);
+
+            const tempFileData = {
+                file_id: data[0]._id,
+                deleted_at: null,
+            };
+            fileList.push(tempFileData);
+        } catch (err) {
+            Logger.error(err);
+        }
+    }
+
+    const deletedOldFiles = JSON.parse(req.body.deletedOldFiles || null) || [];
+
+    let memorandumRes = await MemorandumHelper.loadMemorandumData(req.body._id);
+    const MemorandomFiles = (memorandumRes || {}).files || [];
+
+    for (let index = 0; index < MemorandomFiles.length; index++) {
+        const element = MemorandomFiles[index];
+        fileList.push(element)
+    }
+
+    for (let index = 0; index < deletedOldFiles.length; index++) {
+        const element = deletedOldFiles[index];
+        for (let oil = 0; oil < fileList.length; oil++) {
+            const Fele = fileList[oil];
+            if (Fele.file_id == element) {
+                Fele.deleted_at = Date()
+            }
+        }
+    }
 
     data = {
         "_id": req.body._id,

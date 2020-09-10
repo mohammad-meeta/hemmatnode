@@ -59,7 +59,7 @@ Router.get("/api/invite-session/:invitesession/edit", [
     "InviteSession@editInviteSessionData"
 ]).as("api.invitesession.edit");
 
-Router.post("/invite-session/:id/edit", [
+Router.patch("/invite-session/:id/edit", [
     upload.fields([{
         name: 'files'
     }, {

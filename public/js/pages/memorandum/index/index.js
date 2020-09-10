@@ -385,11 +385,6 @@ module.exports = {
 //
 //
 //
-//
-//
-//
-//
-//
 
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -404,16 +399,13 @@ var Notification = __webpack_require__(/*! VUE-COMPONENTS/general/notification.v
 
 var VuePersianDatetimePicker = __webpack_require__(/*! vue-persian-datetime-picker */ "./node_modules/vue-persian-datetime-picker/dist/vue-persian-datetime-picker.js")["default"];
 
-var MultiTextProject = __webpack_require__(/*! VUE-COMPONENTS/memorandum/multi-text-project.vue */ "./resources/js/vue/components/memorandum/multi-text-project.vue")["default"];
-
 var FileUpload = __webpack_require__(/*! VUE-COMPONENTS/general/file-upload.vue */ "./resources/js/vue/components/general/file-upload.vue")["default"];
 
 module.exports = {
-  name: "RegisterMemorandum",
+  name: "EditMemorandum",
   components: {
     Notification: Notification,
     DatePicker: VuePersianDatetimePicker,
-    MultiTextProject: MultiTextProject,
     FileUpload: FileUpload
   },
   data: function data() {
@@ -427,7 +419,6 @@ module.exports = {
       memorandumData: {
         title: null,
         body: null,
-        project: [],
         conditions: null,
         date: null,
         department_id: null,
@@ -447,7 +438,7 @@ module.exports = {
       type: String,
       "default": null
     },
-    registerUrl: {
+    editUrl: {
       type: String,
       "default": ""
     },
@@ -474,15 +465,15 @@ module.exports = {
   },
   methods: {
     /**
-     * Load specific invite session
+     * Load specific memorandum
      */
     loadMemorandumData: function loadMemorandumData(data) {
+      console.log(data);
       var temp = {
         _id: data._id,
         dep: data.dep.title,
         title: data.title,
         body: data.body,
-        project: data.project,
         conditions: data.conditions,
         date: data.date,
         department_id: data.dep._id,
@@ -597,7 +588,6 @@ module.exports = {
       var memorandumData = {
         _id: this.memorandumData._id,
         title: this.memorandumData.title,
-        project: JSON.stringify(this.memorandumData.project),
         body: this.memorandumData.body,
         conditions: this.memorandumData.conditions,
         date: this.memorandumData.date,
@@ -1039,33 +1029,7 @@ module.exports = {
     onCommand: function onCommand(payload) {
       var arg = payload.arg || null;
       var data = payload.data || {};
-      data.projects = [{
-        title: "پروژه یک",
-        budget: "500",
-        supply: "استانی",
-        results: [{
-          title: "برآمد یک"
-        }, {
-          title: "برآمد دو"
-        }, {
-          title: "برآمد سه"
-        }, {
-          title: "برآمد چهار"
-        }]
-      }, {
-        title: "پروژه دو",
-        budget: "700",
-        supply: "استانی",
-        results: [{
-          title: "برآمد یک"
-        }, {
-          title: "برآمد دو"
-        }, {
-          title: "برآمد سه"
-        }, {
-          title: "برآمد چهار"
-        }]
-      }];
+      data.projects = [];
 
       if (null == arg) {
         arg = payload;
@@ -45906,25 +45870,6 @@ var render = function() {
                 }
               })
             ])
-          ]),
-          _c("fieldset", [
-            _c("legend", [_vm._v("پروژه ها")]),
-            _c(
-              "div",
-              { staticClass: "field" },
-              [
-                _c("multi-text-project", {
-                  model: {
-                    value: _vm.memorandumData.project,
-                    callback: function($$v) {
-                      _vm.$set(_vm.memorandumData, "project", $$v)
-                    },
-                    expression: "memorandumData.project"
-                  }
-                })
-              ],
-              1
-            )
           ]),
           _c("div", { staticClass: "field" }, [
             _c("label", { staticClass: "label" }, [

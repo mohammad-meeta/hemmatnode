@@ -36,11 +36,6 @@
                         v-model='memorandumData.body'
                     )
 
-            fieldset
-                legend پروژه ها
-                .field
-                    multi-text-project(v-model='memorandumData.project')
-
             .field
                 label.label شرایط اجرای تفاهم نامه
                 .control
@@ -73,16 +68,14 @@ const ENUMS = require("JS-HELPERS/enums");
 const MemorandumValidator = require("JS-VALIDATORS/memorandum-register-validator");
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
-const MultiTextProject = require("VUE-COMPONENTS/memorandum/multi-text-project.vue").default;
 const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 
 module.exports = {
-    name: "RegisterMemorandum",
+    name: "EditMemorandum",
 
     components: {
         Notification,
         DatePicker: VuePersianDatetimePicker,
-        MultiTextProject,
         FileUpload,
     },
 
@@ -96,7 +89,6 @@ module.exports = {
         memorandumData: {
             title: null,
             body: null,
-            project: [],
             conditions: null,
             date: null,
             department_id: null,
@@ -119,7 +111,7 @@ module.exports = {
             default: null
         },
 
-        registerUrl: {
+        editUrl: {
             type: String,
             default: ""
         },
@@ -147,17 +139,16 @@ module.exports = {
 
     methods: {
 
-
         /**
-         * Load specific invite session
+         * Load specific memorandum
          */
         loadMemorandumData(data) {
+            console.log(data)
             const temp = {
                 _id: data._id,
                 dep: data.dep.title,
                 title: data.title,
                 body: data.body,
-                project: data.project,
                 conditions: data.conditions,
                 date: data.date,
                 department_id: data.dep._id,
@@ -260,7 +251,6 @@ module.exports = {
             let memorandumData = {
                 _id: this.memorandumData._id,
                 title: this.memorandumData.title,
-                project: JSON.stringify(this.memorandumData.project),
                 body: this.memorandumData.body,
                 conditions: this.memorandumData.conditions,
                 date: this.memorandumData.date,

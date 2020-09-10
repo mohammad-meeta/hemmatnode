@@ -149,10 +149,11 @@ var uuidV4 = __webpack_require__(/*! uuid */ "./node_modules/uuid/index.js").v4;
     /**
      * Update old files
      */
-    updateOldFiles: function updateOldFiles(oldFiles) {
+    updateOldFiles: function updateOldFiles(payload) {
       var _this = this;
 
       Vue.set(this, "files", []);
+      var oldFiles = payload || [];
       oldFiles.forEach(function (file) {
         var item = {
           _id: file._id,
@@ -26087,7 +26088,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/pages/factory.js */"./resources/js/pages/factory.js");
+module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/factory.js */"./resources/js/pages/factory.js");
 
 
 /***/ })

@@ -91,8 +91,7 @@ module.exports = {
                 },
             },
         ],
-        memorandumsCount: 0,
-        pageCount: 0
+        memorandumsCount: 0
     }),
 
     computed: {
@@ -148,11 +147,11 @@ module.exports = {
             if (this.memorandums.length > 0) {
                 const dep = this.memorandums[0].dep;
                 const newMemorandumsData = {
-                    _id: payload._id,
+                    _id: payload.data._id,
                     project: payload.data.project,
-                    title: payload.title,
-                    is_active: payload.is_active,
-                    created_at: payload.created_at,
+                    title: payload.data.title,
+                    is_active: payload.data.is_active,
+                    created_at: payload.data.created_at,
                     date: payload.data.date,
                     body: payload.data.body,
                     body: payload.data.conditions,
@@ -165,14 +164,14 @@ module.exports = {
         editInMemorandumsList(payload) {
             const editedMemorandumsData = {
                 _id: payload.data._id,
-                project: payload.data.project,
-                title: payload.title,
-                is_active: payload.is_active,
-                date: payload.data.date,
-                body: payload.data.body,
-                body: payload.data.conditions,
+                project: payload.data.data.project,
+                title: payload.data.data.title,
+                is_active: payload.data.data.is_active,
+                date: payload.data.data.date,
+                body: payload.data.data.body,
+                body: payload.data.data.conditions,
                 oldFiles: payload.data.data.files,
-                created_at: payload.created_at,
+                created_at: payload.data.data.created_at,
             };
 
             let foundIndex = this.memorandums.findIndex(

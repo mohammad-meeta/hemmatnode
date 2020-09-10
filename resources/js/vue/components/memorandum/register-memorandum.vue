@@ -32,10 +32,13 @@
                 label.label مقدمه و اهداف تفاهم نامه
                 .control
                     textarea.textarea(placeholder='مقدمه', v-model='memorandumData.body')
-            fieldset
-                legend پروژه ها
-                .field
-                    multi-text-project(v-model='memorandumData.project')
+
+            .field
+                .panel
+                    .panel-heading
+                        | پروژه ها
+                    .panel-block
+                        multi-text-project(v-model='memorandumData.project')
 
             .field
                 label.label شرایط اجرای تفاهم نامه
@@ -103,8 +106,7 @@ module.exports = {
 
         notificationMessage: null,
         notificationType: "is-info",
-        showLoadingFlag: false,
-        files: []
+        showLoadingFlag: false
     }),
 
     props: {
@@ -144,15 +146,6 @@ module.exports = {
     },
 
     methods: {
-        /**
-         * Set attachments
-         */
-        setAttachment(sender) {
-            const files = sender.target.files;
-
-            Vue.set(this, "files", files);
-        },
-
         /**
          * On Command
          *
@@ -245,10 +238,8 @@ module.exports = {
                 files: this.files,
                 deletedOldFiles: this.deletedOldFiles,
             };
-            memorandumData.files = this.files[0];
 
             this.showLoading();
-
             const url = this.registerUrl;
            AxiosHelper.send("post", url, memorandumData, {
                 sendAsFormData: true,

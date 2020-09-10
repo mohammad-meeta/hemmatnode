@@ -40,9 +40,9 @@ export default {
         /**
          * Update old files
          */
-        updateOldFiles(oldFiles) {
+        updateOldFiles(payload) {
             Vue.set(this, "files", []);
-
+            const oldFiles = payload || [];
             oldFiles.forEach(file => {
                 let item = {
                     _id: file._id,

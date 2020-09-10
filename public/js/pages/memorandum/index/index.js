@@ -149,10 +149,11 @@ var uuidV4 = __webpack_require__(/*! uuid */ "./node_modules/uuid/index.js").v4;
     /**
      * Update old files
      */
-    updateOldFiles: function updateOldFiles(oldFiles) {
+    updateOldFiles: function updateOldFiles(payload) {
       var _this = this;
 
       Vue.set(this, "files", []);
+      var oldFiles = payload || [];
       oldFiles.forEach(function (file) {
         var item = {
           _id: file._id,
@@ -750,8 +751,7 @@ module.exports = {
           title: null
         }
       }],
-      memorandumsCount: 0,
-      pageCount: 0
+      memorandumsCount: 0
     };
   },
   computed: {
@@ -810,11 +810,11 @@ module.exports = {
 
         var dep = this.memorandums[0].dep;
         var newMemorandumsData = (_newMemorandumsData = {
-          _id: payload._id,
+          _id: payload.data._id,
           project: payload.data.project,
-          title: payload.title,
-          is_active: payload.is_active,
-          created_at: payload.created_at,
+          title: payload.data.title,
+          is_active: payload.data.is_active,
+          created_at: payload.data.created_at,
           date: payload.data.date,
           body: payload.data.body
         }, _defineProperty(_newMemorandumsData, "body", payload.data.conditions), _defineProperty(_newMemorandumsData, "files", payload.data.files), _newMemorandumsData);
@@ -826,12 +826,12 @@ module.exports = {
 
       var editedMemorandumsData = (_editedMemorandumsDat = {
         _id: payload.data._id,
-        project: payload.data.project,
-        title: payload.title,
-        is_active: payload.is_active,
-        date: payload.data.date,
-        body: payload.data.body
-      }, _defineProperty(_editedMemorandumsDat, "body", payload.data.conditions), _defineProperty(_editedMemorandumsDat, "oldFiles", payload.data.data.files), _defineProperty(_editedMemorandumsDat, "created_at", payload.created_at), _editedMemorandumsDat);
+        project: payload.data.data.project,
+        title: payload.data.data.title,
+        is_active: payload.data.data.is_active,
+        date: payload.data.data.date,
+        body: payload.data.data.body
+      }, _defineProperty(_editedMemorandumsDat, "body", payload.data.data.conditions), _defineProperty(_editedMemorandumsDat, "oldFiles", payload.data.data.files), _defineProperty(_editedMemorandumsDat, "created_at", payload.data.data.created_at), _editedMemorandumsDat);
       var foundIndex = this.memorandums.findIndex(function (x) {
         return x._id == editedMemorandumsData._id;
       });
@@ -1384,9 +1384,10 @@ module.exports = {
 //
 //
 //
+//
+//
+//
 
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var AxiosHelper = __webpack_require__(/*! JS-HELPERS/axios-helper */ "./resources/js/helpers/axios-helper.js");
 
@@ -1411,7 +1412,7 @@ module.exports = {
     FileUpload: FileUpload
   },
   data: function data() {
-    return _defineProperty({
+    return {
       ENUMS: ENUMS,
       departments: [],
       users: [],
@@ -1432,7 +1433,7 @@ module.exports = {
       notificationMessage: null,
       notificationType: "is-info",
       showLoadingFlag: false
-    }, "files", []);
+    };
   },
   props: {
     departmentId: {
@@ -1468,14 +1469,6 @@ module.exports = {
     }
   },
   methods: {
-    /**
-     * Set attachments
-     */
-    setAttachment: function setAttachment(sender) {
-      var files = sender.target.files;
-      Vue.set(this, "files", files);
-    },
-
     /**
      * On Command
      *
@@ -1580,7 +1573,6 @@ module.exports = {
         files: this.files,
         deletedOldFiles: this.deletedOldFiles
       };
-      memorandumData.files = this.files[0];
       this.showLoading();
       var url = this.registerUrl;
       AxiosHelper.send("post", url, memorandumData, {
@@ -47005,24 +46997,26 @@ var render = function() {
               })
             ])
           ]),
-          _c("fieldset", [
-            _c("legend", [_vm._v("پروژه ها")]),
-            _c(
-              "div",
-              { staticClass: "field" },
-              [
-                _c("multi-text-project", {
-                  model: {
-                    value: _vm.memorandumData.project,
-                    callback: function($$v) {
-                      _vm.$set(_vm.memorandumData, "project", $$v)
-                    },
-                    expression: "memorandumData.project"
-                  }
-                })
-              ],
-              1
-            )
+          _c("div", { staticClass: "field" }, [
+            _c("div", { staticClass: "panel" }, [
+              _c("div", { staticClass: "panel-heading" }, [_vm._v("پروژه ها")]),
+              _c(
+                "div",
+                { staticClass: "panel-block" },
+                [
+                  _c("multi-text-project", {
+                    model: {
+                      value: _vm.memorandumData.project,
+                      callback: function($$v) {
+                        _vm.$set(_vm.memorandumData, "project", $$v)
+                      },
+                      expression: "memorandumData.project"
+                    }
+                  })
+                ],
+                1
+              )
+            ])
           ]),
           _c("div", { staticClass: "field" }, [
             _c("label", { staticClass: "label" }, [
@@ -49537,7 +49531,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/pages/memorandum/index/index.js */"./resources/js/pages/memorandum/index/index.js");
+module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/memorandum/index/index.js */"./resources/js/pages/memorandum/index/index.js");
 
 
 /***/ })

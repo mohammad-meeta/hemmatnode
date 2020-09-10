@@ -174,7 +174,7 @@ Program.store = async function store(req, res, next) {
  */
 Program.update = async function update(req, res, next) {
     let data = {};
-    const files = req.files.files || [];
+    const files = req.files || [];
     let fileList = [];
 
     for (let i = 0; i < files.length; ++i) {

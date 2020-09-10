@@ -46,7 +46,7 @@ Router.post('/memorandum/:department?', [
     upload.array('files'),
     checkSession,
     Rule.canAsync('user.permision', 'memorandum.store'),
-    validator.validate,
+    // validator.validate,
     'Memorandum@store'
 ])
     .as('memorandum.store');
@@ -68,7 +68,7 @@ Router.get('/api/memorandum/:memorandum/edit', [
 Router.patch('/memorandum/:id', [
     checkSession,
     Rule.canAsync('user.permision', 'memorandum.update'),
-    validator.validate,
+    // validator.validate,
     upload.array('files'),
     'Memorandum@update'
 ])

@@ -123,7 +123,7 @@ Memorandum.editMemorandumData = async function editMemorandumData(req, res, next
  */
 Memorandum.update = async function update(req, res, next) {
     let data = {};
-    const files = req.files.files || [];
+    const files = req.files || [];
     let fileList = [];
 
     for (let i = 0; i < files.length; ++i) {

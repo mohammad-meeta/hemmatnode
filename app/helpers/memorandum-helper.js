@@ -280,12 +280,6 @@ MemorandumHelper.insertNewMemorandum = async function insertNewMemorandum(data) 
             $sort: {
                 created_at: -1
             }
-        },
-        {
-            $skip: skip
-        },
-        {
-            $limit: pageSize
         }
     ];
 
@@ -418,12 +412,6 @@ MemorandumHelper.updateMemorandumData = async function updateMemorandumData(data
             $sort: {
                 created_at: -1
             }
-        },
-        {
-            $skip: skip
-        },
-        {
-            $limit: pageSize
         }
     ];
 

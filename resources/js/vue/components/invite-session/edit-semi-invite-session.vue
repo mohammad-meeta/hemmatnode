@@ -343,7 +343,7 @@ module.exports = {
             this.showLoading();
 
             const url = this.editUrl.replace("$id$", inviteSessionData._id);
-            AxiosHelper.send("post", url, inviteSessionData, {
+            AxiosHelper.send("patch", url, inviteSessionData, {
                 sendAsFormData: true,
                 filesArray: "files"
             })

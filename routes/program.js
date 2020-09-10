@@ -45,7 +45,7 @@ Router.post('/program', [
 ])
     .as('program.store');
 
-Router.post("/program/:id/edit", [
+Router.patch("/program/:id/edit", [
     upload.array("files"),
     checkSession,
     Rule.canAsync("user.permision", "program.update"),

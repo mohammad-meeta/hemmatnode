@@ -145,7 +145,7 @@ Memorandum.update = async function update(req, res, next) {
 
     const deletedOldFiles = JSON.parse(req.body.deletedOldFiles || null) || [];
 
-    let memorandumRes = await MemorandumHelper.loadInviteSessionData(req.body._id);
+    let memorandumRes = await MemorandumHelper.loadMemorandumData(req.body._id);
     const MemorandomFiles = (memorandumRes || {}).files || [];
 
     for (let index = 0; index < MemorandomFiles.length; index++) {

@@ -40,7 +40,7 @@ Router.post('/program', [
     upload.array('files'),
     checkSession,
     Rule.canAsync('user.permision', 'program.store'),
-    validator.validate,
+    // validator.validate,
     'Program@store'
 ])
     .as('program.store');

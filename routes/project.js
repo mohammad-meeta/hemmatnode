@@ -16,66 +16,67 @@ const {
 } = use('core/helpers/auth-helper');
 
 Router.get('/project', [
-        checkSession,
-        Rule.canAsync('user.permision', 'project.index'),
-        'Project@index'
-    ])
+    checkSession,
+    Rule.canAsync('user.permision', 'project.index'),
+    'Project@index'
+])
     .as('project.index');
 
 Router.get('/api/projects/:page/:size?', [
-        checkSession,
-        'Project@paginateProject'
-    ])
+    checkSession,
+    'Project@paginateProject'
+])
     .as('api.project');
 
 Router.get('/project/create', [
-        checkSession,
-        Rule.canAsync('user.permision', 'project.create'),
-        'Project@create'
-    ])
+    checkSession,
+    Rule.canAsync('user.permision', 'project.create'),
+    'Project@create'
+])
     .as('project.create');
 
 Router.get('/project/edit', [
-        checkSession,
-        Rule.canAsync('user.permision', 'project.edit'),
-        'Project@edit'
-    ])
+    checkSession,
+    Rule.canAsync('user.permision', 'project.edit'),
+    'Project@edit'
+])
     .as('project.edit');
 
 Router.post('/project', [
-        upload.array('files'),
-        checkSession,
-        Rule.canAsync('user.permision', 'project.store'),
-        validator.validate,
-        'Project@store'
-    ])
+    upload.array('files'),
+    checkSession,
+    Rule.canAsync('user.permision', 'project.store'),
+    // validator.validate,
+    'Project@store'
+])
     .as('project.store');
 
 Router.get('/project/:project', [
-        checkSession,
-        Rule.canAsync('user.permision', 'project.show'),
-        'Project@show'
-    ])
+    checkSession,
+    Rule.canAsync('user.permision', 'project.show'),
+    'Project@show'
+])
     .as('project.show');
 
 Router.get('/api/project/:project/edit', [
-        checkSession,
-        Rule.canAsync('user.permision', 'api.project.edit'),
-        'Project@editProjectData'
-    ])
+    upload.array('files'),
+    checkSession,
+    Rule.canAsync('user.permision', 'api.project.edit'),
+    'Project@editProjectData'
+])
     .as('api.project.edit');
 
 Router.patch('/project/:id', [
-        checkSession,
-        Rule.canAsync('user.permision', 'project.update'),
-        validator.validate,
-        'Project@update'
-    ])
+    checkSession,
+    Rule.canAsync('user.permision', 'project.update'),
+    // validator.validate,
+    'Project@update'
+])
     .as('project.update');
 
 Router.delete('/project/:project', [
-        checkSession,
-        Rule.canAsync('user.permision', 'project.destroy'),
-        'Project@destroy'
-    ])
+    checkSession,
+    Rule.canAsync('user.permision', 'project.destroy'),
+    'Project@destroy'
+])
     .as('project.destroy');

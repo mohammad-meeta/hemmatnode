@@ -5,7 +5,7 @@ const FileHelper = use('app/helpers/file-helper');
 /**
  * project cat controller
  */
-function Project() {}
+function Project() { }
 module.exports = Project;
 
 /**
@@ -32,7 +32,7 @@ Project.paginateProject = async function paginateProject(req, res, next) {
         .then(data => {
             let count = data.data;
 
-            ProjectHelper.loadAllProjectData(dataPaginate, group)
+            ProjectHelper.loadAllProjectData(req, dataPaginate, group)
                 .then(data => {
                     const result = {
                         success: true,

@@ -59,7 +59,6 @@ Router.get('/project/:project', [
     .as('project.show');
 
 Router.get('/api/project/:project/edit', [
-    upload.array('files'),
     checkSession,
     Rule.canAsync('user.permision', 'api.project.edit'),
     'Project@editProjectData'
@@ -69,6 +68,7 @@ Router.get('/api/project/:project/edit', [
 Router.patch('/project/:id', [
     checkSession,
     Rule.canAsync('user.permision', 'project.update'),
+    upload.array('files'),
     // validator.validate,
     'Project@update'
 ])

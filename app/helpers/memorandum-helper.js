@@ -451,6 +451,7 @@ MemorandumHelper.updateMemorandumData = async function updateMemorandumData(data
             };
         }
     }
+    console.log(res[0])
     return res[0];
 };
 

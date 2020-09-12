@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 /**
  * Article model
  */
-function Model() {}
+function Model() { }
 module.exports = Model;
 
 /**
@@ -42,11 +42,8 @@ Model.model = function model() {
             type: String,
             required: true
         },
-        'supply': {
-            type: String,
-        },
-        'budget': {
-            type: String,
+        'type': {
+            type: String
         },
         'program_id': {
             type: ObjectId,

@@ -45,6 +45,12 @@ Model.model = function model() {
         'type': {
             type: String
         },
+        'supply': {
+            type: String
+        },
+        'budget': {
+            type: String
+        },
         'program_id': {
             type: ObjectId,
         },

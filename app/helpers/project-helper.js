@@ -11,7 +11,7 @@ module.exports = ProjecttHelper;
 /**
  * find all project cat data result 
  */
-ProjecttHelper.loadAllProjectData = async function loadAllProjectData(dataPaginate, group) {
+ProjecttHelper.loadAllProjectData = async function loadAllProjectData(req, dataPaginate, group, type) {
 
     const page = parseInt(dataPaginate.page);
     const pageSize = parseInt(dataPaginate.pageSize);
@@ -23,7 +23,8 @@ ProjecttHelper.loadAllProjectData = async function loadAllProjectData(dataPagina
     const pipeline = [
         {
             $match: {
-                organ_modelator: new ObjectId(group),
+                department_id: new ObjectId(group),
+                type: type,
             }
         },
         {
@@ -35,7 +36,38 @@ ProjecttHelper.loadAllProjectData = async function loadAllProjectData(dataPagina
             }
         },
         {
-            $unwind: "$dep"
+            "$unwind": {
+                "path": "$dep",
+                "preserveNullAndEmptyArrays": true
+            }
+        },
+        {
+            $lookup: {
+                from: "memorandum",
+                localField: "memorandum_id",
+                foreignField: "_id",
+                as: "mem"
+            }
+        },
+        {
+            "$unwind": {
+                "path": "$mem",
+                "preserveNullAndEmptyArrays": true
+            }
+        },
+        {
+            $lookup: {
+                from: "programs",
+                localField: "program_id",
+                foreignField: "_id",
+                as: "prg"
+            }
+        },
+        {
+            "$unwind": {
+                "path": "$prg",
+                "preserveNullAndEmptyArrays": true
+            }
         },
         {
             $unwind: {
@@ -69,26 +101,32 @@ ProjecttHelper.loadAllProjectData = async function loadAllProjectData(dataPagina
         {
             $group: {
                 _id: "$_id",
-                title: {
-                    $last: "$title"
-                },
                 oldFiles: {
                     $push: "$files"
                 },
                 files: {
                     $push: "$ffile"
                 },
-                supply: {
-                    $last: "$supply"
+                mem: {
+                    $last: "$mem"
                 },
-                is_active: {
-                    $last: "$is_active"
+                dep: {
+                    $last: "$dep"
+                },
+                prg: {
+                    $last: "$prg"
+                },
+                title: {
+                    $last: "$title"
                 },
                 budget: {
                     $last: "$budget"
                 },
                 memorandum_id: {
                     $last: "$memorandum_id"
+                },
+                program_id: {
+                    $last: "$program_id"
                 },
                 department_id: {
                     $last: "$department_id"
@@ -98,6 +136,9 @@ ProjecttHelper.loadAllProjectData = async function loadAllProjectData(dataPagina
                 },
                 same_effects_index: {
                     $last: "$same_effects_index"
+                },
+                organ_moderator: {
+                    $last: "$organ_moderator"
                 },
                 project_moderator: {
                     $last: "$project_moderator"
@@ -129,14 +170,14 @@ ProjecttHelper.loadAllProjectData = async function loadAllProjectData(dataPagina
                 help_ipmrove_index: {
                     $last: "$help_ipmrove_index"
                 },
+                other_benefit: {
+                    $last: "$other_benefit"
+                },
                 final_product: {
                     $last: "$final_product"
                 },
                 standards: {
                     $last: "$standards"
-                },
-                other_benefit: {
-                    $last: "$other_benefit"
                 },
                 result_apply: {
                     $last: "$result_apply"
@@ -147,11 +188,11 @@ ProjecttHelper.loadAllProjectData = async function loadAllProjectData(dataPagina
                 monitoring_comment: {
                     $last: "$monitoring_comment"
                 },
+                is_active: {
+                    $last: "$is_active"
+                },
                 created_at: {
                     $last: "$created_at"
-                },
-                dep: {
-                    $last: "$dep"
                 }
             }
         },
@@ -210,11 +251,12 @@ ProjecttHelper.loadAllProjectData = async function loadAllProjectData(dataPagina
 /**
  * find all project cat count data result 
  */
-ProjecttHelper.loadAllCountProjectData = function loadAllCountProjectData(group) {
+ProjecttHelper.loadAllCountProjectData = function loadAllCountProjectData(group, type) {
     const Project = mongoose.model('Project');
 
     const filterQuery = {
-        organ_modelator: group
+        department_id: group,
+        type: type
     };
 
     return new Promise((resolve, reject) => {
@@ -230,11 +272,11 @@ ProjecttHelper.loadAllCountProjectData = function loadAllCountProjectData(group)
 /**
  * find project cat data result 
  */
-ProjecttHelper.loadProjectData = function loadProjectData(title) {
+ProjecttHelper.loadProjectData = function loadProjectData(id) {
     const Project = mongoose.model('Project');
 
     const filterQuery = {
-        title: title
+        _id: id
     };
 
     const projection = {};
@@ -251,34 +293,450 @@ ProjecttHelper.loadProjectData = function loadProjectData(title) {
 /**
  * insert project cat data  
  */
-ProjecttHelper.insertNewProject = function insertNewProject(data) {
+ProjecttHelper.insertNewProject = async function insertNewProject(data) {
 
-    return new Promise((resolve, reject) => {
-        const Project = mongoose.model('Project');
-        const Project1 = new Project(data)
+    const Project = mongoose.model('Project');
+    const Project1 = new Project(data)
 
-        Project1.save()
-            .then(res => {
-                resolve(res);
-            })
-            .catch(err => reject(err));
-    });
+    let res2 = Project1.save();
+
+    // const pipeline = [
+    //     {
+    //         $match: {
+    //             _id: res2._id
+    //         }
+    //     },
+    //     {
+    //         $lookup: {
+    //             from: "departments",
+    //             localField: "department_id",
+    //             foreignField: "_id",
+    //             as: "dep"
+    //         }
+    //     },
+    //     {
+    //         "$unwind": {
+    //             "path": "$dep",
+    //             "preserveNullAndEmptyArrays": true
+    //         }
+    //     },
+    //     {
+    //         $lookup: {
+    //             from: "memorandum",
+    //             localField: "memorandum_id",
+    //             foreignField: "_id",
+    //             as: "mem"
+    //         }
+    //     },
+    //     {
+    //         "$unwind": {
+    //             "path": "$mem",
+    //             "preserveNullAndEmptyArrays": true
+    //         }
+    //     },
+    //     {
+    //         $lookup: {
+    //             from: "programs",
+    //             localField: "program_id",
+    //             foreignField: "_id",
+    //             as: "prg"
+    //         }
+    //     },
+    //     {
+    //         "$unwind": {
+    //             "path": "$prg",
+    //             "preserveNullAndEmptyArrays": true
+    //         }
+    //     },
+    //     {
+    //         $unwind: {
+    //             path: "$files",
+    //             preserveNullAndEmptyArrays: true
+    //         }
+    //     },
+    //     {
+    //         $lookup: {
+    //             from: "files",
+    //             localField: "files.file_id",
+    //             foreignField: "_id",
+    //             as: "ffile"
+    //         }
+    //     },
+    //     {
+    //         $unwind: {
+    //             path: "$ffile",
+    //             preserveNullAndEmptyArrays: true
+    //         }
+    //     },
+    //     {
+    //         $project: {
+    //             "ffile.encoding": 0,
+    //             "ffile.mimetype": 0,
+    //             "ffile.destination": 0,
+    //             "ffile.user_id": 0,
+    //             "ffile.path": 0,
+    //         }
+    //     },
+    //     {
+    //         $group: {
+    //             _id: "$_id",
+    //             oldFiles: {
+    //                 $push: "$files"
+    //             },
+    //             files: {
+    //                 $push: "$ffile"
+    //             },
+    //             mem: {
+    //                 $last: "$mem"
+    //             },
+    //             dep: {
+    //                 $last: "$dep"
+    //             },
+    //             prg: {
+    //                 $last: "$prg"
+    //             },
+    //             title: {
+    //                 $last: "$title"
+    //             },
+    //             budget: {
+    //                 $last: "$budget"
+    //             },
+    //             memorandum_id: {
+    //                 $last: "$memorandum_id"
+    //             },
+    //             program_id: {
+    //                 $last: "$program_id"
+    //             },
+    //             department_id: {
+    //                 $last: "$department_id"
+    //             },
+    //             target: {
+    //                 $last: "$target"
+    //             },
+    //             same_effects_index: {
+    //                 $last: "$same_effects_index"
+    //             },
+    //             organ_moderator: {
+    //                 $last: "$organ_moderator"
+    //             },
+    //             project_moderator: {
+    //                 $last: "$project_moderator"
+    //             },
+    //             consoultant: {
+    //                 $last: "$consoultant"
+    //             },
+    //             supervisor: {
+    //                 $last: "$supervisor"
+    //             },
+    //             committee_leadership: {
+    //                 $last: "$committee_leadership"
+    //             },
+    //             coworker: {
+    //                 $last: "$coworker"
+    //             },
+    //             description: {
+    //                 $last: "$description"
+    //             },
+    //             intervention_review: {
+    //                 $last: "$intervention_review"
+    //             },
+    //             pervious_action_relation: {
+    //                 $last: "$pervious_action_relation"
+    //             },
+    //             target_corresponding: {
+    //                 $last: "$target_corresponding"
+    //             },
+    //             help_ipmrove_index: {
+    //                 $last: "$help_ipmrove_index"
+    //             },
+    //             other_benefit: {
+    //                 $last: "$other_benefit"
+    //             },
+    //             final_product: {
+    //                 $last: "$final_product"
+    //             },
+    //             standards: {
+    //                 $last: "$standards"
+    //             },
+    //             result_apply: {
+    //                 $last: "$result_apply"
+    //             },
+    //             refree: {
+    //                 $last: "$refree"
+    //             },
+    //             monitoring_comment: {
+    //                 $last: "$monitoring_comment"
+    //             },
+    //             is_active: {
+    //                 $last: "$is_active"
+    //             },
+    //             created_at: {
+    //                 $last: "$created_at"
+    //             }
+    //         }
+    //     }
+    // ];
+    // let res = await Project.aggregate(pipeline);
+    // for (let resI = 0; resI < res.length; resI++) {
+
+    //     let oldFiles = res[resI].oldFiles;
+    //     let files = res[resI].files;
+    //     let deleted = [];
+    //     for (let index = 0; index < files.length; index++) {
+    //         const element = files[index];
+    //         for (let index2 = 0; index2 < oldFiles.length; index2++) {
+    //             const element2 = oldFiles[index2];
+    //             if (String(element["_id"]) == String(element2["file_id"]) && element2["deleted_at"] != null) {
+    //                 deleted.push(element["_id"])
+    //             }
+    //         }
+    //     }
+
+    //     for (let index3 = 0; index3 < deleted.length; index3++) {
+    //         const element = deleted[index3];
+    //         const indexF = files.findIndex(x => String(x._id) == String(element));
+    //         if (indexF >= -1) {
+    //             files.splice(indexF, 1)
+    //         }
+    //     }
+    // }
+
+    // for (let i = 0; i < res.length; i++) {
+    //     for (let k = 0; k < res[i].files.length; k++) {
+    //         res[i].files[k] = {
+    //             "_id": res[i].files[k]._id,
+    //             "fieldname": res[i].files[k].fieldname,
+    //             "name": res[i].files[k].originalname,
+    //             "filename": res[i].files[k].filename,
+    //             "size": res[i].files[k].size,
+    //         };
+    //     }
+    // }
+    return res2;
 };
 
 /**
  * update project cat data  
  */
-ProjecttHelper.updateProjectData = function updateProjectData(data) {
-    return new Promise((resolve, reject) => {
-        const Project = mongoose.model('Project');
-        Project.findByIdAndUpdate(data._id, data, {
-            useFindAndModify: false, new: true
-        })
-            .then(res => {
-                resolve(res);
-            })
-            .catch(err => reject(err));
+ProjecttHelper.updateProjectData = async function updateProjectData(data) {
+    const Project = mongoose.model('Project');
+    let res2 = Project.findByIdAndUpdate(data._id, data, {
+        useFindAndModify: false, new: true
     });
+
+    const pipeline = [
+        {
+            $match: {
+                _id: res2._id
+            }
+        },
+        {
+            $lookup: {
+                from: "departments",
+                localField: "department_id",
+                foreignField: "_id",
+                as: "dep"
+            }
+        },
+        {
+            "$unwind": {
+                "path": "$dep",
+                "preserveNullAndEmptyArrays": true
+            }
+        },
+        {
+            $lookup: {
+                from: "memorandum",
+                localField: "memorandum_id",
+                foreignField: "_id",
+                as: "mem"
+            }
+        },
+        {
+            "$unwind": {
+                "path": "$mem",
+                "preserveNullAndEmptyArrays": true
+            }
+        },
+        {
+            $lookup: {
+                from: "programs",
+                localField: "program_id",
+                foreignField: "_id",
+                as: "prg"
+            }
+        },
+        {
+            "$unwind": {
+                "path": "$prg",
+                "preserveNullAndEmptyArrays": true
+            }
+        },
+        {
+            $unwind: {
+                path: "$files",
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $lookup: {
+                from: "files",
+                localField: "files.file_id",
+                foreignField: "_id",
+                as: "ffile"
+            }
+        },
+        {
+            $unwind: {
+                path: "$ffile",
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $project: {
+                "ffile.encoding": 0,
+                "ffile.mimetype": 0,
+                "ffile.destination": 0,
+                "ffile.user_id": 0,
+                "ffile.path": 0,
+            }
+        },
+        {
+            $group: {
+                _id: "$_id",
+                oldFiles: {
+                    $push: "$files"
+                },
+                files: {
+                    $push: "$ffile"
+                },
+                mem: {
+                    $last: "$mem"
+                },
+                dep: {
+                    $last: "$dep"
+                },
+                prg: {
+                    $last: "$prg"
+                },
+                title: {
+                    $last: "$title"
+                },
+                budget: {
+                    $last: "$budget"
+                },
+                memorandum_id: {
+                    $last: "$memorandum_id"
+                },
+                program_id: {
+                    $last: "$program_id"
+                },
+                department_id: {
+                    $last: "$department_id"
+                },
+                target: {
+                    $last: "$target"
+                },
+                same_effects_index: {
+                    $last: "$same_effects_index"
+                },
+                organ_moderator: {
+                    $last: "$organ_moderator"
+                },
+                project_moderator: {
+                    $last: "$project_moderator"
+                },
+                consoultant: {
+                    $last: "$consoultant"
+                },
+                supervisor: {
+                    $last: "$supervisor"
+                },
+                committee_leadership: {
+                    $last: "$committee_leadership"
+                },
+                coworker: {
+                    $last: "$coworker"
+                },
+                description: {
+                    $last: "$description"
+                },
+                intervention_review: {
+                    $last: "$intervention_review"
+                },
+                pervious_action_relation: {
+                    $last: "$pervious_action_relation"
+                },
+                target_corresponding: {
+                    $last: "$target_corresponding"
+                },
+                help_ipmrove_index: {
+                    $last: "$help_ipmrove_index"
+                },
+                other_benefit: {
+                    $last: "$other_benefit"
+                },
+                final_product: {
+                    $last: "$final_product"
+                },
+                standards: {
+                    $last: "$standards"
+                },
+                result_apply: {
+                    $last: "$result_apply"
+                },
+                refree: {
+                    $last: "$refree"
+                },
+                monitoring_comment: {
+                    $last: "$monitoring_comment"
+                },
+                is_active: {
+                    $last: "$is_active"
+                },
+                created_at: {
+                    $last: "$created_at"
+                }
+            }
+        }
+    ];
+    let res = await Project.aggregate(pipeline);
+    for (let resI = 0; resI < res.length; resI++) {
+
+        let oldFiles = res[resI].oldFiles;
+        let files = res[resI].files;
+        let deleted = [];
+        for (let index = 0; index < files.length; index++) {
+            const element = files[index];
+            for (let index2 = 0; index2 < oldFiles.length; index2++) {
+                const element2 = oldFiles[index2];
+                if (String(element["_id"]) == String(element2["file_id"]) && element2["deleted_at"] != null) {
+                    deleted.push(element["_id"])
+                }
+            }
+        }
+
+        for (let index3 = 0; index3 < deleted.length; index3++) {
+            const element = deleted[index3];
+            const indexF = files.findIndex(x => String(x._id) == String(element));
+            if (indexF >= -1) {
+                files.splice(indexF, 1)
+            }
+        }
+    }
+
+    for (let i = 0; i < res.length; i++) {
+        for (let k = 0; k < res[i].files.length; k++) {
+            res[i].files[k] = {
+                "_id": res[i].files[k]._id,
+                "fieldname": res[i].files[k].fieldname,
+                "name": res[i].files[k].originalname,
+                "filename": res[i].files[k].filename,
+                "size": res[i].files[k].size,
+            };
+        }
+    }
+    return res[0];
 };
 
 /**

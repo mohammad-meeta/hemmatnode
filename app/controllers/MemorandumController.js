@@ -277,11 +277,10 @@ Memorandum.store = async function store(req, res, next) {
 
                 ProjectHelper.insertNewProject(proje)
                     .then(prDataRes => {
-
                         result.forEach(resElement => {
                             const resData = {
                                 "result": resElement.title,
-                                "project_id": prDataRes._id,
+                                "project_id": prDataRes._id || "",
                                 "user_id": req.session.auth.userId,
                             };
 

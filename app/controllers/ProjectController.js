@@ -28,11 +28,13 @@ Project.paginateProject = async function paginateProject(req, res, next) {
         pageSize: req.params.size || 10
     };
     const group = req.params.group;
-    ProjectHelper.loadAllCountProjectData(group)
+    const type = req.params.type;
+
+    ProjectHelper.loadAllCountProjectData(group, type)
         .then(data => {
             let count = data.data;
 
-            ProjectHelper.loadAllProjectData(req, dataPaginate, group)
+            ProjectHelper.loadAllProjectData(req, dataPaginate, group, type)
                 .then(data => {
                     const result = {
                         success: true,

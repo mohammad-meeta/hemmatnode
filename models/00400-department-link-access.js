@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 /**
  * Article model
  */
-function Model() {}
+function Model() { }
 module.exports = Model;
 
 /**
@@ -30,6 +30,9 @@ Model.model = function model() {
             required: true
         },
         'text_link': {
+            type: Array
+        },
+        'child': {
             type: Array
         }
     };

@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 /**
  * dep cat controller
  */
-function DepartmentHelper() {}
+function DepartmentHelper() { }
 module.exports = DepartmentHelper;
 
 /**
@@ -22,12 +22,12 @@ DepartmentHelper.loadAllDepartmentData = function loadAllDepartmentData(dataPagi
 
     return new Promise((resolve, reject) => {
         Department.find(filterQuery, projection, {
-                sort: {
-                    'created_at': -1
-                },
-                skip: skip,
-                limit: pageSize
-            })
+            sort: {
+                'created_at': -1
+            },
+            skip: skip,
+            limit: pageSize
+        })
             .then(res => {
                 resolve(res);
             })
@@ -96,7 +96,7 @@ DepartmentHelper.loadDepartmentData = function loadDepartmentData(id) {
 /**
  * insert dep data  
  */
-DepartmentHelper.insertNewDepartment = function insertNewDepartment(data) {
+DepartmentHelper.insertNewDepartment = async function insertNewDepartment(data) {
 
     return new Promise((resolve, reject) => {
         const Department = mongoose.model('Department');
@@ -110,6 +110,17 @@ DepartmentHelper.insertNewDepartment = function insertNewDepartment(data) {
                         group_id: res._id,
                         user_id: res.user_id
                     };
+
+                    const DepartmentAccessLink = mongoose.model('DepartmentAccessLink');
+                    const ObjectId = require("mongoose").Types.ObjectId;
+
+                    DepartmentAccessLink.findOneAndUpdate(
+                        { department_id: ObjectId(res.references) },
+                        { $push: { "child": res._id } },
+                        { useFindAndModify: false, new: true }
+                    ).then((ddd) => {
+                        console.log("OK");
+                    });
                     const Group = mongoose.model('Group');
                     const Group1 = new Group(data)
 
@@ -119,7 +130,6 @@ DepartmentHelper.insertNewDepartment = function insertNewDepartment(data) {
                         })
                         .catch(err => reject(err))
                 }
-
             })
             .catch(err => reject(err));
     });
@@ -132,8 +142,8 @@ DepartmentHelper.updateDepartmentData = function updateDepartmentData(data) {
     return new Promise((resolve, reject) => {
         const Department = mongoose.model('Department');
         Department.findByIdAndUpdate(data._id, data, {
-                useFindAndModify: false, new: true
-            })
+            useFindAndModify: false, new: true
+        })
             .then(res => {
                 resolve(res);
             })
@@ -149,10 +159,10 @@ DepartmentHelper.deleteDepartmentData = function deleteDepartmentData(data) {
         const Department = mongoose.model('Department');
 
         Department.findOneAndUpdate(data._id, {
-                is_active: false
-            }, {
-                useFindAndModify: false, new: true
-            })
+            is_active: false
+        }, {
+            useFindAndModify: false, new: true
+        })
             .then(res => {
                 resolve(res);
             })

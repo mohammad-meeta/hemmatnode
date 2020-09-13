@@ -13,11 +13,12 @@ module.exports = DepartmentLinkAccessHelper;
  */
 DepartmentLinkAccessHelper.loadAllLinkAccessData = function loadAllLinkAccessData(departmentId) {
     const Program = mongoose.model('DepartmentAccessLink');
+    const ObjectId = require("mongoose").Types.ObjectId;
 
     const filterQuery = {
         "$or": [
             { department_id: departmentId },
-            { child: departmentId }
+            { child: ObjectId(departmentId) }
         ]
     };
     const projection = {};

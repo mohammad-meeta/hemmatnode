@@ -101,8 +101,8 @@ ProgramHelper.loadAllProgramData = async function loadAllProgramData(req, dataPa
             $limit: pageSize
         }
     ];
-
     let res = await Program.aggregate(pipeline);
+
     for (let resI = 0; resI < res.length; resI++) {
 
         let oldFiles = res[resI].oldFiles;
@@ -144,7 +144,6 @@ ProgramHelper.loadAllProgramData = async function loadAllProgramData(req, dataPa
  * find all dep cat count data result 
  */
 ProgramHelper.loadAllProgramCountData = function loadAllProgramCountData(group) {
-
     const Program = mongoose.model('Program');
 
     const filterQuery = {

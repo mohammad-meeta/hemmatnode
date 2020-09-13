@@ -23,45 +23,42 @@ Program.index = async function index(req, res, next) {
 /**
  * paginate route
  */
-Program.paginateProgram = function paginateProgram(req, res, next) {
+Program.paginateProgram = async function paginateProgram(req, res, next) {
+    const group = req.params.group;
+
     const dataPaginate = {
         page: req.params.page,
         pageSize: req.params.size || 10
     };
 
-    ProgramHelper.loadAllProgramCountData(req)
-        .then(data => {
-            let count = data.data;
+    try {
+        let result = {};
 
-            ProgramHelper.loadAllProgramData(req, dataPaginate, group)
-                .then(data => {
-                    const result = {
-                        success: true,
-                        data: {
-                            data: data,
-                            count: count
-                        }
-                    };
+        let data = await ProgramHelper.loadAllProgramCountData(group);
+        let count = data.data;
 
-                    res.status(200)
-                        .send(result)
-                        .end();
-                })
-                .catch(err => {
-                    Logger.error(err);
+        data = await ProgramHelper.loadAllProgramData(req, dataPaginate, group);
+        result = {
+            success: true,
+            data: {
+                data: data,
+                count: count
+            }
+        };
 
-                    res.status(500)
-                        .send(err)
-                        .end();
-                });
-        })
-        .catch(err => {
-            Logger.error(err);
+        res.status(200)
+            .send(result)
+            .end();
 
-            res.status(500)
-                .send(err)
-                .end();
-        });
+    }
+    catch (err) {
+
+        Logger.error(err);
+
+        res.status(500)
+            .send(err)
+            .end();
+    }
 };
 
 /**

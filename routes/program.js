@@ -22,12 +22,11 @@ Router.get('/program/:department', [
 ])
     .as('program.index');
 
-Router.get('/api/memorandum/:group/:page/:size?', [
+Router.get("/api/programs/:group/:page/:size?", [
     checkSession,
-    Rule.canAsync('user.permision', 'api.program'),
-    'Program@paginateProgram'
-])
-    .as('api.program');
+    Rule.canAsync("user.permision", "api.program"),
+    "Program@paginateProgram"
+]).as("api.program");
 
 Router.get('/program/create', [
     checkSession,

@@ -119,27 +119,29 @@ module.exports = {
         loadLinkAccess(id) {
             id = id || this.departmentId;
             let url = this.showLoadAccessLinkUrl;
-            url = url.replace(/\$department\$/g, id);
+            if (null != url) {
+                url = url.replace(/\$department\$/g, id);
 
-            AxiosHelper.send("get", url)
-                .then((res) => {
-                    if (res.data.success) {
-                        const data = res.data.data || [];
-                        if (data.length > 0) {
-                            const changeData = this.replaceChildInUrl(
-                                data[0].text_link,
-                                id
-                            );
-                            Vue.set(this, "accessLink", changeData);
+                AxiosHelper.send("get", url)
+                    .then((res) => {
+                        if (res.data.success) {
+                            const data = res.data.data || [];
+                            if (data.length > 0) {
+                                const changeData = this.replaceChildInUrl(
+                                    data[0].text_link,
+                                    id
+                                );
+                                Vue.set(this, "accessLink", changeData);
+                            }
+                        } else {
+                            Vue.set(this, "accessLink", []);
                         }
-                    } else {
-                        Vue.set(this, "accessLink", []);
-                    }
-                })
-                .catch((err) => {
-                    console.error(err);
-                    alert("Error");
-                });
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                        alert("Error");
+                    });
+            }
         },
 
         replaceChildInUrl(input, id) {

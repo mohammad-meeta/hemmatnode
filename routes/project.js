@@ -15,7 +15,7 @@ const {
     clearAuth
 } = use('core/helpers/auth-helper');
 
-Router.get('/project', [
+Router.get('/project/:department/:type', [
     checkSession,
     Rule.canAsync('user.permision', 'project.index'),
     'Project@index'

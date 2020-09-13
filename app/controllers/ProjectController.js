@@ -231,7 +231,9 @@ Project.create = async function create(req, res, next) {
 
     res.render(pageRoute, {
         req,
-        pageRoute
+        pageRoute,
+        departmentId: req.params.department,
+        type: req.params.type
     });
 };
 

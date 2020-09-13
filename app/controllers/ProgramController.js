@@ -127,7 +127,6 @@ Program.create = async function create(req, res, next) {
  */
 Program.store = async function store(req, res, next) {
     const files = req.files || [];
-
     let fileList = [];
 
     for (let i = 0; i < files.length; ++i) {
@@ -139,10 +138,9 @@ Program.store = async function store(req, res, next) {
 
             const tempFileData = {
                 file_id: data[0]._id,
-                deleted_at: null
+                deleted_at: null,
             };
             fileList.push(tempFileData);
-
         } catch (err) {
             Logger.error(err);
         }

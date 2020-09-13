@@ -227,7 +227,6 @@ Memorandum.create = async function create(req, res, next) {
 Memorandum.store = async function store(req, res, next) {
 
     const files = req.files || [];
-
     let fileList = [];
 
     for (let i = 0; i < files.length; ++i) {
@@ -236,7 +235,12 @@ Memorandum.store = async function store(req, res, next) {
             el.user_id = req.session.auth.userId;
 
             const data = await FileHelper.insertFileData(el);
-            fileList.push(data[0]._id);
+
+            const tempFileData = {
+                file_id: data[0]._id,
+                deleted_at: null,
+            };
+            fileList.push(tempFileData);
         } catch (err) {
             Logger.error(err);
         }
@@ -264,6 +268,7 @@ Memorandum.store = async function store(req, res, next) {
                     "title": element.title,
                     "budget": element.budget,
                     "supply": element.supply,
+                    "type": element.type,
                     "department_id": data.department_id,
                     "memorandum_id": dataRes._id,
                     "user_id": req.session.auth.userId,
@@ -272,11 +277,10 @@ Memorandum.store = async function store(req, res, next) {
 
                 ProjectHelper.insertNewProject(proje)
                     .then(prDataRes => {
-
                         result.forEach(resElement => {
                             const resData = {
                                 "result": resElement.title,
-                                "project_id": prDataRes._id,
+                                "project_id": prDataRes._id || "",
                                 "user_id": req.session.auth.userId,
                             };
 

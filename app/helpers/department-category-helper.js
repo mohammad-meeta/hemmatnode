@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 /**
  * dep cat controller
  */
-function DepartmentCategoryHelper() {}
+function DepartmentCategoryHelper() { }
 module.exports = DepartmentCategoryHelper;
 
 /**
@@ -22,12 +22,12 @@ DepartmentCategoryHelper.loadAllDepCatData = function loadAllDepCatData(dataPagi
 
     return new Promise((resolve, reject) => {
         DepartmentCategory.find(filterQuery, projection, {
-                sort: {
-                    'created_at': -1
-                },
-                skip: skip,
-                limit: pageSize
-            })
+            sort: {
+                'created_at': -1
+            },
+            skip: skip,
+            limit: pageSize
+        })
             .then(res => {
                 resolve(res);
             })
@@ -41,7 +41,8 @@ DepartmentCategoryHelper.loadAllDepartmentData = function loadAllDepartmentData(
     const Department = mongoose.model('Department');
 
     const filterQuery = {
-        department_category_id: category
+        department_category_id: category,
+        references: null
     };
     const projection = {};
 
@@ -62,46 +63,46 @@ DepartmentCategoryHelper.loadAllDepCatDataAndDepartment = function loadAllDepCat
     const DepartmentCategory = mongoose.model('DepartmentCategory');
     const ObjectId = require('mongoose').Types.ObjectId;
     const pipeline = [{
-            "$match": {
-                "section_id": new ObjectId(section)
-            }
-        },
-        {
-            "$lookup": {
-                "from": "departments",
-                "let": {
-                    "code": "$_id"
-                },
-                "pipeline": [{
+        "$match": {
+            "section_id": new ObjectId(section)
+        }
+    },
+    {
+        "$lookup": {
+            "from": "departments",
+            "let": {
+                "code": "$_id"
+            },
+            "pipeline": [{
+                "$match": {
+                    "$expr": {
+                        "$eq": ["$department_category_id", "$$code"]
+                    },
+                    "references": {
+                        "$eq": null
+                    }
+                }
+            },
+            {
+                "$lookup": {
+                    "from": "departments",
+                    "let": {
+                        "code": "$_id"
+                    },
+                    "pipeline": [{
                         "$match": {
                             "$expr": {
-                                "$eq": ["$department_category_id", "$$code"]
+                                "$eq": ["$references", "$$code"]
                             },
-                            "references": {
-                                "$eq": null
-                            }
                         }
-                    },
-                    {
-                        "$lookup": {
-                            "from": "departments",
-                            "let": {
-                                "code": "$_id"
-                            },
-                            "pipeline": [{
-                                "$match": {
-                                    "$expr": {
-                                        "$eq": ["$references", "$$code"]
-                                    },
-                                }
-                            }, ],
-                            "as": "child"
-                        }
-                    }
-                ],
-                "as": "department"
+                    },],
+                    "as": "child"
+                }
             }
+            ],
+            "as": "department"
         }
+    }
     ];
 
     return new Promise((resolve, reject) => {
@@ -177,8 +178,8 @@ DepartmentCategoryHelper.updateDepCatData = function updateDepCatData(data) {
     return new Promise((resolve, reject) => {
         const DepartmentCategory = mongoose.model('DepartmentCategory');
         DepartmentCategory.findByIdAndUpdate(data._id, data, {
-                useFindAndModify: false, new: true
-            })
+            useFindAndModify: false, new: true
+        })
             .then(res => {
                 resolve(res);
             })
@@ -194,10 +195,10 @@ DepartmentCategoryHelper.deleteDepCatData = function deleteDepCatData(data) {
         const DepartmentCategory = mongoose.model('DepartmentCategory');
 
         DepartmentCategory.findOneAndUpdate(data._id, {
-                is_active: false
-            }, {
-                useFindAndModify: false, new: true
-            })
+            is_active: false
+        }, {
+            useFindAndModify: false, new: true
+        })
             .then(res => {
                 resolve(res);
             })

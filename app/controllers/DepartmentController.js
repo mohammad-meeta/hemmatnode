@@ -5,7 +5,7 @@ const FileHelper = use('app/helpers/file-helper');
 /**
  * Dep cat controller
  */
-function Department() {}
+function Department() { }
 module.exports = Department;
 
 /**
@@ -163,7 +163,7 @@ Department.update = async function update(req, res, next) {
         const fileData = element;
         FileHelper.insertFileData(fileData)
             .then(data => {
-                console.log(data);
+                console.log("data");
             })
             .catch(err => console.error(err));
     });

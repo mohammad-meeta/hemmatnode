@@ -22,7 +22,7 @@ Router.get('/project', [
 ])
     .as('project.index');
 
-Router.get('/api/projects/:page/:size?', [
+Router.get('/api/projects/:group/:type/:page/:size?', [
     checkSession,
     'Project@paginateProject'
 ])

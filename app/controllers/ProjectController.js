@@ -28,11 +28,13 @@ Project.paginateProject = async function paginateProject(req, res, next) {
         pageSize: req.params.size || 10
     };
     const group = req.params.group;
-    ProjectHelper.loadAllCountProjectData(group)
+    const type = req.params.type;
+
+    ProjectHelper.loadAllCountProjectData(group, type)
         .then(data => {
             let count = data.data;
 
-            ProjectHelper.loadAllProjectData(req, dataPaginate, group)
+            ProjectHelper.loadAllProjectData(req, dataPaginate, group, type)
                 .then(data => {
                     const result = {
                         success: true,
@@ -67,9 +69,9 @@ Project.paginateProject = async function paginateProject(req, res, next) {
  * show route
  */
 Project.show = async function show(req, res, next) {
-    const ProjectTitle = req.params.projectData;
+    const id = req.params.projectData;
     const pageRoute = 'project.show';
-    ProjectHelper.loadProjectData(ProjectTitle)
+    ProjectHelper.loadProjectData(id)
         .then(data => {
             const result = {
                 success: true,
@@ -119,24 +121,50 @@ Project.editProjectData = async function editProjectData(req, res, next) {
  */
 Project.update = async function update(req, res, next) {
     let data = {};
-    const files = req.body.files || [];
-
+    const files = req.files || [];
     let fileList = [];
-    files.forEach(element => {
-        const fileData = element;
-        FileHelper.insertFileData(fileData)
-            .then(data => {
-                console.log(data);
-            })
-            .catch(err => console.error(err));
-    });
+
+    for (let i = 0; i < files.length; ++i) {
+        try {
+            const el = files[i];
+            el.user_id = req.session.auth.userId;
+
+            const data = await FileHelper.insertFileData(el);
+
+            const tempFileData = {
+                file_id: data[0]._id,
+                deleted_at: null,
+            };
+            fileList.push(tempFileData);
+        } catch (err) {
+            Logger.error(err);
+        }
+    }
+
+    const deletedOldFiles = JSON.parse(req.body.deletedOldFiles || null) || [];
+
+    let projectRes = await ProjectHelper.loadProjectData(req.body._id);
+    const projectFiles = (projectRes || {}).files || [];
+
+    for (let index = 0; index < projectFiles.length; index++) {
+        const element = projectFiles[index];
+        fileList.push(element)
+    }
+
+    for (let index = 0; index < deletedOldFiles.length; index++) {
+        const element = deletedOldFiles[index];
+        for (let oil = 0; oil < fileList.length; oil++) {
+            const Fele = fileList[oil];
+            if (Fele.file_id == element) {
+                Fele.deleted_at = Date()
+            }
+        }
+    }
 
     data = {
         "_id": req.body._id,
         "title": req.body.title,
         "program_id": req.body.program_id || null,
-        "user_id": req.session.auth.userId,
-        "is_active": req.body.is_active,
         "target": req.body.target || '',
         "same_effects_index": req.body.same_effects_index || '',
         "organ_moderator": req.body.organ_moderator,
@@ -150,13 +178,15 @@ Project.update = async function update(req, res, next) {
         "pervious_action_relation": req.body.pervious_action_relation || '',
         "target_corresponding": req.body.target_corresponding || '',
         "help_ipmrove_index": req.body.help_ipmrove_index || '',
+        "other_benefit": req.body.other_benefit || '',
         "final_product": req.body.final_product || '',
         "standards": req.body.standards || '',
-        "other_benefit": req.body.other_benefit || '',
         "result_apply": req.body.result_apply || '',
         "refree": req.body.refree || '',
         "monitoring_comment": req.body.monitoring_comment || '',
-        "files": fileList
+        "files": fileList,
+        "user_id": req.session.auth.userId,
+        "is_active": req.body.is_active,
     };
 
     ProjectHelper.updateProjectData(data)
@@ -211,7 +241,6 @@ Project.create = async function create(req, res, next) {
 Project.store = async function store(req, res, next) {
 
     const files = req.files || [];
-
     let fileList = [];
 
     for (let i = 0; i < files.length; ++i) {
@@ -220,7 +249,12 @@ Project.store = async function store(req, res, next) {
             el.user_id = req.session.auth.userId;
 
             const data = await FileHelper.insertFileData(el);
-            fileList.push(data[0]._id);
+
+            const tempFileData = {
+                file_id: data[0]._id,
+                deleted_at: null,
+            };
+            fileList.push(tempFileData);
         } catch (err) {
             Logger.error(err);
         }

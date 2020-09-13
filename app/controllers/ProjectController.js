@@ -15,7 +15,9 @@ Project.index = async function index(req, res, next) {
     const pageRoute = 'project.index';
     res.render(PugView.getView(pageRoute), {
         req,
-        pageRoute
+        pageRoute,
+        departmentId: req.params.department,
+        type: req.params.type
     });
 };
 
@@ -232,8 +234,6 @@ Project.create = async function create(req, res, next) {
     res.render(pageRoute, {
         req,
         pageRoute,
-        departmentId: req.params.department,
-        type: req.params.type
     });
 };
 

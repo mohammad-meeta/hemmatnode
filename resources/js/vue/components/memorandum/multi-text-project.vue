@@ -2,7 +2,7 @@
     .multi-text#multi-text-template
         .form-itemsbox(v-for='(item, index) in values')
             .columns.is-multiline
-                .column.is-4
+                .column.is-3
                     .field
                         label.label عنوان پروژه
                         .control
@@ -12,11 +12,20 @@
                         label.label بودجه (میلیون ریال)
                         .control
                             input.input(type='number', v-model='item.budget', @input='updateValue')
-                .column.is-4
+                .column.is-3
                     .field
                         label.label محل تامین
                         .control
                             input.input(type='text', v-model='item.supply', @input='updateValue')
+                .column.is-2
+                    .field
+                        label.label نوع
+                        .control
+                            .select.is-primary
+                                select(v-model="item.type")
+                                    option(:value="1") محصول و خدمت سلامت محور
+                                    option(:value="2") حفاظت محیط زیست
+                                    option(:value="3") سلامت کارکنان
                 .column.is-2
                     a.button.is-danger(href='#', @click.prevent='deleteValue(index)')
                         i.fa.fa-times

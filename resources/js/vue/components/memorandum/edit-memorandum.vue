@@ -56,7 +56,7 @@
             .field.is-grouped
                 .control(v-show="! isLoadingMode")
                     a.button.is-link.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
-                        |   ایجاد
+                        |   ویرایش
 
 </template>
 
@@ -143,7 +143,7 @@ module.exports = {
          * Load specific memorandum
          */
         loadMemorandumData(data) {
-            console.log(data)
+            console.log(data);
             const temp = {
                 _id: data._id,
                 dep: data.dep.title,
@@ -254,7 +254,7 @@ module.exports = {
                 body: this.memorandumData.body,
                 conditions: this.memorandumData.conditions,
                 date: this.memorandumData.date,
-                department_id: this.memorandumData.departments,
+                department_id: this.memorandumData.department_id,
                 is_active: this.memorandumData.is_active,
                 files: this.files,
                 oldFiles: this.oldFiles,
@@ -263,18 +263,20 @@ module.exports = {
             this.showLoading();
             const url = this.editUrl.replace("$id$", memorandumData._id);
             AxiosHelper.send("patch", url, memorandumData, {
-                sendAsFormData: true
+                sendAsFormData: true,
+                filesArray: "files"
             })
                 .then(res => {
-                    const data = JSON.parse(res.config.data);
+                    //const data = JSON.parse(res.config.data);
+                    const data = res.data;
                     this.$emit("on-update", {
                         sender: this,
                         data
                     });
                 })
                 .catch(err => {
-                    const data = err.response.data;
-                    this.setNotification(data, "is-danger");
+                    console.error(err);
+                    this.setNotification(".خطا در ویرایش تفاهمنامه", "is-danger");
                 })
                 .then(() => this.hideLoading());
         },

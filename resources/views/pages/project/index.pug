@@ -5,10 +5,13 @@ block title
 
 block content
     .container
-        projects(list-url=route('api.project', { page: '$page$', size: '$pageSize$' }),
-            programs-url=route('api.program', { page: 1, size: 1000 }),
-            register-url=route('project.store'),
+        projects(list-url=route('api.project', { group: departmentId, type: type, page: '$page$', size: '$pageSize$' }),
+            departments-url=route('api.department', { page: 1, size: 1000 }),
+            register-url=route('project.store', { department: departmentId }),
             edit-url=route('project.update', { id :'$id$'})
+            users-url=route('api.user', { page: 1, size: 1000 }),
+            programs-url=route('api.program', { page: 1, size: 1000 }),
+            department-id=departmentId,
         )
 
 block scripts

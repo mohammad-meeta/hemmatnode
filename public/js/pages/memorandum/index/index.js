@@ -591,7 +591,7 @@ module.exports = {
         body: this.memorandumData.body,
         conditions: this.memorandumData.conditions,
         date: this.memorandumData.date,
-        department_id: this.memorandumData.departments,
+        department_id: this.memorandumData.department_id,
         is_active: this.memorandumData.is_active,
         files: this.files,
         oldFiles: this.oldFiles,
@@ -600,18 +600,20 @@ module.exports = {
       this.showLoading();
       var url = this.editUrl.replace("$id$", memorandumData._id);
       AxiosHelper.send("patch", url, memorandumData, {
-        sendAsFormData: true
+        sendAsFormData: true,
+        filesArray: "files"
       }).then(function (res) {
-        var data = JSON.parse(res.config.data);
+        //const data = JSON.parse(res.config.data);
+        var data = res.data;
 
         _this3.$emit("on-update", {
           sender: _this3,
           data: data
         });
       })["catch"](function (err) {
-        var data = err.response.data;
+        console.error(err);
 
-        _this3.setNotification(data, "is-danger");
+        _this3.setNotification(".خطا در ویرایش تفاهمنامه", "is-danger");
       }).then(function () {
         return _this3.hideLoading();
       });
@@ -698,8 +700,6 @@ module.exports = {
 //
 //
 
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var ENUMS = __webpack_require__(/*! JS-HELPERS/enums */ "./resources/js/helpers/enums.js");
 
@@ -796,32 +796,33 @@ module.exports = {
      */
     addToMemorandumList: function addToMemorandumList(payload) {
       if (this.memorandums.length > 0) {
-        var _newMemorandumsData;
-
         var dep = this.memorandums[0].dep;
-        var newMemorandumsData = (_newMemorandumsData = {
+        var newMemorandumsData = {
           _id: payload.data._id,
+          dep: payload.data.dep,
           project: payload.data.project,
           title: payload.data.title,
           is_active: payload.data.is_active,
           created_at: payload.data.created_at,
           date: payload.data.date,
-          body: payload.data.body
-        }, _defineProperty(_newMemorandumsData, "body", payload.data.conditions), _defineProperty(_newMemorandumsData, "files", payload.data.files), _newMemorandumsData);
+          body: payload.data.body,
+          conditions: payload.data.conditions,
+          files: payload.data.files
+        };
         this.memorandums.unshift(newMemorandumsData);
       }
     },
-    editInMemorandumsList: function editInMemorandumsList(payload) {
-      var _editedMemorandumsDat;
-
-      var editedMemorandumsData = (_editedMemorandumsDat = {
+    editInMemorandumList: function editInMemorandumList(payload) {
+      var editedMemorandumsData = {
         _id: payload.data._id,
-        project: payload.data.data.project,
-        title: payload.data.data.title,
-        is_active: payload.data.data.is_active,
-        date: payload.data.data.date,
-        body: payload.data.data.body
-      }, _defineProperty(_editedMemorandumsDat, "body", payload.data.data.conditions), _defineProperty(_editedMemorandumsDat, "oldFiles", payload.data.data.files), _defineProperty(_editedMemorandumsDat, "created_at", payload.data.data.created_at), _editedMemorandumsDat);
+        title: payload.data.title,
+        is_active: payload.data.is_active,
+        date: payload.data.date,
+        body: payload.data.body,
+        conditions: payload.data.conditions,
+        oldFiles: payload.data.files,
+        created_at: payload.data.created_at
+      };
       var foundIndex = this.memorandums.findIndex(function (x) {
         return x._id == editedMemorandumsData._id;
       });
@@ -1000,7 +1001,7 @@ module.exports = {
     this.init();
   },
   mounted: function mounted() {
-    this.changeFormMode(ENUMS.FORM_MODE.LIST);
+    this.changeFormMode(this.ENUMS.FORM_MODE.LIST);
     this.$refs.memorandumList.loadMemorandums(1);
   },
   methods: {
@@ -1124,6 +1125,15 @@ module.exports = {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -45997,7 +46007,7 @@ var render = function() {
                       }
                     }
                   },
-                  [_vm._v("  ایجاد")]
+                  [_vm._v("  ویرایش")]
                 )
               ]
             )
@@ -46487,7 +46497,7 @@ var render = function() {
       _vm._l(_vm.values, function(item, index) {
         return _c("div", { staticClass: "form-itemsbox" }, [
           _c("div", { staticClass: "columns is-multiline" }, [
-            _c("div", { staticClass: "column is-4" }, [
+            _c("div", { staticClass: "column is-3" }, [
               _c("div", { staticClass: "field" }, [
                 _c("label", { staticClass: "label" }, [_vm._v("عنوان پروژه")]),
                 _c("div", { staticClass: "control" }, [
@@ -46551,7 +46561,7 @@ var render = function() {
                 ])
               ])
             ]),
-            _c("div", { staticClass: "column is-4" }, [
+            _c("div", { staticClass: "column is-3" }, [
               _c("div", { staticClass: "field" }, [
                 _c("label", { staticClass: "label" }, [_vm._v("محل تامین")]),
                 _c("div", { staticClass: "control" }, [
@@ -46579,6 +46589,58 @@ var render = function() {
                       ]
                     }
                   })
+                ])
+              ])
+            ]),
+            _c("div", { staticClass: "column is-2" }, [
+              _c("div", { staticClass: "field" }, [
+                _c("label", { staticClass: "label" }, [_vm._v("نوع")]),
+                _c("div", { staticClass: "control" }, [
+                  _c("div", { staticClass: "select is-primary" }, [
+                    _c(
+                      "select",
+                      {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: item.type,
+                            expression: "item.type"
+                          }
+                        ],
+                        on: {
+                          change: function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.$set(
+                              item,
+                              "type",
+                              $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            )
+                          }
+                        }
+                      },
+                      [
+                        _c("option", { domProps: { value: 1 } }, [
+                          _vm._v("محصول و خدمت سلامت محور")
+                        ]),
+                        _c("option", { domProps: { value: 2 } }, [
+                          _vm._v("حفاظت محیط زیست")
+                        ]),
+                        _c("option", { domProps: { value: 3 } }, [
+                          _vm._v("سلامت کارکنان")
+                        ])
+                      ]
+                    )
+                  ])
                 ])
               ])
             ]),
@@ -49476,7 +49538,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/pages/memorandum/index/index.js */"./resources/js/pages/memorandum/index/index.js");
+module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/memorandum/index/index.js */"./resources/js/pages/memorandum/index/index.js");
 
 
 /***/ })

@@ -1315,7 +1315,7 @@ module.exports = {
       })["catch"](function (err) {
         console.error(err);
 
-        _this3.setNotification(".خطا در ذخیره جلسه", "is-danger");
+        _this3.setNotification(".خطا در ویرایش دعوتنامه", "is-danger");
       }).then(function () {
         return _this3.hideLoading();
       });
@@ -52450,7 +52450,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/pages/invite-session/index/index.js */"./resources/js/pages/invite-session/index/index.js");
+module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/invite-session/index/index.js */"./resources/js/pages/invite-session/index/index.js");
 
 
 /***/ })

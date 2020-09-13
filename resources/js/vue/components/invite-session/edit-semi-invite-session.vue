@@ -357,7 +357,7 @@ module.exports = {
                 })
                 .catch(err => {
                     console.error(err);
-                    this.setNotification(".خطا در ذخیره جلسه", "is-danger");
+                    this.setNotification(".خطا در ویرایش دعوتنامه", "is-danger");
                 })
                 .then(() => this.hideLoading());
         },

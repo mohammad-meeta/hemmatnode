@@ -145,7 +145,7 @@ module.exports = {
     },
 
     mounted() {
-        this.changeFormMode(ENUMS.FORM_MODE.LIST);
+        this.changeFormMode(this.ENUMS.FORM_MODE.LIST);
         this.$refs.memorandumList.loadMemorandums(1);
     },
 

@@ -57,7 +57,7 @@ const RegisterProject = require("VUE-COMPONENTS/project/register-project.vue")
     .default;
 const ListProject = require("VUE-COMPONENTS/project/list-project.vue")
     .default;
-//const EditProject = require("VUE-COMPONENTS/project/edit-project.vue").default;
+const EditProject = require("VUE-COMPONENTS/project/edit-project.vue").default;
 const ShowProject = require("VUE-COMPONENTS/project/show-project.vue").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
@@ -68,7 +68,7 @@ module.exports = {
         Loading,
         ListProject,
         RegisterProject,
-        //EditProject,
+        EditProject,
         ShowProject,
         Notification
     },

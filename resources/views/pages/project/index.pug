@@ -5,7 +5,9 @@ block title
 
 block content
     .container
-        projects(list-url=route('api.project', { group: departmentId, type: type, page: '$page$', size: '$pageSize$' }),
+        p= department
+        p= type
+        projects(list-url=route('api.project', { group: department, type: type, page: '$page$', size: '$pageSize$' }),
             departments-url=route('api.department', { page: 1, size: 1000 }),
             register-url=route('project.store', { department: departmentId }),
             edit-url=route('project.update', { id :'$id$'})

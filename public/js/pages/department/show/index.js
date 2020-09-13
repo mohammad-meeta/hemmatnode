@@ -115,6 +115,11 @@
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 var ENUMS = __webpack_require__(/*! JS-HELPERS/enums */ "./resources/js/helpers/enums.js");
@@ -133,6 +138,7 @@ module.exports = {
         is_active: false
       },
       accessLink: [],
+      accessContentLink: [],
       showLoadingFlag: false
     };
   },
@@ -221,6 +227,10 @@ module.exports = {
               var changeData = _this2.replaceChildInUrl(data[0].text_link, id);
 
               Vue.set(_this2, "accessLink", changeData);
+
+              var changeContentData = _this2.replaceDepartmentTypeInUrl(data[0].access_content_link, id);
+
+              Vue.set(_this2, "accessContentLink", changeContentData);
             }
           } else {
             Vue.set(_this2, "accessLink", []);
@@ -237,6 +247,16 @@ module.exports = {
       for (var index = 0; index < data.length; index++) {
         var element = data[index];
         data[index].link = data[index].link.replace("#child#", id);
+      }
+
+      return data;
+    },
+    replaceDepartmentTypeInUrl: function replaceDepartmentTypeInUrl(input, id) {
+      var data = input;
+
+      for (var index = 0; index < data.length; index++) {
+        var element = data[index];
+        data[index].link = data[index].link.replace("#department#", id);
       }
 
       return data;
@@ -331,6 +351,27 @@ var render = function() {
                 _vm._v(_vm._s(_vm.departmentData.description))
               ])
             ])
+          ])
+        ]),
+        _c("div", { staticClass: "info-card" }, [
+          _c("div", { staticClass: "content-dashboard-links" }, [
+            _c(
+              "div",
+              { staticClass: "field is-grouped" },
+              _vm._l(_vm.accessContentLink, function(item) {
+                return _c("div", { staticClass: "control" }, [
+                  _c(
+                    "a",
+                    {
+                      staticClass: "button is-primary is-rounded",
+                      attrs: { href: item.link }
+                    },
+                    [_vm._v(_vm._s(item.text))]
+                  )
+                ])
+              }),
+              0
+            )
           ])
         ])
       ]

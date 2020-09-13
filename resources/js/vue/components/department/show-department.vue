@@ -18,6 +18,11 @@
                     .info-card-item
                         .info-card-label معرفی:
                         .info-card-value {{ departmentData.description }}
+            .info-card
+                .content-dashboard-links
+                    .field.is-grouped
+                        .control(v-for='item in accessContentLink')
+                            a.button.is-primary.is-rounded(:href="item.link") {{ item.text }}
 </template>
 <script>
 "use strict";
@@ -35,39 +40,40 @@ module.exports = {
             title: null,
             department_category_id: null,
             files: {},
-            is_active: false,
+            is_active: false
         },
 
         accessLink: [],
+        accessContentLink: [],
 
-        showLoadingFlag: false,
+        showLoadingFlag: false
     }),
 
     props: {
         departmentId: {
             type: String,
-            default: null,
+            default: null
         },
 
         inviteSessionUrl: {
             type: String,
-            default: null,
+            default: null
         },
 
         memorandumUrl: {
             type: String,
-            default: null,
+            default: null
         },
 
         showLoadUrl: {
             type: String,
-            default: null,
+            default: null
         },
 
         showLoadAccessLinkUrl: {
             type: String,
-            default: null,
-        },
+            default: null
+        }
     },
 
     created() {
@@ -75,8 +81,8 @@ module.exports = {
     },
 
     computed: {
-        isLoadingMode: (state) => state.showLoadingFlag == true,
-        showNotification: (state) => state.notificationMessage != null,
+        isLoadingMode: state => state.showLoadingFlag == true,
+        showNotification: state => state.notificationMessage != null
     },
 
     methods: {
@@ -89,11 +95,11 @@ module.exports = {
             url = url.replace(/\$department\$/g, id);
 
             AxiosHelper.send("get", url)
-                .then((res) => {
+                .then(res => {
                     const data = res.data.data.data;
                     Vue.set(this, "departmentData", data || {});
                 })
-                .catch((err) => {
+                .catch(err => {
                     console.error(err);
                     alert("Error");
                 });
@@ -123,7 +129,7 @@ module.exports = {
                 url = url.replace(/\$department\$/g, id);
 
                 AxiosHelper.send("get", url)
-                    .then((res) => {
+                    .then(res => {
                         if (res.data.success) {
                             const data = res.data.data || [];
                             if (data.length > 0) {
@@ -132,12 +138,21 @@ module.exports = {
                                     id
                                 );
                                 Vue.set(this, "accessLink", changeData);
+                                const changeContentData = this.replaceDepartmentTypeInUrl(
+                                    data[0].access_content_link,
+                                    id
+                                );
+                                Vue.set(
+                                    this,
+                                    "accessContentLink",
+                                    changeContentData
+                                );
                             }
                         } else {
                             Vue.set(this, "accessLink", []);
                         }
                     })
-                    .catch((err) => {
+                    .catch(err => {
                         console.error(err);
                         alert("Error");
                     });
@@ -153,6 +168,15 @@ module.exports = {
             }
             return data;
         },
-    },
+        replaceDepartmentTypeInUrl(input, id) {
+            const data = input;
+            for (let index = 0; index < data.length; index++) {
+                const element = data[index];
+
+                data[index].link = data[index].link.replace("#department#", id);
+            }
+            return data;
+        }
+    }
 };
 </script>

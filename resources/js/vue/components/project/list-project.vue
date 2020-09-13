@@ -61,9 +61,12 @@ module.exports = {
          * Load projects
          */
         loadProjects(pageId) {
-            let url = this.listUrl.replace("$page$", pageId);
-            url = url.replace("$pageSize$", 50);
 
+            let url = this.listUrl
+                .replace(/\$page\$/g, pageId)
+                .replace(/\$pageSize\$/g, 50);
+            url = url.replace("$pageSize$", 50);
+            console.log(url);
             AxiosHelper.send("get", url, "").then(res => {
                 const resData = res.data;
                 Vue.set(this, "projects", resData.data.data);

@@ -242,7 +242,7 @@ module.exports = {
             this.showLoading();
             const url = this.registerUrl;
            AxiosHelper.send("post", url, memorandumData, {
-                sendAsFormData: true,
+               sendAsFormData: true,
                 filesArray: "files",
             })
                 .then((res) => {

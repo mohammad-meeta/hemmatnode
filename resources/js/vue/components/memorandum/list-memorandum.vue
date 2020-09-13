@@ -148,30 +148,30 @@ module.exports = {
                 const dep = this.memorandums[0].dep;
                 const newMemorandumsData = {
                     _id: payload.data._id,
+                    dep: payload.data.dep,
                     project: payload.data.project,
                     title: payload.data.title,
                     is_active: payload.data.is_active,
                     created_at: payload.data.created_at,
                     date: payload.data.date,
                     body: payload.data.body,
-                    body: payload.data.conditions,
+                    conditions: payload.data.conditions,
                     files: payload.data.files,
                 };
                 this.memorandums.unshift(newMemorandumsData);
             }
         },
 
-        editInMemorandumsList(payload) {
+        editInMemorandumList(payload) {
             const editedMemorandumsData = {
                 _id: payload.data._id,
-                project: payload.data.data.project,
-                title: payload.data.data.title,
-                is_active: payload.data.data.is_active,
-                date: payload.data.data.date,
-                body: payload.data.data.body,
-                body: payload.data.data.conditions,
-                oldFiles: payload.data.data.files,
-                created_at: payload.data.data.created_at,
+                title: payload.data.title,
+                is_active: payload.data.is_active,
+                date: payload.data.date,
+                body: payload.data.body,
+                conditions: payload.data.conditions,
+                oldFiles: payload.data.files,
+                created_at: payload.data.created_at,
             };
 
             let foundIndex = this.memorandums.findIndex(

@@ -145,7 +145,7 @@ module.exports = {
     },
 
     mounted() {
-        this.changeFormMode(ENUMS.FORM_MODE.LIST);
+        this.changeFormMode(this.ENUMS.FORM_MODE.LIST);
         this.$refs.memorandumList.loadMemorandums(1);
     },
 
@@ -185,46 +185,7 @@ module.exports = {
             let arg = payload.arg || null;
             const data = payload.data || {};
 
-            data.projects = [
-                {
-                title: "پروژه یک",
-                budget: "500",
-                supply: "استانی",
-                results: [
-                    {
-                        title: "برآمد یک"
-                    },
-                    {
-                        title: "برآمد دو"
-                    },
-                    {
-                        title: "برآمد سه"
-                    },
-                    {
-                        title: "برآمد چهار"
-                    },
-                ]
-            },
-            {
-                title: "پروژه دو",
-                budget: "700",
-                supply: "استانی",
-                results: [
-                    {
-                        title: "برآمد یک"
-                    },
-                    {
-                        title: "برآمد دو"
-                    },
-                    {
-                        title: "برآمد سه"
-                    },
-                    {
-                        title: "برآمد چهار"
-                    },
-                ]
-            }
-            ];
+            data.projects = [];
 
             if (null == arg) {
                 arg = payload;

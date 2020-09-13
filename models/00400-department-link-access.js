@@ -32,6 +32,9 @@ Model.model = function model() {
         'text_link': {
             type: Array
         },
+        'access_content_link': {
+            type: Array
+        },
         'child': {
             type: Array
         }

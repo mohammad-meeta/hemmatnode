@@ -210,23 +210,26 @@ module.exports = {
 
       id = id || this.departmentId;
       var url = this.showLoadAccessLinkUrl;
-      url = url.replace(/\$department\$/g, id);
-      AxiosHelper.send("get", url).then(function (res) {
-        if (res.data.success) {
-          var data = res.data.data || [];
 
-          if (data.length > 0) {
-            var changeData = _this2.replaceChildInUrl(data[0].text_link, id);
+      if (null != url) {
+        url = url.replace(/\$department\$/g, id);
+        AxiosHelper.send("get", url).then(function (res) {
+          if (res.data.success) {
+            var data = res.data.data || [];
 
-            Vue.set(_this2, "accessLink", changeData);
+            if (data.length > 0) {
+              var changeData = _this2.replaceChildInUrl(data[0].text_link, id);
+
+              Vue.set(_this2, "accessLink", changeData);
+            }
+          } else {
+            Vue.set(_this2, "accessLink", []);
           }
-        } else {
-          Vue.set(_this2, "accessLink", []);
-        }
-      })["catch"](function (err) {
-        console.error(err);
-        alert("Error");
-      });
+        })["catch"](function (err) {
+          console.error(err);
+          alert("Error");
+        });
+      }
     },
     replaceChildInUrl: function replaceChildInUrl(input, id) {
       var data = input;

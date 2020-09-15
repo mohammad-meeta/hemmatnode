@@ -9,14 +9,6 @@
                     h1(v-show="modeRegister") ایجاد پروژه
                     h1(v-show="modeEdit") ویرایش پروژه
 
-        .columns.exposed-form(v-show="!modeLoading")
-            .column.is-one-fifth(v-show="modeList")
-                a.button.is-primary.is-rounded(href="#",
-                @click.prevent="commandClick(ENUMS.COMMAND.NEW)")
-                    span.icon.is-small
-                        i.material-icons.icon check_circle
-                    span ایجاد
-
             .column.is-one-fifth(v-show="!modeList")
                 a.button.is-warning.is-rounded(href="#",
                 @click.prevent="commandClick(ENUMS.COMMAND.CANCEL)")

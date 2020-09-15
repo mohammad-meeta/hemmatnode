@@ -6,7 +6,7 @@ block title
 block content
     .container
         programs(
-            list-url=route('api.program', { page: '$page$', size: '$pageSize$' }),
+            list-url=route('api.program', { page: '$page$', size: '$pageSize$', group: departmentId }),
             register-url=route('program.store', { department: departmentId }),
             edit-url=route('program.update', { id :'$id$'}),
             department-id=departmentId

@@ -6,16 +6,25 @@
         .column.is-full(v-show="isLoadingMode")
             h1 در حال بارگذاری
         .form-small(v-show="! isLoadingMode")
-            .fieldset
-                legend مشخصات برنامه
-                .field
-                    label.label نام برنامه
-                    .control
-                        input.input(type='text', placeholder='نام برنامه', autofocus, v-model='programData.title' required)
             .field
-                label.checkbox
-                    input(type='file', @change="setAttachment")
-                    |   ضمیمه
+                label.label نام برنامه
+                .control
+                    input.input(type='text', placeholder='نام برنامه', autofocus, v-model='programData.title' required)
+            .field
+                label.label سال
+                .control
+                    date-picker(
+                        v-model='programData.date'
+                        type="year"
+                        display-format="jYYYY"
+                        required
+                    )
+            .field
+                .panel
+                    .panel-heading
+                        | فایل های ضمیمه
+                    .panel-block
+                        file-upload(ref="fileUpload", :old-files="oldFiles")
             .field
                 label.checkbox
                     input(type='checkbox', v-model="programData.is_active")
@@ -33,27 +42,34 @@
 const AxiosHelper = require("JS-HELPERS/axios-helper");
 const ENUMS = require("JS-HELPERS/enums");
 const ProgramValidator = require("JS-VALIDATORS/program-register-validator");
+const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
+const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 
 module.exports = {
     name: "RegisterProgram",
 
     components: {
         Notification,
+        DatePicker: VuePersianDatetimePicker,
+        FileUpload
     },
 
     data: () => ({
         ENUMS,
+        files: [],
+        deletedOldFiles: [],
+        oldFiles: [],
         programData: {
             title: null,
+            date: null,
             files: {},
+            deletedOldFiles: [],
             is_active: true,
         },
-
         notificationMessage: null,
         notificationType: "is-info",
         showLoadingFlag: false,
-        files: [],
     }),
 
     props: {
@@ -136,23 +152,32 @@ module.exports = {
             if (!isValid) {
                 return;
             }
+            const deletedFiles = this.$refs.fileUpload.getDeletedFiles();
+            const newFiles = this.$refs.fileUpload.getNewFiles();
+            let newUploaded = newFiles.map((x) => x.file);
+            Vue.set(this, "files", newUploaded);
+            let deleteUploaded = deletedFiles.map((x) => x._id);
+            Vue.set(this, "deletedOldFiles", deleteUploaded);
             let programData = this.programData;
-
-            programData.files = this.files[0];
 
             this.showLoading();
 
             const url = this.registerUrl;
 
-            AxiosHelper.send("post", url, programData, {
-                sendAsFormData: true,
+           AxiosHelper.send("post", url, programData, {
+               sendAsFormData: true,
+                filesArray: "files",
             })
                 .then((res) => {
                     const data = res.data;
+
                     if (data.success) {
                         this.$emit("on-register", {
                             sender: this,
-                            data,
+                            data: {
+                                data: data,
+                                dep_title: 0,
+                            },
                         });
                     }
                 })

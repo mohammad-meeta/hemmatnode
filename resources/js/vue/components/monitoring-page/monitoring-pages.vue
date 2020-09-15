@@ -15,8 +15,9 @@
                         .intro-card
                             .intro-card-head
                                 h2 {{ eventCategory.title }}
-                            .panel-block.is-active(v-for='doc in eventCategory.event', :key='doc._id')
-                                a(:href="doc.file") {{ doc.title }}
+                            .intro-card-body
+                                .intro-card-blocks(v-for='doc in eventCategory.event', :key='doc._id')
+                                    a(:href="doc.file") {{ doc.title }}
 
 
 </template>

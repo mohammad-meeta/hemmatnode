@@ -12,6 +12,16 @@
                     input.input(type='text', placeholder='نام', v-model='programData.title' required)
 
             .field
+                label.label سال
+                .control
+                    date-picker(
+                        v-model='programData.date'
+                        display-format="jYYYY"
+                        type="year"
+                        required
+                    )
+
+            .field
                 .panel
                     .panel-heading
                         | فایل های ضمیمه
@@ -34,6 +44,7 @@ const Buefy = require("buefy").default;
 const AxiosHelper = require("JS-HELPERS/axios-helper");
 const ProgramValidator = require("JS-VALIDATORS/program-register-validator");
 const ENUMS = require("JS-HELPERS/enums");
+const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 
@@ -41,6 +52,7 @@ module.exports = {
     name: "EditProgram",
     components: {
         FileUpload,
+        DatePicker: VuePersianDatetimePicker,
         Notification,
     },
 
@@ -52,6 +64,7 @@ module.exports = {
         programData: {
             title: null,
             department_id: null,
+            date: null,
             files: {},
             oldFiles: [],
             isActive: false,
@@ -91,8 +104,8 @@ module.exports = {
         loadProgramData(data) {
             let temp = {
                 _id: data._id,
-                // dep: data.dep.title,
                 title: data.title,
+                date: data.date,
                 department_id: data.department_id,
                 files: data.files,
                 isActive: data.is_active,
@@ -165,6 +178,7 @@ module.exports = {
             let programData = {
                 _id: this.programData._id,
                 title: this.programData.title,
+                date: this.programData.date,
                 department_id: this.programData.department_id,
                 is_active: this.programData.isActive,
                 files: this.files,
@@ -188,7 +202,7 @@ module.exports = {
                 })
                 .catch((err) => {
                     console.error(err);
-                    this.setNotification(".خطا در ذخیره جلسه", "is-danger");
+                    this.setNotification(".خطا در ویرایش برنامه", "is-danger");
                 })
                 .then(() => this.hideLoading());
         },

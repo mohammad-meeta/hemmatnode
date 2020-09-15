@@ -37,7 +37,7 @@
                   :register-url="registerUrl",
                   :programs-url="programsUrl")
 
-            //.column(v-show="!modeLoading && modeEdit")
+            .column(v-show="!modeLoading && modeEdit")
                 edit-project(ref="projectEdit", @on-command="onCommand",
                 @on-update="onProjectUpdate"
                 :edit-url="editUrl",
@@ -50,6 +50,7 @@
 <script>
 "use strict";
 
+const Buefy = require("buefy").default;
 const Routes = require("JS-CORE/routes");
 const ENUMS = require("JS-HELPERS/enums");
 const Loading = require("VUE-COMPONENTS/general/loading.vue").default;

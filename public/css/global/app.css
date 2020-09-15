@@ -47383,3 +47383,17 @@ h2.item-category {
   margin: auto;
 }
 
+/**
+* panel
+**/
+
+.panel-full {
+  width: 100%;
+}
+
+.inline-items {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+

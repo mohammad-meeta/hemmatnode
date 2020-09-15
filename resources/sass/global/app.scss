@@ -854,6 +854,7 @@ h2.item-category {
     border-radius: 5px;
     margin-bottom: 35px;
 }
+
 /**
 * checkboxes
 */
@@ -886,4 +887,17 @@ h2.item-category {
 
 .departments-modal .modal-content .childrens a {
     margin: auto;
+}
+
+/**
+* panel
+**/
+.panel-full {
+    width: 100%;
+}
+
+.inline-items {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }

@@ -102,7 +102,6 @@ module.exports = {
         notificationMessage: null,
         notificationType: "is-info",
         showLoadingFlag: false,
-        files: []
     }),
 
     props: {

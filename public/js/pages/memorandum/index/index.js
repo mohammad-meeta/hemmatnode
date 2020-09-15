@@ -387,8 +387,6 @@ module.exports = {
 //
 
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 var AxiosHelper = __webpack_require__(/*! JS-HELPERS/axios-helper */ "./resources/js/helpers/axios-helper.js");
 
 var ENUMS = __webpack_require__(/*! JS-HELPERS/enums */ "./resources/js/helpers/enums.js");
@@ -409,7 +407,7 @@ module.exports = {
     FileUpload: FileUpload
   },
   data: function data() {
-    return _defineProperty({
+    return {
       ENUMS: ENUMS,
       departments: [],
       users: [],
@@ -431,7 +429,7 @@ module.exports = {
       notificationMessage: null,
       notificationType: "is-info",
       showLoadingFlag: false
-    }, "files", []);
+    };
   },
   props: {
     departmentId: {
@@ -49538,7 +49536,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/pages/memorandum/index/index.js */"./resources/js/pages/memorandum/index/index.js");
+module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/memorandum/index/index.js */"./resources/js/pages/memorandum/index/index.js");
 
 
 /***/ })

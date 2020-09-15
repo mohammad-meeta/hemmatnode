@@ -13,20 +13,42 @@
                 .info-card-title {{ departmentData.title }}
                 .info-card-details
                     .info-card-item
-                        .info-card-label نام پروژه:
-                        .info-card-value {{ departmentData.title }}
-                    .info-card-item
-                        .info-card-label معرفی:
-                        .info-card-value {{ departmentData.description }}
-            .info-card
-                .content-dashboard-links
-                    .field.is-grouped
-                        .control(v-for='item in accessContentLink')
-                            a.button.is-primary.is-rounded(:href="item.link") {{ item.text }}
+                        p.info-card-value {{ departmentData.description }}
+
+            .intro-cards.columns(v-if="hasContentProjects")
+                .column.is-4
+                    b-collapse.card(
+                        animation="slide"
+                        :open="false",
+                        aria-id="contentIdForA11y3"
+                    )
+                        .card-header(
+                            slot="trigger"
+                            slot-scope="props"
+                            role="button"
+                            aria-controls="contentIdForA11y3"
+                        )
+                            p.card-header-title
+                                | برنامه های {{ departmentData.title }}
+                            a.card-header-icon
+                                b-icon(:icon="props.open ? 'menu-down' : 'menu-up'")
+                        .intro-card-block
+                            a(href="#")
+                                | برنامه های سال 1399
+                        .intro-card-block
+                            a(href="#")
+                                | برنامه های سال 1400
+
+                    .intro-card
+                        .intro-card-head
+                            h2 پروژه ها
+                        .intro-card-block(v-for='item in accessContentLink')
+                            a(:href="item.link") {{ item.text }}
 </template>
 <script>
 "use strict";
 
+const Buefy = require("buefy").default;
 const ENUMS = require("JS-HELPERS/enums");
 
 module.exports = {
@@ -40,11 +62,12 @@ module.exports = {
             title: null,
             department_category_id: null,
             files: {},
-            is_active: false
+            is_active: false,
         },
 
         accessLink: [],
         accessContentLink: [],
+        props: {},
 
         showLoadingFlag: false
     }),
@@ -82,7 +105,8 @@ module.exports = {
 
     computed: {
         isLoadingMode: state => state.showLoadingFlag == true,
-        showNotification: state => state.notificationMessage != null
+        showNotification: state => state.notificationMessage != null,
+        hasContentProjects: state => state.accessContentLink.length > 0
     },
 
     methods: {

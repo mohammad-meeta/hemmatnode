@@ -172,6 +172,7 @@ module.exports = {
 //
 //
 //
+//
 
 
 var Routes = __webpack_require__(/*! JS-CORE/routes */ "./resources/js/core/routes.js");
@@ -398,30 +399,27 @@ var render = function() {
                 "div",
                 { key: eventCategory.id, staticClass: "column is-4" },
                 [
-                  _c(
-                    "div",
-                    { staticClass: "intro-card" },
-                    [
-                      _c("div", { staticClass: "intro-card-head" }, [
-                        _c("h2", [_vm._v(_vm._s(eventCategory.title))])
-                      ]),
+                  _c("div", { staticClass: "intro-card" }, [
+                    _c("div", { staticClass: "intro-card-head" }, [
+                      _c("h2", [_vm._v(_vm._s(eventCategory.title))])
+                    ]),
+                    _c(
+                      "div",
+                      { staticClass: "intro-card-body" },
                       _vm._l(eventCategory.event, function(doc) {
                         return _c(
                           "div",
-                          {
-                            key: doc._id,
-                            staticClass: "panel-block is-active"
-                          },
+                          { key: doc._id, staticClass: "intro-card-blocks" },
                           [
                             _c("a", { attrs: { href: doc.file } }, [
                               _vm._v(_vm._s(doc.title))
                             ])
                           ]
                         )
-                      })
-                    ],
-                    2
-                  )
+                      }),
+                      0
+                    )
+                  ])
                 ]
               )
             }),

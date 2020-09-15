@@ -733,6 +733,15 @@ h2.item-category {
     width: 100%;
 }
 
+.intro-card-block {
+    padding: 5px;
+    border-bottom: 1px solid #CFCECE;
+}
+
+.intro-card-block:last-child {
+    border-bottom: none;
+}
+
 .front-page-link-box-small {
     width: 35%;
     position: absolute;
@@ -901,3 +910,10 @@ h2.item-category {
     justify-content: space-between;
     align-items: center;
 }
+
+/**
+* buefy hacks
+**/
+.collapse.card {
+    margin-bottom: 20px;
+ }

@@ -120,6 +120,82 @@
                                     |   سایر فواید پروژه درحیطه
                                 .control
                                     textarea.textarea(placeholder='سایرفواید پروژه درحیطه', v-model='projectData.other_benefit')
+
+
+
+
+
+                b-collapse(
+                    aria-id="contentIdForA11y2"
+                    class="panel"
+                    animation="slide"
+                    v-model="isOpen"
+                )
+                    .inline-items(slot="trigger"
+                        slot-scope="props"
+                        class="panel-heading"
+                        role="button"
+                        aria-controls="contentIdForA11y2"
+                    )
+                        strong
+                            | برآمد های پروژه
+                        .card-header-icon
+                            b-icon(:icon="props.open ? 'menu-down' : 'menu-up'")
+
+                    .panel-block
+                        .panel-full
+                            .container.main-content
+                                .inline-cards
+                                    .inline-card.w-100(v-for='result in projectData.results')
+                                        .inline-card-body
+                                            .inline-card-body
+                                                .inline-card-body-item
+                                                    a(:href="showResultData(result)") {{ result.result }}
+                                                        //- list-result(:result="result")
+
+
+                            //- b-collapse.card(animation='slide', v-for='(result, index) of projectData.results', :key='index', :open='isOpen == index', @open='isOpen = index')
+                            //-     .card-header(slot='trigger', slot-scope='props', role='button')
+                            //-         p.card-header-title
+                            //-             | {{ result.result }}
+                            //-         a.card-header-icon
+                            //-             b-icon(:icon="props.open ? 'menu-down' : 'menu-up'")
+                            //-     .card-content
+                            //-         .content
+                            //-             .field
+                            //-                 label.label
+                            //-                     | عنوان
+                            //-                 .control
+                            //-                     input.input(placeholder='عنوان', v-model='result.result')
+
+                            //-             .field
+                            //-                 label.label
+                            //-                     | استاندارد
+                            //-                 .control
+                            //-                     input.input(placeholder='استاندارد', v-model='result.standard')
+
+                            //-             .field
+                            //-                 label.label
+                            //-                     | هزینه
+                            //-                 .control
+                            //-                     input.input(type='text' ,placeholder='هزینه', v-model='result.cast')
+
+                            //-             .field
+                            //-                 label.label
+                            //-                     | تاریخ
+                            //-                 .control
+                            //-                     date-picker(v-model='result.deadline' format="YYYY-MM-DD HH:mm:ss"
+                            //-                         display-format="jDD/jMM/jYYYY HH:mm" type="datetime" required)
+
+                            //-             .field
+                            //-                 label.label
+                            //-                     | فایل
+                            //-                 .control
+                            //-                     result-file-upload(ref="resultFileUpload", :old-files="resultOldFiles")
+
+
+
+
             .field
                 label.label هدف کلی (محصول پروژه)
                     .control
@@ -148,19 +224,20 @@
 
 <script>
 "use strict";
-
 const AxiosHelper = require("JS-HELPERS/axios-helper");
 const ENUMS = require("JS-HELPERS/enums");
 const ProjectValidator = require("JS-VALIDATORS/project-register-validator");
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
+const ListResult = require("VUE-COMPONENTS/project/list-result.vue").default;
 
 module.exports = {
     name: "EditProject",
 
     components: {
         Notification,
-        FileUpload
+        FileUpload,
+        ListResult,
     },
 
     data: () => ({
@@ -189,27 +266,28 @@ module.exports = {
             other_benefit: null,
             result_apply: null,
             files: {},
+            results: [],
             oldFiles: [],
             deletedOldFiles: [],
-            is_active: false
+            is_active: false,
         },
 
         notificationMessage: null,
         notificationType: "is-info",
         showLoadingFlag: false,
-        isOpen: true
+        isOpen: true,
     }),
 
     props: {
         registerUrl: {
             type: String,
-            default: ""
+            default: "",
         },
 
         programsUrl: {
             type: String,
-            default: ""
-        }
+            default: "",
+        },
     },
 
     created() {
@@ -217,17 +295,21 @@ module.exports = {
     },
 
     computed: {
-        isLoadingMode: state => state.showLoadingFlag == true,
-        showNotification: state => state.notificationMessage != null
+        isLoadingMode: (state) => state.showLoadingFlag == true,
+        showNotification: (state) => state.notificationMessage != null,
     },
 
     methods: {
-
+        /**
+         * show result data
+         */
+        showResultData(payload) {
+            alert("OKOKOK");
+        },
         /**
          * Load specific project
          */
         loadProjectData(data) {
-            console.log(data);
             const temp = {
                 _id: data._id,
                 dep: data.dep.title,
@@ -237,6 +319,7 @@ module.exports = {
                 title: data.title,
                 program_id: data.program_id,
                 target: data.target,
+                results: data.results,
                 same_effects_index: data.same_effects_index,
                 organ_moderator: data.organ_moderator,
                 project_moderator: data.project_moderator,
@@ -276,7 +359,7 @@ module.exports = {
          */
         loadPrograms() {
             const url = this.programsUrl;
-            AxiosHelper.send("get", url, "").then(res => {
+            AxiosHelper.send("get", url, "").then((res) => {
                 const resData = res.data;
                 const datas = resData.data.data;
                 Vue.set(this, "programs", datas);
@@ -312,7 +395,7 @@ module.exports = {
             this.setNotification(null);
         },
 
-       /**
+        /**
          * Edit project
          */
         editProject() {
@@ -322,9 +405,9 @@ module.exports = {
             }
             const deletedFiles = this.$refs.fileUpload.getDeletedFiles();
             const newFiles = this.$refs.fileUpload.getNewFiles();
-            let newUploaded = newFiles.map(x => x.file);
+            let newUploaded = newFiles.map((x) => x.file);
             Vue.set(this, "files", newUploaded);
-            let deleteUploaded = deletedFiles.map(x => x._id);
+            let deleteUploaded = deletedFiles.map((x) => x._id);
             Vue.set(this, "deletedOldFiles", deleteUploaded);
             let projectData = {
                 _id: this.projectData._id,
@@ -357,17 +440,17 @@ module.exports = {
             const url = this.editUrl.replace("$id$", projectData._id);
             AxiosHelper.send("patch", url, projectData, {
                 sendAsFormData: true,
-                filesArray: "files"
+                filesArray: "files",
             })
-                .then(res => {
+                .then((res) => {
                     //const data = JSON.parse(res.config.data);
                     const data = res.data;
                     this.$emit("on-update", {
                         sender: this,
-                        data
+                        data,
                     });
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.error(err);
                     this.setNotification(".خطا در ویرایش پروژه", "is-danger");
                 })
@@ -387,16 +470,15 @@ module.exports = {
 
             const errors = result.validator.errors.all();
             const error = Object.keys(errors)
-                .map(key => errors[key].join("\n"))
+                .map((key) => errors[key].join("\n"))
                 .join("</br>");
 
             console.log(error);
             this.setNotification(error, "is-danger");
             return false;
-        }
-    }
+        },
+    },
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

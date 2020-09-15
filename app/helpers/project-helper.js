@@ -70,6 +70,72 @@ ProjecttHelper.loadAllProjectData = async function loadAllProjectData(req, dataP
             }
         },
         {
+            $lookup: {
+                from: "results",
+                let: { "proje_id": "$_id" },
+                pipeline: [
+                    {
+                        $match:
+                        {
+                            $expr: {
+                                $eq: ['$$proje_id', "$project_id"]
+                            }
+                        }
+                    },
+
+                    {
+                        $unwind: {
+                            path: "$files",
+                            preserveNullAndEmptyArrays: true
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: "files",
+                            localField: "files.file_id",
+                            foreignField: "_id",
+                            as: "projfile"
+                        }
+                    },
+                    {
+                        $project: {
+                            "files": {
+                                "name": "$projfile.originalname",
+                                "filename": "$projfile.filename",
+                            },
+                            "_id": 1,
+                            "is_active": 1,
+                            "result": 1,
+                            "project_id": 1,
+                            "user_id": 1,
+                            "updated_at": 1,
+                            "created_at": 1,
+
+                        }
+                    },
+                    {
+                        "$group":
+                        {
+                            "_id": "$_id",
+                            "files": { "$push": "$files" },
+                            "is_active": { "$last": "$is_active" },
+                            "result": { "$last": "$result" },
+                            "project_id": { "$last": "$project_id" },
+                            "user_id": { "$last": "$user_id" },
+                            "updated_at": { "$last": "$updated_at" },
+                            "created_at": { "$last": "$created_at" },
+                        }
+                    },
+                    {
+                        $sort: {
+                            _id: 1
+                        }
+                    },
+                ],
+                "as": "res"
+            }
+        },
+        {
             $unwind: {
                 path: "$files",
                 preserveNullAndEmptyArrays: true
@@ -106,6 +172,9 @@ ProjecttHelper.loadAllProjectData = async function loadAllProjectData(req, dataP
                 },
                 files: {
                     $push: "$ffile"
+                },
+                results: {
+                    $last: "$res"
                 },
                 mem: {
                     $last: "$mem"

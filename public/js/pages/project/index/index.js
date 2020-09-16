@@ -548,13 +548,6 @@ module.exports = {
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
 
 
 var AxiosHelper = __webpack_require__(/*! JS-HELPERS/axios-helper */ "./resources/js/helpers/axios-helper.js");
@@ -45733,9 +45726,1117 @@ render._withStripped = true
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/pug-plain-loader!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/vue/components/project/edit-project.vue?vue&type=template&id=1eff2b4e&scoped=true&lang=pug& ***!
   \********************************************************************************************************************************************************************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
-/***/ (function(module, exports) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-throw new Error("Module build failed (from ./node_modules/pug-plain-loader/index.js):\nError: /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/vue/components/project/edit-project.vue:156:2\n    154|                                                 b-modal(:active.sync='isModalActive' class=\"departments-modal\")\n    155|                                                     list-result(:result=\"selectedResult\")\n  > 156| =======\n----------^\n    157|                                             .inline-card-body\n    158|                                                 .inline-card-body-item\n    159|                                                     a(@click.prevent=\"showResultData(result)\") {{ result.result }}\n\nSyntax Error: Unexpected token\n    at makeError (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/pug-error/index.js:32:13)\n    at Lexer.error (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/pug-lexer/index.js:59:15)\n    at Lexer.assertExpression (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/pug-lexer/index.js:87:12)\n    at Lexer.code (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/pug-lexer/index.js:1023:28)\n    at Lexer.callLexerFunction (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/pug-lexer/index.js:1460:23)\n    at Lexer.advance (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/pug-lexer/index.js:1493:15)\n    at Lexer.callLexerFunction (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/pug-lexer/index.js:1460:23)\n    at Lexer.getTokens (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/pug-lexer/index.js:1516:12)\n    at lex (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/pug-lexer/index.js:12:42)\n    at Object.lex (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/pug/lib/index.js:100:27)\n    at Function.loadString [as string] (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/pug-load/index.js:44:24)\n    at compileBody (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/pug/lib/index.js:86:18)\n    at Object.exports.compile (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/pug/lib/index.js:242:16)\n    at Object.module.exports (/home/mohammad/Documents/Projects/olompezeshki/hemmatnode/node_modules/pug-plain-loader/index.js:11:24)");
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "container-child" },
+    [
+      _vm.showNotification
+        ? _c(
+            "notification",
+            {
+              attrs: { "notification-type": _vm.notificationType },
+              on: { "on-close": _vm.closeNotification }
+            },
+            [
+              _c("span", {
+                domProps: { innerHTML: _vm._s(_vm.notificationMessage) }
+              })
+            ]
+          )
+        : _vm._e(),
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.isLoadingMode,
+              expression: "isLoadingMode"
+            }
+          ],
+          staticClass: "column is-full"
+        },
+        [_c("h1", [_vm._v("در حال بارگذاری")])]
+      ),
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: !_vm.isLoadingMode,
+              expression: "! isLoadingMode"
+            }
+          ],
+          staticClass: "form-small"
+        },
+        [
+          _c(
+            "div",
+            { staticClass: "field" },
+            [
+              _c(
+                "b-collapse",
+                {
+                  staticClass: "panel",
+                  attrs: { "aria-id": "contentIdForA11y2", animation: "slide" },
+                  scopedSlots: _vm._u([
+                    {
+                      key: "trigger",
+                      fn: function(props) {
+                        return _c(
+                          "div",
+                          {
+                            staticClass: "inline-items panel-heading",
+                            attrs: {
+                              role: "button",
+                              "aria-controls": "contentIdForA11y2"
+                            }
+                          },
+                          [
+                            _c("strong", [_vm._v("مشخصات پروژه")]),
+                            _c(
+                              "div",
+                              { staticClass: "card-header-icon" },
+                              [
+                                _c("b-icon", {
+                                  attrs: {
+                                    icon: props.open ? "menu-down" : "menu-up"
+                                  }
+                                })
+                              ],
+                              1
+                            )
+                          ]
+                        )
+                      }
+                    }
+                  ]),
+                  model: {
+                    value: _vm.isOpen,
+                    callback: function($$v) {
+                      _vm.isOpen = $$v
+                    },
+                    expression: "isOpen"
+                  }
+                },
+                [
+                  _c("div", { staticClass: "panel-block" }, [
+                    _c("div", { staticClass: "panel-full" }, [
+                      _c("div", { staticClass: "field" }, [
+                        _c("label", { staticClass: "label" }, [
+                          _vm._v("نام پروژه")
+                        ]),
+                        _c("div", { staticClass: "control" }, [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.projectData.title,
+                                expression: "projectData.title"
+                              }
+                            ],
+                            staticClass: "input",
+                            attrs: {
+                              type: "text",
+                              placeholder: "نام پروژه",
+                              autofocus: "",
+                              required: ""
+                            },
+                            domProps: { value: _vm.projectData.title },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.projectData,
+                                  "title",
+                                  $event.target.value
+                                )
+                              }
+                            }
+                          })
+                        ])
+                      ]),
+                      _c("div", { staticClass: "field" }, [
+                        _c("label", { staticClass: "label" }, [
+                          _vm._v("برنامه متناظر")
+                        ]),
+                        _c("div", { staticClass: "control" }, [
+                          _c("div", { staticClass: "select is-primary" }, [
+                            _c(
+                              "select",
+                              {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.projectData.program_id,
+                                    expression: "projectData.program_id"
+                                  }
+                                ],
+                                on: {
+                                  change: function($event) {
+                                    var $$selectedVal = Array.prototype.filter
+                                      .call($event.target.options, function(o) {
+                                        return o.selected
+                                      })
+                                      .map(function(o) {
+                                        var val =
+                                          "_value" in o ? o._value : o.value
+                                        return val
+                                      })
+                                    _vm.$set(
+                                      _vm.projectData,
+                                      "program_id",
+                                      $event.target.multiple
+                                        ? $$selectedVal
+                                        : $$selectedVal[0]
+                                    )
+                                  }
+                                }
+                              },
+                              _vm._l(_vm.programs, function(
+                                program,
+                                programIndex
+                              ) {
+                                return _c(
+                                  "option",
+                                  { domProps: { value: program._id } },
+                                  [_vm._v(_vm._s(program.title))]
+                                )
+                              }),
+                              0
+                            )
+                          ])
+                        ])
+                      ]),
+                      _c("div", { staticClass: "field" }, [
+                        _c("label", { staticClass: "label" }, [
+                          _vm._v("هدف برنامه")
+                        ]),
+                        _c("div", { staticClass: "control" }, [
+                          _c("textarea", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.projectData.target,
+                                expression: "projectData.target"
+                              }
+                            ],
+                            staticClass: "textarea",
+                            attrs: { placeholder: "هدف برنامه" },
+                            domProps: { value: _vm.projectData.target },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.projectData,
+                                  "target",
+                                  $event.target.value
+                                )
+                              }
+                            }
+                          })
+                        ])
+                      ]),
+                      _c("div", { staticClass: "field" }, [
+                        _c("label", { staticClass: "label" }, [
+                          _vm._v("شاخص های اثر متناظر")
+                        ]),
+                        _c("div", { staticClass: "control" }, [
+                          _c("textarea", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.projectData.same_effects_index,
+                                expression: "projectData.same_effects_index"
+                              }
+                            ],
+                            staticClass: "textarea",
+                            attrs: { placeholder: "شاخص های اثر متناظر" },
+                            domProps: {
+                              value: _vm.projectData.same_effects_index
+                            },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.projectData,
+                                  "same_effects_index",
+                                  $event.target.value
+                                )
+                              }
+                            }
+                          })
+                        ])
+                      ]),
+                      _c("div", { staticClass: "panel" }, [
+                        _c("div", { staticClass: "panel-heading" }, [
+                          _vm._v("مشارکت کنندگان")
+                        ]),
+                        _c("div", { staticClass: "panel-block" }, [
+                          _c("div", { staticClass: "panel-full" }, [
+                            _c("div", { staticClass: "field" }, [
+                              _c("label", { staticClass: "label" }, [
+                                _vm._v("مجری سازمانی")
+                              ]),
+                              _c("div", { staticClass: "control" }, [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.projectData.organ_moderator,
+                                      expression: "projectData.organ_moderator"
+                                    }
+                                  ],
+                                  staticClass: "input",
+                                  attrs: {
+                                    type: "text",
+                                    placeholder: "مجری سازمانی",
+                                    autofocus: "",
+                                    required: ""
+                                  },
+                                  domProps: {
+                                    value: _vm.projectData.organ_moderator
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.projectData,
+                                        "organ_moderator",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ])
+                            ]),
+                            _c("div", { staticClass: "field" }, [
+                              _c("label", { staticClass: "label" }, [
+                                _vm._v("مجری پروژه - پیمانکار"),
+                                _c("div", { staticClass: "control" }, [
+                                  _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value:
+                                          _vm.projectData.project_moderator,
+                                        expression:
+                                          "projectData.project_moderator"
+                                      }
+                                    ],
+                                    staticClass: "input",
+                                    attrs: {
+                                      type: "text",
+                                      placeholder: "مجری پروژه - پیمانکار",
+                                      autofocus: "",
+                                      required: ""
+                                    },
+                                    domProps: {
+                                      value: _vm.projectData.project_moderator
+                                    },
+                                    on: {
+                                      input: function($event) {
+                                        if ($event.target.composing) {
+                                          return
+                                        }
+                                        _vm.$set(
+                                          _vm.projectData,
+                                          "project_moderator",
+                                          $event.target.value
+                                        )
+                                      }
+                                    }
+                                  })
+                                ])
+                              ])
+                            ]),
+                            _c("div", { staticClass: "field" }, [
+                              _c("label", { staticClass: "label" }, [
+                                _vm._v("مشاورین"),
+                                _c("div", { staticClass: "control" }, [
+                                  _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: _vm.projectData.consoultant,
+                                        expression: "projectData.consoultant"
+                                      }
+                                    ],
+                                    staticClass: "input",
+                                    attrs: {
+                                      type: "text",
+                                      placeholder: "مشاورین",
+                                      autofocus: "",
+                                      required: ""
+                                    },
+                                    domProps: {
+                                      value: _vm.projectData.consoultant
+                                    },
+                                    on: {
+                                      input: function($event) {
+                                        if ($event.target.composing) {
+                                          return
+                                        }
+                                        _vm.$set(
+                                          _vm.projectData,
+                                          "consoultant",
+                                          $event.target.value
+                                        )
+                                      }
+                                    }
+                                  })
+                                ])
+                              ])
+                            ]),
+                            _c("div", { staticClass: "field" }, [
+                              _c("label", { staticClass: "label" }, [
+                                _vm._v("ناظر پروژه"),
+                                _c("div", { staticClass: "control" }, [
+                                  _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: _vm.projectData.supervisor,
+                                        expression: "projectData.supervisor"
+                                      }
+                                    ],
+                                    staticClass: "input",
+                                    attrs: {
+                                      type: "text",
+                                      placeholder: "ناظر پروژه",
+                                      autofocus: "",
+                                      required: ""
+                                    },
+                                    domProps: {
+                                      value: _vm.projectData.supervisor
+                                    },
+                                    on: {
+                                      input: function($event) {
+                                        if ($event.target.composing) {
+                                          return
+                                        }
+                                        _vm.$set(
+                                          _vm.projectData,
+                                          "supervisor",
+                                          $event.target.value
+                                        )
+                                      }
+                                    }
+                                  })
+                                ])
+                              ])
+                            ]),
+                            _c("div", { staticClass: "field" }, [
+                              _c("label", { staticClass: "label" }, [
+                                _vm._v("کمیته راهبردی طرح")
+                              ]),
+                              _c("div", { staticClass: "control" }, [
+                                _c("textarea", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value:
+                                        _vm.projectData.committee_leadership,
+                                      expression:
+                                        "projectData.committee_leadership"
+                                    }
+                                  ],
+                                  staticClass: "textarea",
+                                  attrs: { placeholder: "کمیته راهبردی طرح" },
+                                  domProps: {
+                                    value: _vm.projectData.committee_leadership
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.projectData,
+                                        "committee_leadership",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ])
+                            ]),
+                            _c("div", { staticClass: "field" }, [
+                              _c("label", { staticClass: "label" }, [
+                                _vm._v("همکاران اصلی پروژه"),
+                                _c("div", { staticClass: "control" }, [
+                                  _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: _vm.projectData.coworker,
+                                        expression: "projectData.coworker"
+                                      }
+                                    ],
+                                    staticClass: "input",
+                                    attrs: {
+                                      type: "text",
+                                      placeholder: "همکاران اصلی پروژه",
+                                      autofocus: "",
+                                      required: ""
+                                    },
+                                    domProps: {
+                                      value: _vm.projectData.coworker
+                                    },
+                                    on: {
+                                      input: function($event) {
+                                        if ($event.target.composing) {
+                                          return
+                                        }
+                                        _vm.$set(
+                                          _vm.projectData,
+                                          "coworker",
+                                          $event.target.value
+                                        )
+                                      }
+                                    }
+                                  })
+                                ])
+                              ])
+                            ])
+                          ])
+                        ])
+                      ])
+                    ])
+                  ])
+                ]
+              ),
+              _c(
+                "b-collapse",
+                {
+                  staticClass: "panel",
+                  attrs: { "aria-id": "contentIdForA11y2", animation: "slide" },
+                  scopedSlots: _vm._u([
+                    {
+                      key: "trigger",
+                      fn: function(props) {
+                        return _c(
+                          "div",
+                          {
+                            staticClass: "inline-items panel-heading",
+                            attrs: {
+                              role: "button",
+                              "aria-controls": "contentIdForA11y2"
+                            }
+                          },
+                          [
+                            _c("strong", [_vm._v("بیان ضرورت")]),
+                            _c(
+                              "div",
+                              { staticClass: "card-header-icon" },
+                              [
+                                _c("b-icon", {
+                                  attrs: {
+                                    icon: props.open ? "menu-down" : "menu-up"
+                                  }
+                                })
+                              ],
+                              1
+                            )
+                          ]
+                        )
+                      }
+                    }
+                  ]),
+                  model: {
+                    value: _vm.isOpen,
+                    callback: function($$v) {
+                      _vm.isOpen = $$v
+                    },
+                    expression: "isOpen"
+                  }
+                },
+                [
+                  _c("div", { staticClass: "panel-block" }, [
+                    _c("div", { staticClass: "panel-full" }, [
+                      _c("div", { staticClass: "field" }, [
+                        _c("label", { staticClass: "label" }, [
+                          _vm._v("تعریف مسئله -نیاز اصلی")
+                        ]),
+                        _c("div", { staticClass: "control" }, [
+                          _c("textarea", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.projectData.description,
+                                expression: "projectData.description"
+                              }
+                            ],
+                            staticClass: "textarea",
+                            attrs: { placeholder: "تعریف مسئله -نیاز اصلی" },
+                            domProps: { value: _vm.projectData.description },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.projectData,
+                                  "description",
+                                  $event.target.value
+                                )
+                              }
+                            }
+                          })
+                        ])
+                      ]),
+                      _c("div", { staticClass: "field" }, [
+                        _c("label", { staticClass: "label" }, [
+                          _vm._v(
+                            "مروری برمداخلات و خدمات بهبوددهنده وضعیت درتجربیات جهانی و ملی"
+                          )
+                        ]),
+                        _c("div", { staticClass: "control" }, [
+                          _c("textarea", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.projectData.intervention_review,
+                                expression: "projectData.intervention_review"
+                              }
+                            ],
+                            staticClass: "textarea",
+                            attrs: {
+                              placeholder:
+                                "مروری برمداخلات و خدمات بهبوددهنده وضعیت در تجربیات جهانی و ملی"
+                            },
+                            domProps: {
+                              value: _vm.projectData.intervention_review
+                            },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.projectData,
+                                  "intervention_review",
+                                  $event.target.value
+                                )
+                              }
+                            }
+                          })
+                        ])
+                      ]),
+                      _c("div", { staticClass: "field" }, [
+                        _c("label", { staticClass: "label" }, [
+                          _vm._v(
+                            "ارتباط پروژه با اقدامات قبلی سازمان یا سازمان های دیگر در پرداختن به این مسئله-تکمیل کننده،نقض کننده،جدید بودن"
+                          )
+                        ]),
+                        _c("div", { staticClass: "control" }, [
+                          _c("textarea", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.projectData.pervious_action_relation,
+                                expression:
+                                  "projectData.pervious_action_relation"
+                              }
+                            ],
+                            staticClass: "textarea",
+                            attrs: {
+                              placeholder:
+                                "ارتباط پروژه با اقدامات قبلی سازمان یا سازمان های دیگر در پرداختن به این مسئله-تکمیل کننده،نقض کننده،جدیدبودن"
+                            },
+                            domProps: {
+                              value: _vm.projectData.pervious_action_relation
+                            },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.projectData,
+                                  "pervious_action_relation",
+                                  $event.target.value
+                                )
+                              }
+                            }
+                          })
+                        ])
+                      ]),
+                      _c("div", { staticClass: "field" }, [
+                        _c("label", { staticClass: "checkbox" }, [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.projectData.target_corresponding,
+                                expression: "projectData.target_corresponding"
+                              }
+                            ],
+                            attrs: { type: "checkbox" },
+                            domProps: {
+                              checked: Array.isArray(
+                                _vm.projectData.target_corresponding
+                              )
+                                ? _vm._i(
+                                    _vm.projectData.target_corresponding,
+                                    null
+                                  ) > -1
+                                : _vm.projectData.target_corresponding
+                            },
+                            on: {
+                              change: function($event) {
+                                var $$a = _vm.projectData.target_corresponding,
+                                  $$el = $event.target,
+                                  $$c = $$el.checked ? true : false
+                                if (Array.isArray($$a)) {
+                                  var $$v = null,
+                                    $$i = _vm._i($$a, $$v)
+                                  if ($$el.checked) {
+                                    $$i < 0 &&
+                                      _vm.$set(
+                                        _vm.projectData,
+                                        "target_corresponding",
+                                        $$a.concat([$$v])
+                                      )
+                                  } else {
+                                    $$i > -1 &&
+                                      _vm.$set(
+                                        _vm.projectData,
+                                        "target_corresponding",
+                                        $$a
+                                          .slice(0, $$i)
+                                          .concat($$a.slice($$i + 1))
+                                      )
+                                  }
+                                } else {
+                                  _vm.$set(
+                                    _vm.projectData,
+                                    "target_corresponding",
+                                    $$c
+                                  )
+                                }
+                              }
+                            }
+                          }),
+                          _vm._v(
+                            "  تناظر با اهداف راهبردی و اسناد بالادستی سازمان؟"
+                          )
+                        ])
+                      ]),
+                      _c("div", { staticClass: "field" }, [
+                        _c("label", { staticClass: "label" }, [
+                          _vm._v("به ارتقای کدام شاخص اثر کمک می کند؟"),
+                          _c("div", { staticClass: "control" }, [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.projectData.help_ipmrove_index,
+                                  expression: "projectData.help_ipmrove_index"
+                                }
+                              ],
+                              staticClass: "input",
+                              attrs: {
+                                type: "text",
+                                placeholder:
+                                  "به ارتقای کدام شاخص اثر کمک می کند؟",
+                                autofocus: "",
+                                required: ""
+                              },
+                              domProps: {
+                                value: _vm.projectData.help_ipmrove_index
+                              },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.projectData,
+                                    "help_ipmrove_index",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            })
+                          ])
+                        ])
+                      ]),
+                      _c("div", { staticClass: "field" }, [
+                        _c("label", { staticClass: "label" }, [
+                          _vm._v("  سایر فواید پروژه درحیطه")
+                        ]),
+                        _c("div", { staticClass: "control" }, [
+                          _c("textarea", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.projectData.other_benefit,
+                                expression: "projectData.other_benefit"
+                              }
+                            ],
+                            staticClass: "textarea",
+                            attrs: { placeholder: "سایرفواید پروژه درحیطه" },
+                            domProps: { value: _vm.projectData.other_benefit },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.projectData,
+                                  "other_benefit",
+                                  $event.target.value
+                                )
+                              }
+                            }
+                          })
+                        ])
+                      ])
+                    ])
+                  ])
+                ]
+              ),
+              _c(
+                "b-collapse",
+                {
+                  staticClass: "panel",
+                  attrs: { "aria-id": "contentIdForA11y2", animation: "slide" },
+                  scopedSlots: _vm._u([
+                    {
+                      key: "trigger",
+                      fn: function(props) {
+                        return _c(
+                          "div",
+                          {
+                            staticClass: "inline-items panel-heading",
+                            attrs: {
+                              role: "button",
+                              "aria-controls": "contentIdForA11y2"
+                            }
+                          },
+                          [
+                            _c("strong", [_vm._v("برآمد های پروژه")]),
+                            _c(
+                              "div",
+                              { staticClass: "card-header-icon" },
+                              [
+                                _c("b-icon", {
+                                  attrs: {
+                                    icon: props.open ? "menu-down" : "menu-up"
+                                  }
+                                })
+                              ],
+                              1
+                            )
+                          ]
+                        )
+                      }
+                    }
+                  ]),
+                  model: {
+                    value: _vm.isOpen,
+                    callback: function($$v) {
+                      _vm.isOpen = $$v
+                    },
+                    expression: "isOpen"
+                  }
+                },
+                [
+                  _c("div", { staticClass: "panel-block" }, [
+                    _c("div", { staticClass: "panel-full" }, [
+                      _c("div", { staticClass: "container main-content" }, [
+                        _c(
+                          "div",
+                          { staticClass: "inline-cards" },
+                          _vm._l(_vm.projectData.results, function(result) {
+                            return _c(
+                              "div",
+                              { staticClass: "inline-card w-100" },
+                              [
+                                _c("div", { staticClass: "inline-card-body" }, [
+                                  _c(
+                                    "div",
+                                    { staticClass: "inline-card-body" },
+                                    [
+                                      _c(
+                                        "div",
+                                        {
+                                          staticClass: "inline-card-body-item"
+                                        },
+                                        [
+                                          _c(
+                                            "a",
+                                            {
+                                              on: {
+                                                click: function($event) {
+                                                  $event.preventDefault()
+                                                  return _vm.showResultData(
+                                                    result
+                                                  )
+                                                }
+                                              }
+                                            },
+                                            [_vm._v(_vm._s(result.result))]
+                                          ),
+                                          _c(
+                                            "b-modal",
+                                            {
+                                              staticClass: "departments-modal",
+                                              attrs: {
+                                                active: _vm.isModalActive
+                                              },
+                                              on: {
+                                                "update:active": function(
+                                                  $event
+                                                ) {
+                                                  _vm.isModalActive = $event
+                                                }
+                                              }
+                                            },
+                                            [
+                                              _c("list-result", {
+                                                ref: "listResult",
+                                                refInFor: true,
+                                                attrs: { result: result }
+                                              })
+                                            ],
+                                            1
+                                          )
+                                        ],
+                                        1
+                                      )
+                                    ]
+                                  )
+                                ])
+                              ]
+                            )
+                          }),
+                          0
+                        )
+                      ])
+                    ])
+                  ])
+                ]
+              )
+            ],
+            1
+          ),
+          _c("div", { staticClass: "field" }, [
+            _c("label", { staticClass: "label" }, [
+              _vm._v("هدف کلی (محصول پروژه)"),
+              _c("div", { staticClass: "control" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.projectData.final_product,
+                      expression: "projectData.final_product"
+                    }
+                  ],
+                  staticClass: "input",
+                  attrs: {
+                    type: "text",
+                    placeholder: "هدف کلی (محصول پروژه)",
+                    autofocus: "",
+                    required: ""
+                  },
+                  domProps: { value: _vm.projectData.final_product },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.projectData,
+                        "final_product",
+                        $event.target.value
+                      )
+                    }
+                  }
+                })
+              ])
+            ])
+          ]),
+          _c("div", { staticClass: "field" }, [
+            _c("label", { staticClass: "label" }, [
+              _vm._v("  نحوه کاربست محصول پروژه")
+            ]),
+            _c("div", { staticClass: "control" }, [
+              _c("textarea", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.projectData.result_apply,
+                    expression: "projectData.result_apply"
+                  }
+                ],
+                staticClass: "textarea",
+                attrs: { placeholder: "نحوه کاربست محصول پروژه" },
+                domProps: { value: _vm.projectData.result_apply },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(
+                      _vm.projectData,
+                      "result_apply",
+                      $event.target.value
+                    )
+                  }
+                }
+              })
+            ])
+          ]),
+          _c("div", { staticClass: "field" }, [
+            _c("div", { staticClass: "panel" }, [
+              _c("div", { staticClass: "panel-heading" }, [
+                _vm._v("فایل های ضمیمه")
+              ]),
+              _c(
+                "div",
+                { staticClass: "panel-block" },
+                [
+                  _c("file-upload", {
+                    ref: "fileUpload",
+                    attrs: { "old-files": _vm.oldFiles }
+                  })
+                ],
+                1
+              )
+            ])
+          ]),
+          _c("div", { staticClass: "field" }, [
+            _c("label", { staticClass: "checkbox" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.projectData.is_active,
+                    expression: "projectData.is_active"
+                  }
+                ],
+                attrs: { type: "checkbox" },
+                domProps: {
+                  checked: Array.isArray(_vm.projectData.is_active)
+                    ? _vm._i(_vm.projectData.is_active, null) > -1
+                    : _vm.projectData.is_active
+                },
+                on: {
+                  change: function($event) {
+                    var $$a = _vm.projectData.is_active,
+                      $$el = $event.target,
+                      $$c = $$el.checked ? true : false
+                    if (Array.isArray($$a)) {
+                      var $$v = null,
+                        $$i = _vm._i($$a, $$v)
+                      if ($$el.checked) {
+                        $$i < 0 &&
+                          _vm.$set(
+                            _vm.projectData,
+                            "is_active",
+                            $$a.concat([$$v])
+                          )
+                      } else {
+                        $$i > -1 &&
+                          _vm.$set(
+                            _vm.projectData,
+                            "is_active",
+                            $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                          )
+                      }
+                    } else {
+                      _vm.$set(_vm.projectData, "is_active", $$c)
+                    }
+                  }
+                }
+              }),
+              _vm._v("  فعال")
+            ])
+          ]),
+          _c("div", { staticClass: "field is-grouped" }, [
+            _c(
+              "div",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: !_vm.isLoadingMode,
+                    expression: "! isLoadingMode"
+                  }
+                ],
+                staticClass: "control"
+              },
+              [
+                _c(
+                  "a",
+                  {
+                    staticClass: "button is-link is-rounded",
+                    attrs: { href: "#" },
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        return _vm.commandClick(_vm.ENUMS.COMMAND.SAVE)
+                      }
+                    }
+                  },
+                  [_vm._v("  ثبت")]
+                )
+              ]
+            )
+          ])
+        ]
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
 
 /***/ }),
 
@@ -49389,7 +50490,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/project/index/index.js */"./resources/js/pages/project/index/index.js");
+module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/pages/project/index/index.js */"./resources/js/pages/project/index/index.js");
 
 
 /***/ })

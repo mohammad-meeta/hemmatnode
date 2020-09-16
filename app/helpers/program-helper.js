@@ -160,6 +160,9 @@ ProgramHelper.loadGroupDate = async function loadGroupDate(req, group) {
             $group: {
                 _id: "$date"
             }
+        },
+        {
+            $sort: { _id: 1 }
         }
     ];
     let res = await Program.aggregate(pipeline);

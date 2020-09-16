@@ -547,7 +547,6 @@ module.exports = {
 //
 //
 //
-//
 
 
 var AxiosHelper = __webpack_require__(/*! JS-HELPERS/axios-helper */ "./resources/js/helpers/axios-helper.js");
@@ -572,6 +571,7 @@ module.exports = {
   data: function data() {
     return {
       ENUMS: ENUMS,
+      selectedResult: {},
       files: [],
       deletedOldFiles: [],
       oldFiles: [],
@@ -634,6 +634,7 @@ module.exports = {
      * show result data
      */
     showResultData: function showResultData(payload) {
+      Vue.set(this, "selectedResult", payload);
       this.isModalActive = true;
     },
 
@@ -760,23 +761,23 @@ module.exports = {
         files: this.files,
         oldFiles: this.oldFiles,
         deletedOldFiles: this.deletedOldFiles,
-        program_id: this.data.program_id,
-        target: this.data.target,
-        same_effects_index: this.data.same_effects_index,
-        organ_moderator: this.data.organ_moderator,
-        project_moderator: this.data.project_moderator,
-        consoultant: this.data.consoultant,
-        supervisor: this.data.supervisor,
-        committee_leadership: this.data.committee_leadership,
-        coworker: this.data.coworker,
-        description: this.data.description,
-        intervention_review: this.data.intervention_review,
+        program_id: this.projectData.program_id,
+        target: this.projectData.target,
+        same_effects_index: this.projectData.same_effects_index,
+        organ_moderator: this.projectData.organ_moderator,
+        project_moderator: this.projectData.project_moderator,
+        consoultant: this.projectData.consoultant,
+        supervisor: this.projectData.supervisor,
+        committee_leadership: this.projectData.committee_leadership,
+        coworker: this.projectData.coworker,
+        description: this.projectData.description,
+        intervention_review: this.projectData.intervention_review,
         pervious_action_relation: this.data.pervious_action_relation,
-        target_corresponding: this.data.target_corresponding,
-        help_ipmrove_index: this.data.help_ipmrove_index,
-        final_product: this.data.final_product,
-        other_benefit: this.data.other_benefit,
-        result_apply: this.data.result_apply
+        target_corresponding: this.projectData.target_corresponding,
+        help_ipmrove_index: this.projectData.help_ipmrove_index,
+        final_product: this.projectData.final_product,
+        other_benefit: this.projectData.other_benefit,
+        result_apply: this.projectData.result_apply
       };
       this.showLoading();
       var url = this.editUrl.replace("$id$", projectData._id);
@@ -45910,7 +45911,7 @@ var render = function() {
                                 return _c(
                                   "option",
                                   { domProps: { value: program._id } },
-                                  [_vm._v(_vm._s(program.name))]
+                                  [_vm._v(_vm._s(program.title))]
                                 )
                               }),
                               0
@@ -46587,53 +46588,42 @@ var render = function() {
                                 _c("div", { staticClass: "inline-card-body" }, [
                                   _c(
                                     "div",
-                                    { staticClass: "inline-card-body" },
+                                    { staticClass: "inline-card-body-item" },
                                     [
                                       _c(
-                                        "div",
+                                        "a",
                                         {
-                                          staticClass: "inline-card-body-item"
+                                          on: {
+                                            click: function($event) {
+                                              $event.preventDefault()
+                                              return _vm.showResultData(result)
+                                            }
+                                          }
+                                        },
+                                        [_vm._v(_vm._s(result.result))]
+                                      ),
+                                      _c(
+                                        "b-modal",
+                                        {
+                                          staticClass: "departments-modal",
+                                          attrs: { active: _vm.isModalActive },
+                                          on: {
+                                            "update:active": function($event) {
+                                              _vm.isModalActive = $event
+                                            }
+                                          }
                                         },
                                         [
-                                          _c(
-                                            "a",
-                                            {
-                                              on: {
-                                                click: function($event) {
-                                                  return _vm.showResultData(
-                                                    result
-                                                  )
-                                                }
-                                              }
-                                            },
-                                            [_vm._v(_vm._s(result.result))]
-                                          ),
-                                          _c(
-                                            "b-modal",
-                                            {
-                                              staticClass: "departments-modal",
-                                              attrs: {
-                                                active: _vm.isModalActive
-                                              },
-                                              on: {
-                                                "update:active": function(
-                                                  $event
-                                                ) {
-                                                  _vm.isModalActive = $event
-                                                }
-                                              }
-                                            },
-                                            [
-                                              _c("list-result", {
-                                                attrs: { result: result }
-                                              })
-                                            ],
-                                            1
-                                          )
+                                          _c("list-result", {
+                                            attrs: {
+                                              result: _vm.selectedResult
+                                            }
+                                          })
                                         ],
                                         1
                                       )
-                                    ]
+                                    ],
+                                    1
                                   )
                                 ])
                               ]

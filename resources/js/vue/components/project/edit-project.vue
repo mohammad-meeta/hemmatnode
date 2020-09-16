@@ -148,11 +148,11 @@
                                 .inline-cards
                                     .inline-card.w-100(v-for='result in projectData.results')
                                         .inline-card-body
-                                            .inline-card-body
-                                                .inline-card-body-item
-                                                    a(@click.prevent="showResultData(result)") {{ result.result }}
-                                                    b-modal(:active.sync='isModalActive' class="departments-modal")
-                                                        list-result(ref="listResult" :result="result")
+                                            .inline-card-body-item
+                                                a(@click.prevent="showResultData(result)") {{ result.result }}
+                                                b-modal(:active.sync='isModalActive' class="departments-modal")
+                                                    list-result(:result="selectedResult")
+
 
 
                             //- b-collapse.card(animation='slide', v-for='(result, index) of projectData.results', :key='index', :open='isOpen == index', @open='isOpen = index')

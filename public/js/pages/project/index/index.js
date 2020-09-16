@@ -46594,56 +46594,42 @@ var render = function() {
                                 _c("div", { staticClass: "inline-card-body" }, [
                                   _c(
                                     "div",
-                                    { staticClass: "inline-card-body" },
+                                    { staticClass: "inline-card-body-item" },
                                     [
                                       _c(
-                                        "div",
+                                        "a",
                                         {
-                                          staticClass: "inline-card-body-item"
+                                          on: {
+                                            click: function($event) {
+                                              $event.preventDefault()
+                                              return _vm.showResultData(result)
+                                            }
+                                          }
+                                        },
+                                        [_vm._v(_vm._s(result.result))]
+                                      ),
+                                      _c(
+                                        "b-modal",
+                                        {
+                                          staticClass: "departments-modal",
+                                          attrs: { active: _vm.isModalActive },
+                                          on: {
+                                            "update:active": function($event) {
+                                              _vm.isModalActive = $event
+                                            }
+                                          }
                                         },
                                         [
-                                          _c(
-                                            "a",
-                                            {
-                                              on: {
-                                                click: function($event) {
-                                                  $event.preventDefault()
-                                                  return _vm.showResultData(
-                                                    result
-                                                  )
-                                                }
-                                              }
-                                            },
-                                            [_vm._v(_vm._s(result.result))]
-                                          ),
-                                          _c(
-                                            "b-modal",
-                                            {
-                                              staticClass: "departments-modal",
-                                              attrs: {
-                                                active: _vm.isModalActive
-                                              },
-                                              on: {
-                                                "update:active": function(
-                                                  $event
-                                                ) {
-                                                  _vm.isModalActive = $event
-                                                }
-                                              }
-                                            },
-                                            [
-                                              _c("list-result", {
-                                                ref: "listResult",
-                                                refInFor: true,
-                                                attrs: { result: result }
-                                              })
-                                            ],
-                                            1
-                                          )
+                                          _c("list-result", {
+                                            attrs: {
+                                              result: _vm.selectedResult
+                                            }
+                                          })
                                         ],
                                         1
                                       )
-                                    ]
+                                    ],
+                                    1
                                   )
                                 ])
                               ]

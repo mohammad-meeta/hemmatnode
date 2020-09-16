@@ -54,6 +54,11 @@ module.exports = {
         FileUpload,
         DatePicker: VuePersianDatetimePicker,
     },
+    methods: {
+        showModal() {
+            alert("OKOK");
+        },
+    },
 };
 </script>
 

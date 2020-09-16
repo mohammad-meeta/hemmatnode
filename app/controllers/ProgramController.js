@@ -60,6 +60,22 @@ Program.paginateProgram = async function paginateProgram(req, res, next) {
             .end();
     }
 };
+/**
+ * group date program
+ */
+Program.groupDate = async function groupDate(req, res, next) {
+    const group = req.params.group;
+
+    const data = await ProgramHelper.loadGroupDate(req, group);
+    const result = {
+        success: true,
+        data: data
+    };
+
+    res.status(200)
+        .send(result)
+        .end();
+};
 
 /**
  * show route
@@ -145,6 +161,7 @@ Program.store = async function store(req, res, next) {
 
     const data = {
         "title": req.body.title,
+        "date": req.body.date,
         "user_id": req.session.auth.userId,
         "is_active": req.body.is_active,
         "department_id": req.body.departmentId,
@@ -212,14 +229,15 @@ Program.update = async function update(req, res, next) {
     data = {
         "_id": req.body._id,
         "title": req.body.title,
+        "date": req.body.date,
         "user_id": req.session.auth.userId,
         "is_active": req.body.is_active,
-        "department_id": req.body.departmentId,
+        "department_id": req.body.department_id,
         "files": fileList
     };
 
     let result = await ProgramHelper.updateProgramData(data);
-    result2 = {
+    const result2 = {
         success: true,
         data: result,
     };

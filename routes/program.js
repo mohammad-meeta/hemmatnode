@@ -59,6 +59,13 @@ Router.get('/program/:program', [
 ])
     .as('program.show');
 
+Router.get('/program/group/date/:group', [
+    // checkSession,
+    Rule.canAsync('user.permision', 'program.group.date'),
+    'Program@groupDate'
+])
+    .as('program.group.date');
+
 Router.delete('/program/:program', [
     checkSession,
     Rule.canAsync('user.permision', 'program.destroy'),

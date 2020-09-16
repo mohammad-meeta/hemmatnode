@@ -150,9 +150,9 @@
                                         .inline-card-body
                                             .inline-card-body
                                                 .inline-card-body-item
-                                                    a(@click="showResultData(result)") {{ result.result }}
+                                                    a(@click.prevent="showResultData(result)") {{ result.result }}
                                                     b-modal(:active.sync='isModalActive' class="departments-modal")
-                                                        list-result(:result="result")
+                                                        list-result(ref="listResult" :result="result")
 
 
                             //- b-collapse.card(animation='slide', v-for='(result, index) of projectData.results', :key='index', :open='isOpen == index', @open='isOpen = index')
@@ -306,6 +306,7 @@ module.exports = {
          * show result data
          */
         showResultData(payload) {
+            this.$refs.listResult.showModal();
             this.isModalActive = true;
         },
         /**

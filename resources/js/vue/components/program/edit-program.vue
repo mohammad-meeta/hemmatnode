@@ -88,7 +88,9 @@ module.exports = {
         },
     },
 
-    created() {},
+    created() {
+        Vue.set(this.programData, "department_id", this.departmentId);
+    },
 
     mounted() {},
 
@@ -106,7 +108,7 @@ module.exports = {
                 _id: data._id,
                 title: data.title,
                 date: data.date,
-                department_id: data.department_id,
+                department_id: this.programData.department_id,
                 files: data.files,
                 isActive: data.is_active,
             };
@@ -186,9 +188,8 @@ module.exports = {
                 deletedOldFiles: this.deletedOldFiles,
             };
             this.showLoading();
-
             const url = this.editUrl.replace("$id$", programData._id);
-            AxiosHelper.send("post", url, programData, {
+            AxiosHelper.send("patch", url, programData, {
                 sendAsFormData: true,
                 filesArray: "files",
             })

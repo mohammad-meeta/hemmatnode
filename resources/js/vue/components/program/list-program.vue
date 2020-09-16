@@ -121,10 +121,12 @@ module.exports = {
         },
         editProgramList(payload) {
             const editedProgramData = {
-                _id: payload.data.data._id,
-                title: payload.data.data.title,
-                is_active: payload.data.data.is_active,
-                created_at: payload.data.data.created_at,
+                _id: payload.data.data[0]._id,
+                title: payload.data.data[0].title,
+                date: payload.data.data[0].date,
+                is_active: payload.data.data[0].is_active,
+                files: payload.data.data[0].files,
+                created_at: payload.data.data[0].created_at,
             };
 
             let foundIndex = this.programs.findIndex(

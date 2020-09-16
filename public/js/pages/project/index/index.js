@@ -634,6 +634,7 @@ module.exports = {
      * show result data
      */
     showResultData: function showResultData(payload) {
+      this.$refs.listResult.showModal();
       this.isModalActive = true;
     },
 
@@ -1040,6 +1041,11 @@ module.exports = {
   components: {
     FileUpload: FileUpload,
     DatePicker: VuePersianDatetimePicker
+  },
+  methods: {
+    showModal: function showModal() {
+      alert("OKOK");
+    }
   }
 };
 
@@ -46600,6 +46606,7 @@ var render = function() {
                                             {
                                               on: {
                                                 click: function($event) {
+                                                  $event.preventDefault()
                                                   return _vm.showResultData(
                                                     result
                                                   )
@@ -46625,6 +46632,8 @@ var render = function() {
                                             },
                                             [
                                               _c("list-result", {
+                                                ref: "listResult",
+                                                refInFor: true,
                                                 attrs: { result: result }
                                               })
                                             ],
@@ -50480,7 +50489,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/project/index/index.js */"./resources/js/pages/project/index/index.js");
+module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/pages/project/index/index.js */"./resources/js/pages/project/index/index.js");
 
 
 /***/ })

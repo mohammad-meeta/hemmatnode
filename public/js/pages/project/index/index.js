@@ -547,6 +547,7 @@ module.exports = {
 //
 //
 //
+//
 
 
 var AxiosHelper = __webpack_require__(/*! JS-HELPERS/axios-helper */ "./resources/js/helpers/axios-helper.js");
@@ -603,7 +604,8 @@ module.exports = {
       notificationMessage: null,
       notificationType: "is-info",
       showLoadingFlag: false,
-      isOpen: true
+      isOpen: true,
+      isModalActive: false
     };
   },
   props: {
@@ -632,7 +634,7 @@ module.exports = {
      * show result data
      */
     showResultData: function showResultData(payload) {
-      alert("OKOKOK");
+      this.isModalActive = true;
     },
 
     /**
@@ -46596,13 +46598,40 @@ var render = function() {
                                           _c(
                                             "a",
                                             {
-                                              attrs: {
-                                                href: _vm.showResultData(result)
+                                              on: {
+                                                click: function($event) {
+                                                  return _vm.showResultData(
+                                                    result
+                                                  )
+                                                }
                                               }
                                             },
                                             [_vm._v(_vm._s(result.result))]
+                                          ),
+                                          _c(
+                                            "b-modal",
+                                            {
+                                              staticClass: "departments-modal",
+                                              attrs: {
+                                                active: _vm.isModalActive
+                                              },
+                                              on: {
+                                                "update:active": function(
+                                                  $event
+                                                ) {
+                                                  _vm.isModalActive = $event
+                                                }
+                                              }
+                                            },
+                                            [
+                                              _c("list-result", {
+                                                attrs: { result: result }
+                                              })
+                                            ],
+                                            1
                                           )
-                                        ]
+                                        ],
+                                        1
                                       )
                                     ]
                                   )
@@ -50451,7 +50480,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/pages/project/index/index.js */"./resources/js/pages/project/index/index.js");
+module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/project/index/index.js */"./resources/js/pages/project/index/index.js");
 
 
 /***/ })

@@ -150,8 +150,9 @@
                                         .inline-card-body
                                             .inline-card-body
                                                 .inline-card-body-item
-                                                    a(:href="showResultData(result)") {{ result.result }}
-                                                        //- list-result(:result="result")
+                                                    a(@click="showResultData(result)") {{ result.result }}
+                                                    b-modal(:active.sync='isModalActive' class="departments-modal")
+                                                        list-result(:result="result")
 
 
                             //- b-collapse.card(animation='slide', v-for='(result, index) of projectData.results', :key='index', :open='isOpen == index', @open='isOpen = index')
@@ -276,6 +277,7 @@ module.exports = {
         notificationType: "is-info",
         showLoadingFlag: false,
         isOpen: true,
+        isModalActive: false,
     }),
 
     props: {
@@ -304,7 +306,7 @@ module.exports = {
          * show result data
          */
         showResultData(payload) {
-            alert("OKOKOK");
+            this.isModalActive = true;
         },
         /**
          * Load specific project

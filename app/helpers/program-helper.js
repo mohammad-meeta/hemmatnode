@@ -162,7 +162,6 @@ ProgramHelper.loadGroupDate = async function loadGroupDate(req, group) {
             }
         }
     ];
-    console.log(pipeline)
     let res = await Program.aggregate(pipeline);
     return res;
 };

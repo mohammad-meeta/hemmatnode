@@ -52,7 +52,7 @@ module.exports = {
     components: {
         Notification,
         DatePicker: VuePersianDatetimePicker,
-        FileUpload
+        FileUpload,
     },
 
     data: () => ({
@@ -63,7 +63,7 @@ module.exports = {
         programData: {
             title: null,
             date: null,
-            files: {},
+            files: [],
             deletedOldFiles: [],
             is_active: true,
         },
@@ -77,12 +77,17 @@ module.exports = {
             type: String,
             default: null,
         },
+        year: {
+            type: String,
+            default: null,
+        },
         registerUrl: {
             type: String,
             default: "",
         },
     },
     created() {
+        this.clearFormData();
         this.programData.departmentId = this.departmentId;
     },
 
@@ -158,20 +163,23 @@ module.exports = {
             Vue.set(this, "files", newUploaded);
             let deleteUploaded = deletedFiles.map((x) => x._id);
             Vue.set(this, "deletedOldFiles", deleteUploaded);
+            Vue.set(this.programData, "files", this.files);
+            Vue.set(this.programData, "deletedOldFiles", this.deletedOldFiles);
+
             let programData = this.programData;
 
             this.showLoading();
 
             const url = this.registerUrl;
 
-           AxiosHelper.send("post", url, programData, {
-               sendAsFormData: true,
+            AxiosHelper.send("post", url, programData, {
+                sendAsFormData: true,
                 filesArray: "files",
             })
                 .then((res) => {
                     const data = res.data;
-
                     if (data.success) {
+                        this.clearFormData();
                         this.$emit("on-register", {
                             sender: this,
                             data: {
@@ -186,6 +194,7 @@ module.exports = {
                     this.setNotification(data, "is-danger");
                 })
                 .then(() => this.hideLoading());
+            this.clearFormData();
         },
 
         /**
@@ -207,6 +216,23 @@ module.exports = {
             console.log(error);
             this.setNotification(error, "is-danger");
             return false;
+        },
+        /**
+         * clear form data
+         */
+        clearFormData() {
+            const programData = {
+                title: null,
+                date: null,
+                files: [],
+                deletedOldFiles: [],
+                is_active: true,
+            };
+
+            Vue.set(this, "programData", programData);
+            Vue.set(this, "files", []);
+            Vue.set(this, "deletedOldFiles", []);
+            Vue.set(this, "oldFiles", []);
         },
     },
 };

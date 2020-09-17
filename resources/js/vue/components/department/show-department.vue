@@ -23,6 +23,7 @@
                         aria-id="contentIdForA11y3"
                     )
                         .card-header(
+                            v-if="hasProject"
                             slot="trigger"
                             slot-scope="props"
                             role="button"
@@ -32,12 +33,9 @@
                                 | برنامه های {{ departmentData.title }}
                             a.card-header-icon
                                 b-icon(:icon="props.open ? 'menu-down' : 'menu-up'")
-                        .intro-card-block
-                            a(href="#")
-                                | برنامه های سال 1399
-                        .intro-card-block
-                            a(href="#")
-                                | برنامه های سال 1400
+                        .intro-card-block(v-for='year in yearsProject')
+                            a(:href="createLinkProject(year)")
+                                | برنامه های سال {{ year }}
 
                     .intro-card
                         .intro-card-head
@@ -55,6 +53,8 @@ module.exports = {
     name: "ShowDepartment",
 
     data: () => ({
+        hasProject: false,
+        yearsProject: [],
         ENUMS,
         departmentData: {
             _id: null,
@@ -69,34 +69,43 @@ module.exports = {
         accessContentLink: [],
         props: {},
 
-        showLoadingFlag: false
+        showLoadingFlag: false,
     }),
 
     props: {
         departmentId: {
             type: String,
-            default: null
+            default: null,
         },
 
         inviteSessionUrl: {
             type: String,
-            default: null
+            default: null,
         },
 
         memorandumUrl: {
             type: String,
-            default: null
+            default: null,
         },
 
         showLoadUrl: {
             type: String,
-            default: null
+            default: null,
         },
 
         showLoadAccessLinkUrl: {
             type: String,
-            default: null
-        }
+            default: null,
+        },
+
+        programGroupDateUrl: {
+            type: String,
+            default: null,
+        },
+        showPragramYearUrl: {
+            type: String,
+            default: null,
+        },
     },
 
     created() {
@@ -104,12 +113,20 @@ module.exports = {
     },
 
     computed: {
-        isLoadingMode: state => state.showLoadingFlag == true,
-        showNotification: state => state.notificationMessage != null,
-        hasContentProjects: state => state.accessContentLink.length > 0
+        isLoadingMode: (state) => state.showLoadingFlag == true,
+        showNotification: (state) => state.notificationMessage != null,
+        hasContentProjects: (state) => state.accessContentLink.length > 0,
     },
 
     methods: {
+        /**
+         * create link for project
+         */
+        createLinkProject(year) {
+            let url = "";
+            url = this.showPragramYearUrl.replace(/\$year\$/g, year);
+            return url;
+        },
         /**
          * Load specific department
          */
@@ -119,11 +136,11 @@ module.exports = {
             url = url.replace(/\$department\$/g, id);
 
             AxiosHelper.send("get", url)
-                .then(res => {
+                .then((res) => {
                     const data = res.data.data.data;
                     Vue.set(this, "departmentData", data || {});
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.error(err);
                     alert("Error");
                 });
@@ -153,7 +170,7 @@ module.exports = {
                 url = url.replace(/\$department\$/g, id);
 
                 AxiosHelper.send("get", url)
-                    .then(res => {
+                    .then((res) => {
                         if (res.data.success) {
                             const data = res.data.data || [];
                             if (data.length > 0) {
@@ -171,12 +188,42 @@ module.exports = {
                                     "accessContentLink",
                                     changeContentData
                                 );
+                                Vue.set(
+                                    this,
+                                    "hasProject",
+                                    data[0].project_flag
+                                );
+
+                                if (this.hasProject) {
+                                    AxiosHelper.send(
+                                        "get",
+                                        this.programGroupDateUrl
+                                    ).then((res) => {
+                                        if (res.data.success) {
+                                            const dataPrjGr =
+                                                res.data.data || [];
+                                            if (data.length > 0) {
+                                                const arrDataPrjGr = [];
+                                                dataPrjGr.forEach((element) => {
+                                                    arrDataPrjGr.push(
+                                                        element._id
+                                                    );
+                                                });
+                                                Vue.set(
+                                                    this,
+                                                    "yearsProject",
+                                                    arrDataPrjGr
+                                                );
+                                            }
+                                        }
+                                    });
+                                }
                             }
                         } else {
                             Vue.set(this, "accessLink", []);
                         }
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         console.error(err);
                         alert("Error");
                     });
@@ -200,7 +247,7 @@ module.exports = {
                 data[index].link = data[index].link.replace("#department#", id);
             }
             return data;
-        }
-    }
+        },
+    },
 };
 </script>

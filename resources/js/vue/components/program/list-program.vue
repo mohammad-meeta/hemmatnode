@@ -113,6 +113,8 @@ module.exports = {
             const newProgramData = {
                 _id: payload._id,
                 title: payload.title,
+                date: payload.date,
+                files: payload.files,
                 is_active: payload.is_active,
                 created_at: payload.created_at,
             };

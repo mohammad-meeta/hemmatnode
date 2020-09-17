@@ -17,7 +17,8 @@ Program.index = async function index(req, res, next) {
     res.render(PugView.getView(pageRoute), {
         req,
         pageRoute,
-        departmentId: req.params.department
+        departmentId: req.params.department,
+        year: req.params.year,
     });
 };
 /**
@@ -38,6 +39,47 @@ Program.paginateProgram = async function paginateProgram(req, res, next) {
         let count = data.data;
 
         data = await ProgramHelper.loadAllProgramData(req, dataPaginate, group);
+        result = {
+            success: true,
+            data: {
+                data: data,
+                count: count
+            }
+        };
+
+        res.status(200)
+            .send(result)
+            .end();
+
+    }
+    catch (err) {
+
+        Logger.error(err);
+
+        res.status(500)
+            .send(err)
+            .end();
+    }
+};
+/**
+ * paginate by year route
+ */
+Program.paginateProgramYear = async function paginateProgramYear(req, res, next) {
+    const group = req.params.group;
+    const year = req.params.year;
+
+    const dataPaginate = {
+        page: req.params.page,
+        pageSize: req.params.size || 10
+    };
+
+    try {
+        let result = {};
+
+        let data = await ProgramHelper.loadAllProgramCountYearData(group, year);
+        let count = data.data;
+
+        data = await ProgramHelper.loadAllProgramYearData(req, dataPaginate, group, year);
         result = {
             success: true,
             data: {

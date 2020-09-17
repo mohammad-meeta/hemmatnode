@@ -9,7 +9,10 @@ block content
         show-load-access-link-url=route("api.department.link.access", { departmentId: '$department$'}),
         invite-session-url=route("invitesession.index", { department: departmentId}),
         memorandum-url=route("memorandum.index", { department: departmentId}),
-        department-id=departmentId)
+        program-group-date-url=route("program.group.date", { group: departmentId}),
+        show-pragram-year-url=route("program.index", { department: departmentId, year:"$year$"}),
+        department-id=departmentId
+    )
 
 block scripts
     script(defer src=mix("js/pages/department/show/index.js"))

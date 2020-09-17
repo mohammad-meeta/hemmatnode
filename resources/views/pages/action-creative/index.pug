@@ -5,14 +5,14 @@ block title
 
 block content
     .container
-        creativeActions(
-            list-url=route('api.creativeAction', { page: '$page$', size: '$pageSize$', group: departmentId }),
-            register-url=route('creativeAction.store', { department: departmentId }),
-            edit-url=route('creativeAction.update', { id :'$id$'}),
+        actionCreatives(
+            list-url=route('api.actionCreative', { page: '$page$', size: '$pageSize$', group: departmentId }),
+            register-url=route('actionCreative.store', { department: departmentId }),
+            edit-url=route('actionCreative.update', { id :'$id$'}),
             department-id=departmentId,
         )
 
 block scripts
-    script(defer, src=mix('js/pages/creativeAction/index/index.js'))
+    script(defer, src=mix('js/pages/action-creative/index/index.js'))
 
 

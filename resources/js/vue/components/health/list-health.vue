@@ -52,8 +52,6 @@
 
 const ENUMS = require("JS-HELPERS/enums");
 
-const Paginate = require("vuejs-paginate");
-Vue.component("paginate", Paginate);
 module.exports = {
     props: {
         listUrl: {
@@ -98,7 +96,7 @@ module.exports = {
                 const resData = res.data;
                 Vue.set(this, "healths", resData.data.data);
                 Vue.set(this, "healthsCount", resData.data.count);
-
+                Vue.set(this.pagination, "total", resData.data.count);
                 this.paginator();
             });
         },

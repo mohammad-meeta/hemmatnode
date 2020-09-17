@@ -97,7 +97,6 @@ module.exports = {
                 Vue.set(this, "healths", resData.data.data);
                 Vue.set(this, "healthsCount", resData.data.count);
                 Vue.set(this.pagination, "total", resData.data.count);
-                this.paginator();
             });
         },
 

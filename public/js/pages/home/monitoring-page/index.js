@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 21);
+/******/ 	return __webpack_require__(__webpack_require__.s = 22);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -938,14 +938,14 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ 21:
+/***/ 22:
 /*!****************************************************************!*\
   !*** multi ./resources/js/pages/home/monitoring-page/index.js ***!
   \****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/home/monitoring-page/index.js */"./resources/js/pages/home/monitoring-page/index.js");
+module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/pages/home/monitoring-page/index.js */"./resources/js/pages/home/monitoring-page/index.js");
 
 
 /***/ })

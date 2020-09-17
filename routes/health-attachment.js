@@ -15,7 +15,7 @@ const {
     clearAuth
 } = use('core/helpers/auth-helper');
 
-Router.get('/health/:department/:year', [
+Router.get('/health/:department', [
     checkSession,
     Rule.canAsync('user.permision', 'health.index'),
     'Health@index'

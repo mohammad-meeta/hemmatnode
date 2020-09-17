@@ -144,6 +144,9 @@
 //
 //
 //
+//
+//
+//
 
 
 var Buefy = __webpack_require__(/*! buefy */ "./node_modules/buefy/dist/esm/index.js")["default"];
@@ -840,8 +843,6 @@ module.exports = {
 //
 //
 //
-//
-//
 
 
 var Buefy = __webpack_require__(/*! buefy */ "./node_modules/buefy/dist/esm/index.js")["default"];
@@ -852,6 +853,8 @@ module.exports = {
   name: "ShowDepartment",
   data: function data() {
     return {
+      hasProject: false,
+      yearsProject: [],
       ENUMS: ENUMS,
       departmentData: {
         _id: null,
@@ -887,6 +890,14 @@ module.exports = {
     showLoadAccessLinkUrl: {
       type: String,
       "default": null
+    },
+    programGroupDateUrl: {
+      type: String,
+      "default": null
+    },
+    showPragramYearUrl: {
+      type: String,
+      "default": null
     }
   },
   created: function created() {
@@ -904,6 +915,15 @@ module.exports = {
     }
   },
   methods: {
+    /**
+     * create link for project
+     */
+    createLinkProject: function createLinkProject(year) {
+      var url = "";
+      url = this.showPragramYearUrl.replace(/\$year\$/g, year);
+      return url;
+    },
+
     /**
      * Load specific department
      */
@@ -959,6 +979,23 @@ module.exports = {
               var changeContentData = _this2.replaceDepartmentTypeInUrl(data[0].access_content_link, id);
 
               Vue.set(_this2, "accessContentLink", changeContentData);
+              Vue.set(_this2, "hasProject", data[0].project_flag);
+
+              if (_this2.hasProject) {
+                AxiosHelper.send("get", _this2.programGroupDateUrl).then(function (res) {
+                  if (res.data.success) {
+                    var dataPrjGr = res.data.data || [];
+
+                    if (data.length > 0) {
+                      var arrDataPrjGr = [];
+                      dataPrjGr.forEach(function (element) {
+                        arrDataPrjGr.push(element._id);
+                      });
+                      Vue.set(_this2, "yearsProject", arrDataPrjGr);
+                    }
+                  }
+                });
+              }
             }
           } else {
             Vue.set(_this2, "accessLink", []);
@@ -23996,62 +24033,61 @@ var render = function() {
                           {
                             key: "trigger",
                             fn: function(props) {
-                              return _c(
-                                "div",
-                                {
-                                  staticClass: "card-header",
-                                  attrs: {
-                                    role: "button",
-                                    "aria-controls": "contentIdForA11y3"
-                                  }
-                                },
-                                [
-                                  _c(
-                                    "p",
-                                    { staticClass: "card-header-title" },
+                              return _vm.hasProject
+                                ? _c(
+                                    "div",
+                                    {
+                                      staticClass: "card-header",
+                                      attrs: {
+                                        role: "button",
+                                        "aria-controls": "contentIdForA11y3"
+                                      }
+                                    },
                                     [
-                                      _vm._v(
-                                        "برنامه های " +
-                                          _vm._s(_vm.departmentData.title)
+                                      _c(
+                                        "p",
+                                        { staticClass: "card-header-title" },
+                                        [
+                                          _vm._v(
+                                            "برنامه های " +
+                                              _vm._s(_vm.departmentData.title)
+                                          )
+                                        ]
+                                      ),
+                                      _c(
+                                        "a",
+                                        { staticClass: "card-header-icon" },
+                                        [
+                                          _c("b-icon", {
+                                            attrs: {
+                                              icon: props.open
+                                                ? "menu-down"
+                                                : "menu-up"
+                                            }
+                                          })
+                                        ],
+                                        1
                                       )
                                     ]
-                                  ),
-                                  _c(
-                                    "a",
-                                    { staticClass: "card-header-icon" },
-                                    [
-                                      _c("b-icon", {
-                                        attrs: {
-                                          icon: props.open
-                                            ? "menu-down"
-                                            : "menu-up"
-                                        }
-                                      })
-                                    ],
-                                    1
                                   )
-                                ]
-                              )
+                                : _vm._e()
                             }
                           }
                         ],
                         null,
-                        false,
-                        3598623100
+                        true
                       )
                     },
-                    [
-                      _c("div", { staticClass: "intro-card-block" }, [
-                        _c("a", { attrs: { href: "#" } }, [
-                          _vm._v("برنامه های سال 1399")
-                        ])
-                      ]),
-                      _c("div", { staticClass: "intro-card-block" }, [
-                        _c("a", { attrs: { href: "#" } }, [
-                          _vm._v("برنامه های سال 1400")
-                        ])
+                    _vm._l(_vm.yearsProject, function(year) {
+                      return _c("div", { staticClass: "intro-card-block" }, [
+                        _c(
+                          "a",
+                          { attrs: { href: _vm.createLinkProject(year) } },
+                          [_vm._v("برنامه های سال " + _vm._s(year))]
+                        )
                       ])
-                    ]
+                    }),
+                    0
                   ),
                   _c(
                     "div",

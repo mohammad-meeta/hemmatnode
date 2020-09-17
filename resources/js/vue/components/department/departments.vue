@@ -45,7 +45,10 @@
                 :departmentCategories-url="departmentCategoriesUrl")
 
             .column(v-show="!modeLoading && modeShow")
-                show-department(ref="departmentShow", @on-command="onCommand")
+                show-department(
+                    ref="departmentShow" 
+                    @on-command="onCommand"
+                )
 </template>
 
 <script>
@@ -73,7 +76,7 @@ module.exports = {
         RegisterDepartment,
         //EditDepartment,
         ShowDepartment,
-        Notification
+        Notification,
     },
 
     data: () => ({
@@ -81,55 +84,56 @@ module.exports = {
         formModeStack: [],
         departments: [],
         notificationMessage: null,
-        notificationType: "is-info"
+        notificationType: "is-info",
     }),
 
     props: {
         title: {
             type: String,
-            default: null
+            default: null,
         },
 
         listUrl: {
             type: String,
-            default: null
+            default: null,
         },
 
         registerUrl: {
             type: String,
-            default: null
+            default: null,
         },
 
         departmentCategoriesUrl: {
             type: String,
-            default: null
+            default: null,
         },
 
         departmentsUrl: {
             type: String,
-            default: null
+            default: null,
         },
 
         editUrl: {
             type: String,
-            default: null
+            default: null,
         },
 
         loadUrl: {
             type: String,
-            default: null
-        }
+            default: null,
+        },
     },
 
     computed: {
-        formMode: state => state.formModeStack[state.formModeStack.length - 1],
+        formMode: (state) =>
+            state.formModeStack[state.formModeStack.length - 1],
 
-        modeLoading: state => state.formMode == ENUMS.FORM_MODE.LOADING,
-        modeList: state => state.formMode == ENUMS.FORM_MODE.LIST,
-        modeRegister: state => state.formMode == ENUMS.FORM_MODE.REGISTER,
-        modeEdit: state => state.formMode == ENUMS.FORM_MODE.EDIT,
-        modeShow: state => state.formMode == ENUMS.FORM_MODE.SHOW,
-        showNotification: state => state.notificationMessage != null
+        modeLoading: (state) => state.formMode == ENUMS.FORM_MODE.LOADING,
+        modeList: (state) => state.formMode == ENUMS.FORM_MODE.LIST,
+        modeRegister: (state) => state.formMode == ENUMS.FORM_MODE.REGISTER,
+        modeEdit: (state) => state.formMode == ENUMS.FORM_MODE.EDIT,
+        modeShow: (state) => state.formMode == ENUMS.FORM_MODE.SHOW,
+        showNotification: (state) => state.notificationMessage != null,
     },
 
     created() {
@@ -220,7 +224,7 @@ module.exports = {
         changeFormMode(mode, options) {
             const opts = Object.assign(
                 {
-                    pop: false
+                    pop: false,
                 },
                 options
             );
@@ -250,7 +254,7 @@ module.exports = {
          */
         closeNotification() {
             this.setNotification(null);
-        }
-    }
+        },
+    },
 };
 </script>

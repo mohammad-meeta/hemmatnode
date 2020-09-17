@@ -15,7 +15,7 @@ const {
     clearAuth
 } = use('core/helpers/auth-helper');
 
-Router.get('/program/:department', [
+Router.get('/program/:department/:year', [
     checkSession,
     Rule.canAsync('user.permision', 'program.index'),
     'Program@index'
@@ -27,6 +27,12 @@ Router.get("/api/programs/:group/:page/:size?", [
     Rule.canAsync("user.permision", "api.program"),
     "Program@paginateProgram"
 ]).as("api.program");
+
+Router.get("/api/programs/:group/:year/:page/:size?", [
+    checkSession,
+    Rule.canAsync("user.permision", "api.program.year"),
+    "Program@paginateProgramYear"
+]).as("api.program.year");
 
 Router.get('/program/create', [
     checkSession,

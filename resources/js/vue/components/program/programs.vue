@@ -28,13 +28,14 @@
                 loading
 
             .column(v-show="!modeLoading && modeList")
-                list-program(ref="programList", @on-command="onCommand", :list-url="listUrl")
+                list-program(ref="programList", @on-command="onCommand", :list-url="showPragramYearUrl")
 
             .column(v-show="!modeLoading && modeRegister")
                 register-program(ref="programRegister", @on-command="onCommand",
                   @on-register="onProgramRegister"
                   :register-url="registerUrl",
-                  :department-id="departmentId"
+                  :department-id="departmentId",
+                  :year="year"
                   )
 
             .column(v-show="!modeLoading && modeEdit")
@@ -86,6 +87,10 @@ module.exports = {
             type: String,
             default: null,
         },
+        year: {
+            type: String,
+            default: null,
+        },
 
         title: {
             type: String,
@@ -93,6 +98,10 @@ module.exports = {
         },
 
         listUrl: {
+            type: String,
+            default: null,
+        },
+        showPragramYearUrl: {
             type: String,
             default: null,
         },
@@ -133,9 +142,22 @@ module.exports = {
          */
         onProgramRegister(payload) {
             //***update vue list****
-            this.$refs.programList.addToProgramList(payload.data.data);
+            console.log(payload.data.data.data[0]);
+            if (this.year == payload.data.data.data[0].date) {
+                this.$refs.programList.addToProgramList(
+                    payload.data.data.data[0]
+                );
+                this.setNotification(
+                    ".برنامه با موفقیت ذخیره شد",
+                    "is-success"
+                );
+            } else {
+                this.setNotification(
+                    ".برنامه با موفقیت ذخیره شد و در لیست سال های خود قابل مشاهده می باشد",
+                    "is-success"
+                );
+            }
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
-            this.setNotification(".برنامه با موفقیت ذخیره شد", "is-success");
         },
         /**
          * On Update

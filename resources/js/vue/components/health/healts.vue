@@ -5,8 +5,8 @@
                 span(v-html="notificationMessage")
             .container.page-header
                 .title
-                    h1(v-show="modeList") برنامه
-                    h1(v-show="modeRegister") ایجاد برنامه
+                    h1(v-show="modeList") پیوست سلامت
+                    h1(v-show="modeRegister") ایجاد پیوست سلامت
 
         .columns.exposed-form(v-show="!modeLoading")
             .column.is-one-fifth(v-show="modeList")
@@ -28,25 +28,25 @@
                 loading
 
             .column(v-show="!modeLoading && modeList")
-                list-program(ref="programList", @on-command="onCommand", :list-url="showPragramYearUrl")
+                list-healt(ref="healtList", @on-command="onCommand", :list-url="showHealtYearUrl")
 
             .column(v-show="!modeLoading && modeRegister")
-                register-program(ref="programRegister", @on-command="onCommand",
-                  @on-register="onProgramRegister"
+                register-healt(ref="healtRegister", @on-command="onCommand",
+                  @on-register="onHealtRegister"
                   :register-url="registerUrl",
                   :department-id="departmentId",
                   :year="year"
                   )
 
             .column(v-show="!modeLoading && modeEdit")
-                edit-program(ref="programEdit", @on-command="onCommand",
-                @on-update="onProgramUpdate"
+                edit-healt(ref="healtEdit", @on-command="onCommand",
+                @on-update="onHealtUpdate"
                 :edit-url="editUrl"
                 :department-id="departmentId"
                 )
 
             .column(v-show="!modeLoading && modeShow")
-                show-program(ref="programShow", @on-command="onCommand")
+                show-healt(ref="healtShow", @on-command="onCommand")
 </template>
 
 <script>
@@ -55,29 +55,29 @@
 const Routes = require("JS-CORE/routes");
 const ENUMS = require("JS-HELPERS/enums");
 const Loading = require("VUE-COMPONENTS/general/loading.vue").default;
-const RegisterProgram = require("VUE-COMPONENTS/program/register-program.vue")
+const RegisterHealt = require("VUE-COMPONENTS/healt/register-healt.vue")
     .default;
-const EditProgram = require("VUE-COMPONENTS/program/edit-program.vue").default;
-const ListProgram = require("VUE-COMPONENTS/program/list-program.vue").default;
-const ShowProgram = require("VUE-COMPONENTS/program/show-program.vue").default;
+const EditHealt = require("VUE-COMPONENTS/healt/edit-healt.vue").default;
+const ListHealt = require("VUE-COMPONENTS/healt/list-healt.vue").default;
+const ShowHealt = require("VUE-COMPONENTS/healt/show-healt.vue").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
 module.exports = {
-    name: "Programs",
+    name: "Healts",
 
     components: {
         Loading,
-        ListProgram,
-        RegisterProgram,
-        EditProgram,
-        ShowProgram,
+        ListHealt,
+        RegisterHealt,
+        EditHealt,
+        ShowHealt,
         Notification,
     },
 
     data: () => ({
         ENUMS,
         formModeStack: [],
-        programs: [],
+        healts: [],
         notificationMessage: null,
         notificationType: "is-info",
     }),
@@ -101,7 +101,7 @@ module.exports = {
             type: String,
             default: null,
         },
-        showPragramYearUrl: {
+        showHealtYearUrl: {
             type: String,
             default: null,
         },
@@ -138,22 +138,22 @@ module.exports = {
 
     methods: {
         /**
-         * On Register program
+         * On Register healt
          */
-        onProgramRegister(payload) {
+        onHealtRegister(payload) {
             //***update vue list****
             console.log(payload.data.data.data[0]);
             if (this.year == payload.data.data.data[0].date) {
-                this.$refs.programList.addToProgramList(
+                this.$refs.healtList.addToHealtList(
                     payload.data.data.data[0]
                 );
                 this.setNotification(
-                    ".برنامه با موفقیت ذخیره شد",
+                    ".پیوست سلامت با موفقیت ذخیره شد",
                     "is-success"
                 );
             } else {
                 this.setNotification(
-                    ".برنامه با موفقیت ذخیره شد و در لیست سال های خود قابل مشاهده می باشد",
+                    ".پیوست سلامت با موفقیت ذخیره شد و در لیست سال های خود قابل مشاهده می باشد",
                     "is-success"
                 );
             }
@@ -162,8 +162,8 @@ module.exports = {
         /**
          * On Update
          */
-        onProgramUpdate(payload) {
-            this.$refs.programList.editProgramList(payload);
+        onHealtUpdate(payload) {
+            this.$refs.healtList.editHealtList(payload);
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
 
             this.setNotification(".جلسه با موفقیت ویرایش شد", "is-success");
@@ -185,12 +185,12 @@ module.exports = {
 
                 case ENUMS.COMMAND.REGISTER:
                     /* TODO: REGISTER NEW  */
-                    console.log("REGISTER NEW Program", arg);
+                    console.log("REGISTER NEW Healt", arg);
                     break;
 
                 case ENUMS.COMMAND.EDIT:
                     /* TODO: Edit InviteSession */
-                    this.$refs.programEdit.loadProgramData(data);
+                    this.$refs.healtEdit.loadHealtData(data);
                     this.changeFormMode(ENUMS.FORM_MODE.EDIT);
                     break;
 
@@ -199,7 +199,7 @@ module.exports = {
                     break;
 
                 case ENUMS.COMMAND.SHOW:
-                    this.$refs.programShow.loadProgramData(data);
+                    this.$refs.healtShow.loadHealtData(data);
                     this.changeFormMode(ENUMS.FORM_MODE.SHOW);
                     break;
             }
@@ -219,7 +219,7 @@ module.exports = {
          */
         init() {
             this.changeFormMode(ENUMS.FORM_MODE.LOADING);
-            this.$refs.programList.loadPrograms(1);
+            this.$refs.healtList.loadHealts(1);
         },
 
         /**

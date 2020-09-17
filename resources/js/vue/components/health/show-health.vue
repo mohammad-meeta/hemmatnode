@@ -6,14 +6,14 @@
             .column.is-full(v-show="! isLoadingMode")
 
                 .info-card
-                    .info-card-title {{ programData.title }}
+                    .info-card-title {{ healthData.title }}
                     .info-card-details
                         .info-card-item
                             .info-card-label نام پیوست سلامت:
-                            .info-card-value {{ programData.title }}
+                            .info-card-value {{ healthData.title }}
                         .info-card-item
                             .info-card-label پیوست سلامت:
-                            .info-card-value {{ programData.program_id }}
+                            .info-card-value {{ healthData.health_id }}
 </template>
 <script>
 "use strict";
@@ -21,15 +21,15 @@
 const ENUMS = require("JS-HELPERS/enums");
 
 module.exports = {
-    name: "ShowProgram",
+    name: "ShowHealth",
 
     data: () => ({
         ENUMS,
-        programs: [],
-        programData: {
+        healths: [],
+        healthData: {
             _id: null,
             title: null,
-            program_id: null,
+            health_id: null,
             executor: null,
             date: null,
             files: {},
@@ -38,7 +38,7 @@ module.exports = {
         showLoadingFlag: false,
     }),
     props: {
-        programsUrl: {
+        healthsUrl: {
             type: String,
             default: "",
         },
@@ -50,20 +50,20 @@ module.exports = {
 
     methods: {
         /**
-         * Load specific program
+         * Load specific health
          */
-        loadProgramData(data) {
+        loadHealthData(data) {
             const temp = {
                 _id: data._id,
                 title: data.title,
-                program_id: data.program_id,
+                health_id: data.health_id,
                 date: data.date,
                 executor: data.executor,
                 files: {},
                 is_active: data.is_active,
             };
             console.log(temp);
-            Vue.set(this, "programData", temp);
+            Vue.set(this, "healthData", temp);
         },
 
         /**

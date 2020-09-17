@@ -120,6 +120,7 @@ module.exports = {
         },
 
         editInProjectList(payload) {
+            console.log(payload);
             const editedProjectData = {
                 _id: payload._id,
                 title: payload.title,
@@ -131,8 +132,12 @@ module.exports = {
                 x => x._id == editedProjectData._id
             );
             this.projects[foundIndex].title = editedProjectData.title;
-            this.projects[foundIndex].is_active =
-                editedProjectData.is_active;
+            if(editedProjectData.is_active == "false") {
+                this.inviteSessions[foundIndex].is_active = false;
+            }
+            else {
+                this.inviteSessions[foundIndex].is_active = true;
+            }
         }
     }
 };

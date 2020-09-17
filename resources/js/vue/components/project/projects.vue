@@ -136,7 +136,7 @@ module.exports = {
          * On Update project
          */
         onProjectUpdate(payload) {
-            this.$refs.projectList.editInProjectList(payload.data);
+            this.$refs.projectList.editInProjectList(payload);
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
 
             this.setNotification(".پروژه با موفقیت ویرایش شد", "is-success");

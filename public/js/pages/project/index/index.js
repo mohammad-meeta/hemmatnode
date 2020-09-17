@@ -544,10 +544,6 @@ module.exports = {
 //
 //
 //
-//
-//
-//
-//
 
 
 var AxiosHelper = __webpack_require__(/*! JS-HELPERS/axios-helper */ "./resources/js/helpers/axios-helper.js");
@@ -611,6 +607,10 @@ module.exports = {
   },
   props: {
     registerUrl: {
+      type: String,
+      "default": ""
+    },
+    editUrl: {
       type: String,
       "default": ""
     },
@@ -773,7 +773,7 @@ module.exports = {
         coworker: this.projectData.coworker,
         description: this.projectData.description,
         intervention_review: this.projectData.intervention_review,
-        pervious_action_relation: this.data.pervious_action_relation,
+        pervious_action_relation: this.projectData.pervious_action_relation,
         target_corresponding: this.projectData.target_corresponding,
         help_ipmrove_index: this.projectData.help_ipmrove_index,
         final_product: this.projectData.final_product,
@@ -959,6 +959,7 @@ module.exports = {
       this.projects.unshift(newProjectData);
     },
     editInProjectList: function editInProjectList(payload) {
+      console.log(payload);
       var editedProjectData = {
         _id: payload._id,
         title: payload.title,
@@ -969,7 +970,12 @@ module.exports = {
         return x._id == editedProjectData._id;
       });
       this.projects[foundIndex].title = editedProjectData.title;
-      this.projects[foundIndex].is_active = editedProjectData.is_active;
+
+      if (editedProjectData.is_active == "false") {
+        this.inviteSessions[foundIndex].is_active = false;
+      } else {
+        this.inviteSessions[foundIndex].is_active = true;
+      }
     }
   }
 };
@@ -1042,11 +1048,6 @@ module.exports = {
   components: {
     FileUpload: FileUpload,
     DatePicker: VuePersianDatetimePicker
-  },
-  methods: {
-    showModal: function showModal() {
-      alert("OKOK");
-    }
   }
 };
 
@@ -1207,7 +1208,7 @@ module.exports = {
      * On Update project
      */
     onProjectUpdate: function onProjectUpdate(payload) {
-      this.$refs.projectList.editInProjectList(payload.data);
+      this.$refs.projectList.editInProjectList(payload);
       this.changeFormMode(ENUMS.FORM_MODE.LIST);
       this.setNotification(".پروژه با موفقیت ویرایش شد", "is-success");
     },
@@ -46591,47 +46592,43 @@ var render = function() {
                               "div",
                               { staticClass: "inline-card w-100" },
                               [
-                                _c("div", { staticClass: "inline-card-body" }, [
-                                  _c(
-                                    "div",
-                                    { staticClass: "inline-card-body-item" },
-                                    [
-                                      _c(
-                                        "a",
-                                        {
-                                          on: {
-                                            click: function($event) {
-                                              $event.preventDefault()
-                                              return _vm.showResultData(result)
-                                            }
+                                _c(
+                                  "div",
+                                  { staticClass: "inline-card-body-item" },
+                                  [
+                                    _c(
+                                      "a",
+                                      {
+                                        on: {
+                                          click: function($event) {
+                                            $event.preventDefault()
+                                            return _vm.showResultData(result)
                                           }
-                                        },
-                                        [_vm._v(_vm._s(result.result))]
-                                      ),
-                                      _c(
-                                        "b-modal",
-                                        {
-                                          staticClass: "departments-modal",
-                                          attrs: { active: _vm.isModalActive },
-                                          on: {
-                                            "update:active": function($event) {
-                                              _vm.isModalActive = $event
-                                            }
+                                        }
+                                      },
+                                      [_vm._v(_vm._s(result.result))]
+                                    ),
+                                    _c(
+                                      "b-modal",
+                                      {
+                                        staticClass: "departments-modal",
+                                        attrs: { active: _vm.isModalActive },
+                                        on: {
+                                          "update:active": function($event) {
+                                            _vm.isModalActive = $event
                                           }
-                                        },
-                                        [
-                                          _c("list-result", {
-                                            attrs: {
-                                              result: _vm.selectedResult
-                                            }
-                                          })
-                                        ],
-                                        1
-                                      )
-                                    ],
-                                    1
-                                  )
-                                ])
+                                        }
+                                      },
+                                      [
+                                        _c("list-result", {
+                                          attrs: { result: _vm.selectedResult }
+                                        })
+                                      ],
+                                      1
+                                    )
+                                  ],
+                                  1
+                                )
                               ]
                             )
                           }),

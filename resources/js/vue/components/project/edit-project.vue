@@ -141,19 +141,15 @@
                             | برآمد های پروژه
                         .card-header-icon
                             b-icon(:icon="props.open ? 'menu-down' : 'menu-up'")
-
                     .panel-block
                         .panel-full
                             .container.main-content
                                 .inline-cards
                                     .inline-card.w-100(v-for='result in projectData.results')
-                                        .inline-card-body
-                                            .inline-card-body-item
-                                                a(@click.prevent="showResultData(result)") {{ result.result }}
-                                                b-modal(:active.sync='isModalActive' class="departments-modal")
-                                                    list-result(:result="selectedResult")
-
-
+                                        .inline-card-body-item
+                                            a(@click.prevent="showResultData(result)") {{ result.result }}
+                                            b-modal(:active.sync='isModalActive' class="departments-modal")
+                                                list-result(:result="selectedResult")
 
                             //- b-collapse.card(animation='slide', v-for='(result, index) of projectData.results', :key='index', :open='isOpen == index', @open='isOpen = index')
                             //-     .card-header(slot='trigger', slot-scope='props', role='button')
@@ -285,6 +281,11 @@ module.exports = {
         registerUrl: {
             type: String,
             default: "",
+        },
+
+        editUrl: {
+            type: String,
+            default: ""
         },
 
         programsUrl: {
@@ -433,7 +434,7 @@ module.exports = {
                 coworker: this.projectData.coworker,
                 description: this.projectData.description,
                 intervention_review: this.projectData.intervention_review,
-                pervious_action_relation: this.data.pervious_action_relation,
+                pervious_action_relation: this.projectData.pervious_action_relation,
                 target_corresponding: this.projectData.target_corresponding,
                 help_ipmrove_index: this.projectData.help_ipmrove_index,
                 final_product: this.projectData.final_product,

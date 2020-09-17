@@ -1596,7 +1596,7 @@ module.exports = {
      * clear form data
      */
     clearFormData: function clearFormData() {
-      this.inviteSessionData = {
+      this.memorandumData = {
         title: null,
         body: null,
         project: [],
@@ -49536,7 +49536,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/sources/hemmatnode/resources/js/pages/memorandum/index/index.js */"./resources/js/pages/memorandum/index/index.js");
+module.exports = __webpack_require__(/*! /home/mohammad/Documents/Projects/olompezeshki/hemmatnode/resources/js/pages/memorandum/index/index.js */"./resources/js/pages/memorandum/index/index.js");
 
 
 /***/ })

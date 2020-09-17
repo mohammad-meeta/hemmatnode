@@ -7,56 +7,32 @@
             h1 در حال بارگذاری
         .form-small(v-show="! isLoadingMode")
             .field
-                label.label
+                label.label نام گزارش
                 .control
-                    .select.is-primary
-                        select(v-model="memorandumData.departments")
-                            option(v-for='(department, departmentIndex) in departments',
-                                :value="department._id") {{ department.title }}
-            .field
-                label.label عنوان
-                .control
-                    input.input(type='text', placeholder='عنوان', v-model='memorandumData.title' required)
-
+                    input.input(type='text', placeholder='نام گزارش', autofocus, v-model='healtData.title' required)
             .field
                 label.label سال
                 .control
                     date-picker(
-                        v-model='memorandumData.date'
+                        v-model='healtData.date'
                         type="year"
                         display-format="jYYYY"
                         required
                     )
-
             .field
-                label.label مقدمه و اهداف تفاهم نامه
+                label.label مجری
                 .control
-                    textarea.textarea(placeholder='مقدمه', v-model='memorandumData.body')
-
-            .field
-                .panel
-                    .panel-heading
-                        | پروژه ها
-                    .panel-block
-                        multi-text-project(v-model='memorandumData.project')
-
-            .field
-                label.label شرایط اجرای تفاهم نامه
-                .control
-                    textarea.textarea(placeholder='شرایط اجرای تفاهم نامه', v-model='memorandumData.conditions')
-
+                    input.input(type='text', placeholder='مجری', autofocus, v-model='healtData.executor' required)
             .field
                 .panel
                     .panel-heading
                         | فایل های ضمیمه
                     .panel-block
                         file-upload(ref="fileUpload", :old-files="oldFiles")
-
             .field
                 label.checkbox
-                    input(type='checkbox', v-model="memorandumData.is_active")
+                    input(type='checkbox', v-model="healtData.is_active")
                     |   فعال
-
             .field.is-grouped
                 .control(v-show="! isLoadingMode")
                     a.button.is-link.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
@@ -69,83 +45,72 @@
 
 const AxiosHelper = require("JS-HELPERS/axios-helper");
 const ENUMS = require("JS-HELPERS/enums");
-const MemorandumValidator = require("JS-VALIDATORS/memorandum-register-validator");
-const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
+const HealtValidator = require("JS-VALIDATORS/healt-register-validator");
 const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
-const MultiTextProject = require("VUE-COMPONENTS/memorandum/multi-text-project.vue").default;
+const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 
 module.exports = {
-    name: "RegisterMemorandum",
+    name: "RegisterHealt",
 
     components: {
         Notification,
         DatePicker: VuePersianDatetimePicker,
-        MultiTextProject,
-        FileUpload
+        FileUpload,
     },
 
     data: () => ({
         ENUMS,
-        departments: [],
-        users: [],
         files: [],
         deletedOldFiles: [],
         oldFiles: [],
-        memorandumData: {
+        healtData: {
             title: null,
-            body: null,
-            project: [],
-            conditions: null,
             date: null,
-            department_id: null,
-            files: {},
+            executor: null,
+            files: [],
             deletedOldFiles: [],
-            is_active: false
+            is_active: true,
         },
-
         notificationMessage: null,
         notificationType: "is-info",
-        showLoadingFlag: false
+        showLoadingFlag: false,
     }),
 
     props: {
         departmentId: {
             type: String,
-            default: null
+            default: null,
         },
-
+        year: {
+            type: String,
+            default: null,
+        },
         registerUrl: {
             type: String,
-            default: ""
+            default: "",
         },
-
-        departmentsUrl: {
-            type: String,
-            default: ""
-        },
-
-        usersUrl: {
-            type: String,
-            default: ""
-        }
     },
-
     created() {
-        this.loadDepartments();
-        this.loadUsers();
-    },
-
-    mounted() {
-        Vue.set(this.memorandumData, "departments", this.departmentId);
+        this.clearFormData();
+        this.healtData.departmentId = this.departmentId;
     },
 
     computed: {
-        isLoadingMode: state => state.showLoadingFlag == true,
-        showNotification: state => state.notificationMessage != null
+        isLoadingMode: (state) => state.showLoadingFlag == true,
+        showNotification: (state) => state.notificationMessage != null,
     },
 
     methods: {
+        /**
+         * Set attachments
+         */
+        setAttachment(sender) {
+            const files = sender.target.files;
+
+            Vue.set(this, "files", files);
+        },
+
         /**
          * On Command
          *
@@ -154,33 +119,9 @@ module.exports = {
         commandClick(arg) {
             switch (arg) {
                 case ENUMS.COMMAND.SAVE:
-                    this.registerMemorandum();
+                    this.registerHealt();
                     break;
             }
-        },
-
-        /**
-         * load all departments for select departments in form
-         */
-        loadDepartments() {
-            const url = this.departmentsUrl;
-            AxiosHelper.send("get", url, "").then(res => {
-                const resData = res.data;
-                const datas = resData.data.data;
-                Vue.set(this, "departments", datas);
-            });
-        },
-
-        /**
-         * load all users for select user in form
-         */
-        loadUsers() {
-            const url = this.usersUrl;
-            AxiosHelper.send("get", url, "").then(res => {
-                const resData = res.data;
-                const datas = resData.data.data;
-                Vue.set(this, "users", datas);
-            });
         },
 
         /**
@@ -213,42 +154,37 @@ module.exports = {
         },
 
         /**
-         * Register new memorandum
+         * Register new healt
          */
-        registerMemorandum() {
+        registerHealt() {
             const isValid = this.validate();
+
             if (!isValid) {
                 return;
             }
-
             const deletedFiles = this.$refs.fileUpload.getDeletedFiles();
             const newFiles = this.$refs.fileUpload.getNewFiles();
             let newUploaded = newFiles.map((x) => x.file);
             Vue.set(this, "files", newUploaded);
             let deleteUploaded = deletedFiles.map((x) => x._id);
             Vue.set(this, "deletedOldFiles", deleteUploaded);
-            let memorandumData = {
-                title: this.memorandumData.title,
-                project: JSON.stringify(this.memorandumData.project),
-                body: this.memorandumData.body,
-                conditions: this.memorandumData.conditions,
-                date: this.memorandumData.date,
-                department_id: this.memorandumData.departments,
-                is_active: this.memorandumData.is_active,
-                files: this.files,
-                deletedOldFiles: this.deletedOldFiles,
-            };
+            Vue.set(this.healtData, "files", this.files);
+            Vue.set(this.healtData, "deletedOldFiles", this.deletedOldFiles);
+
+            let healtData = this.healtData;
 
             this.showLoading();
+
             const url = this.registerUrl;
-           AxiosHelper.send("post", url, memorandumData, {
-               sendAsFormData: true,
+
+            AxiosHelper.send("post", url, healtData, {
+                sendAsFormData: true,
                 filesArray: "files",
             })
                 .then((res) => {
                     const data = res.data;
-
                     if (data.success) {
+                        this.clearFormData();
                         this.$emit("on-register", {
                             sender: this,
                             data: {
@@ -263,14 +199,14 @@ module.exports = {
                     this.setNotification(data, "is-danger");
                 })
                 .then(() => this.hideLoading());
-                this.clearFormData();
+            this.clearFormData();
         },
 
         /**
-         * Validate new memorandum data
+         * Validate new healt data
          */
         validate() {
-            const result = MemorandumValidator.validate(this.memorandumData);
+            const result = HealtValidator.validate(this.healtData);
 
             if (result.passes) {
                 this.closeNotification();
@@ -279,35 +215,36 @@ module.exports = {
 
             const errors = result.validator.errors.all();
             const error = Object.keys(errors)
-                .map(key => errors[key].join("\n"))
+                .map((key) => errors[key].join("\n"))
                 .join("</br>");
 
             console.log(error);
             this.setNotification(error, "is-danger");
             return false;
         },
-
         /**
          * clear form data
          */
         clearFormData() {
-            this.memorandumData = {
+            const healtData = {
                 title: null,
-                body: null,
-                project: [],
-                conditions: null,
+                executor: null,
                 date: null,
                 files: [],
                 deletedOldFiles: [],
-                is_active: false
+                is_active: true,
             };
+
+            Vue.set(this, "healtData", healtData);
+            Vue.set(this, "files", []);
+            Vue.set(this, "deletedOldFiles", []);
+            Vue.set(this, "oldFiles", []);
             this.files = [];
             this.deletedOldFiles = [];
             this.oldFiles = [];
-        }
-    }
+        },
+    },
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

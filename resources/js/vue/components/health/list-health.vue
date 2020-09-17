@@ -1,7 +1,7 @@
 <template lang="pug">
 .container-child
-    h1(v-if="! hasProgram") هیچ برنامه ای ایجاد نشده
-    table.table.is-striped.is-hoverable.is-fullwidth(v-if="hasProgram")
+    h1(v-if="! hasHealt") هیچ برنامه ای ایجاد نشده
+    table.table.is-striped.is-hoverable.is-fullwidth(v-if="hasHealt")
         thead
             tr
                 th عنوان
@@ -9,19 +9,19 @@
                 th تاریخ ایجاد
                 th عملیات
         tbody
-            tr(v-for='program in programs', :key='program.id')
-                td {{ program.title }}
-                td {{ program.is_active }}
-                td {{ toPersianDate(program.created_at) }}
+            tr(v-for='healt in healts', :key='healt.id')
+                td {{ healt.title }}
+                td {{ healt.is_active }}
+                td {{ toPersianDate(healt.created_at) }}
                 td.function-links
-                    a.button.is-warning.is-rounded.mt-2(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SHOW, program)")
+                    a.button.is-warning.is-rounded.mt-2(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SHOW, healt)")
                         span.icon.is-small
                             i.material-icons.icon swap_horizontal_circle
                         span مشاهده
 
                     a.button.is-primary.is-rounded(
                         href="#",
-                        @click.prevent="commandClick(ENUMS.COMMAND.EDIT, program)"
+                        @click.prevent="commandClick(ENUMS.COMMAND.EDIT, healt)"
                     )
                         span.icon.is-small
                             i.material-icons.icon check_circle
@@ -77,27 +77,27 @@ module.exports = {
             prevIcon: "chevron-left",
             nextIcon: "chevron-right",
         },
-        programs: [],
-        programsCount: 0,
+        healts: [],
+        healtsCount: 0,
         pageCount: 0,
     }),
 
     computed: {
-        hasProgram: (state) => (state.programs || []).length,
+        hasHealt: (state) => (state.healts || []).length,
     },
 
     methods: {
         /**
-         * Load programs
+         * Load healts
          */
-        loadPrograms(pageId) {
+        loadHealts(pageId) {
             let url = this.listUrl.replace("$page$", pageId);
             url = url.replace("$pageSize$", 50);
 
             AxiosHelper.send("get", url, "").then((res) => {
                 const resData = res.data;
-                Vue.set(this, "programs", resData.data.data);
-                Vue.set(this, "programsCount", resData.data.count);
+                Vue.set(this, "healts", resData.data.data);
+                Vue.set(this, "healtsCount", resData.data.count);
 
                 this.paginator();
             });
@@ -127,34 +127,36 @@ module.exports = {
         },
 
         /**
-         * add new Program data to list data
+         * add new Healt data to list data
          */
-        addToProgramList(payload) {
-            const newProgramData = {
+        addToHealtList(payload) {
+            const newHealtData = {
                 _id: payload._id,
                 title: payload.title,
                 date: payload.date,
+                executor: payload.executor,
                 files: payload.files,
                 is_active: payload.is_active,
                 created_at: payload.created_at,
             };
 
-            this.programs.unshift(newProgramData);
+            this.healts.unshift(newHealtData);
         },
-        editProgramList(payload) {
-            const editedProgramData = {
+        editHealtList(payload) {
+            const editedHealtData = {
                 _id: payload.data.data[0]._id,
                 title: payload.data.data[0].title,
+                executor: payload.data.data[0].executor,
                 date: payload.data.data[0].date,
                 is_active: payload.data.data[0].is_active,
                 files: payload.data.data[0].files,
                 created_at: payload.data.data[0].created_at,
             };
 
-            let foundIndex = this.programs.findIndex(
-                (x) => x._id == editedProgramData._id
+            let foundIndex = this.healts.findIndex(
+                (x) => x._id == editedHealtData._id
             );
-            Vue.set(this.programs, foundIndex, editedProgramData);
+            Vue.set(this.healts, foundIndex, editedHealtData);
         },
     },
 };

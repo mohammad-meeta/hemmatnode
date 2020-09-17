@@ -1,0 +1,20 @@
+extends ../../layout/app.pug
+
+block title
+    | برنامه
+
+block content
+    .container
+        healths(
+            list-url=route('api.health', { page: '$page$', size: '$pageSize$', group: departmentId }),
+            show-pragram-year-url=route("api.health.year", { group: departmentId, year:year,page:'$page$',size:'$pageSize$'}),
+            register-url=route('health.store', { department: departmentId }),
+            edit-url=route('health.update', { id :'$id$'}),
+            department-id=departmentId,
+            year=year
+        )
+
+block scripts
+    script(defer, src=mix('js/pages/health/index/index.js'))
+
+

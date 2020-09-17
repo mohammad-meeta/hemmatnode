@@ -1,0 +1,18 @@
+extends ../../layout/app.pug
+
+block title
+    | برنامه
+
+block content
+    .container
+        creativeActions(
+            list-url=route('api.creativeAction', { page: '$page$', size: '$pageSize$', group: departmentId }),
+            register-url=route('creativeAction.store', { department: departmentId }),
+            edit-url=route('creativeAction.update', { id :'$id$'}),
+            department-id=departmentId,
+        )
+
+block scripts
+    script(defer, src=mix('js/pages/creativeAction/index/index.js'))
+
+

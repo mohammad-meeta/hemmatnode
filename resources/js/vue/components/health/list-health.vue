@@ -1,7 +1,7 @@
 <template lang="pug">
 .container-child
-    h1(v-if="! hasHealt") هیچ برنامه ای ایجاد نشده
-    table.table.is-striped.is-hoverable.is-fullwidth(v-if="hasHealt")
+    h1(v-if="! hasHealth") هیچ برنامه ای ایجاد نشده
+    table.table.is-striped.is-hoverable.is-fullwidth(v-if="hasHealth")
         thead
             tr
                 th عنوان
@@ -9,19 +9,19 @@
                 th تاریخ ایجاد
                 th عملیات
         tbody
-            tr(v-for='healt in healts', :key='healt.id')
-                td {{ healt.title }}
-                td {{ healt.is_active }}
-                td {{ toPersianDate(healt.created_at) }}
+            tr(v-for='health in healths', :key='health.id')
+                td {{ health.title }}
+                td {{ health.is_active }}
+                td {{ toPersianDate(health.created_at) }}
                 td.function-links
-                    a.button.is-warning.is-rounded.mt-2(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SHOW, healt)")
+                    a.button.is-warning.is-rounded.mt-2(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SHOW, health)")
                         span.icon.is-small
                             i.material-icons.icon swap_horizontal_circle
                         span مشاهده
 
                     a.button.is-primary.is-rounded(
                         href="#",
-                        @click.prevent="commandClick(ENUMS.COMMAND.EDIT, healt)"
+                        @click.prevent="commandClick(ENUMS.COMMAND.EDIT, health)"
                     )
                         span.icon.is-small
                             i.material-icons.icon check_circle
@@ -77,27 +77,27 @@ module.exports = {
             prevIcon: "chevron-left",
             nextIcon: "chevron-right",
         },
-        healts: [],
-        healtsCount: 0,
+        healths: [],
+        healthsCount: 0,
         pageCount: 0,
     }),
 
     computed: {
-        hasHealt: (state) => (state.healts || []).length,
+        hasHealth: (state) => (state.healths || []).length,
     },
 
     methods: {
         /**
-         * Load healts
+         * Load healths
          */
-        loadHealts(pageId) {
+        loadHealths(pageId) {
             let url = this.listUrl.replace("$page$", pageId);
             url = url.replace("$pageSize$", 50);
 
             AxiosHelper.send("get", url, "").then((res) => {
                 const resData = res.data;
-                Vue.set(this, "healts", resData.data.data);
-                Vue.set(this, "healtsCount", resData.data.count);
+                Vue.set(this, "healths", resData.data.data);
+                Vue.set(this, "healthsCount", resData.data.count);
 
                 this.paginator();
             });
@@ -127,10 +127,10 @@ module.exports = {
         },
 
         /**
-         * add new Healt data to list data
+         * add new Health data to list data
          */
-        addToHealtList(payload) {
-            const newHealtData = {
+        addToHealthList(payload) {
+            const newHealthData = {
                 _id: payload._id,
                 title: payload.title,
                 date: payload.date,
@@ -140,10 +140,10 @@ module.exports = {
                 created_at: payload.created_at,
             };
 
-            this.healts.unshift(newHealtData);
+            this.healths.unshift(newHealthData);
         },
-        editHealtList(payload) {
-            const editedHealtData = {
+        editHealthList(payload) {
+            const editedHealthData = {
                 _id: payload.data.data[0]._id,
                 title: payload.data.data[0].title,
                 executor: payload.data.data[0].executor,
@@ -153,10 +153,10 @@ module.exports = {
                 created_at: payload.data.data[0].created_at,
             };
 
-            let foundIndex = this.healts.findIndex(
-                (x) => x._id == editedHealtData._id
+            let foundIndex = this.healths.findIndex(
+                (x) => x._id == editedHealthData._id
             );
-            Vue.set(this.healts, foundIndex, editedHealtData);
+            Vue.set(this.healths, foundIndex, editedHealthData);
         },
     },
 };

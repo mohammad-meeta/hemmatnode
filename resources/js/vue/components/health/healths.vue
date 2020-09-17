@@ -28,25 +28,25 @@
                 loading
 
             .column(v-show="!modeLoading && modeList")
-                list-healt(ref="healtList", @on-command="onCommand", :list-url="showHealtYearUrl")
+                list-health(ref="healthList", @on-command="onCommand", :list-url="showHealthYearUrl")
 
             .column(v-show="!modeLoading && modeRegister")
-                register-healt(ref="healtRegister", @on-command="onCommand",
-                  @on-register="onHealtRegister"
+                register-health(ref="healthRegister", @on-command="onCommand",
+                  @on-register="onHealthRegister"
                   :register-url="registerUrl",
                   :department-id="departmentId",
                   :year="year"
                   )
 
             .column(v-show="!modeLoading && modeEdit")
-                edit-healt(ref="healtEdit", @on-command="onCommand",
-                @on-update="onHealtUpdate"
+                edit-health(ref="healthEdit", @on-command="onCommand",
+                @on-update="onHealthUpdate"
                 :edit-url="editUrl"
                 :department-id="departmentId"
                 )
 
             .column(v-show="!modeLoading && modeShow")
-                show-healt(ref="healtShow", @on-command="onCommand")
+                show-health(ref="healthShow", @on-command="onCommand")
 </template>
 
 <script>
@@ -55,29 +55,29 @@
 const Routes = require("JS-CORE/routes");
 const ENUMS = require("JS-HELPERS/enums");
 const Loading = require("VUE-COMPONENTS/general/loading.vue").default;
-const RegisterHealt = require("VUE-COMPONENTS/healt/register-healt.vue")
+const RegisterHealth = require("VUE-COMPONENTS/health/register-health.vue")
     .default;
-const EditHealt = require("VUE-COMPONENTS/healt/edit-healt.vue").default;
-const ListHealt = require("VUE-COMPONENTS/healt/list-healt.vue").default;
-const ShowHealt = require("VUE-COMPONENTS/healt/show-healt.vue").default;
+const EditHealth = require("VUE-COMPONENTS/health/edit-health.vue").default;
+const ListHealth = require("VUE-COMPONENTS/health/list-health.vue").default;
+const ShowHealth = require("VUE-COMPONENTS/health/show-health.vue").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
 module.exports = {
-    name: "Healts",
+    name: "Healths",
 
     components: {
         Loading,
-        ListHealt,
-        RegisterHealt,
-        EditHealt,
-        ShowHealt,
+        ListHealth,
+        RegisterHealth,
+        EditHealth,
+        ShowHealth,
         Notification,
     },
 
     data: () => ({
         ENUMS,
         formModeStack: [],
-        healts: [],
+        healths: [],
         notificationMessage: null,
         notificationType: "is-info",
     }),
@@ -101,7 +101,7 @@ module.exports = {
             type: String,
             default: null,
         },
-        showHealtYearUrl: {
+        showHealthYearUrl: {
             type: String,
             default: null,
         },
@@ -138,13 +138,13 @@ module.exports = {
 
     methods: {
         /**
-         * On Register healt
+         * On Register health
          */
-        onHealtRegister(payload) {
+        onHealthRegister(payload) {
             //***update vue list****
             console.log(payload.data.data.data[0]);
             if (this.year == payload.data.data.data[0].date) {
-                this.$refs.healtList.addToHealtList(
+                this.$refs.healthList.addToHealthList(
                     payload.data.data.data[0]
                 );
                 this.setNotification(
@@ -162,8 +162,8 @@ module.exports = {
         /**
          * On Update
          */
-        onHealtUpdate(payload) {
-            this.$refs.healtList.editHealtList(payload);
+        onHealthUpdate(payload) {
+            this.$refs.healthList.editHealthList(payload);
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
 
             this.setNotification(".جلسه با موفقیت ویرایش شد", "is-success");
@@ -185,12 +185,12 @@ module.exports = {
 
                 case ENUMS.COMMAND.REGISTER:
                     /* TODO: REGISTER NEW  */
-                    console.log("REGISTER NEW Healt", arg);
+                    console.log("REGISTER NEW Health", arg);
                     break;
 
                 case ENUMS.COMMAND.EDIT:
                     /* TODO: Edit InviteSession */
-                    this.$refs.healtEdit.loadHealtData(data);
+                    this.$refs.healthEdit.loadHealthData(data);
                     this.changeFormMode(ENUMS.FORM_MODE.EDIT);
                     break;
 
@@ -199,7 +199,7 @@ module.exports = {
                     break;
 
                 case ENUMS.COMMAND.SHOW:
-                    this.$refs.healtShow.loadHealtData(data);
+                    this.$refs.healthShow.loadHealthData(data);
                     this.changeFormMode(ENUMS.FORM_MODE.SHOW);
                     break;
             }
@@ -219,7 +219,7 @@ module.exports = {
          */
         init() {
             this.changeFormMode(ENUMS.FORM_MODE.LOADING);
-            this.$refs.healtList.loadHealts(1);
+            this.$refs.healthList.loadHealths(1);
         },
 
         /**

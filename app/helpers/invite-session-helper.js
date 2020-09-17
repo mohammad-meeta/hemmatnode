@@ -553,17 +553,6 @@ InviteSessiontHelper.insertNewInviteSession = async function insertNewInviteSess
                     $last: "$dep"
                 }
             }
-        },
-        {
-            $sort: {
-                created_at: -1
-            }
-        },
-        {
-            $skip: skip
-        },
-        {
-            $limit: pageSize
         }
     ];
 
@@ -847,17 +836,6 @@ InviteSessiontHelper.updateInviteSessionData = async function updateInviteSessio
                     $last: "$dep"
                 }
             }
-        },
-        {
-            $sort: {
-                created_at: -1
-            }
-        },
-        {
-            $skip: skip
-        },
-        {
-            $limit: pageSize
         }
     ];
 

@@ -52,9 +52,13 @@ PugView.viewPath = {
     'project.show': 'pages/project/show.pug',
     'project.edit': 'pages/project/edit.pug',
 
-    /* project */
+    /* program */
     'program.index': 'pages/program/index.pug',
     'program.create': 'pages/program/register.pug',
+
+    /* health */
+    'health.index': 'pages/health/index.pug',
+    'health.create': 'pages/health/register.pug',
 
     /* request */
     'request.index': 'pages/request/index.pug',

@@ -15,7 +15,7 @@ const {
     clearAuth
 } = use('core/helpers/auth-helper');
 
-Router.get('/actioncreative/:department/:year', [
+Router.get('/actioncreative/:department', [
     checkSession,
     Rule.canAsync('user.permision', 'actioncreative.index'),
     'Actioncreative@index'

@@ -1,17 +1,15 @@
 extends ../../layout/app.pug
 
 block title
-    | برنامه
+    | پیوست سلامت
 
 block content
     .container
         healths(
             list-url=route('api.health', { page: '$page$', size: '$pageSize$', group: departmentId }),
-            show-health-year-url=route("api.health", { group: departmentId,page:'$page$',size:'$pageSize$'}),
             register-url=route('health.store', { department: departmentId }),
             edit-url=route('health.update', { id :'$id$'}),
             department-id=departmentId,
-            year=year
         )
 
 block scripts

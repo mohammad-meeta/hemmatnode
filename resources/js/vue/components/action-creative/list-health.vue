@@ -130,7 +130,7 @@ module.exports = {
             const newHealthData = {
                 _id: payload._id,
                 title: payload.title,
-                year: payload.year,
+                date: payload.date,
                 executor: payload.executor,
                 files: payload.files,
                 is_active: payload.is_active,
@@ -144,7 +144,7 @@ module.exports = {
                 _id: payload.data.data[0]._id,
                 title: payload.data.data[0].title,
                 executor: payload.data.data[0].executor,
-                year: payload.data.data[0].year,
+                date: payload.data.data[0].date,
                 is_active: payload.data.data[0].is_active,
                 files: payload.data.data[0].files,
                 created_at: payload.data.data[0].created_at,

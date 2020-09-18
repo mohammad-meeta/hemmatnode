@@ -28,25 +28,24 @@
                 loading
 
             .column(v-show="!modeLoading && modeList")
-                list-health(ref="healthList", @on-command="onCommand", :list-url="listUrl")
+                list-action-careative(ref="actionCreativeList", @on-command="onCommand", :list-url="listUrl")
 
             .column(v-show="!modeLoading && modeRegister")
-                register-health(ref="healthRegister", @on-command="onCommand",
-                  @on-register="onHealthRegister"
+                register-action-creative(ref="actionCreativeRegister", @on-command="onCommand",
+                  @on-register="onActionCreativeRegister"
                   :register-url="registerUrl",
                   :department-id="departmentId",
-                  :year="year"
                   )
 
             .column(v-show="!modeLoading && modeEdit")
-                edit-health(ref="healthEdit", @on-command="onCommand",
-                @on-update="onHealthUpdate"
+                edit-action-creative(ref="actionCreativeEdit", @on-command="onCommand",
+                @on-update="onActionCreativeUpdate"
                 :edit-url="editUrl"
                 :department-id="departmentId"
                 )
 
             .column(v-show="!modeLoading && modeShow")
-                show-health(ref="healthShow", @on-command="onCommand")
+                show-action-creative(ref="actionCreativeShow", @on-command="onCommand")
 </template>
 
 <script>
@@ -55,39 +54,35 @@
 const Routes = require("JS-CORE/routes");
 const ENUMS = require("JS-HELPERS/enums");
 const Loading = require("VUE-COMPONENTS/general/loading.vue").default;
-const RegisterHealth = require("VUE-COMPONENTS/health/register-health.vue")
+const RegisterActionCreative = require("VUE-COMPONENTS/action-creative/register-action-creative.vue")
     .default;
-const EditHealth = require("VUE-COMPONENTS/health/edit-health.vue").default;
-const ListHealth = require("VUE-COMPONENTS/health/list-health.vue").default;
-const ShowHealth = require("VUE-COMPONENTS/health/show-health.vue").default;
+const EditActionCreative = require("VUE-COMPONENTS/action-creative/edit-action-creative.vue").default;
+const ListActionCreative = require("VUE-COMPONENTS/action-creative/list-action-creative.vue").default;
+const ShowActionCreative = require("VUE-COMPONENTS/action-creative/show-action-creative.vue").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
 module.exports = {
-    name: "Healths",
+    name: "ActionCreatives",
 
     components: {
         Loading,
-        ListHealth,
-        RegisterHealth,
-        EditHealth,
-        ShowHealth,
+        ListActionCreative,
+        RegisterActionCreative,
+        EditActionCreative,
+        ShowActionCreative,
         Notification,
     },
 
     data: () => ({
         ENUMS,
         formModeStack: [],
-        healths: [],
+        actionCreatives: [],
         notificationMessage: null,
         notificationType: "is-info",
     }),
 
     props: {
         departmentId: {
-            type: String,
-            default: null,
-        },
-        year: {
             type: String,
             default: null,
         },
@@ -98,10 +93,6 @@ module.exports = {
         },
 
         listUrl: {
-            type: String,
-            default: null,
-        },
-        showHealthYearUrl: {
             type: String,
             default: null,
         },
@@ -138,11 +129,11 @@ module.exports = {
 
     methods: {
         /**
-         * On Register health
+         * On Register actionCreative
          */
-        onHealthRegister(payload) {
+        onActionCreativeRegister(payload) {
             //***update vue list****
-            this.$refs.healthList.addToHealthList(
+            this.$refs.actionCreativeList.addToActionCreativeList(
                 payload.data.data.data[0]
             );
             this.setNotification(
@@ -154,8 +145,8 @@ module.exports = {
         /**
          * On Update
          */
-        onHealthUpdate(payload) {
-            this.$refs.healthList.editHealthList(payload);
+        onActionCreativeUpdate(payload) {
+            this.$refs.actionCreativeList.editActionCreativeList(payload);
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
 
             this.setNotification(".جلسه با موفقیت ویرایش شد", "is-success");
@@ -177,12 +168,12 @@ module.exports = {
 
                 case ENUMS.COMMAND.REGISTER:
                     /* TODO: REGISTER NEW  */
-                    console.log("REGISTER NEW Health", arg);
+                    console.log("REGISTER NEW ActionCreative", arg);
                     break;
 
                 case ENUMS.COMMAND.EDIT:
                     /* TODO: Edit InviteSession */
-                    this.$refs.healthEdit.loadHealthData(data);
+                    this.$refs.actionCreativeEdit.loadActionCreativeData(data);
                     this.changeFormMode(ENUMS.FORM_MODE.EDIT);
                     break;
 
@@ -191,7 +182,7 @@ module.exports = {
                     break;
 
                 case ENUMS.COMMAND.SHOW:
-                    this.$refs.healthShow.loadHealthData(data);
+                    this.$refs.actionCreativeShow.loadActionCreativeData(data);
                     this.changeFormMode(ENUMS.FORM_MODE.SHOW);
                     break;
             }
@@ -211,7 +202,7 @@ module.exports = {
          */
         init() {
             this.changeFormMode(ENUMS.FORM_MODE.LOADING);
-            this.$refs.healthList.loadHealths(1);
+            this.$refs.actionCreativeList.loadActionCreatives(1);
         },
 
         /**

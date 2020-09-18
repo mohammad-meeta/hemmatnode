@@ -15,7 +15,7 @@
                 label.label سال اجرا
                 .control
                     date-picker(
-                        v-model='healthData.year'
+                        v-model='healthData.date'
                         display-format="jYYYY"
                         type="year"
                         required
@@ -69,7 +69,7 @@ module.exports = {
         healthData: {
             title: null,
             department_id: null,
-            year: null,
+            date: null,
             executor: null,
             files: {},
             oldFiles: [],
@@ -113,7 +113,7 @@ module.exports = {
             let temp = {
                 _id: data._id,
                 title: data.title,
-                year: data.year,
+                date: data.date,
                 executor: data.executor,
                 department_id: this.healthData.department_id,
                 files: data.files,
@@ -187,7 +187,7 @@ module.exports = {
             let healthData = {
                 _id: this.healthData._id,
                 title: this.healthData.title,
-                year: this.healthData.year,
+                date: this.healthData.date,
                 executor: this.healthData.executor,
                 department_id: this.healthData.department_id,
                 is_active: this.healthData.isActive,

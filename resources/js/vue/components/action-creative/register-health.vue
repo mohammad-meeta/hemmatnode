@@ -9,23 +9,20 @@
             .field
                 label.label نام گزارش
                 .control
-                    input.input(type='text', placeholder='نام', v-model='healthData.title' required)
-
+                    input.input(type='text', placeholder='نام گزارش', autofocus, v-model='healthData.title' required)
             .field
-                label.label سال اجرا
+                label.label سال
                 .control
                     date-picker(
-                        v-model='healthData.year'
-                        display-format="jYYYY"
+                        v-model='healthData.date'
                         type="year"
+                        display-format="jYYYY"
                         required
                     )
-
             .field
                 label.label مجری
                 .control
-                    input.input(type='text', placeholder='مجری', v-model='healthData.executor' required)
-
+                    input.input(type='text', placeholder='مجری', autofocus, v-model='healthData.executor' required)
             .field
                 .panel
                     .panel-heading
@@ -34,31 +31,32 @@
                         file-upload(ref="fileUpload", :old-files="oldFiles")
             .field
                 label.checkbox
-                    input(type='checkbox', v-model="healthData.isActive")
+                    input(type='checkbox', v-model="healthData.is_active")
                     |   فعال
-                .field.is-grouped
-                    .control(v-show="! isLoadingMode")
-                        a.button.is-link.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
-                            |   ویرایش
+            .field.is-grouped
+                .control(v-show="! isLoadingMode")
+                    a.button.is-link.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
+                        |   ایجاد
+
 </template>
 
 <script>
 "use strict";
 
-const Buefy = require("buefy").default;
 const AxiosHelper = require("JS-HELPERS/axios-helper");
-const HealthValidator = require("JS-VALIDATORS/health-register-validator");
 const ENUMS = require("JS-HELPERS/enums");
+const HealthValidator = require("JS-VALIDATORS/health-register-validator");
 const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 
 module.exports = {
-    name: "EditHealth",
+    name: "RegisterHealth",
+
     components: {
-        FileUpload,
-        DatePicker: VuePersianDatetimePicker,
         Notification,
+        DatePicker: VuePersianDatetimePicker,
+        FileUpload,
     },
 
     data: () => ({
@@ -68,37 +66,35 @@ module.exports = {
         oldFiles: [],
         healthData: {
             title: null,
-            department_id: null,
-            year: null,
+            date: null,
             executor: null,
-            files: {},
-            oldFiles: [],
-            isActive: false,
+            files: [],
             deletedOldFiles: [],
+            is_active: true,
         },
-
         notificationMessage: null,
         notificationType: "is-info",
         showLoadingFlag: false,
     }),
 
     props: {
-        editUrl: {
-            type: String,
-            default: "",
-        },
-
         departmentId: {
             type: String,
             default: null,
         },
+        year: {
+            type: String,
+            default: null,
+        },
+        registerUrl: {
+            type: String,
+            default: "",
+        },
     },
-
     created() {
-        Vue.set(this.healthData, "department_id", this.departmentId);
+        this.clearFormData();
+        this.healthData.departmentId = this.departmentId;
     },
-
-    mounted() {},
 
     computed: {
         isLoadingMode: (state) => state.showLoadingFlag == true,
@@ -107,21 +103,12 @@ module.exports = {
 
     methods: {
         /**
-         * Load specific user
+         * Set attachments
          */
-        loadHealthData(data) {
-            let temp = {
-                _id: data._id,
-                title: data.title,
-                year: data.year,
-                executor: data.executor,
-                department_id: this.healthData.department_id,
-                files: data.files,
-                isActive: data.is_active,
-            };
-            Vue.set(this, "oldFiles", data.files);
-            Vue.set(this, "healthData", temp);
-            this.$refs.fileUpload.updateOldFiles(data.files);
+        setAttachment(sender) {
+            const files = sender.target.files;
+
+            Vue.set(this, "files", files);
         },
 
         /**
@@ -132,7 +119,7 @@ module.exports = {
         commandClick(arg) {
             switch (arg) {
                 case ENUMS.COMMAND.SAVE:
-                    this.EditHealth();
+                    this.registerHealth();
                     break;
             }
         },
@@ -167,60 +154,59 @@ module.exports = {
         },
 
         /**
-         * Edit health
+         * Register new health
          */
-        EditHealth() {
+        registerHealth() {
             const isValid = this.validate();
 
             if (!isValid) {
                 return;
             }
-
-            this.showLoading();
-
             const deletedFiles = this.$refs.fileUpload.getDeletedFiles();
             const newFiles = this.$refs.fileUpload.getNewFiles();
             let newUploaded = newFiles.map((x) => x.file);
             Vue.set(this, "files", newUploaded);
             let deleteUploaded = deletedFiles.map((x) => x._id);
             Vue.set(this, "deletedOldFiles", deleteUploaded);
-            let healthData = {
-                _id: this.healthData._id,
-                title: this.healthData.title,
-                year: this.healthData.year,
-                executor: this.healthData.executor,
-                department_id: this.healthData.department_id,
-                is_active: this.healthData.isActive,
-                files: this.files,
-                oldFiles: this.oldFiles,
-                deletedOldFiles: this.deletedOldFiles,
-            };
+            Vue.set(this.healthData, "files", this.files);
+            Vue.set(this.healthData, "deletedOldFiles", this.deletedOldFiles);
+
+            let healthData = this.healthData;
+
             this.showLoading();
-            const url = this.editUrl.replace("$id$", healthData._id);
-            AxiosHelper.send("patch", url, healthData, {
+
+            const url = this.registerUrl;
+
+            AxiosHelper.send("post", url, healthData, {
                 sendAsFormData: true,
                 filesArray: "files",
             })
                 .then((res) => {
-                    //const data = JSON.parse(res.config.data);
                     const data = res.data;
-                    this.$emit("on-update", {
-                        sender: this,
-                        data,
-                    });
+                    if (data.success) {
+                        this.clearFormData();
+                        this.$emit("on-register", {
+                            sender: this,
+                            data: {
+                                data: data,
+                                dep_title: 0,
+                            },
+                        });
+                    }
                 })
                 .catch((err) => {
-                    console.error(err);
-                    this.setNotification(".خطا در ویرایش پیوست سلامت", "is-danger");
+                    const data = err.response.data;
+                    this.setNotification(data, "is-danger");
                 })
                 .then(() => this.hideLoading());
+            this.clearFormData();
         },
 
         /**
-         * Validate
+         * Validate new health data
          */
         validate() {
-            const result = HealthValidator.validateEdit(this.healthData);
+            const result = HealthValidator.validate(this.healthData);
 
             if (result.passes) {
                 this.closeNotification();
@@ -235,6 +221,27 @@ module.exports = {
             console.log(error);
             this.setNotification(error, "is-danger");
             return false;
+        },
+        /**
+         * clear form data
+         */
+        clearFormData() {
+            const healthData = {
+                title: null,
+                executor: null,
+                date: null,
+                files: [],
+                deletedOldFiles: [],
+                is_active: true,
+            };
+
+            Vue.set(this, "healthData", healthData);
+            Vue.set(this, "files", []);
+            Vue.set(this, "deletedOldFiles", []);
+            Vue.set(this, "oldFiles", []);
+            this.files = [];
+            this.deletedOldFiles = [];
+            this.oldFiles = [];
         },
     },
 };

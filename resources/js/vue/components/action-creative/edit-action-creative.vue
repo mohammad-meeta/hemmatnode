@@ -7,24 +7,21 @@
             h1 در حال بارگذاری
         .form-small(v-show="! isLoadingMode")
             .field
-                label.label نام گزارش
+                label.label عنوان
                 .control
-                    input.input(type='text', placeholder='نام', v-model='healthData.title' required)
-
+                    input.input(type='text', placeholder='نام گزارش', autofocus, v-model='actionCreativeData.title' required)
             .field
-                label.label سال اجرا
+                label.label شرح
                 .control
-                    date-picker(
-                        v-model='healthData.date'
-                        display-format="jYYYY"
-                        type="year"
-                        required
-                    )
-
+                    textarea.textarea(placeholder='شرح', v-model='actionCreativeData.description' required)
             .field
-                label.label مجری
+                label.label دلیل خلاق بودن
                 .control
-                    input.input(type='text', placeholder='مجری', v-model='healthData.executor' required)
+                    textarea.textarea(placeholder='دلیل خلاق بودن', v-model='actionCreativeData.reason' required)
+            .field
+                label.label مسئول اقدام
+                .control
+                    input.input(type='text', placeholder='مسئول اقدام', autofocus, v-model='actionCreativeData.responsible' required)
 
             .field
                 .panel
@@ -34,7 +31,7 @@
                         file-upload(ref="fileUpload", :old-files="oldFiles")
             .field
                 label.checkbox
-                    input(type='checkbox', v-model="healthData.isActive")
+                    input(type='checkbox', v-model="actionCreativeData.isActive")
                     |   فعال
                 .field.is-grouped
                     .control(v-show="! isLoadingMode")
@@ -47,14 +44,14 @@
 
 const Buefy = require("buefy").default;
 const AxiosHelper = require("JS-HELPERS/axios-helper");
-const HealthValidator = require("JS-VALIDATORS/health-register-validator");
+const ActionCreativeValidator = require("JS-VALIDATORS/action-creative-register-validator");
 const ENUMS = require("JS-HELPERS/enums");
 const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 
 module.exports = {
-    name: "EditHealth",
+    name: "EditActionCreative",
     components: {
         FileUpload,
         DatePicker: VuePersianDatetimePicker,
@@ -66,11 +63,12 @@ module.exports = {
         files: [],
         deletedOldFiles: [],
         oldFiles: [],
-        healthData: {
+        actionCreativeData: {
             title: null,
             department_id: null,
-            date: null,
-            executor: null,
+            description: null,
+            reason: null,
+            responsible: null,
             files: {},
             oldFiles: [],
             isActive: false,
@@ -95,7 +93,7 @@ module.exports = {
     },
 
     created() {
-        Vue.set(this.healthData, "department_id", this.departmentId);
+        Vue.set(this.actionCreativeData, "department_id", this.departmentId);
     },
 
     mounted() {},
@@ -109,18 +107,19 @@ module.exports = {
         /**
          * Load specific user
          */
-        loadHealthData(data) {
+        loadActionCreativeData(data) {
             let temp = {
                 _id: data._id,
                 title: data.title,
-                date: data.date,
-                executor: data.executor,
-                department_id: this.healthData.department_id,
+                description: data.description,
+                reason: data.reason,
+                responsible: data.responsible,
+                department_id: this.actionCreativeData.department_id,
                 files: data.files,
                 isActive: data.is_active,
             };
             Vue.set(this, "oldFiles", data.files);
-            Vue.set(this, "healthData", temp);
+            Vue.set(this, "actionCreativeData", temp);
             this.$refs.fileUpload.updateOldFiles(data.files);
         },
 
@@ -132,7 +131,7 @@ module.exports = {
         commandClick(arg) {
             switch (arg) {
                 case ENUMS.COMMAND.SAVE:
-                    this.EditHealth();
+                    this.EditActionCreative();
                     break;
             }
         },
@@ -167,9 +166,9 @@ module.exports = {
         },
 
         /**
-         * Edit health
+         * Edit action creative
          */
-        EditHealth() {
+        EditActionCreative() {
             const isValid = this.validate();
 
             if (!isValid) {
@@ -184,20 +183,20 @@ module.exports = {
             Vue.set(this, "files", newUploaded);
             let deleteUploaded = deletedFiles.map((x) => x._id);
             Vue.set(this, "deletedOldFiles", deleteUploaded);
-            let healthData = {
-                _id: this.healthData._id,
-                title: this.healthData.title,
-                date: this.healthData.date,
-                executor: this.healthData.executor,
-                department_id: this.healthData.department_id,
-                is_active: this.healthData.isActive,
+            let actionCreativeData = {
+                _id: this.actionCreativeData._id,
+                title: this.actionCreativeData.title,
+                description: this.actionCreativeData.description,
+                reason: this.actionCreativeData.reason,
+                responsible: this.actionCreativeData.responsible,
+                is_active: this.actionCreativeData.isActive,
                 files: this.files,
                 oldFiles: this.oldFiles,
                 deletedOldFiles: this.deletedOldFiles,
             };
             this.showLoading();
-            const url = this.editUrl.replace("$id$", healthData._id);
-            AxiosHelper.send("patch", url, healthData, {
+            const url = this.editUrl.replace("$id$", actionCreativeData._id);
+            AxiosHelper.send("patch", url, actionCreativeData, {
                 sendAsFormData: true,
                 filesArray: "files",
             })
@@ -211,7 +210,7 @@ module.exports = {
                 })
                 .catch((err) => {
                     console.error(err);
-                    this.setNotification(".خطا در ویرایش پیوست سلامت", "is-danger");
+                    this.setNotification(".خطا در ویرایش اقدامات خلاق", "is-danger");
                 })
                 .then(() => this.hideLoading());
         },
@@ -220,7 +219,7 @@ module.exports = {
          * Validate
          */
         validate() {
-            const result = HealthValidator.validateEdit(this.healthData);
+            const result = ActionCreativeValidator.validateEdit(this.actionCreativeData);
 
             if (result.passes) {
                 this.closeNotification();

@@ -7,22 +7,21 @@
             h1 در حال بارگذاری
         .form-small(v-show="! isLoadingMode")
             .field
-                label.label نام گزارش
+                label.label عنوان
                 .control
-                    input.input(type='text', placeholder='نام گزارش', autofocus, v-model='healthData.title' required)
+                    input.input(type='text', placeholder='نام گزارش', autofocus, v-model='actionCreativeData.title' required)
             .field
-                label.label سال
+                label.label شرح
                 .control
-                    date-picker(
-                        v-model='healthData.date'
-                        type="year"
-                        display-format="jYYYY"
-                        required
-                    )
+                    textarea.textarea(placeholder='شرح', v-model='actionCreativeData.description' required)
             .field
-                label.label مجری
+                label.label دلیل خلاق بودن
                 .control
-                    input.input(type='text', placeholder='مجری', autofocus, v-model='healthData.executor' required)
+                    textarea.textarea(placeholder='دلیل خلاق بودن', v-model='actionCreativeData.reason' required)
+            .field
+                label.label مسئول اقدام
+                .control
+                    input.input(type='text', placeholder='مسئول اقدام', autofocus, v-model='actionCreativeData.responsible' required)
             .field
                 .panel
                     .panel-heading
@@ -31,7 +30,7 @@
                         file-upload(ref="fileUpload", :old-files="oldFiles")
             .field
                 label.checkbox
-                    input(type='checkbox', v-model="healthData.is_active")
+                    input(type='checkbox', v-model="actionCreativeData.is_active")
                     |   فعال
             .field.is-grouped
                 .control(v-show="! isLoadingMode")
@@ -45,13 +44,13 @@
 
 const AxiosHelper = require("JS-HELPERS/axios-helper");
 const ENUMS = require("JS-HELPERS/enums");
-const HealthValidator = require("JS-VALIDATORS/health-register-validator");
+const ActionCreativeValidator = require("JS-VALIDATORS/action-creative-register-validator");
 const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 
 module.exports = {
-    name: "RegisterHealth",
+    name: "RegisterActionCreative",
 
     components: {
         Notification,
@@ -64,10 +63,11 @@ module.exports = {
         files: [],
         deletedOldFiles: [],
         oldFiles: [],
-        healthData: {
+        actionCreativeData: {
             title: null,
-            date: null,
-            executor: null,
+            description: null,
+            reason: null,
+            responsible: null,
             files: [],
             deletedOldFiles: [],
             is_active: true,
@@ -93,7 +93,7 @@ module.exports = {
     },
     created() {
         this.clearFormData();
-        this.healthData.departmentId = this.departmentId;
+        this.actionCreativeData.departmentId = this.departmentId;
     },
 
     computed: {
@@ -103,15 +103,6 @@ module.exports = {
 
     methods: {
         /**
-         * Set attachments
-         */
-        setAttachment(sender) {
-            const files = sender.target.files;
-
-            Vue.set(this, "files", files);
-        },
-
-        /**
          * On Command
          *
          * @param      {Object}  arg     The argument
@@ -119,7 +110,7 @@ module.exports = {
         commandClick(arg) {
             switch (arg) {
                 case ENUMS.COMMAND.SAVE:
-                    this.registerHealth();
+                    this.registerActionCreative();
                     break;
             }
         },
@@ -154,9 +145,9 @@ module.exports = {
         },
 
         /**
-         * Register new health
+         * Register new actionCreative
          */
-        registerHealth() {
+        registerActionCreative() {
             const isValid = this.validate();
 
             if (!isValid) {
@@ -168,16 +159,16 @@ module.exports = {
             Vue.set(this, "files", newUploaded);
             let deleteUploaded = deletedFiles.map((x) => x._id);
             Vue.set(this, "deletedOldFiles", deleteUploaded);
-            Vue.set(this.healthData, "files", this.files);
-            Vue.set(this.healthData, "deletedOldFiles", this.deletedOldFiles);
+            Vue.set(this.actionCreativeData, "files", this.files);
+            Vue.set(this.actionCreativeData, "deletedOldFiles", this.deletedOldFiles);
 
-            let healthData = this.healthData;
+            let actionCreativeData = this.actionCreativeData;
 
             this.showLoading();
 
             const url = this.registerUrl;
 
-            AxiosHelper.send("post", url, healthData, {
+            AxiosHelper.send("post", url, actionCreativeData, {
                 sendAsFormData: true,
                 filesArray: "files",
             })
@@ -203,10 +194,10 @@ module.exports = {
         },
 
         /**
-         * Validate new health data
+         * Validate new actionCreative data
          */
         validate() {
-            const result = HealthValidator.validate(this.healthData);
+            const result = ActionCreativeValidator.validate(this.actionCreativeData);
 
             if (result.passes) {
                 this.closeNotification();
@@ -226,16 +217,17 @@ module.exports = {
          * clear form data
          */
         clearFormData() {
-            const healthData = {
+            const actionCreativeData = {
                 title: null,
-                executor: null,
-                date: null,
+                description: null,
+                reason: null,
+                responsible: null,
                 files: [],
                 deletedOldFiles: [],
                 is_active: true,
             };
 
-            Vue.set(this, "healthData", healthData);
+            Vue.set(this, "actionCreativeData", actionCreativeData);
             Vue.set(this, "files", []);
             Vue.set(this, "deletedOldFiles", []);
             Vue.set(this, "oldFiles", []);

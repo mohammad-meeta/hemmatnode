@@ -6,14 +6,14 @@
             .column.is-full(v-show="! isLoadingMode")
 
                 .info-card
-                    .info-card-title {{ healthData.title }}
+                    .info-card-title {{ actionCreativeData.title }}
                     .info-card-details
                         .info-card-item
                             .info-card-label نام پیوست سلامت:
-                            .info-card-value {{ healthData.title }}
+                            .info-card-value {{ actionCreativeData.title }}
                         .info-card-item
                             .info-card-label پیوست سلامت:
-                            .info-card-value {{ healthData.health_id }}
+                            .info-card-value {{ actionCreativeData.actionCreative_id }}
 </template>
 <script>
 "use strict";
@@ -21,15 +21,15 @@
 const ENUMS = require("JS-HELPERS/enums");
 
 module.exports = {
-    name: "ShowHealth",
+    name: "ShowActionCreative",
 
     data: () => ({
         ENUMS,
-        healths: [],
-        healthData: {
+        actionCreatives: [],
+        actionCreativeData: {
             _id: null,
             title: null,
-            health_id: null,
+            actionCreative_id: null,
             executor: null,
             date: null,
             files: {},
@@ -38,7 +38,7 @@ module.exports = {
         showLoadingFlag: false,
     }),
     props: {
-        healthsUrl: {
+        actionCreativesUrl: {
             type: String,
             default: "",
         },
@@ -50,20 +50,20 @@ module.exports = {
 
     methods: {
         /**
-         * Load specific health
+         * Load specific actionCreative
          */
-        loadHealthData(data) {
+        loadActionCreativeData(data) {
             const temp = {
                 _id: data._id,
                 title: data.title,
-                health_id: data.health_id,
+                actionCreative_id: data.actionCreative_id,
                 date: data.date,
                 executor: data.executor,
                 files: {},
                 is_active: data.is_active,
             };
             console.log(temp);
-            Vue.set(this, "healthData", temp);
+            Vue.set(this, "actionCreativeData", temp);
         },
 
         /**

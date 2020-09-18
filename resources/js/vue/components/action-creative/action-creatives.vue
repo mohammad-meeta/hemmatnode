@@ -5,8 +5,8 @@
                 span(v-html="notificationMessage")
             .container.page-header
                 .title
-                    h1(v-show="modeList") پیوست سلامت
-                    h1(v-show="modeRegister") ایجاد پیوست سلامت
+                    h1(v-show="modeList") اقدامات خلاق
+                    h1(v-show="modeRegister") ایجاد اقدامات خلاق
 
         .columns.exposed-form(v-show="!modeLoading")
             .column.is-one-fifth(v-show="modeList")
@@ -137,7 +137,7 @@ module.exports = {
                 payload.data.data.data[0]
             );
             this.setNotification(
-                ".پیوست سلامت با موفقیت ذخیره شد",
+                ".اقدامات خلاق با موفقیت ذخیره شد",
                 "is-success"
             );
             this.changeFormMode(ENUMS.FORM_MODE.LIST);

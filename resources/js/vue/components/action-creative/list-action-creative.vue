@@ -1,7 +1,7 @@
 <template lang="pug">
 .container-child
-    h1(v-if="! hasHealth") هیچ پیوست سلامتی ایجاد نشده
-    table.table.is-striped.is-hoverable.is-fullwidth(v-if="hasHealth")
+    h1(v-if="! hasActionCreative") هیچ اقدامات خلاقی ایجاد نشده
+    table.table.is-striped.is-hoverable.is-fullwidth(v-if="hasActionCreative")
         thead
             tr
                 th عنوان
@@ -9,23 +9,23 @@
                 th تاریخ ایجاد
                 th عملیات
         tbody
-            tr(v-for='health in healths', :key='health.id')
-                td {{ health.title }}
-                td {{ health.is_active }}
-                td {{ toPersianDate(health.created_at) }}
+            tr(v-for='actionCreative in actionCreatives', :key='actionCreative.id')
+                td {{ actionCreative.title }}
+                td {{ actionCreative.is_active }}
+                td {{ toPersianDate(actionCreative.created_at) }}
                 td.function-links
-                    a.button.is-warning.is-rounded.mt-2(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SHOW, health)")
+                    a.button.is-warning.is-rounded.mt-2(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SHOW, actionCreative)")
                         span.icon.is-small
                             i.material-icons.icon swap_horizontal_circle
                         span مشاهده
 
                     a.button.is-primary.is-rounded(
                         href="#",
-                        @click.prevent="commandClick(ENUMS.COMMAND.EDIT, health)"
+                        @click.prevent="commandClick(ENUMS.COMMAND.EDIT, actionCreative)"
                     )
                         span.icon.is-small
                             i.material-icons.icon check_circle
-                        span ویرایش پیوست سلامت
+                        span ویرایش اقدامات خلاق
 
     b-pagination(
         :total="pagination.total",
@@ -75,27 +75,27 @@ module.exports = {
             prevIcon: "chevron-left",
             nextIcon: "chevron-right",
         },
-        healths: [],
-        healthsCount: 0,
+        actionCreatives: [],
+        actionCreativesCount: 0,
         pageCount: 0,
     }),
 
     computed: {
-        hasHealth: (state) => (state.healths || []).length,
+        hasActionCreative: (state) => (state.actionCreatives || []).length,
     },
 
     methods: {
         /**
-         * Load healths
+         * Load actionCreatives
          */
-        loadHealths(pageId) {
+        loadActionCreatives(pageId) {
             let url = this.listUrl.replace("$page$", pageId);
             url = url.replace("$pageSize$", 50);
 
             AxiosHelper.send("get", url, "").then((res) => {
                 const resData = res.data;
-                Vue.set(this, "healths", resData.data.data);
-                Vue.set(this, "healthsCount", resData.data.count);
+                Vue.set(this, "actionCreatives", resData.data.data);
+                Vue.set(this, "actionCreativesCount", resData.data.count);
                 Vue.set(this.pagination, "total", resData.data.count);
             });
         },
@@ -124,10 +124,10 @@ module.exports = {
         },
 
         /**
-         * add new Health data to list data
+         * add new ActionCreative data to list data
          */
-        addToHealthList(payload) {
-            const newHealthData = {
+        addToActionCreativeList(payload) {
+            const newActionCreativeData = {
                 _id: payload._id,
                 title: payload.title,
                 date: payload.date,
@@ -137,10 +137,10 @@ module.exports = {
                 created_at: payload.created_at,
             };
 
-            this.healths.unshift(newHealthData);
+            this.actionCreatives.unshift(newActionCreativeData);
         },
-        editHealthList(payload) {
-            const editedHealthData = {
+        editActionCreativeList(payload) {
+            const editedActionCreativeData = {
                 _id: payload.data.data[0]._id,
                 title: payload.data.data[0].title,
                 executor: payload.data.data[0].executor,
@@ -150,10 +150,10 @@ module.exports = {
                 created_at: payload.data.data[0].created_at,
             };
 
-            let foundIndex = this.healths.findIndex(
-                (x) => x._id == editedHealthData._id
+            let foundIndex = this.actionCreatives.findIndex(
+                (x) => x._id == editedActionCreativeData._id
             );
-            Vue.set(this.healths, foundIndex, editedHealthData);
+            Vue.set(this.actionCreatives, foundIndex, editedActionCreativeData);
         },
     },
 };

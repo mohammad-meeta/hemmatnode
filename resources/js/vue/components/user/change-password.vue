@@ -26,7 +26,7 @@
 
 const ENUMS = require("JS-HELPERS/enums");
 
-module.exports = {
+export default {
     data: () => ({
         ENUMS,
         userData: {

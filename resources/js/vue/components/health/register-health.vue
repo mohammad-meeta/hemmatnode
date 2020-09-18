@@ -1,43 +1,63 @@
 <template lang="pug">
-    .container-child
-        notification(:notification-type="notificationType", @on-close="closeNotification", v-if="showNotification")
-            span(v-html="notificationMessage")
+.container-child
+    notification(
+        :notification-type="notificationType",
+        @on-close="closeNotification",
+        v-if="showNotification"
+    )
+        span(v-html="notificationMessage")
 
-        .column.is-full(v-show="isLoadingMode")
-            h1 در حال بارگذاری
-        .form-small(v-show="! isLoadingMode")
-            .field
-                label.label نام گزارش
-                .control
-                    input.input(type='text', placeholder='نام گزارش', autofocus, v-model='healthData.title' required)
-            .field
-                label.label سال
-                .control
-                    date-picker(
-                        v-model='healthData.year'
-                        type="year"
-                        display-format="jYYYY"
-                        required
-                    )
-            .field
-                label.label مجری
-                .control
-                    input.input(type='text', placeholder='مجری', autofocus, v-model='healthData.executor' required)
-            .field
-                .panel
-                    .panel-heading
-                        | فایل های ضمیمه
-                    .panel-block
-                        file-upload(ref="fileUpload", :old-files="oldFiles")
-            .field
-                label.checkbox
-                    input(type='checkbox', v-model="healthData.is_active")
-                    |   فعال
-            .field.is-grouped
-                .control(v-show="! isLoadingMode")
-                    a.button.is-link.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
-                        |   ایجاد
-
+    .column.is-full(v-show="isLoadingMode")
+        h1 در حال بارگذاری
+    .form-small(v-show="! isLoadingMode")
+        .field
+            label.label نام گزارش
+            .control
+                input.input(
+                    type="text",
+                    placeholder="نام گزارش",
+                    autofocus,
+                    v-model="healthData.title",
+                    required
+                )
+        .field
+            label.label سال
+            .control
+                date-picker(
+                    v-model="healthData.year",
+                    type="year",
+                    display-format="jYYYY",
+                    required
+                )
+        .field
+            label.label مجری
+            .control
+                input.input(
+                    type="text",
+                    placeholder="مجری",
+                    autofocus,
+                    v-model="healthData.executor",
+                    required
+                )
+        .field
+            .panel
+                .panel-heading
+                    | فایل های ضمیمه
+                .panel-block
+                    file-upload(ref="fileUpload", :old-files="oldFiles")
+        .field
+            label.checkbox
+                input(type="checkbox", v-model="healthData.is_active")
+                |
+                | فعال
+        .field.is-grouped
+            .control(v-show="! isLoadingMode")
+                a.button.is-link.is-rounded(
+                    href="#",
+                    @click.prevent="commandClick(ENUMS.COMMAND.SAVE)"
+                )
+                    |
+                    | ایجاد
 </template>
 
 <script>
@@ -50,7 +70,7 @@ const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 
-module.exports = {
+export default {
     name: "RegisterHealth",
 
     components: {
@@ -156,49 +176,53 @@ module.exports = {
         /**
          * Register new health
          */
-        registerHealth() {
+        async registerHealth() {
             const isValid = this.validate();
 
             if (!isValid) {
                 return;
             }
+
+            this.showLoading();
+
             const deletedFiles = this.$refs.fileUpload.getDeletedFiles();
             const newFiles = this.$refs.fileUpload.getNewFiles();
+
             let newUploaded = newFiles.map((x) => x.file);
             Vue.set(this, "files", newUploaded);
+
             let deleteUploaded = deletedFiles.map((x) => x._id);
             Vue.set(this, "deletedOldFiles", deleteUploaded);
+
             Vue.set(this.healthData, "files", this.files);
             Vue.set(this.healthData, "deletedOldFiles", this.deletedOldFiles);
 
             let healthData = this.healthData;
 
-            this.showLoading();
+            try {
+                const url = this.registerUrl;
+                let res = await AxiosHelper.send("post", url, healthData, {
+                    sendAsFormData: true,
+                    filesArray: "files",
+                });
 
-            const url = this.registerUrl;
+                const data = res.data;
+                if (data.success) {
+                    this.clearFormData();
+                    this.$emit("on-register", {
+                        sender: this,
+                        data: {
+                            data: data,
+                            dep_title: 0,
+                        },
+                    });
+                }
+            } catch (err) {
+                const data = err.response.data;
+                this.setNotification(data, "is-danger");
+            }
+            this.hideLoading();
 
-            AxiosHelper.send("post", url, healthData, {
-                sendAsFormData: true,
-                filesArray: "files",
-            })
-                .then((res) => {
-                    const data = res.data;
-                    if (data.success) {
-                        this.clearFormData();
-                        this.$emit("on-register", {
-                            sender: this,
-                            data: {
-                                data: data,
-                                dep_title: 0,
-                            },
-                        });
-                    }
-                })
-                .catch((err) => {
-                    const data = err.response.data;
-                    this.setNotification(data, "is-danger");
-                })
-                .then(() => this.hideLoading());
             this.clearFormData();
         },
 
@@ -218,7 +242,6 @@ module.exports = {
                 .map((key) => errors[key].join("\n"))
                 .join("</br>");
 
-            console.log(error);
             this.setNotification(error, "is-danger");
             return false;
         },
@@ -246,5 +269,3 @@ module.exports = {
     },
 };
 </script>
-
-<style scoped></style>

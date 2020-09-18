@@ -137,7 +137,7 @@ const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 const FileUploadSignatured = require("VUE-COMPONENTS/general/file-upload.vue")
     .default;
 
-module.exports = {
+export default {
     name: "EditInviteSession",
     components: {
         Notification,

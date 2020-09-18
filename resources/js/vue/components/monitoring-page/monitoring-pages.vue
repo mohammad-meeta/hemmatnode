@@ -31,7 +31,7 @@ const Loading = require("VUE-COMPONENTS/general/loading.vue").default;
 
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
-module.exports = {
+export default {
     name: "MonitoringPage",
 
     components: {

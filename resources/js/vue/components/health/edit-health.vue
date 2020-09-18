@@ -1,45 +1,64 @@
 <template lang="pug">
-    .container-child
-        notification(:notification-type="notificationType", @on-close="closeNotification", v-if="showNotification")
-            span(v-html="notificationMessage")
+.container-child
+    notification(
+        :notification-type="notificationType",
+        @on-close="closeNotification",
+        v-if="showNotification"
+    )
+        span(v-html="notificationMessage")
 
-        .column.is-full(v-show="isLoadingMode")
-            h1 در حال بارگذاری
-        .form-small(v-show="! isLoadingMode")
-            .field
-                label.label نام گزارش
-                .control
-                    input.input(type='text', placeholder='نام', v-model='healthData.title' required)
+    .column.is-full(v-show="isLoadingMode")
+        h1 در حال بارگذاری
+    .form-small(v-show="! isLoadingMode")
+        .field
+            label.label نام گزارش
+            .control
+                input.input(
+                    type="text",
+                    placeholder="نام",
+                    v-model="healthData.title",
+                    required
+                )
 
-            .field
-                label.label سال اجرا
-                .control
-                    date-picker(
-                        v-model='healthData.year'
-                        display-format="jYYYY"
-                        type="year"
-                        required
+        .field
+            label.label سال اجرا
+            .control
+                date-picker(
+                    v-model="healthData.year",
+                    display-format="jYYYY",
+                    type="year",
+                    required
+                )
+
+        .field
+            label.label مجری
+            .control
+                input.input(
+                    type="text",
+                    placeholder="مجری",
+                    v-model="healthData.executor",
+                    required
+                )
+
+        .field
+            .panel
+                .panel-heading
+                    | فایل های ضمیمه
+                .panel-block
+                    file-upload(ref="fileUpload", :old-files="oldFiles")
+        .field
+            label.checkbox
+                input(type="checkbox", v-model="healthData.isActive")
+                |
+                | فعال
+            .field.is-grouped
+                .control(v-show="! isLoadingMode")
+                    a.button.is-link.is-rounded(
+                        href="#",
+                        @click.prevent="commandClick(ENUMS.COMMAND.SAVE)"
                     )
-
-            .field
-                label.label مجری
-                .control
-                    input.input(type='text', placeholder='مجری', v-model='healthData.executor' required)
-
-            .field
-                .panel
-                    .panel-heading
-                        | فایل های ضمیمه
-                    .panel-block
-                        file-upload(ref="fileUpload", :old-files="oldFiles")
-            .field
-                label.checkbox
-                    input(type='checkbox', v-model="healthData.isActive")
-                    |   فعال
-                .field.is-grouped
-                    .control(v-show="! isLoadingMode")
-                        a.button.is-link.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
-                            |   ویرایش
+                        |
+                        | ویرایش
 </template>
 
 <script>
@@ -53,7 +72,7 @@ const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 
-module.exports = {
+export default {
     name: "EditHealth",
     components: {
         FileUpload,
@@ -132,7 +151,7 @@ module.exports = {
         commandClick(arg) {
             switch (arg) {
                 case ENUMS.COMMAND.SAVE:
-                    this.EditHealth();
+                    this.editHealth();
                     break;
             }
         },
@@ -169,7 +188,7 @@ module.exports = {
         /**
          * Edit health
          */
-        EditHealth() {
+        async editHealth() {
             const isValid = this.validate();
 
             if (!isValid) {
@@ -180,10 +199,13 @@ module.exports = {
 
             const deletedFiles = this.$refs.fileUpload.getDeletedFiles();
             const newFiles = this.$refs.fileUpload.getNewFiles();
+
             let newUploaded = newFiles.map((x) => x.file);
             Vue.set(this, "files", newUploaded);
+
             let deleteUploaded = deletedFiles.map((x) => x._id);
             Vue.set(this, "deletedOldFiles", deleteUploaded);
+
             let healthData = {
                 _id: this.healthData._id,
                 title: this.healthData.title,
@@ -195,25 +217,24 @@ module.exports = {
                 oldFiles: this.oldFiles,
                 deletedOldFiles: this.deletedOldFiles,
             };
-            this.showLoading();
-            const url = this.editUrl.replace("$id$", healthData._id);
-            AxiosHelper.send("patch", url, healthData, {
-                sendAsFormData: true,
-                filesArray: "files",
-            })
-                .then((res) => {
-                    //const data = JSON.parse(res.config.data);
-                    const data = res.data;
-                    this.$emit("on-update", {
-                        sender: this,
-                        data,
-                    });
-                })
-                .catch((err) => {
-                    console.error(err);
-                    this.setNotification(".خطا در ویرایش پیوست سلامت", "is-danger");
-                })
-                .then(() => this.hideLoading());
+
+            try {
+                const url = this.editUrl.replace("$id$", healthData._id);
+                let res = await AxiosHelper.send("patch", url, healthData, {
+                    sendAsFormData: true,
+                    filesArray: "files",
+                });
+
+                const data = res.data;
+                this.$emit("on-update", {
+                    sender: this,
+                    data,
+                });
+            } catch (err) {
+                this.setNotification(".خطا در ویرایش پیوست سلامت", "is-danger");
+            }
+
+            this.hideLoading();
         },
 
         /**
@@ -232,12 +253,9 @@ module.exports = {
                 .map((key) => errors[key].join("\n"))
                 .join("</br>");
 
-            console.log(error);
             this.setNotification(error, "is-danger");
             return false;
         },
     },
 };
 </script>
-
-<style scoped></style>

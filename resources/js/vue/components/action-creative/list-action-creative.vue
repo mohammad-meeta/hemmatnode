@@ -1,6 +1,6 @@
 <template lang="pug">
 .container-child
-    h1(v-if="! hasActionCreative") هیچ اقدامات خلاقی ایجاد نشده
+    h1(v-if="!hasActionCreative") هیچ اقدامات خلاقی ایجاد نشده
     table.table.is-striped.is-hoverable.is-fullwidth(v-if="hasActionCreative")
         thead
             tr
@@ -9,12 +9,18 @@
                 th تاریخ ایجاد
                 th عملیات
         tbody
-            tr(v-for='actionCreative in actionCreatives', :key='actionCreative.id')
+            tr(
+                v-for="actionCreative in actionCreatives",
+                :key="actionCreative.id"
+            )
                 td {{ actionCreative.title }}
                 td {{ actionCreative.is_active }}
                 td {{ toPersianDate(actionCreative.created_at) }}
                 td.function-links
-                    a.button.is-warning.is-rounded.mt-2(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SHOW, actionCreative)")
+                    a.button.is-warning.is-rounded.mt-2(
+                        href="#",
+                        @click.prevent="commandClick(ENUMS.COMMAND.SHOW, actionCreative)"
+                    )
                         span.icon.is-small
                             i.material-icons.icon swap_horizontal_circle
                         span مشاهده
@@ -42,7 +48,7 @@
         aria-next-label="Next page",
         aria-previous-label="Previous page",
         aria-page-label="Page",
-        aria-current-label="Current page"
+        aria-current-label="Current page",
         @change="loadMemorandums(pagination.current)"
     )
 </template>
@@ -52,7 +58,7 @@
 
 const ENUMS = require("JS-HELPERS/enums");
 
-module.exports = {
+export default {
     props: {
         listUrl: {
             type: String,
@@ -88,16 +94,16 @@ module.exports = {
         /**
          * Load actionCreatives
          */
-        loadActionCreatives(pageId) {
+        async loadActionCreatives(pageId) {
             let url = this.listUrl.replace("$page$", pageId);
             url = url.replace("$pageSize$", 50);
 
-            AxiosHelper.send("get", url, "").then((res) => {
-                const resData = res.data;
-                Vue.set(this, "actionCreatives", resData.data.data);
-                Vue.set(this, "actionCreativesCount", resData.data.count);
-                Vue.set(this.pagination, "total", resData.data.count);
-            });
+            let res = await AxiosHelper.send("get", url, "");
+            const resData = res.data;
+
+            Vue.set(this, "actionCreatives", resData.data.data);
+            Vue.set(this, "actionCreativesCount", resData.data.count);
+            Vue.set(this.pagination, "total", resData.data.count);
         },
 
         /**
@@ -139,6 +145,10 @@ module.exports = {
 
             this.actionCreatives.unshift(newActionCreativeData);
         },
+
+        /**
+         * EditActionCreativeList
+         */
         editActionCreativeList(payload) {
             const editedActionCreativeData = {
                 _id: payload.data.data[0]._id,
@@ -153,10 +163,9 @@ module.exports = {
             let foundIndex = this.actionCreatives.findIndex(
                 (x) => x._id == editedActionCreativeData._id
             );
+
             Vue.set(this.actionCreatives, foundIndex, editedActionCreativeData);
         },
     },
 };
 </script>
-
-<style scoped></style>

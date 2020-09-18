@@ -72,7 +72,7 @@ const ShowMemorandum = require("VUE-COMPONENTS/memorandum/show-memorandum.vue")
     .default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
-module.exports = {
+export default {
     name: "Memorandums",
 
     components: {

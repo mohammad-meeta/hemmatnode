@@ -1,50 +1,73 @@
 <template lang="pug">
-    .container-child
-        notification(:notification-type="notificationType", @on-close="closeNotification", v-if="showNotification")
-            span(v-html="notificationMessage")
+.container-child
+    notification(
+        :notification-type="notificationType",
+        @on-close="closeNotification",
+        v-if="showNotification"
+    )
+        span(v-html="notificationMessage")
 
-        .column.is-full(v-show="isLoadingMode")
-            h1 در حال بارگذاری
-        .form-small(v-show="! isLoadingMode")
-            .field
-                label.label عنوان
-                .control
-                    input.input(type='text', placeholder='عنوان', autofocus, v-model='departmentData.title' required)
-            .field
-                label.label معرفی
-                .control
-                    textarea.textarea(placeholder='معرفی', v-model='departmentData.description')
+    .column.is-full(v-show="isLoadingMode")
+        h1 در حال بارگذاری
+    .form-small(v-show="! isLoadingMode")
+        .field
+            label.label عنوان
+            .control
+                input.input(
+                    type="text",
+                    placeholder="عنوان",
+                    autofocus,
+                    v-model="departmentData.title",
+                    required
+                )
+        .field
+            label.label معرفی
+            .control
+                textarea.textarea(
+                    placeholder="معرفی",
+                    v-model="departmentData.description"
+                )
 
-            .field
-                label.label دسته بندی
-                .control
-                    .select.is-primary
-                        select(v-model="departmentData.departmentCategories",
-                            @change="onChange($event.target.value)")
-                            option(v-for='(departmentCategory, departmentCategoryIndex) in departmentCategories',
-                                :value="departmentCategory._id") {{ departmentCategory.title }}
-                .control
-                    .select.is-primary
-                        select(v-model="departmentData.department")
-                            option(v-for='(department, departmentIndex) in departments',
-                                :value="department._id") {{ department.title }}
+        .field
+            label.label دسته بندی
+            .control
+                .select.is-primary
+                    select(
+                        v-model="departmentData.departmentCategories",
+                        @change="onChange($event.target.value)"
+                    )
+                        option(
+                            v-for="(departmentCategory, departmentCategoryIndex) in departmentCategories",
+                            :value="departmentCategory._id"
+                        ) {{ departmentCategory.title }}
+            .control
+                .select.is-primary
+                    select(v-model="departmentData.department")
+                        option(
+                            v-for="(department, departmentIndex) in departments",
+                            :value="department._id"
+                        ) {{ department.title }}
 
-            .field
-                label.checkbox
-                    input(type='file', @change="setAttachment")
-                    |   ضمیمه
+        .field
+            label.checkbox
+                input(type="file", @change="setAttachment")
+                |
+                | ضمیمه
 
-            .field
-                label.checkbox
-                    input(type='checkbox', v-model="departmentData.is_active")
-                    |   فعال
+        .field
+            label.checkbox
+                input(type="checkbox", v-model="departmentData.is_active")
+                |
+                | فعال
 
-            .field.is-grouped
-                .control(v-show="! isLoadingMode")
-                    a.button.is-link.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
-                        |   ایجاد
-
-
+        .field.is-grouped
+            .control(v-show="! isLoadingMode")
+                a.button.is-link.is-rounded(
+                    href="#",
+                    @click.prevent="commandClick(ENUMS.COMMAND.SAVE)"
+                )
+                    |
+                    | ایجاد
 </template>
 
 <script>
@@ -55,11 +78,11 @@ const ENUMS = require("JS-HELPERS/enums");
 const DepartmentValidator = require("JS-VALIDATORS/department-register-validator");
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
-module.exports = {
+export default {
     name: "RegisterDepartment",
 
     components: {
-        Notification
+        Notification,
     },
 
     data: () => ({
@@ -72,36 +95,36 @@ module.exports = {
             department_category_id: null,
             references: null,
             files: {},
-            is_active: false
+            is_active: false,
         },
 
         notificationMessage: null,
         notificationType: "is-info",
         showLoadingFlag: false,
         files: [],
-        hasNewRegulation: false
+        hasNewRegulation: false,
     }),
 
     props: {
         registerUrl: {
             type: String,
-            default: ""
+            default: "",
         },
 
         departmentCategoriesUrl: {
             type: String,
-            default: ""
+            default: "",
         },
 
         departmentsUrl: {
             type: String,
-            default: ""
+            default: "",
         },
 
         departmentRegulationUrl: {
             type: String,
-            default: ""
-        }
+            default: "",
+        },
     },
 
     created() {
@@ -109,9 +132,9 @@ module.exports = {
     },
 
     computed: {
-        isLoadingMode: state => state.showLoadingFlag == true,
-        showNotification: state => state.notificationMessage != null,
-        showNewRegulation: state => state.hasNewRegulation == true
+        isLoadingMode: (state) => state.showLoadingFlag == true,
+        showNotification: (state) => state.notificationMessage != null,
+        showNewRegulation: (state) => state.hasNewRegulation == true,
     },
 
     methods: {
@@ -127,14 +150,16 @@ module.exports = {
         /**
          * onchange department category
          */
-        onChange($event) {
-            let url = this.departmentsUrl.replace("$department_category$", $event);
-            AxiosHelper.send("get", url, "").then(res => {
-                const resData = res.data;
-                const datas = resData.data.data;
-                Vue.set(this, "departments", datas);
-            });
-            console.log(this.departments);
+        async onChange($event) {
+            let url = this.departmentsUrl.replace(
+                "$department_category$",
+                $event
+            );
+
+            let res = await AxiosHelper.send("get", url, "");
+            const resData = res.data;
+            const datas = resData.data.data;
+            Vue.set(this, "departments", datas);
         },
 
         /**
@@ -153,14 +178,14 @@ module.exports = {
         /**
          * load all departmentCategories for select departmentCategories in form
          */
-        loadDepartmentCategories() {
+        async loadDepartmentCategories() {
             const url = this.departmentCategoriesUrl;
 
-            AxiosHelper.send("get", url, "").then(res => {
-                const resData = res.data;
-                const datas = resData.data.data;
-                Vue.set(this, "departmentCategories", datas);
-            });
+            let res = await AxiosHelper.send("get", url, "");
+            const resData = res.data;
+            const datas = resData.data.data;
+
+            Vue.set(this, "departmentCategories", datas);
         },
 
         /**
@@ -195,52 +220,57 @@ module.exports = {
         /**
          * Register new department
          */
-        registerDepartment() {
+        async registerDepartment() {
             const isValid = this.validate();
 
             if (!isValid) {
                 return;
             }
+
+            this.showLoading();
+
             let departmentData = {
                 title: this.departmentData.title,
                 description: this.departmentData.description,
                 department_category_id: this.departmentData
                     .departmentCategories,
                 references: this.departmentData.department,
-                is_active: this.departmentData.is_active
+                is_active: this.departmentData.is_active,
             };
 
             departmentData.files = this.files[0];
-
-            this.showLoading();
-
             const url = this.registerUrl;
 
-            AxiosHelper.send("post", url, departmentData, {
-                sendAsFormData: true
-            })
-                .then(res => {
-                    const data = res.data;
-                    if (data.success) {
-                        this.$emit("on-register", {
-                            sender: this,
-                            data
-                        });
-                    }
-                })
-                .catch(err => {
-                    const data = err.response.data;
-                    this.setNotification(data, "is-danger");
-                })
-                .then(() => this.hideLoading());
+            try {
+                let res = await AxiosHelper.send("post", url, departmentData, {
+                    sendAsFormData: true,
+                });
+
+                const data = res.data;
+                if (data.success) {
+                    this.$emit("on-register", {
+                        sender: this,
+                        data,
+                    });
+                }
+            } catch (err) {
+                const data = err.response.data;
+                this.setNotification(data, "is-danger");
+            }
+
+            this.hideLoading();
         },
+
         /**
          * after dave department must be saved regulation
          */
         hasNewRegulationFunc(payload) {
             Vue.set(this, "hasNewRegulation", true);
-            this.$refs.departmentRegulation.setDepartmentId(payload.data.data._id);
+            this.$refs.departmentRegulation.setDepartmentId(
+                payload.data.data._id
+            );
         },
+
         /**
          * Validate new department data
          */
@@ -254,16 +284,12 @@ module.exports = {
 
             const errors = result.validator.errors.all();
             const error = Object.keys(errors)
-                .map(key => errors[key].join("\n"))
+                .map((key) => errors[key].join("\n"))
                 .join("</br>");
 
-            console.log(error);
             this.setNotification(error, "is-danger");
             return false;
-        }
-    }
+        },
+    },
 };
 </script>
-
-<style scoped>
-</style>

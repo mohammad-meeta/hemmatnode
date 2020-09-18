@@ -22,7 +22,7 @@
 
 const ENUMS = require("JS-HELPERS/enums");
 
-module.exports = {
+export default {
     name: "ShowRegulation",
 
     data: () => ({

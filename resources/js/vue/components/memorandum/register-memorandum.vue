@@ -75,7 +75,7 @@ const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
 const MultiTextProject = require("VUE-COMPONENTS/memorandum/multi-text-project.vue").default;
 const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 
-module.exports = {
+export default {
     name: "RegisterMemorandum",
 
     components: {

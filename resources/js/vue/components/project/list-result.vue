@@ -38,7 +38,7 @@
 const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
 
-module.exports = {
+export default {
     data: () => ({
         files: [],
         deletedOldFiles: [],

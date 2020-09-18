@@ -27,7 +27,7 @@
 <script>
 "use strict";
 
-module.exports = {
+export default {
     name: "MultiTextApprov",
 
     data: () => ({

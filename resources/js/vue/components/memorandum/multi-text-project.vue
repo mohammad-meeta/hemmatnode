@@ -43,7 +43,7 @@
 
 const MultiTextResult = require("VUE-COMPONENTS/memorandum/multi-text-result.vue").default;
 
-module.exports = {
+export default {
     name: "MultiTextProject",
     components: {
         MultiTextResult

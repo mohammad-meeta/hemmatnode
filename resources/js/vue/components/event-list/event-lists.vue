@@ -1,22 +1,22 @@
 <template lang="pug">
-    .container-parent
-        section.hero
-            notification(:notification-type="notificationType",
-                         @on-close="closeNotification", v-if="showNotification")
-                span(v-html="notificationMessage")
+.container-parent
+    section.hero
+        notification(
+            :notification-type="notificationType",
+            @on-close="closeNotification",
+            v-if="showNotification"
+        )
+            span(v-html="notificationMessage")
 
-            .container.page-header
-                .title
-                    h1 رویدادها
-            .container.main-content
-                .info-card
-                    .info-card-title {{ title }}
-                    .info-card-details
-                        .info-card-item
-                            .info-card-value {{ description }}
-
-
-
+        .container.page-header
+            .title
+                h1 رویدادها
+        .container.main-content
+            .info-card
+                .info-card-title {{ title }}
+                .info-card-details
+                    .info-card-item
+                        .info-card-value {{ description }}
 </template>
 
 <script>
@@ -25,44 +25,47 @@
 const Routes = require("JS-CORE/routes");
 const ENUMS = require("JS-HELPERS/enums");
 const Loading = require("VUE-COMPONENTS/general/loading.vue").default;
-
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
-module.exports = {
+export default {
     name: "EventList",
 
     components: {
         Loading,
-        Notification
+        Notification,
     },
 
     data: () => ({
         ENUMS,
         formModeStack: [],
         title: "انعقاد تفاهم نامه های سال 1398 با دستگاههای اجرایی استان",
-        description: "تفاهم نامه پروژه های سلامت محور سال 1398 با دستگاههای اجرایی منعقد می گردد",
+        description:
+            "تفاهم نامه پروژه های سلامت محور سال 1398 با دستگاههای اجرایی منعقد می گردد",
         notificationMessage: null,
-        notificationType: "is-info"
+        notificationType: "is-info",
     }),
 
     computed: {
-        formMode: state => state.formModeStack[state.formModeStack.length - 1],
+        formMode: (state) =>
+            state.formModeStack[state.formModeStack.length - 1],
 
-        modeLoading: state => state.formMode == ENUMS.FORM_MODE.LOADING,
-        modeList: state => state.formMode == ENUMS.FORM_MODE.LIST,
-        showNotification: state => state.notificationMessage != null
+        modeLoading: (state) => state.formMode == ENUMS.FORM_MODE.LOADING,
+        modeList: (state) => state.formMode == ENUMS.FORM_MODE.LIST,
+        showNotification: (state) => state.notificationMessage != null,
     },
 
+    /**
+     * Created
+     */
     created() {
         this.init();
-    },
-
-    mounted() {
         this.changeFormMode(ENUMS.FORM_MODE.LIST);
     },
 
     methods: {
-
+        /**
+         * Init
+         */
         init() {
             this.changeFormMode(ENUMS.FORM_MODE.LOADING);
         },
@@ -73,7 +76,7 @@ module.exports = {
         changeFormMode(mode, options) {
             const opts = Object.assign(
                 {
-                    pop: false
+                    pop: false,
                 },
                 options
             );
@@ -103,7 +106,7 @@ module.exports = {
          */
         closeNotification() {
             this.setNotification(null);
-        }
-    }
+        },
+    },
 };
 </script>

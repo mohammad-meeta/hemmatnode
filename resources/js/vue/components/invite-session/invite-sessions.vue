@@ -94,7 +94,7 @@ const ShowInviteSession = require("VUE-COMPONENTS/invite-session/show-invite-ses
     .default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
-module.exports = {
+export default {
     name: "InviteSessions",
 
     components: {

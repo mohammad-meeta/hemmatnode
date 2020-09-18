@@ -1,54 +1,66 @@
 <template lang="pug">
-    .container-parent
-        section.hero
-            notification(:notification-type="notificationType", @on-close="closeNotification", v-if="showNotification")
-                span(v-html="notificationMessage")
-            .container.page-header
-                .title
-                    h1(v-show="modeList") گروه
-                    h1(v-show="modeRegister") ایجاد گروه
-                    h1(v-show="modeEdit") ویرایش گروه
+.container-parent
+    section.hero
+        notification(
+            :notification-type="notificationType",
+            @on-close="closeNotification",
+            v-if="showNotification"
+        )
+            span(v-html="notificationMessage")
+        .container.page-header
+            .title
+                h1(v-show="modeList") گروه
+                h1(v-show="modeRegister") ایجاد گروه
+                h1(v-show="modeEdit") ویرایش گروه
 
-        .columns.exposed-form(v-show="!modeLoading")
-            .column.is-one-fifth(v-show="modeList")
-                a.button.is-primary.is-rounded(href="#",
-                @click.prevent="commandClick(ENUMS.COMMAND.NEW)")
-                    span.icon.is-small
-                        i.material-icons.icon check_circle
-                    span ایجاد
+    .columns.exposed-form(v-show="!modeLoading")
+        .column.is-one-fifth(v-show="modeList")
+            a.button.is-primary.is-rounded(
+                href="#",
+                @click.prevent="commandClick(ENUMS.COMMAND.NEW)"
+            )
+                span.icon.is-small
+                    i.material-icons.icon check_circle
+                span ایجاد
 
-            .column.is-one-fifth(v-show="!modeList")
-                a.button.is-warning.is-rounded(href="#",
-                @click.prevent="commandClick(ENUMS.COMMAND.CANCEL)")
-                    span.icon.is-small
-                        i.material-icons.icon check_circle
-                    span بازگشت
+        .column.is-one-fifth(v-show="!modeList")
+            a.button.is-warning.is-rounded(
+                href="#",
+                @click.prevent="commandClick(ENUMS.COMMAND.CANCEL)"
+            )
+                span.icon.is-small
+                    i.material-icons.icon check_circle
+                span بازگشت
 
-        .columns.is-vcentered
-            .column(v-if="modeLoading")
-                loading
+    .columns.is-vcentered
+        .column(v-if="modeLoading")
+            loading
 
-            .column(v-show="!modeLoading && modeList")
-                list-department(ref="departmentList", @on-command="onCommand", :list-url="listUrl")
+        .column(v-show="!modeLoading && modeList")
+            list-department(
+                ref="departmentList",
+                @on-command="onCommand",
+                :list-url="listUrl"
+            )
 
-            .column(v-show="!modeLoading && modeRegister")
-                register-department(ref="departmentRegister", @on-command="onCommand",
-                  @on-register="onDepartmentRegister"
-                  :register-url="registerUrl",
-                  :department-categories-url="departmentCategoriesUrl",
-                  :departments-url="departmentsUrl")
+        .column(v-show="!modeLoading && modeRegister")
+            register-department(
+                ref="departmentRegister",
+                @on-command="onCommand",
+                @on-register="onDepartmentRegister",
+                :register-url="registerUrl",
+                :department-categories-url="departmentCategoriesUrl",
+                :departments-url="departmentsUrl"
+            )
 
-            //.column(v-show="!modeLoading && modeEdit")
-                edit-department(ref="departmentEdit", @on-command="onCommand",
-                @on-update="onDepartmentUpdate"
-                :edit-url="editUrl",
-                :departmentCategories-url="departmentCategoriesUrl")
+        //.column(v-show="!modeLoading && modeEdit")
+            edit-department(ref="departmentEdit", @on-command="onCommand",
+            @on-update="onDepartmentUpdate"
+            :edit-url="editUrl",
+            :departmentCategories-url="departmentCategoriesUrl")
 
-            .column(v-show="!modeLoading && modeShow")
-                show-department(
-                    ref="departmentShow" 
-                    @on-command="onCommand"
-                )
+        .column(v-show="!modeLoading && modeShow")
+            show-department(ref="departmentShow", @on-command="onCommand")
 </template>
 
 <script>
@@ -67,14 +79,13 @@ const ShowDepartment = require("VUE-COMPONENTS/department/show-department.vue")
     .default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
-module.exports = {
+export default {
     name: "Departments",
 
     components: {
         Loading,
         ListDepartment,
         RegisterDepartment,
-        //EditDepartment,
         ShowDepartment,
         Notification,
     },
@@ -174,6 +185,7 @@ module.exports = {
             if (null == arg) {
                 arg = payload;
             }
+
             switch (arg) {
                 case ENUMS.COMMAND.NEW:
                     this.changeFormMode(ENUMS.FORM_MODE.REGISTER);
@@ -181,7 +193,6 @@ module.exports = {
 
                 case ENUMS.COMMAND.REGISTER:
                     /* TODO: REGISTER NEW  */
-                    console.log("REGISTER NEW Department", arg);
                     break;
 
                 case ENUMS.COMMAND.EDIT:

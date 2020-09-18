@@ -37,7 +37,7 @@ const ENUMS = require("JS-HELPERS/enums");
 
 const Paginate = require("vuejs-paginate");
 Vue.component("paginate", Paginate);
-module.exports = {
+export default {
     props: {
         responseListUrl: {
             type: String,

@@ -55,7 +55,7 @@ const RequestValidator = require("JS-VALIDATORS/request-register-validator");
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
 
-module.exports = {
+export default {
     name: "RegisterRequest",
 
     components: {

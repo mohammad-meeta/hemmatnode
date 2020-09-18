@@ -85,7 +85,7 @@ const MultiTextMember = require("VUE-COMPONENTS/invite-session/multi-text-member
     .default;
 const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 
-module.exports = {
+export default {
     name: "EditSemiInviteSession",
     components: {
         Notification,

@@ -62,7 +62,7 @@ const EditUser = require("VUE-COMPONENTS/user/edit-user.vue").default;
 const ShowUser = require("VUE-COMPONENTS/user/show-user.vue").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
-module.exports = {
+export default {
     name: "Users",
 
     components: {

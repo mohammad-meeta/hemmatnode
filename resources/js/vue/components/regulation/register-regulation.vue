@@ -45,7 +45,7 @@ const ENUMS = require("JS-HELPERS/enums");
 const RegulationValidator = require("JS-VALIDATORS/regulation-register-validator");
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
-module.exports = {
+export default {
     name: "RegisterRegulation",
 
     components: {

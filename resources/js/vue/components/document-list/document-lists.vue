@@ -1,24 +1,30 @@
 <template lang="pug">
-    .container-parent
-        section.hero
-            notification(:notification-type="notificationType",
-                         @on-close="closeNotification", v-if="showNotification")
-                span(v-html="notificationMessage")
+.container-parent
+    section.hero
+        notification(
+            :notification-type="notificationType",
+            @on-close="closeNotification",
+            v-if="showNotification"
+        )
+            span(v-html="notificationMessage")
 
-            .container.page-header
-                .title
-                    h1 اسناد راهبردی
-            .container.main-content
-                .intro-cards.columns
-                    .column.is-4(v-for='documentCategory in documentCategories',
-                                 :key='documentCategory.id')
-                        .intro-card
-                            .intro-card-head
-                                h2 {{ documentCategory.title }}
-                            .panel-block.is-active(v-for='doc in documentCategory.document', :key='doc._id')
-                                a(:href="doc.file") {{ doc.title }}
-
-
+        .container.page-header
+            .title
+                h1 اسناد راهبردی
+        .container.main-content
+            .intro-cards.columns
+                .column.is-4(
+                    v-for="documentCategory in documentCategories",
+                    :key="documentCategory.id"
+                )
+                    .intro-card
+                        .intro-card-head
+                            h2 {{ documentCategory.title }}
+                        .panel-block.is-active(
+                            v-for="doc in documentCategory.document",
+                            :key="doc._id"
+                        )
+                            a(:href="doc.file") {{ doc.title }}
 </template>
 
 <script>
@@ -30,12 +36,12 @@ const Loading = require("VUE-COMPONENTS/general/loading.vue").default;
 
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
-module.exports = {
+export default {
     name: "DocumentList",
 
     components: {
         Loading,
-        Notification
+        Notification,
     },
 
     data: () => ({
@@ -47,16 +53,18 @@ module.exports = {
                 title: "اسناد مربوط به کارگروه سلامت و امنیت غذایی",
                 document: [
                     {
-                    id: 1,
-                    title: "اولین صورتجلسه کارگروه سلامت و امنیت غذایی استان",
-                    file: "/images/storage/1.pdf"
+                        id: 1,
+                        title:
+                            "اولین صورتجلسه کارگروه سلامت و امنیت غذایی استان",
+                        file: "/images/storage/1.pdf",
                     },
                     {
-                    id: 3,
-                    title: "دومین صورتجلسه کارگروه سلامت و امنیت غذایی استان",
-                    file: "/images/storage/2.pdf"
+                        id: 3,
+                        title:
+                            "دومین صورتجلسه کارگروه سلامت و امنیت غذایی استان",
+                        file: "/images/storage/2.pdf",
                     },
-                ]
+                ],
             },
             {
                 id: 2,
@@ -64,41 +72,45 @@ module.exports = {
                 document: [
                     {
                         id: 2,
-                        title: "شیوه نامه تشکیل شورای پیام گزاران دستگاههای اجرایی",
-                        file: "/images/storage/tashkil-v-ertegha-payam.pdf"
-                    }
-                ]
-            }
+                        title:
+                            "شیوه نامه تشکیل شورای پیام گزاران دستگاههای اجرایی",
+                        file: "/images/storage/tashkil-v-ertegha-payam.pdf",
+                    },
+                ],
+            },
         ],
         notificationMessage: null,
-        notificationType: "is-info"
+        notificationType: "is-info",
     }),
 
     props: {
         title: {
             type: String,
-            default: null
-        }
+            default: null,
+        },
     },
 
     computed: {
-        formMode: state => state.formModeStack[state.formModeStack.length - 1],
+        formMode: (state) =>
+            state.formModeStack[state.formModeStack.length - 1],
 
-        modeLoading: state => state.formMode == ENUMS.FORM_MODE.LOADING,
-        modeList: state => state.formMode == ENUMS.FORM_MODE.LIST,
-        showNotification: state => state.notificationMessage != null
+        modeLoading: (state) => state.formMode == ENUMS.FORM_MODE.LOADING,
+        modeList: (state) => state.formMode == ENUMS.FORM_MODE.LIST,
+        showNotification: (state) => state.notificationMessage != null,
     },
 
+    /**
+     * Created
+     */
     created() {
         this.init();
-    },
-
-    mounted() {
         this.changeFormMode(ENUMS.FORM_MODE.LIST);
     },
 
     methods: {
-
+        /**
+         * Init
+         */
         init() {
             this.changeFormMode(ENUMS.FORM_MODE.LOADING);
         },
@@ -109,7 +121,7 @@ module.exports = {
         changeFormMode(mode, options) {
             const opts = Object.assign(
                 {
-                    pop: false
+                    pop: false,
                 },
                 options
             );
@@ -139,7 +151,7 @@ module.exports = {
          */
         closeNotification() {
             this.setNotification(null);
-        }
-    }
+        },
+    },
 };
 </script>

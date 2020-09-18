@@ -1,42 +1,71 @@
 <template lang="pug">
-    .container-child
-        notification(:notification-type="notificationType", @on-close="closeNotification", v-if="showNotification")
-            span(v-html="notificationMessage")
+.container-child
+    notification(
+        :notification-type="notificationType",
+        @on-close="closeNotification",
+        v-if="showNotification"
+    )
+        span(v-html="notificationMessage")
 
-        .column.is-full(v-show="isLoadingMode")
-            h1 در حال بارگذاری
-        .form-small(v-show="! isLoadingMode")
-            .field
-                label.label عنوان
-                .control
-                    input.input(type='text', placeholder='نام گزارش', autofocus, v-model='actionCreativeData.title' required)
-            .field
-                label.label شرح
-                .control
-                    textarea.textarea(placeholder='شرح', v-model='actionCreativeData.description' required)
-            .field
-                label.label دلیل خلاق بودن
-                .control
-                    textarea.textarea(placeholder='دلیل خلاق بودن', v-model='actionCreativeData.reason' required)
-            .field
-                label.label مسئول اقدام
-                .control
-                    input.input(type='text', placeholder='مسئول اقدام', autofocus, v-model='actionCreativeData.responsible' required)
-            .field
-                .panel
-                    .panel-heading
-                        | فایل های ضمیمه
-                    .panel-block
-                        file-upload(ref="fileUpload", :old-files="oldFiles")
-            .field
-                label.checkbox
-                    input(type='checkbox', v-model="actionCreativeData.is_active")
-                    |   فعال
-            .field.is-grouped
-                .control(v-show="! isLoadingMode")
-                    a.button.is-link.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
-                        |   ایجاد
+    .column.is-full(v-show="isLoadingMode")
+        h1 در حال بارگذاری
 
+    .form-small(v-show="! isLoadingMode")
+        .field
+            label.label عنوان
+            .control
+                input.input(
+                    type="text",
+                    placeholder="نام گزارش",
+                    autofocus,
+                    v-model="actionCreativeData.title",
+                    required
+                )
+        .field
+            label.label شرح
+            .control
+                textarea.textarea(
+                    placeholder="شرح",
+                    v-model="actionCreativeData.description",
+                    required
+                )
+        .field
+            label.label دلیل خلاق بودن
+            .control
+                textarea.textarea(
+                    placeholder="دلیل خلاق بودن",
+                    v-model="actionCreativeData.reason",
+                    required
+                )
+        .field
+            label.label مسئول اقدام
+            .control
+                input.input(
+                    type="text",
+                    placeholder="مسئول اقدام",
+                    autofocus,
+                    v-model="actionCreativeData.responsible",
+                    required
+                )
+        .field
+            .panel
+                .panel-heading
+                    | فایل های ضمیمه
+                .panel-block
+                    file-upload(ref="fileUpload", :old-files="oldFiles")
+        .field
+            label.checkbox
+                input(type="checkbox", v-model="actionCreativeData.is_active")
+                |
+                | فعال
+        .field.is-grouped
+            .control(v-show="! isLoadingMode")
+                a.button.is-link.is-rounded(
+                    href="#",
+                    @click.prevent="commandClick(ENUMS.COMMAND.SAVE)"
+                )
+                    |
+                    | ایجاد
 </template>
 
 <script>
@@ -49,7 +78,7 @@ const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 
-module.exports = {
+export default {
     name: "RegisterActionCreative",
 
     components: {
@@ -91,14 +120,18 @@ module.exports = {
             default: "",
         },
     },
-    created() {
-        this.clearFormData();
-        this.actionCreativeData.departmentId = this.departmentId;
-    },
 
     computed: {
         isLoadingMode: (state) => state.showLoadingFlag == true,
         showNotification: (state) => state.notificationMessage != null,
+    },
+
+    /**
+     * Created
+     */
+    created() {
+        this.clearFormData();
+        this.actionCreativeData.departmentId = this.departmentId;
     },
 
     methods: {
@@ -132,8 +165,8 @@ module.exports = {
         /**
          * Set notification
          */
-        setNotification(message, notificationType = "is-info") {
-            Vue.set(this, "notificationType", notificationType);
+        setNotification(message, notificationType) {
+            Vue.set(this, "notificationType", notificationType || "is-info");
             Vue.set(this, "notificationMessage", message);
         },
 
@@ -147,49 +180,61 @@ module.exports = {
         /**
          * Register new actionCreative
          */
-        registerActionCreative() {
+        async registerActionCreative() {
             const isValid = this.validate();
 
             if (!isValid) {
                 return;
             }
-            const deletedFiles = this.$refs.fileUpload.getDeletedFiles();
-            const newFiles = this.$refs.fileUpload.getNewFiles();
-            let newUploaded = newFiles.map((x) => x.file);
-            Vue.set(this, "files", newUploaded);
-            let deleteUploaded = deletedFiles.map((x) => x._id);
-            Vue.set(this, "deletedOldFiles", deleteUploaded);
-            Vue.set(this.actionCreativeData, "files", this.files);
-            Vue.set(this.actionCreativeData, "deletedOldFiles", this.deletedOldFiles);
-
-            let actionCreativeData = this.actionCreativeData;
 
             this.showLoading();
 
+            const deletedFiles = this.$refs.fileUpload.getDeletedFiles();
+            const newFiles = this.$refs.fileUpload.getNewFiles();
+
+            let newUploaded = newFiles.map((x) => x.file);
+            Vue.set(this, "files", newUploaded);
+
+            let deleteUploaded = deletedFiles.map((x) => x._id);
+            Vue.set(this, "deletedOldFiles", deleteUploaded);
+
+            Vue.set(this.actionCreativeData, "files", this.files);
+            Vue.set(
+                this.actionCreativeData,
+                "deletedOldFiles",
+                this.deletedOldFiles
+            );
+
             const url = this.registerUrl;
 
-            AxiosHelper.send("post", url, actionCreativeData, {
-                sendAsFormData: true,
-                filesArray: "files",
-            })
-                .then((res) => {
-                    const data = res.data;
-                    if (data.success) {
-                        this.clearFormData();
-                        this.$emit("on-register", {
-                            sender: this,
-                            data: {
-                                data: data,
-                                dep_title: 0,
-                            },
-                        });
+            try {
+                let res = await AxiosHelper.send(
+                    "post",
+                    url,
+                    this.actionCreativeData,
+                    {
+                        sendAsFormData: true,
+                        filesArray: "files",
                     }
-                })
-                .catch((err) => {
-                    const data = err.response.data;
-                    this.setNotification(data, "is-danger");
-                })
-                .then(() => this.hideLoading());
+                );
+                const data = res.data;
+
+                if (data.success) {
+                    this.clearFormData();
+                    this.$emit("on-register", {
+                        sender: this,
+                        data: {
+                            data: data,
+                            dep_title: 0,
+                        },
+                    });
+                }
+            } catch (err) {
+                const data = err.response.data;
+                this.setNotification(data, "is-danger");
+            }
+
+            this.hideLoading();
             this.clearFormData();
         },
 
@@ -197,7 +242,9 @@ module.exports = {
          * Validate new actionCreative data
          */
         validate() {
-            const result = ActionCreativeValidator.validate(this.actionCreativeData);
+            const result = ActionCreativeValidator.validate(
+                this.actionCreativeData
+            );
 
             if (result.passes) {
                 this.closeNotification();
@@ -209,7 +256,6 @@ module.exports = {
                 .map((key) => errors[key].join("\n"))
                 .join("</br>");
 
-            console.log(error);
             this.setNotification(error, "is-danger");
             return false;
         },
@@ -238,5 +284,3 @@ module.exports = {
     },
 };
 </script>
-
-<style scoped></style>

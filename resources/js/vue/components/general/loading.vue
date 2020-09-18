@@ -1,16 +1,13 @@
 <template lang="pug">
-    .columns.is-vcentered
-        .column
-            | LOADING . . .
+.columns.is-vcentered
+    .column
+        | شکیبا باشید ...
 </template>
 
 <script>
 "use strict";
 
-module.exports = {
-    name: "Loading"
+export default {
+    name: "Loading",
 };
 </script>
-
-<style scoped>
-</style>

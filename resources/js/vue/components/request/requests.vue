@@ -57,7 +57,7 @@ const ShowRequest = require("VUE-COMPONENTS/request/show-request.vue").default;
 const EditRequest = require("VUE-COMPONENTS/request/edit-request.vue").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
-module.exports = {
+export default {
     name: "Requests",
 
     components: {

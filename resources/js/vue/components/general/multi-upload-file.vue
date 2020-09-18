@@ -1,78 +1,93 @@
 <template lang="pug">
-    .multi-file-uploader
-        .drop-active(v-show='$refs.upload && $refs.upload.dropActive')
-            h3 Drop files to upload
-        .upload(v-show='!isOption')
-            .table-responsive
-                table.table.table-hover
-                    thead
-                        tr
-                            th #
-                            th Thumb
-                            th Name
-                            th Size
-                            th Speed
-                            th Status
-                            th Action
-                    tbody
-                        tr(v-if='!files.length')
-                            td(colspan='7')
-                                .text-center.p-5
-                                    h4
-                                        | Drop files anywhere to upload
-                                        br
-                                        | or
-                                    label.btn.btn-lg.btn-primary(:for='name') Select Files
-                        tr(v-for='(file, index) in files', :key='file.id')
-                            td {{index}}
-                            td
-                                img(v-if='file.thumb', :src='file.thumb', width='40', height='auto')
-                                span(v-else='') No Image
-                            td
-                                .filename
-                                    | {{file.name}}
-                                .progress(v-if="file.active || file.progress !== '0.00'")
-                                    div(:class="{'progress-bar': true, 'progress-bar-striped': true, 'bg-danger': file.error, 'progress-bar-animated': file.active}", role='progressbar', :style="{width: file.progress + '%'}") {{file.progress}}%
-                            td {{file.size}}
-                            td {{file.speed}}
-                            td(v-if='file.error') {{file.error}}
-                            td(v-else-if='file.success') success
-                            td(v-else-if='file.active') active
-                            td(v-else='')
-                            td
-                                button.btn.btn-secondary(href='#', @click.prevent='$refs.upload.remove(file)') Remove
-        .example-foorer
-            .btn-group
-                file-upload.btn.btn-primary.dropdown-toggle(
-                    :post-action='postAction',
-                    :put-action='putAction',
-                    :extensions='extensions',
-                    :accept='accept',
-                    :multiple='multiple',
-                    :directory='directory',
-                    :size='size || 0',
-                    :thread='thread < 1 ? 1 : (thread > 5 ? 5 : thread)',
-                    :drop='drop',
-                    :drop-directory='dropDirectory',
-                    :add-index='addIndex',
-                    v-model='files',
-                    @input-filter='inputFilter',
-                    @input-file='inputFile',
-                    ref='upload')
-
-                    i.fa.fa-plus
-                    |           Select
+.multi-file-uploader
+    .drop-active(v-show="$refs.upload && $refs.upload.dropActive")
+        h3 Drop files to upload
+    .upload(v-show="!isOption")
+        .table-responsive
+            table.table.table-hover
+                thead
+                    tr
+                        th #
+                        th Thumb
+                        th Name
+                        th Size
+                        th Speed
+                        th Status
+                        th Action
+                tbody
+                    tr(v-if="!files.length")
+                        td(colspan="7")
+                            .text-center.p-5
+                                h4
+                                    | Drop files anywhere to upload
+                                    br
+                                    | or
+                                label.btn.btn-lg.btn-primary(:for="name") Select Files
+                    tr(v-for="(file, index) in files", :key="file.id")
+                        td {{ index }}
+                        td
+                            img(
+                                v-if="file.thumb",
+                                :src="file.thumb",
+                                width="40",
+                                height="auto"
+                            )
+                            span(v-else="") No Image
+                        td
+                            .filename
+                                | {{ file.name }}
+                            .progress(
+                                v-if="file.active || file.progress !== '0.00'"
+                            )
+                                div(
+                                    :class="{ 'progress-bar': true, 'progress-bar-striped': true, 'bg-danger': file.error, 'progress-bar-animated': file.active }",
+                                    role="progressbar",
+                                    :style="{ width: file.progress + '%' }"
+                                ) {{ file.progress }}%
+                        td {{ file.size }}
+                        td {{ file.speed }}
+                        td(v-if="file.error") {{ file.error }}
+                        td(v-else-if="file.success") success
+                        td(v-else-if="file.active") active
+                        td(v-else="")
+                        td
+                            button.btn.btn-secondary(
+                                href="#",
+                                @click.prevent="$refs.upload.remove(file)"
+                            ) Remove
+    .example-foorer
+        .btn-group
+            file-upload.btn.btn-primary.dropdown-toggle(
+                :post-action="postAction",
+                :put-action="putAction",
+                :extensions="extensions",
+                :accept="accept",
+                :multiple="multiple",
+                :directory="directory",
+                :size="size || 0",
+                :thread="thread < 1 ? 1 : thread > 5 ? 5 : thread",
+                :drop="drop",
+                :drop-directory="dropDirectory",
+                :add-index="addIndex",
+                v-model="files",
+                @input-filter="inputFilter",
+                @input-file="inputFile",
+                ref="upload"
+            )
+                i.fa.fa-plus
+                |
+                | Select
 </template>
 <script>
 "use strict";
 
 const VueUploadComponent = require("vue-upload-component");
 
-module.exports = {
+export default {
     name: "MultiUploadFile",
 
     components: {
-        FileUpload: VueUploadComponent
+        FileUpload: VueUploadComponent,
     },
 
     data: () => ({
@@ -94,7 +109,7 @@ module.exports = {
         autoCompress: 1024 * 1024,
         uploadAuto: false,
         isOption: false,
-        files: []
+        files: [],
     }),
 
     methods: {
@@ -124,22 +139,22 @@ module.exports = {
                     const imageCompressor = new ImageCompressor(null, {
                         convertSize: Infinity,
                         maxWidth: 512,
-                        maxHeight: 512
+                        maxHeight: 512,
                     });
 
                     imageCompressor
                         .compress(newFile.file)
-                        .then(file => {
+                        .then((file) => {
                             this.$refs.upload.update(newFile, {
                                 error: "",
                                 file,
                                 size: file.size,
-                                type: file.type
+                                type: file.type,
                             });
                         })
-                        .catch(err => {
+                        .catch((err) => {
                             this.$refs.upload.update(newFile, {
-                                error: err.message || "compress"
+                                error: err.message || "compress",
                             });
                         });
                 }
@@ -216,7 +231,7 @@ module.exports = {
 
         stopUpload() {
             this.$refs.upload.active = false;
-        }
-    }
+        },
+    },
 };
 </script>

@@ -135,7 +135,7 @@ const MultiTextApprov = require("VUE-COMPONENTS/invite-session/multi-text-approv
 const MultiTextMember = require("VUE-COMPONENTS/invite-session/multi-text-member.vue").default;
 const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 
-module.exports = {
+export default {
     name: "RegisterFullInviteSession",
     components: {
         Notification,

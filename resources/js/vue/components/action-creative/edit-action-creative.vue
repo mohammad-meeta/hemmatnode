@@ -1,42 +1,77 @@
 <template lang="pug">
-    .container-child
-        notification(:notification-type="notificationType", @on-close="closeNotification", v-if="showNotification")
-            span(v-html="notificationMessage")
+.container-child
+    notification(
+        :notification-type="notificationType",
+        @on-close="closeNotification",
+        v-if="showNotification"
+    )
+        span(v-html="notificationMessage")
 
-        .column.is-full(v-show="isLoadingMode")
-            h1 در حال بارگذاری
-        .form-small(v-show="! isLoadingMode")
-            .field
-                label.label عنوان
-                .control
-                    input.input(type='text', placeholder='نام گزارش', autofocus, v-model='actionCreativeData.title' required)
-            .field
-                label.label شرح
-                .control
-                    textarea.textarea(placeholder='شرح', v-model='actionCreativeData.description' required)
-            .field
-                label.label دلیل خلاق بودن
-                .control
-                    textarea.textarea(placeholder='دلیل خلاق بودن', v-model='actionCreativeData.reason' required)
-            .field
-                label.label مسئول اقدام
-                .control
-                    input.input(type='text', placeholder='مسئول اقدام', autofocus, v-model='actionCreativeData.responsible' required)
+    .column.is-full(v-show="isLoadingMode")
+        h1 در حال بارگذاری
 
-            .field
-                .panel
-                    .panel-heading
-                        | فایل های ضمیمه
-                    .panel-block
-                        file-upload(ref="fileUpload", :old-files="oldFiles")
-            .field
-                label.checkbox
-                    input(type='checkbox', v-model="actionCreativeData.isActive")
-                    |   فعال
-                .field.is-grouped
-                    .control(v-show="! isLoadingMode")
-                        a.button.is-link.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SAVE)")
-                            |   ویرایش
+    .form-small(v-show="! isLoadingMode")
+        .field
+            label.label عنوان
+            .control
+                input.input(
+                    type="text",
+                    placeholder="نام گزارش",
+                    autofocus,
+                    v-model="actionCreativeData.title",
+                    required
+                )
+
+        .field
+            label.label شرح
+            .control
+                textarea.textarea(
+                    placeholder="شرح",
+                    v-model="actionCreativeData.description",
+                    required
+                )
+
+        .field
+            label.label دلیل خلاق بودن
+            .control
+                textarea.textarea(
+                    placeholder="دلیل خلاق بودن",
+                    v-model="actionCreativeData.reason",
+                    required
+                )
+
+        .field
+            label.label مسئول اقدام
+            .control
+                input.input(
+                    type="text",
+                    placeholder="مسئول اقدام",
+                    autofocus,
+                    v-model="actionCreativeData.responsible",
+                    required
+                )
+
+        .field
+            .panel
+                .panel-heading
+                    | فایل های ضمیمه
+                .panel-block
+                    file-upload(ref="fileUpload", :old-files="oldFiles")
+
+        .field
+            label.checkbox
+                input(type="checkbox", v-model="actionCreativeData.isActive")
+                |
+                | فعال
+
+            .field.is-grouped
+                .control(v-show="! isLoadingMode")
+                    a.button.is-link.is-rounded(
+                        href="#",
+                        @click.prevent="commandClick(ENUMS.COMMAND.SAVE)"
+                    )
+                        |
+                        | ویرایش
 </template>
 
 <script>
@@ -50,7 +85,7 @@ const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 
-module.exports = {
+export default {
     name: "EditActionCreative",
     components: {
         FileUpload,
@@ -92,11 +127,12 @@ module.exports = {
         },
     },
 
+    /**
+     * Created
+     */
     created() {
         Vue.set(this.actionCreativeData, "department_id", this.departmentId);
     },
-
-    mounted() {},
 
     computed: {
         isLoadingMode: (state) => state.showLoadingFlag == true,
@@ -168,7 +204,7 @@ module.exports = {
         /**
          * Edit action creative
          */
-        EditActionCreative() {
+        async EditActionCreative() {
             const isValid = this.validate();
 
             if (!isValid) {
@@ -179,10 +215,13 @@ module.exports = {
 
             const deletedFiles = this.$refs.fileUpload.getDeletedFiles();
             const newFiles = this.$refs.fileUpload.getNewFiles();
+
             let newUploaded = newFiles.map((x) => x.file);
             Vue.set(this, "files", newUploaded);
+
             let deleteUploaded = deletedFiles.map((x) => x._id);
             Vue.set(this, "deletedOldFiles", deleteUploaded);
+
             let actionCreativeData = {
                 _id: this.actionCreativeData._id,
                 title: this.actionCreativeData.title,
@@ -194,32 +233,44 @@ module.exports = {
                 oldFiles: this.oldFiles,
                 deletedOldFiles: this.deletedOldFiles,
             };
-            this.showLoading();
+
             const url = this.editUrl.replace("$id$", actionCreativeData._id);
-            AxiosHelper.send("patch", url, actionCreativeData, {
-                sendAsFormData: true,
-                filesArray: "files",
-            })
-                .then((res) => {
-                    //const data = JSON.parse(res.config.data);
-                    const data = res.data;
-                    this.$emit("on-update", {
-                        sender: this,
-                        data,
-                    });
-                })
-                .catch((err) => {
-                    console.error(err);
-                    this.setNotification(".خطا در ویرایش اقدامات خلاق", "is-danger");
-                })
-                .then(() => this.hideLoading());
+
+            try {
+                let res = await AxiosHelper.send(
+                    "patch",
+                    url,
+                    actionCreativeData,
+                    {
+                        sendAsFormData: true,
+                        filesArray: "files",
+                    }
+                );
+
+                const data = res.data;
+
+                this.$emit("on-update", {
+                    sender: this,
+                    data,
+                });
+            } catch (err) {
+                console.error(err);
+                this.setNotification(
+                    ".خطا در ویرایش اقدامات خلاق",
+                    "is-danger"
+                );
+            }
+
+            this.hideLoading();
         },
 
         /**
          * Validate
          */
         validate() {
-            const result = ActionCreativeValidator.validateEdit(this.actionCreativeData);
+            const result = ActionCreativeValidator.validateEdit(
+                this.actionCreativeData
+            );
 
             if (result.passes) {
                 this.closeNotification();
@@ -233,10 +284,9 @@ module.exports = {
 
             console.log(error);
             this.setNotification(error, "is-danger");
+
             return false;
         },
     },
 };
 </script>
-
-<style scoped></style>

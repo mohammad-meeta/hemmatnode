@@ -126,7 +126,7 @@ const ENUMS = require("JS-HELPERS/enums");
 const ProjectValidator = require("JS-VALIDATORS/project-register-validator");
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
-module.exports = {
+export default {
     name: "RegisterProject",
 
     components: {

@@ -17,7 +17,7 @@
 <script>
 "use strict";
 
-module.exports = {
+export default {
     name: "MultiTextResult",
 
     data: () => ({

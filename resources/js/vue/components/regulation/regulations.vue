@@ -70,7 +70,7 @@ const ShowRegulation = require("VUE-COMPONENTS/regulation/show-regulation.vue")
     .default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
-module.exports = {
+export default {
     name: "Regulations",
 
     components: {

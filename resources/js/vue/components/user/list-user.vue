@@ -59,7 +59,7 @@
 
 const ENUMS = require("JS-HELPERS/enums");
 
-module.exports = {
+export default {
     props: {
         listUrl: {
             type: String,

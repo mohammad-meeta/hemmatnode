@@ -54,7 +54,7 @@ const EditProject = require("VUE-COMPONENTS/project/edit-project.vue").default;
 const ShowProject = require("VUE-COMPONENTS/project/show-project.vue").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
-module.exports = {
+export default {
     name: "Projects",
 
     components: {

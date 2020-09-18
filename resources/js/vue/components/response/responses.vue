@@ -76,7 +76,7 @@ const EditResponse = require("VUE-COMPONENTS/response/edit-response.vue")
     .default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
-module.exports = {
+export default {
     name: "Responses",
 
     components: {

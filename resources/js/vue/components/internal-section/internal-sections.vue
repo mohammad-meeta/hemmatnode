@@ -1,33 +1,39 @@
 <template lang="pug">
-    .container-parent
-        section.hero
-            notification(:notification-type="notificationType",
-                         @on-close="closeNotification", v-if="showNotification")
-                span(v-html="notificationMessage")
+.container-parent
+    section.hero
+        notification(
+            :notification-type="notificationType",
+            @on-close="closeNotification",
+            v-if="showNotification"
+        )
+            span(v-html="notificationMessage")
 
-            .container.page-header
-                .title
-                    h1 هماهنگی درون بخشی
-            .container.main-content
-                //.intro-cards.columns
-                    .column.is-4(v-for='departmentCategory in departmentCategories',
-                                 :key='departmentCategory.id')
-                        .intro-card
-                            .intro-card-head
-                                h2 {{ departmentCategory.title }}
-                            .panel-block.is-active(v-for='dep in departmentCategory.department', :key='dep._id')
-                                a(:href="getUrl(dep._id)") {{ dep.title }}
-
-                .inline-cards
-                    .inline-card.w-100(v-for='departmentCategory in departmentCategories',
-                                 :key='departmentCategory.id')
-                        .inline-card-head
+        .container.page-header
+            .title
+                h1 هماهنگی درون بخشی
+        .container.main-content
+            //.intro-cards.columns
+                .column.is-4(v-for='departmentCategory in departmentCategories',
+                             :key='departmentCategory.id')
+                    .intro-card
+                        .intro-card-head
                             h2 {{ departmentCategory.title }}
-                        .inline-card-body
-                            .inline-card-body-item(v-for='dep in departmentCategory.department', :key='dep._id')
-                                a(:href="getUrl(dep._id)") {{ dep.title }}
+                        .panel-block.is-active(v-for='dep in departmentCategory.department', :key='dep._id')
+                            a(:href="getUrl(dep._id)") {{ dep.title }}
 
-
+            .inline-cards
+                .inline-card.w-100(
+                    v-for="departmentCategory in departmentCategories",
+                    :key="departmentCategory.id"
+                )
+                    .inline-card-head
+                        h2 {{ departmentCategory.title }}
+                    .inline-card-body
+                        .inline-card-body-item(
+                            v-for="dep in departmentCategory.department",
+                            :key="dep._id"
+                        )
+                            a(:href="getUrl(dep._id)") {{ dep.title }}
 </template>
 
 <script>
@@ -39,12 +45,12 @@ const Loading = require("VUE-COMPONENTS/general/loading.vue").default;
 
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
-module.exports = {
+export default {
     name: "InternalSection",
 
     components: {
         Loading,
-        Notification
+        Notification,
     },
 
     data: () => ({
@@ -53,41 +59,48 @@ module.exports = {
         departmentCategories: [],
         department: [],
         notificationMessage: null,
-        notificationType: "is-info"
+        notificationType: "is-info",
     }),
 
     props: {
         title: {
             type: String,
-            default: null
+            default: null,
         },
 
         departmentLinkUrl: {
             type: String,
-            default: null
+            default: null,
         },
 
         departmentCategoriesUrl: {
             type: String,
-            default: null
-        }
+            default: null,
+        },
     },
 
     computed: {
-        formMode: state => state.formModeStack[state.formModeStack.length - 1],
+        formMode: (state) =>
+            state.formModeStack[state.formModeStack.length - 1],
 
-        modeLoading: state => state.formMode == ENUMS.FORM_MODE.LOADING,
-        modeList: state => state.formMode == ENUMS.FORM_MODE.LIST,
-        showNotification: state => state.notificationMessage != null
+        modeLoading: (state) => state.formMode == ENUMS.FORM_MODE.LOADING,
+        modeList: (state) => state.formMode == ENUMS.FORM_MODE.LIST,
+        showNotification: (state) => state.notificationMessage != null,
     },
 
+    /**
+     * Created
+     */
     created() {
         this.init();
+        this.loadDepartmentCategories();
     },
 
+    /**
+     * Mounted
+     */
     mounted() {
         this.changeFormMode(ENUMS.FORM_MODE.LIST);
-        this.loadDepartmentCategories();
     },
 
     methods: {
@@ -105,12 +118,13 @@ module.exports = {
          */
         loadDepartmentCategories() {
             AxiosHelper.send("get", this.departmentCategoriesUrl, "").then(
-                res => {
+                (res) => {
                     const resData = res.data;
                     Vue.set(this, "departmentCategories", resData.data.data);
                 }
             );
         },
+
         /**
          * Init method
          */
@@ -124,7 +138,7 @@ module.exports = {
         changeFormMode(mode, options) {
             const opts = Object.assign(
                 {
-                    pop: false
+                    pop: false,
                 },
                 options
             );
@@ -154,7 +168,7 @@ module.exports = {
          */
         closeNotification() {
             this.setNotification(null);
-        }
-    }
+        },
+    },
 };
 </script>

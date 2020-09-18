@@ -1,16 +1,20 @@
 <template lang="pug">
+div
+    input.is-hidden(
+        type="file",
+        ref="fileInput",
+        multiple,
+        @change="addAttachment"
+    )
+    button.button.is-success(@click="showFileUpload()")
+        i.fa.fa-plus افزودن فایل
+
     div
-        input(type="file" class="is-hidden" ref="fileInput" multiple @change="addAttachment")
-        button.button.is-success(@click="showFileUpload()")
-            i.fa.fa-plus افزودن فایل
-
-        div
-            ul
-                li(v-for="(file, index) in fileList", style="dir: ltr;")
-                    button.button.is-danger(@click.prevent="removeFile(file)") &times;
-                    label {{ humanFileSize(file.file.size) }}
-                    label {{ file.file.name }}
-
+        ul
+            li(v-for="(file, index) in fileList", style="dir: ltr;")
+                button.button.is-danger(@click.prevent="removeFile(file)") &times;
+                label {{ humanFileSize(file.file.size) }}
+                label {{ file.file.name }}
 </template>
 
 <script>
@@ -20,15 +24,15 @@ export default {
     name: "FileUpload",
 
     props: {
-        oldFiles: { type: Array, default: () => [] }
+        oldFiles: { type: Array, default: () => [] },
     },
 
     computed: {
-        fileList: state => state.files.filter(x => !x.is_deleted)
+        fileList: (state) => state.files.filter((x) => !x.is_deleted),
     },
 
     data: () => ({
-        files: []
+        files: [],
     }),
 
     /**
@@ -43,14 +47,14 @@ export default {
         updateOldFiles(payload) {
             Vue.set(this, "files", []);
             const oldFiles = payload || [];
-            oldFiles.forEach(file => {
+            oldFiles.forEach((file) => {
                 let item = {
                     _id: file._id,
                     type: "old",
                     file: {
-                        ...file
+                        ...file,
                     },
-                    is_deleted: false
+                    is_deleted: false,
                 };
                 Vue.set(this.files, this.files.length, item);
             });
@@ -67,14 +71,14 @@ export default {
          * Get deleted files list
          */
         getDeletedFiles() {
-            return this.files.filter(x => x.is_deleted);
+            return this.files.filter((x) => x.is_deleted);
         },
 
         /**
          * Get new files
          */
         getNewFiles() {
-            return this.files.filter(x => x.type == "new");
+            return this.files.filter((x) => x.type == "new");
         },
 
         /**
@@ -95,7 +99,7 @@ export default {
                     _id: uuidV4(),
                     type: "new",
                     file: files[i],
-                    is_deleted: false
+                    is_deleted: false,
                 };
                 Vue.set(this.files, this.files.length, obj);
             }
@@ -111,7 +115,9 @@ export default {
                 if (file.type == "old") {
                     Vue.set(file, "is_deleted", true);
                 } else {
-                    const index = this.files.findIndex(x => x._id == file._id);
+                    const index = this.files.findIndex(
+                        (x) => x._id == file._id
+                    );
 
                     Vue.delete(this.files, index);
                 }
@@ -142,8 +148,8 @@ export default {
             );
 
             return bytes.toFixed(dp) + " " + units[u];
-        }
-    }
+        },
+    },
 };
 </script>
 

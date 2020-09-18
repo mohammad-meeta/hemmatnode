@@ -1,6 +1,6 @@
 <template lang="pug">
 .container-child
-    h1(v-if="! hasHealth") هیچ پیوست سلامتی ایجاد نشده
+    h1(v-if="!hasHealth") هیچ پیوست سلامتی ایجاد نشده
     table.table.is-striped.is-hoverable.is-fullwidth(v-if="hasHealth")
         thead
             tr
@@ -9,12 +9,15 @@
                 th تاریخ ایجاد
                 th عملیات
         tbody
-            tr(v-for='health in healths', :key='health.id')
+            tr(v-for="health in healths", :key="health.id")
                 td {{ health.title }}
                 td {{ health.is_active }}
                 td {{ toPersianDate(health.created_at) }}
                 td.function-links
-                    a.button.is-warning.is-rounded.mt-2(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SHOW, health)")
+                    a.button.is-warning.is-rounded.mt-2(
+                        href="#",
+                        @click.prevent="commandClick(ENUMS.COMMAND.SHOW, health)"
+                    )
                         span.icon.is-small
                             i.material-icons.icon swap_horizontal_circle
                         span مشاهده
@@ -42,7 +45,7 @@
         aria-next-label="Next page",
         aria-previous-label="Previous page",
         aria-page-label="Page",
-        aria-current-label="Current page"
+        aria-current-label="Current page",
         @change="loadMemorandums(pagination.current)"
     )
 </template>
@@ -52,7 +55,7 @@
 
 const ENUMS = require("JS-HELPERS/enums");
 
-module.exports = {
+export default {
     props: {
         listUrl: {
             type: String,
@@ -153,10 +156,9 @@ module.exports = {
             let foundIndex = this.healths.findIndex(
                 (x) => x._id == editedHealthData._id
             );
+
             Vue.set(this.healths, foundIndex, editedHealthData);
         },
     },
 };
 </script>
-
-<style scoped></style>

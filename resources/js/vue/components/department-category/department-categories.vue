@@ -1,49 +1,63 @@
 <template lang="pug">
-    .container-parent
-        section.hero
-            notification(:notification-type="notificationType", @on-close="closeNotification", v-if="showNotification")
-                span(v-html="notificationMessage")
-            .container.page-header
-                .title
-                    h1(v-show="modeList") دسته بندی های گروه
-                    h1(v-show="modeRegister") ایجاد دسته بندی گروه
-                    h1(v-show="modeEdit") ویرایش دسته بندی گروه
+.container-parent
+    section.hero
+        notification(
+            :notification-type="notificationType",
+            @on-close="closeNotification",
+            v-if="showNotification"
+        )
+            span(v-html="notificationMessage")
+        .container.page-header
+            .title
+                h1(v-show="modeList") دسته بندی های گروه
+                h1(v-show="modeRegister") ایجاد دسته بندی گروه
+                h1(v-show="modeEdit") ویرایش دسته بندی گروه
 
-        .columns.exposed-form(v-show="!modeLoading")
-            .column.is-one-fifth(v-show="modeList")
-                a.button.is-primary.is-rounded(href="#",
-                @click.prevent="commandClick(ENUMS.COMMAND.NEW)")
-                    span.icon.is-small
-                        i.material-icons.icon check_circle
-                    span ایجاد
+    .columns.exposed-form(v-show="!modeLoading")
+        .column.is-one-fifth(v-show="modeList")
+            a.button.is-primary.is-rounded(
+                href="#",
+                @click.prevent="commandClick(ENUMS.COMMAND.NEW)"
+            )
+                span.icon.is-small
+                    i.material-icons.icon check_circle
+                span ایجاد
 
-            .column.is-one-fifth(v-show="!modeList")
-                a.button.is-warning.is-rounded(href="#",
-                @click.prevent="commandClick(ENUMS.COMMAND.CANCEL)")
-                    span.icon.is-small
-                        i.material-icons.icon check_circle
-                    span بازگشت
+        .column.is-one-fifth(v-show="!modeList")
+            a.button.is-warning.is-rounded(
+                href="#",
+                @click.prevent="commandClick(ENUMS.COMMAND.CANCEL)"
+            )
+                span.icon.is-small
+                    i.material-icons.icon check_circle
+                span بازگشت
 
-        .columns.is-vcentered
-            .column(v-if="modeLoading")
-                loading
+    .columns.is-vcentered
+        .column(v-if="modeLoading")
+            loading
 
-            .column(v-show="!modeLoading && modeList")
-                list-department-category(ref="departmentCategoryList", @on-command="onCommand", :list-url="listUrl")
+        .column(v-show="!modeLoading && modeList")
+            list-department-category(
+                ref="departmentCategoryList",
+                @on-command="onCommand",
+                :list-url="listUrl"
+            )
 
-            .column(v-show="!modeLoading && modeRegister")
-                register-department-category(@on-command="onCommand",
-                  @on-register="onDepartmentCategoryRegister"
-                  :register-url="registerUrl"
-                  :sections-url="sectionsUrl")
+        .column(v-show="!modeLoading && modeRegister")
+            register-department-category(
+                @on-command="onCommand",
+                @on-register="onDepartmentCategoryRegister",
+                :register-url="registerUrl",
+                :sections-url="sectionsUrl"
+            )
 
-            //.column(v-show="!modeLoading && modeEdit")
-                edit-department-category(ref="departmentCategoryEdit", @on-command="onCommand",
-                @on-update="onDepartmentCategoryUpdate"
-                :edit-url="editUrl",)
+        //.column(v-show="!modeLoading && modeEdit")
+            edit-department-category(ref="departmentCategoryEdit", @on-command="onCommand",
+            @on-update="onDepartmentCategoryUpdate"
+            :edit-url="editUrl",)
 
-            //.column(v-show="!modeLoading && modeShow")
-                show-department-category(ref="departmentCategoryShow", @on-command="onCommand")
+        //.column(v-show="!modeLoading && modeShow")
+            show-department-category(ref="departmentCategoryShow", @on-command="onCommand")
 </template>
 
 <script>
@@ -52,22 +66,20 @@
 const Routes = require("JS-CORE/routes");
 const ENUMS = require("JS-HELPERS/enums");
 const Loading = require("VUE-COMPONENTS/general/loading.vue").default;
-const RegisterDepartmentCategory = require("VUE-COMPONENTS/department-category/register-department-category.vue").default;
-const ListDepartmentCategory = require("VUE-COMPONENTS/department-category/list-department-category.vue").default;
-//const EditDepartmentCategory = require("VUE-COMPONENTS/department-category/edit-department-category.vue").default;
-//const ShowDepartmentCategory = require("VUE-COMPONENTS/department-category/show-department-category.vue").default;
+const RegisterDepartmentCategory = require("VUE-COMPONENTS/department-category/register-department-category.vue")
+    .default;
+const ListDepartmentCategory = require("VUE-COMPONENTS/department-category/list-department-category.vue")
+    .default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
-module.exports = {
+export default {
     name: "DepartmentCategories",
 
     components: {
         Loading,
         ListDepartmentCategory,
         RegisterDepartmentCategory,
-        //EditDepartmentCategory,
-        //ShowDepartmentCategory,
-        Notification
+        Notification,
     },
 
     data: () => ({
@@ -81,45 +93,52 @@ module.exports = {
     props: {
         title: {
             type: String,
-            default: null
+            default: null,
         },
 
         listUrl: {
             type: String,
-            default: null
+            default: null,
         },
 
         registerUrl: {
             type: String,
-            default: null
+            default: null,
         },
 
         editUrl: {
             type: String,
-            default: null
+            default: null,
         },
 
         sectionsUrl: {
             type: String,
-            default: null
-        }
+            default: null,
+        },
     },
 
     computed: {
-        formMode: state => state.formModeStack[state.formModeStack.length - 1],
+        formMode: (state) =>
+            state.formModeStack[state.formModeStack.length - 1],
 
-        modeLoading: state => state.formMode == ENUMS.FORM_MODE.LOADING,
-        modeList: state => state.formMode == ENUMS.FORM_MODE.LIST,
-        modeRegister: state => state.formMode == ENUMS.FORM_MODE.REGISTER,
-        modeEdit: state => state.formMode == ENUMS.FORM_MODE.EDIT,
-        modeShow: state => state.formMode == ENUMS.FORM_MODE.SHOW,
-        showNotification: state => state.notificationMessage != null
+        modeLoading: (state) => state.formMode == ENUMS.FORM_MODE.LOADING,
+        modeList: (state) => state.formMode == ENUMS.FORM_MODE.LIST,
+        modeRegister: (state) => state.formMode == ENUMS.FORM_MODE.REGISTER,
+        modeEdit: (state) => state.formMode == ENUMS.FORM_MODE.EDIT,
+        modeShow: (state) => state.formMode == ENUMS.FORM_MODE.SHOW,
+        showNotification: (state) => state.notificationMessage != null,
     },
 
+    /**
+     * Created
+     */
     created() {
         this.init();
     },
 
+    /**
+     * Mounted
+     */
     mounted() {
         this.changeFormMode(ENUMS.FORM_MODE.LIST);
         this.$refs.departmentCategoryList.loadDepartmentCategories(1);
@@ -130,20 +149,21 @@ module.exports = {
          * On Register department category
          */
         onDepartmentCategoryRegister(payload) {
-            this.$refs.departmentCategoryList.addToDepartmentCategoryList(payload.data.data);
+            this.$refs.departmentCategoryList.addToDepartmentCategoryList(
+                payload.data.data
+            );
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
 
-            this.setNotification(
-                ".دسته بندی با موفقیت ذخیره شد",
-                "is-success"
-            );
+            this.setNotification(".دسته بندی با موفقیت ذخیره شد", "is-success");
         },
 
         /**
          * On Update department category
          */
         onDepartmentCategoryUpdate(payload) {
-            this.$refs.departmentCategoryList.editInDepartmentCategoryList(payload.data);
+            this.$refs.departmentCategoryList.editInDepartmentCategoryList(
+                payload.data
+            );
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
 
             this.setNotification(
@@ -173,7 +193,9 @@ module.exports = {
 
                 case ENUMS.COMMAND.EDIT:
                     /* TODO: REGISTER NEW DepartmentCategory */
-                    this.$refs.departmentCategoryEdit.loadDepartmentCategoryData(data);
+                    this.$refs.departmentCategoryEdit.loadDepartmentCategoryData(
+                        data
+                    );
                     this.changeFormMode(ENUMS.FORM_MODE.EDIT);
                     break;
 
@@ -182,7 +204,9 @@ module.exports = {
                     break;
 
                 case ENUMS.COMMAND.SHOW:
-                    this.$refs.departmentCategoryShow.loadDepartmentCategoryData(data);
+                    this.$refs.departmentCategoryShow.loadDepartmentCategoryData(
+                        data
+                    );
                     this.changeFormMode(ENUMS.FORM_MODE.SHOW);
                     break;
             }
@@ -210,7 +234,7 @@ module.exports = {
         changeFormMode(mode, options) {
             const opts = Object.assign(
                 {
-                    pop: false
+                    pop: false,
                 },
                 options
             );
@@ -243,5 +267,4 @@ module.exports = {
         },
     },
 };
-
 </script>

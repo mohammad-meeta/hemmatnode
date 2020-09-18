@@ -61,7 +61,7 @@ const ListResult = require("VUE-COMPONENTS/result/list-result.vue")
 //const ShowResult = require("VUE-COMPONENTS/result/show-result.vue").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
-module.exports = {
+export default {
     name: "Results",
 
     components: {

@@ -62,7 +62,7 @@ const ListProgram = require("VUE-COMPONENTS/program/list-program.vue").default;
 const ShowProgram = require("VUE-COMPONENTS/program/show-program.vue").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
-module.exports = {
+export default {
     name: "Programs",
 
     components: {

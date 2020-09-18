@@ -1,52 +1,68 @@
 <template lang="pug">
-    .container-parent
-        section.hero
-            notification(:notification-type="notificationType", @on-close="closeNotification", v-if="showNotification")
-                span(v-html="notificationMessage")
-            .container.page-header
-                .title
-                    h1(v-show="modeList") پیوست سلامت
-                    h1(v-show="modeRegister") ایجاد پیوست سلامت
+.container-parent
+    section.hero
+        notification(
+            :notification-type="notificationType",
+            @on-close="closeNotification",
+            v-if="showNotification"
+        )
+            span(v-html="notificationMessage")
+        .container.page-header
+            .title
+                h1(v-show="modeList") پیوست سلامت
+                h1(v-show="modeRegister") ایجاد پیوست سلامت
 
-        .columns.exposed-form(v-show="!modeLoading")
-            .column.is-one-fifth(v-show="modeList")
-                a.button.is-primary.is-rounded(href="#",
-                @click.prevent="commandClick(ENUMS.COMMAND.NEW)")
-                    span.icon.is-small
-                        i.material-icons.icon check_circle
-                    span ایجاد
+    .columns.exposed-form(v-show="!modeLoading")
+        .column.is-one-fifth(v-show="modeList")
+            a.button.is-primary.is-rounded(
+                href="#",
+                @click.prevent="commandClick(ENUMS.COMMAND.NEW)"
+            )
+                span.icon.is-small
+                    i.material-icons.icon check_circle
+                span ایجاد
 
-            .column.is-one-fifth(v-show="!modeList")
-                a.button.is-warning.is-rounded(href="#",
-                @click.prevent="commandClick(ENUMS.COMMAND.CANCEL)")
-                    span.icon.is-small
-                        i.material-icons.icon check_circle
-                    span بازگشت
+        .column.is-one-fifth(v-show="!modeList")
+            a.button.is-warning.is-rounded(
+                href="#",
+                @click.prevent="commandClick(ENUMS.COMMAND.CANCEL)"
+            )
+                span.icon.is-small
+                    i.material-icons.icon check_circle
+                span بازگشت
 
-        .columns.is-vcentered
-            .column(v-if="modeLoading")
-                loading
+    .columns.is-vcentered
+        .column(v-if="modeLoading")
+            loading
 
-            .column(v-show="!modeLoading && modeList")
-                list-health(ref="healthList", @on-command="onCommand", :list-url="listUrl")
+        .column(v-show="!modeLoading && modeList")
+            list-health(
+                ref="healthList",
+                @on-command="onCommand",
+                :list-url="listUrl"
+            )
 
-            .column(v-show="!modeLoading && modeRegister")
-                register-health(ref="healthRegister", @on-command="onCommand",
-                  @on-register="onHealthRegister"
-                  :register-url="registerUrl",
-                  :department-id="departmentId",
-                  :year="year"
-                  )
+        .column(v-show="!modeLoading && modeRegister")
+            register-health(
+                ref="healthRegister",
+                @on-command="onCommand",
+                @on-register="onHealthRegister",
+                :register-url="registerUrl",
+                :department-id="departmentId",
+                :year="year"
+            )
 
-            .column(v-show="!modeLoading && modeEdit")
-                edit-health(ref="healthEdit", @on-command="onCommand",
-                @on-update="onHealthUpdate"
-                :edit-url="editUrl"
+        .column(v-show="!modeLoading && modeEdit")
+            edit-health(
+                ref="healthEdit",
+                @on-command="onCommand",
+                @on-update="onHealthUpdate",
+                :edit-url="editUrl",
                 :department-id="departmentId"
-                )
+            )
 
-            .column(v-show="!modeLoading && modeShow")
-                show-health(ref="healthShow", @on-command="onCommand")
+        .column(v-show="!modeLoading && modeShow")
+            show-health(ref="healthShow", @on-command="onCommand")
 </template>
 
 <script>
@@ -62,7 +78,7 @@ const ListHealth = require("VUE-COMPONENTS/health/list-health.vue").default;
 const ShowHealth = require("VUE-COMPONENTS/health/show-health.vue").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
-module.exports = {
+export default {
     name: "Healths",
 
     components: {
@@ -129,8 +145,9 @@ module.exports = {
         showNotification: (state) => state.notificationMessage != null,
     },
 
-    created() {},
-
+    /**
+     * Mounted
+     */
     mounted() {
         this.init();
         this.changeFormMode(ENUMS.FORM_MODE.LIST);
@@ -142,9 +159,7 @@ module.exports = {
          */
         onHealthRegister(payload) {
             //***update vue list****
-            this.$refs.healthList.addToHealthList(
-                payload.data.data.data[0]
-            );
+            this.$refs.healthList.addToHealthList(payload.data.data.data[0]);
             this.setNotification(
                 ".پیوست سلامت با موفقیت ذخیره شد",
                 "is-success"

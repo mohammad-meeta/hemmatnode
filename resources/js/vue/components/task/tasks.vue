@@ -61,7 +61,7 @@ const ListTask = require("VUE-COMPONENTS/task/list-task.vue")
 //const ShowTask = require("VUE-COMPONENTS/task/show-task.vue").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
-module.exports = {
+export default {
     name: "Tasks",
 
     components: {

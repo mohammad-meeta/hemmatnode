@@ -1,18 +1,18 @@
 <template lang="pug">
-    .notification(:class="notificationType")
-        button.delete(@click.prevent="closeNotifiaction")
-        slot
+.notification(:class="notificationType")
+    button.delete(@click.prevent="closeNotifiaction")
+    slot
 </template>
 
 <script>
-module.exports = {
+export default {
     name: "Notifiaction",
 
     props: {
         notificationType: {
             type: String,
-            default: "is-info"
-        }
+            default: "is-info",
+        },
     },
 
     methods: {
@@ -20,11 +20,8 @@ module.exports = {
          * Close notification dialog
          */
         closeNotifiaction(e) {
-            this.$emit('on-close', this);
-        }
-    }
+            this.$emit("on-close", this);
+        },
+    },
 };
 </script>
-
-<style scoped>
-</style>

@@ -1,55 +1,58 @@
 <template lang="pug">
-    .container
-        .column.is-full(v-show="isLoadingMode")
-            h1 در حال بارگذاری
-        .column.is-full(v-show="! isLoadingMode")
-            .container.page-header
-                .hero-dashboard
-                    .field.is-grouped
-                        .control(v-for='item in accessLink')
-                            a.button.is-primary.is-rounded(:href="item.link") {{ item.text }}
+.container
+    .column.is-full(v-show="isLoadingMode")
+        h1 در حال بارگذاری
+    .column.is-full(v-show="! isLoadingMode")
+        .container.page-header
+            .hero-dashboard
+                .field.is-grouped
+                    .control(v-for="item in accessLink")
+                        a.button.is-primary.is-rounded(:href="item.link") {{ item.text }}
 
-            .info-card
-                .info-card-title {{ departmentData.title }}
-                .info-card-details
-                    .info-card-item
-                        p.info-card-value {{ departmentData.description }}
+        .info-card
+            .info-card-title {{ departmentData.title }}
+            .info-card-details
+                .info-card-item
+                    p.info-card-value {{ departmentData.description }}
 
-            .intro-cards.columns(v-if="hasContentProjects")
-                .column.is-4
-                    b-collapse.card(
-                        animation="slide"
-                        :open="false",
-                        aria-id="contentIdForA11y3"
+        .intro-cards.columns(v-if="hasContentProjects")
+            .column.is-4
+                b-collapse.card(
+                    animation="slide",
+                    :open="false",
+                    aria-id="contentIdForA11y3"
+                )
+                    .card-header(
+                        v-if="hasProject",
+                        slot="trigger",
+                        slot-scope="props",
+                        role="button",
+                        aria-controls="contentIdForA11y3"
                     )
-                        .card-header(
-                            v-if="hasProject"
-                            slot="trigger"
-                            slot-scope="props"
-                            role="button"
-                            aria-controls="contentIdForA11y3"
-                        )
-                            p.card-header-title
-                                | برنامه های {{ departmentData.title }}
-                            a.card-header-icon
-                                b-icon(:icon="props.open ? 'menu-down' : 'menu-up'")
-                        .intro-card-block(v-for='year in yearsProject')
-                            a(:href="createLinkProject(year)")
-                                | برنامه های سال {{ year }}
+                        p.card-header-title
+                            | برنامه های {{ departmentData.title }}
+                        a.card-header-icon
+                            b-icon(
+                                :icon="props.open ? 'menu-down' : 'menu-up'"
+                            )
+                    .intro-card-block(v-for="year in yearsProject")
+                        a(:href="createLinkProject(year)")
+                            | برنامه های سال {{ year }}
 
-                    .intro-card
-                        .intro-card-head
-                            h2 پروژه ها
-                        .intro-card-block(v-for='item in accessContentLink')
-                            a(:href="item.link") {{ item.text }}
+                .intro-card
+                    .intro-card-head
+                        h2 پروژه ها
+                    .intro-card-block(v-for="item in accessContentLink")
+                        a(:href="item.link") {{ item.text }}
 </template>
+
 <script>
 "use strict";
 
 const Buefy = require("buefy").default;
 const ENUMS = require("JS-HELPERS/enums");
 
-module.exports = {
+export default {
     name: "ShowDepartment",
 
     data: () => ({
@@ -108,6 +111,9 @@ module.exports = {
         },
     },
 
+    /**
+     * Created
+     */
     created() {
         this.loadLinkAccess(this.departmentId);
     },
@@ -127,23 +133,23 @@ module.exports = {
             url = this.showPragramYearUrl.replace(/\$year\$/g, year);
             return url;
         },
+
         /**
          * Load specific department
          */
-        loadDepartmentData(id) {
+        async loadDepartmentData(id) {
             id = id || this.departmentId;
             let url = this.loadUrl || this.showLoadUrl;
             url = url.replace(/\$department\$/g, id);
 
-            AxiosHelper.send("get", url)
-                .then((res) => {
-                    const data = res.data.data.data;
-                    Vue.set(this, "departmentData", data || {});
-                })
-                .catch((err) => {
-                    console.error(err);
-                    alert("Error");
-                });
+            try {
+                let res = await AxiosHelper.send("get", url);
+
+                const data = res.data.data.data;
+                Vue.set(this, "departmentData", data || {});
+            } catch (err) {
+                alert("Error");
+            }
         },
 
         /**
@@ -163,89 +169,90 @@ module.exports = {
         /**
          * load link access
          */
-        loadLinkAccess(id) {
+        async loadLinkAccess(id) {
             id = id || this.departmentId;
             let url = this.showLoadAccessLinkUrl;
-            if (null != url) {
-                url = url.replace(/\$department\$/g, id);
 
-                AxiosHelper.send("get", url)
-                    .then((res) => {
-                        if (res.data.success) {
-                            const data = res.data.data || [];
-                            if (data.length > 0) {
-                                const changeData = this.replaceChildInUrl(
-                                    data[0].text_link,
-                                    id
-                                );
-                                Vue.set(this, "accessLink", changeData);
-                                const changeContentData = this.replaceDepartmentTypeInUrl(
-                                    data[0].access_content_link,
-                                    id
-                                );
-                                Vue.set(
-                                    this,
-                                    "accessContentLink",
-                                    changeContentData
-                                );
-                                Vue.set(
-                                    this,
-                                    "hasProject",
-                                    data[0].project_flag
-                                );
+            if (null == url) {
+                return;
+            }
 
-                                if (this.hasProject) {
-                                    AxiosHelper.send(
-                                        "get",
-                                        this.programGroupDateUrl
-                                    ).then((res) => {
-                                        if (res.data.success) {
-                                            const dataPrjGr =
-                                                res.data.data || [];
-                                            if (data.length > 0) {
-                                                const arrDataPrjGr = [];
-                                                dataPrjGr.forEach((element) => {
-                                                    arrDataPrjGr.push(
-                                                        element._id
-                                                    );
-                                                });
-                                                Vue.set(
-                                                    this,
-                                                    "yearsProject",
-                                                    arrDataPrjGr
-                                                );
-                                            }
-                                        }
+            url = url.replace(/\$department\$/g, id);
+            try {
+                let res = await AxiosHelper.send("get", url);
+
+                if (res.data.success) {
+                    const data = res.data.data || [];
+                    if (data.length > 0) {
+                        const changeData = this.replaceChildInUrl(
+                            data[0].text_link,
+                            id
+                        );
+
+                        Vue.set(this, "accessLink", changeData);
+                        const changeContentData = this.replaceDepartmentTypeInUrl(
+                            data[0].access_content_link,
+                            id
+                        );
+
+                        Vue.set(this, "accessContentLink", changeContentData);
+                        Vue.set(this, "hasProject", data[0].project_flag);
+
+                        if (this.hasProject) {
+                            res = await AxiosHelper.send(
+                                "get",
+                                this.programGroupDateUrl
+                            );
+
+                            if (res.data.success) {
+                                const dataPrjGr = res.data.data || [];
+
+                                if (data.length > 0) {
+                                    const arrDataPrjGr = [];
+                                    dataPrjGr.forEach((element) => {
+                                        arrDataPrjGr.push(element._id);
                                     });
+
+                                    Vue.set(this, "yearsProject", arrDataPrjGr);
                                 }
                             }
-                        } else {
-                            Vue.set(this, "accessLink", []);
                         }
-                    })
-                    .catch((err) => {
-                        console.error(err);
-                        alert("Error");
-                    });
+                    }
+                } else {
+                    Vue.set(this, "accessLink", []);
+                }
+            } catch (err) {
+                alert("Error");
             }
         },
 
+        /**
+         * replaceChildInUrl
+         */
         replaceChildInUrl(input, id) {
             const data = input;
+
             for (let index = 0; index < data.length; index++) {
                 const element = data[index];
 
                 data[index].link = data[index].link.replace("#child#", id);
             }
+
             return data;
         },
+
+        /**
+         * ReplaceDepartmentTypeInUrl
+         */
         replaceDepartmentTypeInUrl(input, id) {
             const data = input;
+
             for (let index = 0; index < data.length; index++) {
                 const element = data[index];
 
                 data[index].link = data[index].link.replace("#department#", id);
             }
+
             return data;
         },
     },

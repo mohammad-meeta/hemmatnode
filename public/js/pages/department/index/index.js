@@ -843,6 +843,10 @@ module.exports = {
 //
 //
 //
+//
+//
+//
+//
 
 
 var Buefy = __webpack_require__(/*! buefy */ "./node_modules/buefy/dist/esm/index.js")["default"];
@@ -24103,7 +24107,9 @@ var render = function() {
                       })
                     ],
                     2
-                  )
+                  ),
+                  _vm._m(1),
+                  _vm._m(2)
                 ],
                 1
               )
@@ -24120,6 +24126,22 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "intro-card-head" }, [
       _c("h2", [_vm._v("پروژه ها")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "inline-card-body-item" }, [
+      _c("a", { attrs: { href: "#" } }, [_vm._v("پیوست سلامت")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "inline-card-body-item" }, [
+      _c("a", { attrs: { href: "#" } }, [_vm._v("اقدامات خلاق")])
     ])
   }
 ]

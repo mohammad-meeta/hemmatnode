@@ -42,6 +42,10 @@
                             h2 پروژه ها
                         .intro-card-block(v-for='item in accessContentLink')
                             a(:href="item.link") {{ item.text }}
+                    .inline-card-body-item
+                        a(href="#") پیوست سلامت
+                    .inline-card-body-item
+                        a(href="#") اقدامات خلاق
 </template>
 <script>
 "use strict";

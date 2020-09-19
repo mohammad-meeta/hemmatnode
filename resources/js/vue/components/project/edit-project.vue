@@ -1,6 +1,5 @@
 <template lang="pug">
 .container-child
-    file-manager(v-model="fileList")
     notification(
         :notification-type="notificationType",
         @on-close="closeNotification",
@@ -313,7 +312,6 @@ const AxiosHelper = require("JS-HELPERS/axios-helper");
 const ENUMS = require("JS-HELPERS/enums");
 const ProjectValidator = require("JS-VALIDATORS/project-register-validator");
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
-const FileManager = require("VUE-COMPONENTS/general/file-manager.vue").default;
 const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 const ListResult = require("VUE-COMPONENTS/project/list-result.vue").default;
 
@@ -322,7 +320,6 @@ export default {
 
     components: {
         Notification,
-        FileManager,
         FileUpload,
         ListResult,
     },

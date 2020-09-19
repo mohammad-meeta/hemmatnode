@@ -1,6 +1,6 @@
 'use strict';
 
 /* Export */
-export default {
+module.exports = {
     level: process.env.LOG_LEVEL || 'info',
 };

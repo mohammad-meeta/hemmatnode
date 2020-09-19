@@ -62,6 +62,20 @@ export default {
 
     methods: {
         /**
+         * Get deleted files
+         */
+        getDeletedFiles() {
+            return this.files.filter((x) => x.deleted);
+        },
+
+        /**
+         * Get deleted files
+         */
+        getNewFiles() {
+            return this.files.filter((x) => x instanceof File);
+        },
+
+        /**
          * Update files
          */
         updateFiles(value) {

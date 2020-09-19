@@ -29,6 +29,7 @@
                         role="button",
                         aria-controls="contentIdForA11y3"
                     )
+<<<<<<< HEAD
                         p.card-header-title
                             | برنامه های {{ departmentData.title }}
                         a.card-header-icon
@@ -44,6 +45,32 @@
                         h2 پروژه ها
                     .intro-card-block(v-for="item in accessContentLink")
                         a(:href="item.link") {{ item.text }}
+=======
+                        .card-header(
+                            v-if="hasProject"
+                            slot="trigger"
+                            slot-scope="props"
+                            role="button"
+                            aria-controls="contentIdForA11y3"
+                        )
+                            p.card-header-title
+                                | برنامه های {{ departmentData.title }}
+                            a.card-header-icon
+                                b-icon(:icon="props.open ? 'menu-down' : 'menu-up'")
+                        .intro-card-block(v-for='year in yearsProject')
+                            a(:href="createLinkProject(year)")
+                                | برنامه های سال {{ year }}
+
+                    .intro-card
+                        .intro-card-head
+                            h2 پروژه ها
+                        .intro-card-block(v-for='item in accessContentLink')
+                            a(:href="item.link") {{ item.text }}
+                    .inline-card-body-item
+                        a(href="#") پیوست سلامت
+                    .inline-card-body-item
+                        a(href="#") اقدامات خلاق
+>>>>>>> a8423caa3eeaeb097010b9042607c4cc2170ee6c
 </template>
 
 <script>

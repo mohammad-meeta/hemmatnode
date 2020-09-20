@@ -1,31 +1,33 @@
 <template lang="pug">
 .block
     //- Upload box
-    .file.is-boxed
-        label.file-label
-            input.file-input(
-                multiple,
-                ref="fileInput",
-                type="file",
-                name="resume",
-                @input="fileSelected"
-            )
-            span.file-cta
-                span.file-icon
-                    i.fas.fa-upload
-                span.file-label
-                    | افزودن فایل
+    .field
+        .file.is-primary
+            label.file-label
+                input.file-input(
+                    multiple,
+                    ref="fileInput",
+                    type="file",
+                    name="resume",
+                    @input="fileSelected"
+                )
+                span.file-cta
+                    span.file-icon
+                        i.fa.fa-upload
+                    span.file-label
+                        | افزودن فایل
 
     //- Files list
-    .columns(v-for="(file, index) in undeletedFiles", :key="index")
-        .column.is-3.has-text-left
-            a.button.is-danger.has-text-white(
-                href="#",
-                @click.prevent="removeFile(file)"
-            ) &times;
-            | {{ file.size }}
-        .column.is-9.has-text-left
+    .info-card-details(v-for="(file, index) in undeletedFiles", :key="index")
+        span
             | {{ file.name }}
+        span
+            | {{ file.size }}
+        .button.is-danger.has-text-white(
+            @click.prevent="removeFile(file)"
+            ) &times;
+
+
 </template>
 
 <script>

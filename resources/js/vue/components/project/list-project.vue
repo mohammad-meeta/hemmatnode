@@ -41,19 +41,19 @@ export default {
     props: {
         listUrl: {
             type: String,
-            default: ""
-        }
+            default: "",
+        },
     },
 
     data: () => ({
         ENUMS,
         projects: [],
         projectsCount: 0,
-        pageCount: 0
+        pageCount: 0,
     }),
 
     computed: {
-        hasProject: state => (state.projects || []).length
+        hasProject: (state) => (state.projects || []).length,
     },
 
     methods: {
@@ -61,13 +61,12 @@ export default {
          * Load projects
          */
         loadProjects(pageId) {
-
             let url = this.listUrl
                 .replace(/\$page\$/g, pageId)
                 .replace(/\$pageSize\$/g, 50);
             url = url.replace("$pageSize$", 50);
-            console.log(url);
-            AxiosHelper.send("get", url, "").then(res => {
+
+            AxiosHelper.send("get", url, "").then((res) => {
                 const resData = res.data;
                 Vue.set(this, "projects", resData.data.data);
                 Vue.set(this, "projectsCount", resData.data.count);
@@ -113,7 +112,7 @@ export default {
                 _id: payload._id,
                 title: payload.title,
                 is_active: payload.is_active,
-                created_at: payload.created_at
+                created_at: payload.created_at,
             };
 
             this.projects.unshift(newProjectData);
@@ -125,23 +124,21 @@ export default {
                 _id: payload._id,
                 title: payload.title,
                 is_active: payload.is_active,
-                created_at: payload.created_at
+                created_at: payload.created_at,
             };
 
             let foundIndex = this.projects.findIndex(
-                x => x._id == editedProjectData._id
+                (x) => x._id == editedProjectData._id
             );
             this.projects[foundIndex].title = editedProjectData.title;
-            if(editedProjectData.is_active == "false") {
+            if (editedProjectData.is_active == "false") {
                 this.inviteSessions[foundIndex].is_active = false;
-            }
-            else {
+            } else {
                 this.inviteSessions[foundIndex].is_active = true;
             }
-        }
-    }
+        },
+    },
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

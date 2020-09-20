@@ -77,7 +77,8 @@ Program.paginateProgramYear = async function paginateProgramYear(req, res, next)
         let result = {};
 
         let data = await ProgramHelper.loadAllProgramCountYearData(group, year);
-        let count = data.data;
+
+        let count = data;
 
         data = await ProgramHelper.loadAllProgramYearData(req, dataPaginate, group, year);
         result = {
@@ -87,7 +88,6 @@ Program.paginateProgramYear = async function paginateProgramYear(req, res, next)
                 count: count
             }
         };
-
         res.status(200)
             .send(result)
             .end();

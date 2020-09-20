@@ -96,7 +96,6 @@ export default {
             files: {},
                 is_active: data.is_active
             };
-            console.log(temp);
             Vue.set(this, "projectData", temp);
         },
 

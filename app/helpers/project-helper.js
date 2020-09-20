@@ -106,6 +106,12 @@ ProjecttHelper.loadAllProjectData = async function loadAllProjectData(req, dataP
                             "_id": 1,
                             "is_active": 1,
                             "result": 1,
+
+                            "is_active": 1,
+                            "standard": 1,
+                            "cast": 1,
+                            "deadline": 1,
+
                             "project_id": 1,
                             "user_id": 1,
                             "updated_at": 1,
@@ -120,6 +126,9 @@ ProjecttHelper.loadAllProjectData = async function loadAllProjectData(req, dataP
                             "files": { "$push": "$files" },
                             "is_active": { "$last": "$is_active" },
                             "result": { "$last": "$result" },
+                            "standard": { "$last": "$standard" },
+                            "cast": { "$last": "$cast" },
+                            "deadline": { "$last": "$deadline" },
                             "project_id": { "$last": "$project_id" },
                             "user_id": { "$last": "$user_id" },
                             "updated_at": { "$last": "$updated_at" },
@@ -314,6 +323,7 @@ ProjecttHelper.loadAllProjectData = async function loadAllProjectData(req, dataP
             };
         }
     }
+    // console.log(JSON.stringify(res, null, 2))
     return res;
 
 };
@@ -589,10 +599,9 @@ ProjecttHelper.insertNewProject = async function insertNewProject(data) {
  */
 ProjecttHelper.updateProjectData = async function updateProjectData(data) {
     const Project = mongoose.model('Project');
-    let res2 = Project.findByIdAndUpdate(data._id, data, {
+    let res2 = await Project.findByIdAndUpdate(data._id, data, {
         useFindAndModify: false, new: true
     });
-
     const pipeline = [
         {
             $match: {

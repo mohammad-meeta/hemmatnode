@@ -262,10 +262,8 @@ export default {
             if (!isValid) {
                 return;
             }
-            console.log("this.projectData");
             let projectData = this.projectData;
 
-            console.log(projectData);
             projectData.files = this.files[0];
 
             this.showLoading();

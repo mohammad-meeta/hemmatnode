@@ -33,7 +33,9 @@
                 edit-project(ref="projectEdit", @on-command="onCommand",
                 @on-update="onProjectUpdate"
                 :edit-url="editUrl",
-                :programs-url="programsUrl")
+                :programs-url="programsUrl"
+                :edit-result-url="editResultUrl"
+            )
 
             .column(v-show="!modeLoading && modeShow")
                 show-project(ref="projectShow", @on-command="onCommand")
@@ -48,8 +50,7 @@ const ENUMS = require("JS-HELPERS/enums");
 const Loading = require("VUE-COMPONENTS/general/loading.vue").default;
 const RegisterProject = require("VUE-COMPONENTS/project/register-project.vue")
     .default;
-const ListProject = require("VUE-COMPONENTS/project/list-project.vue")
-    .default;
+const ListProject = require("VUE-COMPONENTS/project/list-project.vue").default;
 const EditProject = require("VUE-COMPONENTS/project/edit-project.vue").default;
 const ShowProject = require("VUE-COMPONENTS/project/show-project.vue").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
@@ -63,7 +64,7 @@ export default {
         RegisterProject,
         EditProject,
         ShowProject,
-        Notification
+        Notification,
     },
 
     data: () => ({
@@ -71,45 +72,50 @@ export default {
         formModeStack: [],
         projects: [],
         notificationMessage: null,
-        notificationType: "is-info"
+        notificationType: "is-info",
     }),
 
     props: {
         title: {
             type: String,
-            default: null
+            default: null,
         },
 
         listUrl: {
             type: String,
-            default: null
+            default: null,
         },
 
         registerUrl: {
             type: String,
-            default: null
+            default: null,
         },
 
         programsUrl: {
             type: String,
-            default: null
+            default: null,
         },
 
         editUrl: {
             type: String,
-            default: null
+            default: null,
+        },
+        editResultUrl: {
+            type: String,
+            default: null,
         },
     },
 
     computed: {
-        formMode: state => state.formModeStack[state.formModeStack.length - 1],
+        formMode: (state) =>
+            state.formModeStack[state.formModeStack.length - 1],
 
-        modeLoading: state => state.formMode == ENUMS.FORM_MODE.LOADING,
-        modeList: state => state.formMode == ENUMS.FORM_MODE.LIST,
-        modeRegister: state => state.formMode == ENUMS.FORM_MODE.REGISTER,
-        modeEdit: state => state.formMode == ENUMS.FORM_MODE.EDIT,
-        modeShow: state => state.formMode == ENUMS.FORM_MODE.SHOW,
-        showNotification: state => state.notificationMessage != null
+        modeLoading: (state) => state.formMode == ENUMS.FORM_MODE.LOADING,
+        modeList: (state) => state.formMode == ENUMS.FORM_MODE.LIST,
+        modeRegister: (state) => state.formMode == ENUMS.FORM_MODE.REGISTER,
+        modeEdit: (state) => state.formMode == ENUMS.FORM_MODE.EDIT,
+        modeShow: (state) => state.formMode == ENUMS.FORM_MODE.SHOW,
+        showNotification: (state) => state.notificationMessage != null,
     },
 
     created() {
@@ -128,7 +134,7 @@ export default {
         onProjectRegister(payload) {
             //***update vue list****
             this.$refs.projectList.addToProjectList(payload.data.data);
-            this.changeFormMode(ENUMS.FORM_MODE.LIST)
+            this.changeFormMode(ENUMS.FORM_MODE.LIST);
             this.setNotification(".پروژه با موفقیت ذخیره شد", "is-success");
         },
 
@@ -200,7 +206,7 @@ export default {
         changeFormMode(mode, options) {
             const opts = Object.assign(
                 {
-                    pop: false
+                    pop: false,
                 },
                 options
             );
@@ -230,7 +236,7 @@ export default {
          */
         closeNotification() {
             this.setNotification(null);
-        }
-    }
+        },
+    },
 };
 </script>

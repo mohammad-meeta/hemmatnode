@@ -16,66 +16,67 @@ const {
 } = use('core/helpers/auth-helper');
 
 Router.get('/result', [
-        checkSession,
-        // Rule.canAsync('user.permision', 'result.index'),
-        'Result@index'
-    ])
+    checkSession,
+    // Rule.canAsync('user.permision', 'result.index'),
+    'Result@index'
+])
     .as('result.index');
 
 Router.get('/api/results/:page/:size?', [
-        checkSession,
-        'Result@paginateResult'
-    ])
+    checkSession,
+    'Result@paginateResult'
+])
     .as('api.result');
 
 Router.get('/result/create', [
-        checkSession,
-        // Rule.canAsync('user.permision', 'result.create'),
-        'Result@create'
-    ])
+    checkSession,
+    // Rule.canAsync('user.permision', 'result.create'),
+    'Result@create'
+])
     .as('result.create');
 
 Router.get('/result/edit', [
-        checkSession,
-        // Rule.canAsync('user.permision', 'result.edit'),
-        'Result@edit'
-    ])
+    checkSession,
+    // Rule.canAsync('user.permision', 'result.edit'),
+    'Result@edit'
+])
     .as('result.edit');
 
 Router.post('/result', [
-        upload.array('files'),
-        checkSession,
-        // Rule.canAsync('user.permision', 'result.store'),
-        validator.validate,
-        'Result@store'
-    ])
+    upload.array('files'),
+    checkSession,
+    // Rule.canAsync('user.permision', 'result.store'),
+    validator.validate,
+    'Result@store'
+])
     .as('result.store');
 
 Router.get('/result/:result', [
-        checkSession,
-        // Rule.canAsync('user.permision', 'result.show'),
-        'Result@show'
-    ])
+    checkSession,
+    // Rule.canAsync('user.permision', 'result.show'),
+    'Result@show'
+])
     .as('result.show');
 
 Router.get('/api/result/:result/edit', [
-        checkSession,
-        // Rule.canAsync('user.permision', 'api.result.edit'),
-        'Result@editResultData'
-    ])
+    checkSession,
+    // Rule.canAsync('user.permision', 'api.result.edit'),
+    'Result@editResultData'
+])
     .as('api.result.edit');
 
 Router.patch('/result/:id', [
-        checkSession,
-        // Rule.canAsync('user.permision', 'result.update'),
-        validator.validate,
-        'Result@update'
-    ])
+    upload.array('files'),
+    checkSession,
+    Rule.canAsync('user.permision', 'result.update'),
+    // validator.validate,
+    'Result@update'
+])
     .as('result.update');
 
 Router.delete('/result/:result', [
-        checkSession,
-        // Rule.canAsync('user.permision', 'result.destroy'),
-        'Result@destroy'
-    ])
+    checkSession,
+    // Rule.canAsync('user.permision', 'result.destroy'),
+    'Result@destroy'
+])
     .as('result.destroy');

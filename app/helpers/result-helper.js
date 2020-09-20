@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 /**
  * result cat controller
  */
-function ResultHelper() {}
+function ResultHelper() { }
 module.exports = ResultHelper;
 
 /**
@@ -22,12 +22,12 @@ ResultHelper.loadAllResultData = function loadAllResultData(dataPaginate) {
 
     return new Promise((resolve, reject) => {
         Result.find(filterQuery, resultion, {
-                sort: {
-                    'created_at': -1
-                },
-                skip: skip,
-                limit: pageSize
-            })
+            sort: {
+                'created_at': -1
+            },
+            skip: skip,
+            limit: pageSize
+        })
             .then(res => {
                 resolve(res);
             })
@@ -55,11 +55,11 @@ ResultHelper.loadAllCountResultData = function loadAllCountResultData() {
 /**
  * find result cat data result 
  */
-ResultHelper.loadResultData = function loadResultData(title) {
+ResultHelper.loadResultData = function loadResultData(id) {
     const Result = mongoose.model('Result');
 
     const filterQuery = {
-        title: title
+        _id: id
     };
 
     const resultion = {};
@@ -97,8 +97,8 @@ ResultHelper.updateResultData = function updateResultData(data) {
     return new Promise((resolve, reject) => {
         const Result = mongoose.model('Result');
         Result.findByIdAndUpdate(data._id, data, {
-                useFindAndModify: false, new: true
-            })
+            useFindAndModify: false, new: true
+        })
             .then(res => {
                 resolve(res);
             })
@@ -114,10 +114,10 @@ ResultHelper.deleteResultData = function deleteResultData(data) {
         const Result = mongoose.model('Result');
 
         Result.findOneAndUpdate(data._id, {
-                is_active: false
-            }, {
-                useFindAndModify: false, new: true
-            })
+            is_active: false
+        }, {
+            useFindAndModify: false, new: true
+        })
             .then(res => {
                 resolve(res);
             })

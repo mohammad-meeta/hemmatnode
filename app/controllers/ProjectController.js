@@ -163,6 +163,7 @@ Project.update = async function update(req, res, next) {
         }
     }
 
+
     data = {
         "_id": req.body._id,
         "title": req.body.title,
@@ -190,7 +191,6 @@ Project.update = async function update(req, res, next) {
         "user_id": req.session.auth.userId,
         "is_active": req.body.is_active,
     };
-
     ProjectHelper.updateProjectData(data)
         .then(data => {
             const result = {

@@ -140,7 +140,6 @@ Result.update = async function update(req, res, next) {
     }
 
     const deletedOldFiles = JSON.parse(req.body.deletedOldFiles || null) || [];
-
     let resResult = await ResultHelper.loadResultData(req.body._id);
     const ResultLFiles = (resResult || {}).files || [];
 
@@ -153,7 +152,7 @@ Result.update = async function update(req, res, next) {
         const element = deletedOldFiles[index];
         for (let oil = 0; oil < fileList.length; oil++) {
             const Fele = fileList[oil];
-            if (Fele.file_id == element) {
+            if (Fele.file_id == element._id) {
                 Fele.deleted_at = Date()
             }
         }
@@ -170,7 +169,7 @@ Result.update = async function update(req, res, next) {
         "deadline": req.body.deadline || '',
         "files": fileList
     };
-
+    console.log(data.files)
     ResultHelper.updateResultData(data)
         .then(data => {
             const result = {

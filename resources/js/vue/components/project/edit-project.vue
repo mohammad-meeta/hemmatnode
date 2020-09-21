@@ -501,6 +501,58 @@ export default {
                 return;
             }
 
+            /******************************************************** */
+            const Presults = this.projectData.results;
+            for (let index = 0; index < Presults.length; index++) {
+                const element = Presults[index];
+
+                const urlResult = this.editResultUrl.replace(
+                    "$id$",
+                    element._id
+                );
+
+                const newResFiles = element.resfiles.filter(
+                    (x) => x instanceof File
+                );
+                const deletedResFiles = element.resfiles.filter(
+                    (x) => x.deleted
+                );
+
+                const resultData = {
+                    _id: element._id,
+                    files: newResFiles,
+                    result: element.result,
+                    project_id: this.projectData._id,
+                    standard: element.standard,
+                    cast: element.cast,
+                    deadline: element.deadline,
+                    deletedOldFiles: deletedResFiles,
+                    is_active: true,
+                };
+
+                AxiosHelper.send("patch", urlResult, resultData, {
+                    sendAsFormData: true,
+                    filesArray: "files",
+                })
+                    .then((res) => {
+                        //const data = JSON.parse(res.config.data);
+                        const data = res.data;
+                        this.$emit("on-result-update", {
+                            sender: this,
+                            data,
+                        });
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                        this.setNotification(
+                            ".خطا در ویرایش برآمدها",
+                            "is-danger"
+                        );
+                    })
+                    .then(() => this.hideLoading());
+            }
+            /********************************** */
+
             const deletedFiles = this.$refs.fileUpload.getDeletedFiles();
             const newFiles = this.$refs.fileUpload.getNewFiles();
 
@@ -558,52 +610,6 @@ export default {
                     this.setNotification(".خطا در ویرایش پروژه", "is-danger");
                 })
                 .then(() => this.showLoading());
-
-            /******************************************************** */
-            const Presults = this.projectData.results;
-            for (let index = 0; index < Presults.length; index++) {
-                const element = Presults[index];
-
-                const urlResult = this.editResultUrl.replace(
-                    "$id$",
-                    element._id
-                );
-
-                const newFiles = element.files.filter((x) => x instanceof File);
-                const deletedFiles = element.files.filter((x) => x.deleted);
-                const resultData = {
-                    _id: element._id,
-                    result: element.result,
-                    project_id: this.projectData._id,
-                    standard: element.standard,
-                    cast: element.cast,
-                    deadline: element.deadline,
-                    deletedOldFiles: deletedFiles,
-                    is_active: true,
-                };
-
-                AxiosHelper.send("patch", urlResult, resultData, {
-                    sendAsFormData: true,
-                    filesArray: "files",
-                })
-                    .then((res) => {
-                        //const data = JSON.parse(res.config.data);
-                        const data = res.data;
-                        console.log(data);
-                        this.$emit("on-result-update", {
-                            sender: this,
-                            data,
-                        });
-                    })
-                    .catch((err) => {
-                        console.error(err);
-                        this.setNotification(
-                            ".خطا در ویرایش برآمدها",
-                            "is-danger"
-                        );
-                    })
-                    .then(() => this.hideLoading());
-            }
         },
 
         /**

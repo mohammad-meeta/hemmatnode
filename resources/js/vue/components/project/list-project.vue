@@ -119,22 +119,25 @@ export default {
         },
 
         editInProjectList(payload) {
-            console.log(payload);
             const editedProjectData = {
-                _id: payload._id,
-                title: payload.title,
-                is_active: payload.is_active,
-                created_at: payload.created_at,
+                _id: payload.data.data._id,
+                title: payload.data.data.title,
+                is_active: payload.data.data.is_active,
+                created_at: payload.data.data.created_at,
             };
 
             let foundIndex = this.projects.findIndex(
                 (x) => x._id == editedProjectData._id
             );
-            this.projects[foundIndex].title = editedProjectData.title;
+            console.log(foundIndex);
+            console.log(payload.data.data);
+
+            Vue.set(this.projects, foundIndex, payload.data.data);
+
             if (editedProjectData.is_active == "false") {
-                this.inviteSessions[foundIndex].is_active = false;
+                this.projects[foundIndex].is_active = false;
             } else {
-                this.inviteSessions[foundIndex].is_active = true;
+                this.projects[foundIndex].is_active = true;
             }
         },
     },

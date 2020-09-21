@@ -232,7 +232,6 @@ Response.update = async function update(req, res, next) {
         "files": fileList
     };
 
-    console.log(data);
     ResponseHelper.updateResponseData(data)
         .then(data => {
             const result = {

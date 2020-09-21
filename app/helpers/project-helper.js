@@ -83,47 +83,81 @@ ProjecttHelper.loadAllProjectData = async function loadAllProjectData(req, dataP
                         }
                     },
 
-                    {
-                        $unwind: {
-                            path: "$files",
-                            preserveNullAndEmptyArrays: true
-                        }
-                    },
+
+
+
+
                     {
                         $lookup: {
                             from: "files",
                             localField: "files.file_id",
                             foreignField: "_id",
-                            as: "projfile"
+                            as: "resfile"
+                        }
+                    },
+                    {
+                        $unwind: {
+                            path: "$resfile",
+                            preserveNullAndEmptyArrays: true
                         }
                     },
                     {
                         $project: {
-                            "files": {
-                                "name": "$projfile.originalname",
-                                "filename": "$projfile.filename",
-                            },
-                            "_id": 1,
-                            "is_active": 1,
-                            "result": 1,
-
-                            "is_active": 1,
-                            "standard": 1,
-                            "cast": 1,
-                            "deadline": 1,
-
-                            "project_id": 1,
-                            "user_id": 1,
-                            "updated_at": 1,
-                            "created_at": 1,
-
+                            "resfile.encoding": 0,
+                            "resfile.mimetype": 0,
+                            "resfile.destination": 0,
+                            "resfile.user_id": 0,
+                            "resfile.path": 0,
                         }
                     },
+
+
+
+
+
+
+                    // {
+                    //     $unwind: {
+                    //         path: "$files",
+                    //         preserveNullAndEmptyArrays: true
+                    //     }
+                    // },
+                    // {
+                    //     $lookup: {
+                    //         from: "files",
+                    //         localField: "files.file_id",
+                    //         foreignField: "_id",
+                    //         as: "projfile"
+                    //     }
+                    // },
+                    // {
+                    //     $project: {
+                    //         "files": {
+                    //             "name": "$projfile.originalname",
+                    //             "filename": "$projfile.filename",
+                    //         },
+                    //         "_id": 1,
+                    //         "is_active": 1,
+                    //         "result": 1,
+
+                    //         "is_active": 1,
+                    //         "standard": 1,
+                    //         "cast": 1,
+                    //         "deadline": 1,
+
+                    //         "project_id": 1,
+                    //         "user_id": 1,
+                    //         "updated_at": 1,
+                    //         "created_at": 1,
+
+                    //     }
+                    // },
                     {
                         "$group":
                         {
                             "_id": "$_id",
-                            "files": { "$push": "$files" },
+                            "resfiles": { "$push": "$resfile" },
+                            "oldFiles": { "$push": "$resfile" },
                             "is_active": { "$last": "$is_active" },
                             "result": { "$last": "$result" },
                             "standard": { "$last": "$standard" },
@@ -289,6 +323,46 @@ ProjecttHelper.loadAllProjectData = async function loadAllProjectData(req, dataP
 
     let res = await Project.aggregate(pipeline);
     for (let resI = 0; resI < res.length; resI++) {
+
+
+        let resulPrj = res[resI].results || [];
+        for (let resultPrjIndex = 0; resultPrjIndex < resulPrj.length; resultPrjIndex++) {
+
+            let resPrjoldFiles = resulPrj[resultPrjIndex].oldFiles || [];
+            let resPrjFiles = resulPrj[resultPrjIndex].resfiles || [];
+            let ResPrjdeletedFiles = [];
+            for (let index = 0; index < resPrjFiles.length; index++) {
+                const element = resPrjFiles[index];
+                for (let index2resPrjFil = 0; index2resPrjFil < resPrjoldFiles.length; index2resPrjFil++) {
+                    const element2 = resPrjoldFiles[index2resPrjFil];
+                    if (String(element["_id"]) == String(element2["file_id"]) && element2["deleted_at"] != null) {
+                        ResPrjdeletedFiles.push(element["_id"])
+                    }
+                }
+            }
+
+            for (let index3resdeletdFile = 0; index3resdeletdFile < ResPrjdeletedFiles.length; index3resdeletdFile++) {
+                const element = ResPrjdeletedFiles[index3resdeletdFile];
+                const indexF = resPrjFiles.findIndex(x => String(x._id) == String(element));
+                if (indexF >= -1) {
+                    resPrjFiles.splice(indexF, 1)
+                }
+            }
+        }
+
+        for (let i = 0; i < resulPrj.length; i++) {
+            for (let k = 0; k < resulPrj[i].resfiles.length; k++) {
+                resulPrj[i].resfiles[k] = {
+                    "_id": resulPrj[i].resfiles[k]._id,
+                    "fieldname": resulPrj[i].resfiles[k].fieldname,
+                    "name": resulPrj[i].resfiles[k].originalname,
+                    "filename": resulPrj[i].resfiles[k].filename,
+                    "size": resulPrj[i].resfiles[k].size,
+                };
+            }
+        }
+
+
 
         let oldFiles = res[resI].oldFiles;
         let files = res[resI].files;

@@ -38,7 +38,7 @@
         label.label
             | فایل
         .control
-            file-manager(ref="fileManager", v-model="result.files")
+            file-manager(ref="fileManager", v-model="result.resfiles")
             //- file-upload(ref="FileUpload", :old-files="OldFiles")
 </template>
 

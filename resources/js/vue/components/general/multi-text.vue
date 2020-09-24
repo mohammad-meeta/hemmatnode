@@ -19,7 +19,7 @@
                             option(value="رای مخفی") رای مخفی
                             option(value="رای منفی") رای منفی
                             option(value="اجماع") اجماع
-                            option(value="تفویز اختیار رئیس") تفویز اختیار رئیس
+                            option(value="تفویض اختیار رئیس") تفویض اختیار رئیس
                         optgroup(label="بحث")
                             option(value="ارائه نظرات چرخشی") ارائه نظرات چرخشی
                             option(value="ارائه") ارائه

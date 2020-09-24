@@ -53,7 +53,7 @@ export default {
     }),
 
     props: {
-        value: null
+        value: null,
     },
 
     created() {
@@ -77,7 +77,8 @@ export default {
 
         addValue: function() {
             this.values.push({
-                result: []
+                result: [],
+                type: 1
             });
             this.$emit('input', this.values);
         },

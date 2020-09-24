@@ -52,8 +52,6 @@
 
 const ENUMS = require("JS-HELPERS/enums");
 
-const Paginate = require("vuejs-paginate");
-Vue.component("paginate", Paginate);
 export default {
     props: {
         listUrl: {
@@ -78,8 +76,7 @@ export default {
             nextIcon: "chevron-right",
         },
         programs: [],
-        programsCount: 0,
-        pageCount: 0,
+        programsCount: 0
     }),
 
     computed: {
@@ -98,8 +95,7 @@ export default {
                 const resData = res.data;
                 Vue.set(this, "programs", resData.data.data);
                 Vue.set(this, "programsCount", resData.data.count);
-
-                this.paginator();
+                Vue.set(this.pagination, "total", resData.data.count);
             });
         },
 

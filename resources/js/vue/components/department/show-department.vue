@@ -11,9 +11,6 @@
 
         .info-card
             .info-card-title {{ departmentData.title }}
-            .info-card-details
-                .info-card-item
-                    p.info-card-value {{ departmentData.description }}
 
         .intro-cards.columns(v-if="hasContentProjects")
             .column.is-4
@@ -38,16 +35,48 @@
                     .intro-card-block(v-for="year in yearsProject")
                         a(:href="createLinkProject(year)")
                             | برنامه های سال {{ year }}
-
+                .inline-card-body-item
+                    a(:href="healthLink") پیوست سلامت
+                .inline-card-body-item
+                    a(:href="actionCreativeLink") اقدامات خلاق
+                .inline-card-body-item
+                    a(href="#") اقدامات متناظر شهرستان
+            .column.is-4
                 .intro-card
                     .intro-card-head
                         h2 پروژه ها
                     .intro-card-block(v-for="item in accessContentLink")
                         a(:href="item.link") {{ item.text }}
-                .inline-card-body-item
-                    a(href="#") پیوست سلامت
-                .inline-card-body-item
-                    a(href="#") اقدامات خلاق
+            .column.is-4
+                .big-button
+                    a(href="/document-list")
+                        span.big-button-icon
+                            i.fa.fa-book
+                        span.big-button-text
+                            | اسناد راهبردی مرتبط به حوزه سلامت
+                .big-button
+                    a(
+                        href="#"
+                        @click.prevent="isCardModalActive = true"
+                    )
+                        span.big-button-icon
+                            i.fa.fa-info
+                        span.big-button-text
+                            | معرفی پیام گزار سلامت
+                    b-modal.departments-modal(
+                        :active.sync="isCardModalActive"
+                    )
+                        .info-card
+                            .info-card-title {{ departmentData.title }}
+                            .info-card-details
+                                .info-card-item
+                                    p.info-card-value {{ departmentData.description }}
+                .big-button
+                    a(href="#")
+                        span.big-button-icon
+                            i.fa.fa-bar-chart
+                        span.big-button-text
+                            | کارنامه دستگاه
 </template>
 
 <script>
@@ -74,9 +103,12 @@ export default {
 
         accessLink: [],
         accessContentLink: [],
+        isCardModalActive: false,
         props: {},
 
         showLoadingFlag: false,
+
+        healthLink: "",
     }),
 
     props: {
@@ -120,6 +152,7 @@ export default {
      */
     created() {
         this.loadLinkAccess(this.departmentId);
+        this.loadContentLinks(this.departmentId);
     },
 
     computed: {
@@ -154,6 +187,7 @@ export default {
             } catch (err) {
                 alert("Error");
             }
+            document.title = this.departmentData.title;
         },
 
         /**
@@ -228,6 +262,15 @@ export default {
             } catch (err) {
                 alert("Error");
             }
+        },
+
+        /**
+         * load content links
+         */
+        loadContentLinks(id) {
+            id = id || this.departmentId;
+            this.healthLink = "/health/" + id;
+            this.actionCreativeLink = "/actioncreative/" + id;
         },
 
         /**

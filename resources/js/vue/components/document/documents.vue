@@ -9,8 +9,8 @@
             span(v-html="notificationMessage")
         .container.page-header
             .title
-                h1(v-show="modeList") اقدامات خلاق
-                h1(v-show="modeRegister") ایجاد اقدامات خلاق
+                h1(v-show="modeList") اسناد راهبردی
+                h1(v-show="modeRegister") ایجاد اسناد راهبردی
 
     .columns.exposed-form(v-show="!modeLoading")
         .column.is-one-fifth(v-show="modeList")
@@ -36,36 +36,33 @@
             loading
 
         .column(v-show="!modeLoading && modeList")
-            list-action-creative(
-                ref="actionCreativeList",
+            list-document(
+                ref="documentList",
                 @on-command="onCommand",
-                :department-id="departmentId",
                 :list-url="listUrl"
             )
 
         .column(v-show="!modeLoading && modeRegister")
-            register-action-creative(
-                ref="actionCreativeRegister",
+            register-document(
+                ref="documentRegister",
                 @on-command="onCommand",
-                @on-register="onActionCreativeRegister",
+                @on-register="onDocumentRegister",
                 :register-url="registerUrl",
-                :department-id="departmentId"
+                :department-id="departmentId",
+                :year="year"
             )
 
         .column(v-show="!modeLoading && modeEdit")
-            edit-action-creative(
-                ref="actionCreativeEdit",
+            edit-document(
+                ref="documentEdit",
                 @on-command="onCommand",
-                @on-update="onActionCreativeUpdate",
+                @on-update="onDocumentUpdate",
                 :edit-url="editUrl",
                 :department-id="departmentId"
             )
 
         .column(v-show="!modeLoading && modeShow")
-            show-action-creative(
-                ref="actionCreativeShow",
-                @on-command="onCommand"
-            )
+            show-document(ref="documentShow", @on-command="onCommand")
 </template>
 
 <script>
@@ -74,38 +71,39 @@
 const Routes = require("JS-CORE/routes");
 const ENUMS = require("JS-HELPERS/enums");
 const Loading = require("VUE-COMPONENTS/general/loading.vue").default;
-const RegisterActionCreative = require("VUE-COMPONENTS/action-creative/register-action-creative.vue")
+const RegisterDocument = require("VUE-COMPONENTS/document/register-document.vue")
     .default;
-const EditActionCreative = require("VUE-COMPONENTS/action-creative/edit-action-creative.vue")
-    .default;
-const ListActionCreative = require("VUE-COMPONENTS/action-creative/list-action-creative.vue")
-    .default;
-const ShowActionCreative = require("VUE-COMPONENTS/action-creative/show-action-creative.vue")
-    .default;
+const EditDocument = require("VUE-COMPONENTS/document/edit-document.vue").default;
+const ListDocument = require("VUE-COMPONENTS/document/list-document.vue").default;
+const ShowDocument = require("VUE-COMPONENTS/document/show-document.vue").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
 export default {
-    name: "ActionCreatives",
+    name: "Documents",
 
     components: {
         Loading,
-        ListActionCreative,
-        RegisterActionCreative,
-        EditActionCreative,
-        ShowActionCreative,
+        ListDocument,
+        RegisterDocument,
+        EditDocument,
+        ShowDocument,
         Notification,
     },
 
     data: () => ({
         ENUMS,
         formModeStack: [],
-        actionCreatives: [],
+        documents: [],
         notificationMessage: null,
         notificationType: "is-info",
     }),
 
     props: {
         departmentId: {
+            type: String,
+            default: null,
+        },
+        year: {
             type: String,
             default: null,
         },
@@ -116,6 +114,10 @@ export default {
         },
 
         listUrl: {
+            type: String,
+            default: null,
+        },
+        showDocumentYearUrl: {
             type: String,
             default: null,
         },
@@ -153,25 +155,22 @@ export default {
 
     methods: {
         /**
-         * On Register actionCreative
+         * On Register document
          */
-        onActionCreativeRegister(payload) {
+        onDocumentRegister(payload) {
             //***update vue list****
-            this.$refs.actionCreativeList.addToActionCreativeList(
-                payload.data.data.data[0]
-            );
+            this.$refs.documentList.addToDocumentList(payload.data.data.data[0]);
             this.setNotification(
-                ".اقدامات خلاق با موفقیت ذخیره شد",
+                ".اسناد راهبردی با موفقیت ذخیره شد",
                 "is-success"
             );
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
         },
-
         /**
          * On Update
          */
-        onActionCreativeUpdate(payload) {
-            this.$refs.actionCreativeList.editActionCreativeList(payload);
+        onDocumentUpdate(payload) {
+            this.$refs.documentList.editDocumentList(payload);
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
 
             this.setNotification(".جلسه با موفقیت ویرایش شد", "is-success");
@@ -181,10 +180,11 @@ export default {
          * On commands clicked
          */
         onCommand(payload) {
-            const data = payload.data || {};
             let arg = payload.arg || null;
-            arg = arg || payload;
-
+            const data = payload.data || {};
+            if (null == arg) {
+                arg = payload;
+            }
             switch (arg) {
                 case ENUMS.COMMAND.NEW:
                     this.changeFormMode(ENUMS.FORM_MODE.REGISTER);
@@ -192,12 +192,12 @@ export default {
 
                 case ENUMS.COMMAND.REGISTER:
                     /* TODO: REGISTER NEW  */
-                    console.log("REGISTER NEW ActionCreative", arg);
+                    console.log("REGISTER NEW Document", arg);
                     break;
 
                 case ENUMS.COMMAND.EDIT:
                     /* TODO: Edit InviteSession */
-                    this.$refs.actionCreativeEdit.loadActionCreativeData(data);
+                    this.$refs.documentEdit.loadDocumentData(data);
                     this.changeFormMode(ENUMS.FORM_MODE.EDIT);
                     break;
 
@@ -206,7 +206,7 @@ export default {
                     break;
 
                 case ENUMS.COMMAND.SHOW:
-                    this.$refs.actionCreativeShow.loadActionCreativeData(data);
+                    this.$refs.documentShow.loadDocumentData(data);
                     this.changeFormMode(ENUMS.FORM_MODE.SHOW);
                     break;
             }
@@ -226,7 +226,7 @@ export default {
          */
         init() {
             this.changeFormMode(ENUMS.FORM_MODE.LOADING);
-            this.$refs.actionCreativeList.loadActionCreatives(1);
+            this.$refs.documentList.loadDocuments(1);
         },
 
         /**

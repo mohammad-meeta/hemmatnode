@@ -713,6 +713,7 @@ h2.item-category {
     background: #fff;
     border-top: 3px solid #08c2c0;
     box-shadow: 0px 5px 14px #c7c7c7;
+    margin-bottom: 30px;
 }
 
 .intro-card-head h2 {
@@ -796,6 +797,13 @@ h2.item-category {
     margin-right: -15px;
 }
 
+.intro-cards .inline-card-body-item {
+	justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
 .inline-card-body-item a {
     border-radius: 3px;
     border: 1px dashed #c7c7c7;
@@ -806,6 +814,42 @@ h2.item-category {
     width: 270px;
 }
 
+.intro-cards.columns {
+    justify-content: space-between;
+    margin: 0px;
+}
+
+.intro-cards .inline-card-body-item a {
+	width: 100%;
+}
+
+.big-button {
+	margin-bottom: 15px;
+	justify-content: left;
+	display: flex;
+}
+
+.big-button a {
+    display: flex;
+    justify-content: center;
+	flex-direction: column;
+	padding: 10px;
+    background: linear-gradient(0deg, #4fe1ff 0%, #0bc3e8 30%, #0b6990 100%);
+    box-shadow: 0px 12px 16px #22A6D829;
+	border-radius: 10px;
+	height: 110px;
+	width: 120px;
+    text-align: center;
+    color: #fff;
+}
+
+.big-button-text {
+	font-size: 14px;
+}
+
+.big-button-icon i {
+    font-size: 28px;;
+}
 
 /*=========================hamahangi daroon bakhshi*/
 
@@ -829,7 +873,7 @@ h2.item-category {
     box-shadow: 0px 5px 7px #3E4D6124;
     padding: 15px;
     border-radius: 5px;
-    margin: 15px;
+    margin: 15px 0px;
 }
 
 .info-card-title {

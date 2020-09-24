@@ -5,10 +5,10 @@ block title
 
 block content
     .container
-        actionCreatives(
-            list-url=route('api.actionCreative', { page: '$page$', size: '$pageSize$', group: departmentId }),
-            register-url=route('actionCreative.store', { department: departmentId }),
-            edit-url=route('actionCreative.update', { id :'$id$'}),
+        action-creatives(
+            list-url=route('api.actioncreative', { page: '$page$', size: '$pageSize$', group: departmentId }),
+            register-url=route('actioncreative.store', { department: departmentId }),
+            edit-url=route('actioncreative.update', { id :'$id$'}),
             department-id=departmentId,
         )
 

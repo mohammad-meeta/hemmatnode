@@ -94,16 +94,16 @@ export default {
         /**
          * Load actionCreatives
          */
-        async loadActionCreatives(pageId) {
-            let url = this.listUrl.replace("$page$", pageId);
-            url = url.replace("$pageSize$", 50);
-
-            let res = await AxiosHelper.send("get", url, "");
-            const resData = res.data;
-
-            Vue.set(this, "actionCreatives", resData.data.data);
-            Vue.set(this, "actionCreativesCount", resData.data.count);
-            Vue.set(this.pagination, "total", resData.data.count);
+        loadActionCreatives(pageId) {
+            let url = this.listUrl
+                .replace(/\$page\$/g, pageId)
+                .replace(/\$pageSize\$/g, 50);
+            AxiosHelper.send("get", url, "").then((res) => {
+                const resData = res.data;
+                Vue.set(this, "actionCreatives", resData.data.data);
+                Vue.set(this, "actionCreativesCount", resData.data.count);
+                Vue.set(this.pagination, "total", resData.data.count);
+            });
         },
 
         /**

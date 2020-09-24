@@ -1,0 +1,18 @@
+extends ../../layout/app.pug
+
+block title
+    | پیوست سلامت
+
+block content
+    .container
+        documents(
+            list-url=route('api.document', { page: '$page$', size: '$pageSize$', group: departmentId }),
+            register-url=route('document.store', { department: departmentId }),
+            edit-url=route('document.update', { id :'$id$'}),
+            department-id=departmentId,
+        )
+
+block scripts
+    script(defer, src=mix('js/pages/document/index/index.js'))
+
+

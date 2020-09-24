@@ -1,7 +1,7 @@
 <template lang="pug">
 .container-child
-    h1(v-if="!hasHealth") هیچ پیوست سلامتی ایجاد نشده
-    table.table.is-striped.is-hoverable.is-fullwidth(v-if="hasHealth")
+    h1(v-if="!hasDocument") هیچ اسناد راهبردی ایجاد نشده
+    table.table.is-striped.is-hoverable.is-fullwidth(v-if="hasDocument")
         thead
             tr
                 th عنوان
@@ -9,14 +9,14 @@
                 th تاریخ ایجاد
                 th عملیات
         tbody
-            tr(v-for="health in healths", :key="health.id")
-                td {{ health.title }}
-                td {{ health.is_active }}
-                td {{ toPersianDate(health.created_at) }}
+            tr(v-for="document in documents", :key="document.id")
+                td {{ document.title }}
+                td {{ document.is_active }}
+                td {{ toPersianDate(document.created_at) }}
                 td.function-links
                     a.button.is-warning.is-rounded.mt-2(
                         href="#",
-                        @click.prevent="commandClick(ENUMS.COMMAND.SHOW, health)"
+                        @click.prevent="commandClick(ENUMS.COMMAND.SHOW, document)"
                     )
                         span.icon.is-small
                             i.material-icons.icon swap_horizontal_circle
@@ -24,11 +24,11 @@
 
                     a.button.is-primary.is-rounded(
                         href="#",
-                        @click.prevent="commandClick(ENUMS.COMMAND.EDIT, health)"
+                        @click.prevent="commandClick(ENUMS.COMMAND.EDIT, document)"
                     )
                         span.icon.is-small
                             i.material-icons.icon check_circle
-                        span ویرایش پیوست سلامت
+                        span ویرایش اسناد راهبردی
 
     b-pagination(
         :total="pagination.total",
@@ -78,27 +78,27 @@ export default {
             prevIcon: "chevron-left",
             nextIcon: "chevron-right",
         },
-        healths: [],
-        healthsCount: 0,
+        documents: [],
+        documentsCount: 0,
         pageCount: 0,
     }),
 
     computed: {
-        hasHealth: (state) => (state.healths || []).length,
+        hasDocument: (state) => (state.documents || []).length,
     },
 
     methods: {
         /**
-         * Load healths
+         * Load documents
          */
-        loadHealths(pageId) {
+        loadDocuments(pageId) {
             let url = this.listUrl
                             .replace(/\$page\$/g, pageId)
                             .replace(/\$pageSize\$/g, 50);
             AxiosHelper.send("get", url, "").then((res) => {
                 const resData = res.data;
-                Vue.set(this, "healths", resData.data.data);
-                Vue.set(this, "healthsCount", resData.data.count);
+                Vue.set(this, "documents", resData.data.data);
+                Vue.set(this, "documentsCount", resData.data.count);
                 Vue.set(this.pagination, "total", resData.data.count);
             });
         },
@@ -127,10 +127,10 @@ export default {
         },
 
         /**
-         * add new Health data to list data
+         * add new Document data to list data
          */
-        addToHealthList(payload) {
-            const newHealthData = {
+        addToDocumentList(payload) {
+            const newDocumentData = {
                 _id: payload._id,
                 title: payload.title,
                 year: payload.year,
@@ -140,10 +140,10 @@ export default {
                 created_at: payload.created_at,
             };
 
-            this.healths.unshift(newHealthData);
+            this.documents.unshift(newDocumentData);
         },
-        editHealthList(payload) {
-            const editedHealthData = {
+        editDocumentList(payload) {
+            const editedDocumentData = {
                 _id: payload.data.data[0]._id,
                 title: payload.data.data[0].title,
                 executor: payload.data.data[0].executor,
@@ -153,11 +153,11 @@ export default {
                 created_at: payload.data.data[0].created_at,
             };
 
-            let foundIndex = this.healths.findIndex(
-                (x) => x._id == editedHealthData._id
+            let foundIndex = this.documents.findIndex(
+                (x) => x._id == editedDocumentData._id
             );
 
-            Vue.set(this.healths, foundIndex, editedHealthData);
+            Vue.set(this.documents, foundIndex, editedDocumentData);
         },
     },
 };

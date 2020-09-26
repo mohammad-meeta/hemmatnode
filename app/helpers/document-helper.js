@@ -83,8 +83,8 @@ DocumentHelper.loadAllDocumentData = async function loadAllDocumentData(req, dat
                 title: {
                     $last: "$title"
                 },
-                body: {
-                    $last: "$body"
+                date: {
+                    $last: "$date"
                 },
                 oldFiles: {
                     $push: "$files"
@@ -229,8 +229,8 @@ DocumentHelper.loadAllDocumentDataAll = async function loadAllDocumentDataAll(re
                 title: {
                     $last: "$title"
                 },
-                body: {
-                    $last: "$body"
+                date: {
+                    $last: "$date"
                 },
                 oldFiles: {
                     $push: "$files"
@@ -381,8 +381,8 @@ DocumentHelper.loadAllDocumentYearData = async function loadAllDocumentYearData(
                 title: {
                     $last: "$title"
                 },
-                body: {
-                    $last: "$body"
+                date: {
+                    $last: "$date"
                 },
                 oldFiles: {
                     $push: "$files"
@@ -633,8 +633,8 @@ DocumentHelper.insertNewDocument = async function insertNewDocument(data) {
                 title: {
                     $last: "$title"
                 },
-                body: {
-                    $last: "$body"
+                date: {
+                    $last: "$date"
                 },
                 oldFiles: {
                     $push: "$files"
@@ -775,8 +775,8 @@ DocumentHelper.updateDocumentData = async function updateDocumentData(data) {
                 title: {
                     $last: "$title"
                 },
-                body: {
-                    $last: "$body"
+                date: {
+                    $last: "$date"
                 },
                 oldFiles: {
                     $push: "$files"

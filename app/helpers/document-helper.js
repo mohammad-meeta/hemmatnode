@@ -37,17 +37,17 @@ DocumentHelper.loadAllDocumentData = async function loadAllDocumentData(req, dat
         {
             $unwind: "$dep"
         },
-        {
-            $lookup: {
-                from: "document_type",
-                localField: "department_type_id",
-                foreignField: "_id",
-                as: "doctype"
-            }
-        },
-        {
-            $unwind: "$doctype"
-        },
+        // {
+        //     $lookup: {
+        //         from: "document_type",
+        //         localField: "department_type_id",
+        //         foreignField: "_id",
+        //         as: "doctype"
+        //     }
+        // },
+        // {
+        //     $unwind: "$doctype"
+        // },
         {
             $unwind: {
                 path: "$files",
@@ -180,17 +180,20 @@ DocumentHelper.loadAllDocumentDataAll = async function loadAllDocumentDataAll(re
         {
             $unwind: "$dep"
         },
-        {
-            $lookup: {
-                from: "document_type",
-                localField: "department_type_id",
-                foreignField: "_id",
-                as: "doctype"
-            }
-        },
-        {
-            $unwind: "$doctype"
-        },
+        // {
+        //     $lookup: {
+        //         from: "document_type",
+        //         localField: "department_type_id",
+        //         foreignField: "_id",
+        //         as: "doctype"
+        //     }
+        // },
+        // {
+        // $unwind: {
+        //     path: "$doctype",
+        //     preserveNullAndEmptyArrays: true
+        // }
+        // },
         {
             $unwind: {
                 path: "$files",
@@ -329,17 +332,20 @@ DocumentHelper.loadAllDocumentYearData = async function loadAllDocumentYearData(
         {
             $unwind: "$dep"
         },
-        {
-            $lookup: {
-                from: "document_type",
-                localField: "department_type_id",
-                foreignField: "_id",
-                as: "doctype"
-            }
-        },
-        {
-            $unwind: "$doctype"
-        },
+        // {
+        //     $lookup: {
+        //         from: "document_type",
+        //         localField: "department_type_id",
+        //         foreignField: "_id",
+        //         as: "doctype"
+        //     }
+        // },
+        // {
+        //     $unwind: {
+        //         path: "$doctype",
+        //         preserveNullAndEmptyArrays: true
+        //     }
+        // },
         {
             $unwind: {
                 path: "$files",
@@ -578,17 +584,20 @@ DocumentHelper.insertNewDocument = async function insertNewDocument(data) {
         {
             $unwind: "$dep"
         },
-        {
-            $lookup: {
-                from: "document_type",
-                localField: "department_type_id",
-                foreignField: "_id",
-                as: "doctype"
-            }
-        },
-        {
-            $unwind: "$doctype"
-        },
+        // {
+        //     $lookup: {
+        //         from: "document_type",
+        //         localField: "department_type_id",
+        //         foreignField: "_id",
+        //         as: "doctype"
+        //     }
+        // },
+        // {
+        //     $unwind: {
+        //         path: "$doctype",
+        //         preserveNullAndEmptyArrays: true
+        //     }
+        // },
         {
             $unwind: {
                 path: "$files",
@@ -717,17 +726,20 @@ DocumentHelper.updateDocumentData = async function updateDocumentData(data) {
         {
             $unwind: "$dep"
         },
-        {
-            $lookup: {
-                from: "document_type",
-                localField: "department_type_id",
-                foreignField: "_id",
-                as: "doctype"
-            }
-        },
-        {
-            $unwind: "$doctype"
-        },
+        // {
+        //     $lookup: {
+        //         from: "document_type",
+        //         localField: "department_type_id",
+        //         foreignField: "_id",
+        //         as: "doctype"
+        //     }
+        // },
+        // {
+        //     $unwind: {
+        //         path: "$doctype",
+        //         preserveNullAndEmptyArrays: true
+        //     }
+        // },
         {
             $unwind: {
                 path: "$files",

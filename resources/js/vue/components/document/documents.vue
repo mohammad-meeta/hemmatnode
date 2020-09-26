@@ -159,6 +159,7 @@ export default {
          */
         onDocumentRegister(payload) {
             //***update vue list****
+
             this.$refs.documentList.addToDocumentList(payload.data.data.data[0]);
             this.setNotification(
                 ".اسناد راهبردی با موفقیت ذخیره شد",

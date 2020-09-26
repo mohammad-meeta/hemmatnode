@@ -36,7 +36,7 @@
                 .panel-heading
                     | فایل های ضمیمه
                 .panel-block
-                    file-manager(ref="fileManager", v-model="oldFiles")
+                    file-upload(ref="fileUpload", :old-files="oldFiles")
         .field
             label.checkbox
                 input(type="checkbox", v-model="documentData.is_active")
@@ -58,7 +58,7 @@ const ENUMS = require("JS-HELPERS/enums");
 const DocumentValidator = require("JS-VALIDATORS/document-register-validator");
 const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
-const FileManager = require("VUE-COMPONENTS/general/file-manager.vue").default;
+const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 
 export default {
     name: "RegisterDocument",
@@ -66,7 +66,7 @@ export default {
     components: {
         Notification,
         DatePicker: VuePersianDatetimePicker,
-        FileManager,
+        FileUpload,
     },
 
     data: () => ({
@@ -171,8 +171,8 @@ export default {
 
             this.showLoading();
 
-            const deletedFiles = this.$refs.fileManager.getDeletedFiles();
-            const newFiles = this.$refs.fileManager.getNewFiles();
+            const deletedFiles = this.$refs.fileUpload.getDeletedFiles();
+            const newFiles = this.$refs.fileUpload.getNewFiles();
 
             let newUploaded = newFiles.map((x) => x.file);
             Vue.set(this, "files", newUploaded);

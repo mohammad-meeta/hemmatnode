@@ -36,7 +36,7 @@
                 .panel-heading
                     | فایل های ضمیمه
                 .panel-block
-                    file-manager(ref="fileManager", v-model="oldFiles")
+                    file-upload(ref="fileUpload", v-model="oldFiles")
         .field
             label.checkbox
                 input(type="checkbox", v-model="documentData.isActive")
@@ -59,12 +59,12 @@ const DocumentValidator = require("JS-VALIDATORS/document-register-validator");
 const ENUMS = require("JS-HELPERS/enums");
 const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
-const FileManager = require("VUE-COMPONENTS/general/file-manager.vue").default;
+const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 
 export default {
     name: "EditDocument",
     components: {
-        FileManager,
+        FileUpload,
         DatePicker: VuePersianDatetimePicker,
         Notification,
     },

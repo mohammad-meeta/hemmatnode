@@ -48,7 +48,6 @@
         .field
             label.checkbox
                 input(type="checkbox", v-model="healthData.is_active")
-                |
                 | فعال
         .field.is-grouped
             .control(v-show="! isLoadingMode")
@@ -56,7 +55,6 @@
                     href="#",
                     @click.prevent="commandClick(ENUMS.COMMAND.SAVE)"
                 )
-                    |
                     | ایجاد
 </template>
 
@@ -85,6 +83,7 @@ export default {
         deletedOldFiles: [],
         oldFiles: [],
         healthData: {
+            department_id: null,
             title: null,
             year: null,
             executor: null,
@@ -114,6 +113,10 @@ export default {
     created() {
         this.clearFormData();
         this.healthData.departmentId = this.departmentId;
+    },
+
+    mounted() {
+        Vue.set(this.documentData, "department_id", this.departmentId);
     },
 
     computed: {

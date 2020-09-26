@@ -32,18 +32,6 @@
                 )
 
         .field
-            b-field(label='دسته بندی')
-                b-autocomplete(
-                    rounded='',
-                    v-model='documentData.category',
-                    :data='categories',
-                    placeholder='دسته بندی را انتخاب کنید',
-                    icon='magnify', clearable='',
-                    @select='option => selected = option'
-                )
-                template(slot='empty') دسته بندی مورد نظر وجود ندارد
-
-        .field
             .panel
                 .panel-heading
                     | فایل های ضمیمه
@@ -90,16 +78,11 @@ export default {
             title: null,
             department_id: null,
             date: null,
-            category: null,
             files: {},
             oldFiles: [],
             isActive: false,
             deletedOldFiles: [],
         },
-        categories: [
-            'اسناد مربوط به کارگروه سلامت و امنیت غذایی',
-            'شیوه نامه های کارگروه سلامت و امنیت غذایی'
-        ],
 
         notificationMessage: null,
         notificationType: "is-info",
@@ -138,7 +121,6 @@ export default {
                 _id: data._id,
                 title: data.title,
                 date: data.date,
-                category: data.category,
                 department_id: this.documentData.department_id,
                 files: data.files,
                 isActive: data.is_active,
@@ -215,7 +197,6 @@ export default {
                 _id: this.documentData._id,
                 title: this.documentData.title,
                 data: this.documentData.year,
-                category: this.documentData.category,
                 department_id: this.documentData.department_id,
                 is_active: this.documentData.isActive,
                 files: this.files,

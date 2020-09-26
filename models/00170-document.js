@@ -42,8 +42,8 @@ Model.model = function model() {
             type: String,
             required: true
         },
-        'body': {
-            type: String
+        'date': {
+            type: Date
         },
         'files': {
             type: [File]
@@ -53,10 +53,10 @@ Model.model = function model() {
             default: true,
             required: true
         },
-        'document_type_id': {
-            type: ObjectId,
-            required: false
-        },
+        // 'document_type_id': {
+        //     type: ObjectId,
+        //     required: false
+        // },
         'department_id': {
             type: ObjectId,
             required: true

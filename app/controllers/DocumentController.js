@@ -248,7 +248,7 @@ Document.store = async function store(req, res, next) {
         "department_id": req.body.department_id,
         "files": fileList
     };
-
+    console.log(data)
     DocumentHelper.insertNewDocument(data)
         .then(dataRes => {
             const result = {

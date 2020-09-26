@@ -25,9 +25,9 @@
             .control
                 date-picker(
                     v-model="documentData.date",
-                    format="YYYY-MM-DD HH:mm:ss"
-                    display-format="jDD/jMM/jYYYY HH:mm"
-                    type="datetime"
+                    format="YYYY-MM-DD"
+                    display-format="jDD/jMM/jYYYY"
+                    type="date"
                     required
                 )
 
@@ -76,6 +76,7 @@ export default {
         oldFiles: [],
         documentData: {
             title: null,
+            department_id: null,
             date: null,
             files: [],
             deletedOldFiles: [],
@@ -103,6 +104,10 @@ export default {
     created() {
         this.clearFormData();
         this.documentData.departmentId = this.departmentId;
+    },
+
+    mounted() {
+        Vue.set(this.documentData, "department_id", this.departmentId);
     },
 
     computed: {
@@ -166,8 +171,8 @@ export default {
 
             this.showLoading();
 
-            const deletedFiles = this.$refs.fileUpload.getDeletedFiles();
-            const newFiles = this.$refs.fileUpload.getNewFiles();
+            const deletedFiles = this.$refs.fileManager.getDeletedFiles();
+            const newFiles = this.$refs.fileManager.getNewFiles();
 
             let newUploaded = newFiles.map((x) => x.file);
             Vue.set(this, "files", newUploaded);

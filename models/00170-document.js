@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 /**
  * Article model
  */
-function Model() {}
+function Model() { }
 module.exports = Model;
 
 /**
@@ -54,6 +54,10 @@ Model.model = function model() {
             required: true
         },
         'document_type_id': {
+            type: ObjectId,
+            required: true
+        },
+        'department_id': {
             type: ObjectId,
             required: true
         },

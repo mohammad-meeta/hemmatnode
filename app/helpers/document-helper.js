@@ -1,70 +1,389 @@
+
 'use strict';
 
 const mongoose = require('mongoose');
 
 /**
- * document cat controller
+ * Document controller
  */
-function DocumentHelper() {}
+function DocumentHelper() { }
 module.exports = DocumentHelper;
 
 /**
- * find all document cat data result 
+ * find all dep cat data result 
  */
-DocumentHelper.loadAllDocumentData = function loadAllDocumentData(dataPaginate) {
-    const page = parseInt(dataPaginate.page)
-    const pageSize = parseInt(dataPaginate.pageSize)
-    const skip = page > 0 ? ((page - 1) * pageSize) : 0
-    const Document = mongoose.model('Document');
+DocumentHelper.loadAllDocumentData = async function loadAllDocumentData(req, dataPaginate, group) {
+    const page = parseInt(dataPaginate.page);
+    const pageSize = parseInt(dataPaginate.pageSize);
+    const skip = page > 0 ? (page - 1) * pageSize : 0;
+    const ObjectId = require("mongoose").Types.ObjectId;
+    const Document = mongoose.model("Document");
 
-    const filterQuery = {};
-    const projection = {};
-
-    return new Promise((resolve, reject) => {
-        Document.find(filterQuery, projection, {
-                sort: {
-                    'created_at': -1
+    const userId = req.session.auth.userId;
+    const pipeline = [
+        {
+            $match: {
+                department_id: new ObjectId(group),
+            }
+        },
+        {
+            $lookup: {
+                from: "departments",
+                localField: "department_id",
+                foreignField: "_id",
+                as: "dep"
+            }
+        },
+        {
+            $unwind: "$dep"
+        },
+        {
+            $lookup: {
+                from: "document_type",
+                localField: "department_type_id",
+                foreignField: "_id",
+                as: "doctype"
+            }
+        },
+        {
+            $unwind: "$doctype"
+        },
+        {
+            $unwind: {
+                path: "$files",
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $lookup: {
+                from: "files",
+                localField: "files.file_id",
+                foreignField: "_id",
+                as: "ffile"
+            }
+        },
+        {
+            $unwind: {
+                path: "$ffile",
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $project: {
+                "ffile.encoding": 0,
+                "ffile.mimetype": 0,
+                "ffile.destination": 0,
+                "ffile.user_id": 0,
+                "ffile.path": 0,
+            }
+        },
+        {
+            $group: {
+                _id: "$_id",
+                title: {
+                    $last: "$title"
                 },
-                skip: skip,
-                limit: pageSize
-            })
-            .then(res => {
-                resolve(res);
-            })
-            .catch(err => reject(err));
-    });
+                body: {
+                    $last: "$body"
+                },
+                oldFiles: {
+                    $push: "$files"
+                },
+                files: {
+                    $push: "$ffile"
+                },
+                is_active: {
+                    $last: "$is_active"
+                },
+                created_at: {
+                    $last: "$created_at"
+                },
+                dep: {
+                    $last: "$dep"
+                },
+                doctype: {
+                    $last: "$doctype"
+                }
+            }
+        },
+        {
+            $sort: {
+                created_at: -1
+            }
+        },
+        {
+            $skip: skip
+        },
+        {
+            $limit: pageSize
+        }
+    ];
+    let res = await Document.aggregate(pipeline);
+
+    for (let resI = 0; resI < res.length; resI++) {
+
+        let oldFiles = res[resI].oldFiles;
+        let files = res[resI].files;
+        let deleted = [];
+        for (let index = 0; index < files.length; index++) {
+            const element = files[index];
+            for (let index2 = 0; index2 < oldFiles.length; index2++) {
+                const element2 = oldFiles[index2];
+                if (String(element["_id"]) == String(element2["file_id"]) && element2["deleted_at"] != null) {
+                    deleted.push(element["_id"])
+                }
+            }
+        }
+
+        for (let index3 = 0; index3 < deleted.length; index3++) {
+            const element = deleted[index3];
+            const indexF = files.findIndex(x => String(x._id) == String(element));
+            if (indexF >= -1) {
+                files.splice(indexF, 1)
+            }
+        }
+    }
+
+    for (let i = 0; i < res.length; i++) {
+        for (let k = 0; k < res[i].files.length; k++) {
+            res[i].files[k] = {
+                "_id": res[i].files[k]._id,
+                "fieldname": res[i].files[k].fieldname,
+                "name": res[i].files[k].originalname,
+                "filename": res[i].files[k].filename,
+                "size": res[i].files[k].size,
+            };
+        }
+    }
+    return res;
 };
 /**
- * find all document cat count data result 
+ * find all dep cat data result 
  */
-DocumentHelper.loadAllDocumentCountData = function loadAllDocumentCountData() {
+DocumentHelper.loadAllDocumentYearData = async function loadAllDocumentYearData(req, dataPaginate, group, year) {
+    const page = parseInt(dataPaginate.page);
+    const pageSize = parseInt(dataPaginate.pageSize);
+    const skip = page > 0 ? (page - 1) * pageSize : 0;
+    const ObjectId = require("mongoose").Types.ObjectId;
+    const Document = mongoose.model("Document");
+
+    const userId = req.session.auth.userId;
+    const pipeline = [
+        {
+            $match: {
+                department_id: new ObjectId(group),
+                date: year
+            }
+        },
+        {
+            $lookup: {
+                from: "departments",
+                localField: "department_id",
+                foreignField: "_id",
+                as: "dep"
+            }
+        },
+        {
+            $unwind: "$dep"
+        },
+        {
+            $lookup: {
+                from: "document_type",
+                localField: "department_type_id",
+                foreignField: "_id",
+                as: "doctype"
+            }
+        },
+        {
+            $unwind: "$doctype"
+        },
+        {
+            $unwind: {
+                path: "$files",
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $lookup: {
+                from: "files",
+                localField: "files.file_id",
+                foreignField: "_id",
+                as: "ffile"
+            }
+        },
+        {
+            $unwind: {
+                path: "$ffile",
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $project: {
+                "ffile.encoding": 0,
+                "ffile.mimetype": 0,
+                "ffile.destination": 0,
+                "ffile.user_id": 0,
+                "ffile.path": 0,
+            }
+        },
+        {
+            $group: {
+                _id: "$_id",
+                title: {
+                    $last: "$title"
+                },
+                body: {
+                    $last: "$body"
+                },
+                oldFiles: {
+                    $push: "$files"
+                },
+                files: {
+                    $push: "$ffile"
+                },
+                is_active: {
+                    $last: "$is_active"
+                },
+                created_at: {
+                    $last: "$created_at"
+                },
+                dep: {
+                    $last: "$dep"
+                },
+                doctype: {
+                    $last: "$doctype"
+                }
+            }
+        },
+        {
+            $sort: {
+                created_at: -1
+            }
+        },
+        {
+            $skip: skip
+        },
+        {
+            $limit: pageSize
+        }
+    ];
+    let res = await Document.aggregate(pipeline);
+
+    for (let resI = 0; resI < res.length; resI++) {
+
+        let oldFiles = res[resI].oldFiles;
+        let files = res[resI].files;
+        let deleted = [];
+        for (let index = 0; index < files.length; index++) {
+            const element = files[index];
+            for (let index2 = 0; index2 < oldFiles.length; index2++) {
+                const element2 = oldFiles[index2];
+                if (String(element["_id"]) == String(element2["file_id"]) && element2["deleted_at"] != null) {
+                    deleted.push(element["_id"])
+                }
+            }
+        }
+
+        for (let index3 = 0; index3 < deleted.length; index3++) {
+            const element = deleted[index3];
+            const indexF = files.findIndex(x => String(x._id) == String(element));
+            if (indexF >= -1) {
+                files.splice(indexF, 1)
+            }
+        }
+    }
+
+    for (let i = 0; i < res.length; i++) {
+        for (let k = 0; k < res[i].files.length; k++) {
+            res[i].files[k] = {
+                "_id": res[i].files[k]._id,
+                "fieldname": res[i].files[k].fieldname,
+                "name": res[i].files[k].originalname,
+                "filename": res[i].files[k].filename,
+                "size": res[i].files[k].size,
+            };
+        }
+    }
+    return res;
+};
+/**
+ * group date document 
+ */
+DocumentHelper.loadGroupDate = async function loadGroupDate(req, group) {
+    const ObjectId = require("mongoose").Types.ObjectId;
+    const Document = mongoose.model("Document");
+
+    const pipeline = [
+        {
+            $match: {
+                department_id: new ObjectId(group),
+            }
+        },
+        {
+            $group: {
+                _id: "$date"
+            }
+        },
+        {
+            $sort: { _id: 1 }
+        }
+    ];
+    let res = await Document.aggregate(pipeline);
+    return res;
+};
+/**
+ * find all dep cat count data result 
+ */
+DocumentHelper.loadAllDocumentCountData = function loadAllDocumentCountData(group) {
     const Document = mongoose.model('Document');
 
-    const filterQuery = {};
+    const filterQuery = {
+        department_id: group
+    };
 
     return new Promise((resolve, reject) => {
         Document.countDocuments(filterQuery)
             .then(res => {
+
                 resolve(res);
             })
             .catch(err => reject(err));
     });
 };
-
 /**
- * find document cat data result 
+ * find all dep cat count data result 
  */
-DocumentHelper.loadDocumentData = function loadDocumentData(title) {
+DocumentHelper.loadAllDocumentCountYearData = function loadAllDocumentCountYearData(group, year) {
     const Document = mongoose.model('Document');
 
     const filterQuery = {
-        title: title
+        department_id: group,
+        date: year
     };
 
+    return new Promise((resolve, reject) => {
+        Document.countDocuments(filterQuery)
+            .then(res => {
+
+                resolve(res);
+            })
+            .catch(err => reject(err));
+    });
+};
+
+/**
+ * find Document data result 
+ */
+DocumentHelper.loadDocumentData = function loadDocumentData(id) {
+    const Document = mongoose.model('Document');
+
+    const filterQuery = {
+        _id: id
+    };
     const projection = {};
 
     return new Promise((resolve, reject) => {
-        Document.findOne(filterQuery, projection)
+        Document.findOne(filterQuery, projection, {})
             .then(res => {
                 resolve(res);
             })
@@ -73,53 +392,296 @@ DocumentHelper.loadDocumentData = function loadDocumentData(title) {
 };
 
 /**
- * insert document cat data  
+ * insert Document data  
  */
-DocumentHelper.insertNewDocument = function insertNewDocument(data) {
+DocumentHelper.insertNewDocument = async function insertNewDocument(data) {
 
-    return new Promise((resolve, reject) => {
-        const Document = mongoose.model('Document');
-        const Document1 = new Document(data)
+    const Document = mongoose.model('Document');
+    const document = new Document(data)
 
-        Document1.save()
-            .then(res => {
-                resolve(res);
-            })
-            .catch(err => reject(err));
-    });
+    let res2 = await document.save();
+    const pipeline = [
+        {
+            $match: {
+                _id: res2._id,
+            }
+        },
+        {
+            $lookup: {
+                from: "departments",
+                localField: "department_id",
+                foreignField: "_id",
+                as: "dep"
+            }
+        },
+        {
+            $unwind: "$dep"
+        },
+        {
+            $lookup: {
+                from: "document_type",
+                localField: "department_type_id",
+                foreignField: "_id",
+                as: "doctype"
+            }
+        },
+        {
+            $unwind: "$doctype"
+        },
+        {
+            $unwind: {
+                path: "$files",
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $lookup: {
+                from: "files",
+                localField: "files.file_id",
+                foreignField: "_id",
+                as: "ffile"
+            }
+        },
+        {
+            $unwind: {
+                path: "$ffile",
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $project: {
+                "ffile.encoding": 0,
+                "ffile.mimetype": 0,
+                "ffile.destination": 0,
+                "ffile.user_id": 0,
+                "ffile.path": 0,
+            }
+        },
+        {
+            $group: {
+                _id: "$_id",
+                title: {
+                    $last: "$title"
+                },
+                body: {
+                    $last: "$body"
+                },
+                oldFiles: {
+                    $push: "$files"
+                },
+                files: {
+                    $push: "$ffile"
+                },
+                is_active: {
+                    $last: "$is_active"
+                },
+                created_at: {
+                    $last: "$created_at"
+                },
+                dep: {
+                    $last: "$dep"
+                },
+                doctype: {
+                    $last: "$doctype"
+                }
+            }
+        },
+        {
+            $sort: {
+                created_at: -1
+            }
+        }
+    ];
+
+    let res = await Document.aggregate(pipeline);
+    for (let resI = 0; resI < res.length; resI++) {
+
+        let oldFiles = res[resI].oldFiles;
+        let files = res[resI].files;
+        let deleted = [];
+        for (let index = 0; index < files.length; index++) {
+            const element = files[index];
+            for (let index2 = 0; index2 < oldFiles.length; index2++) {
+                const element2 = oldFiles[index2];
+                if (String(element["_id"]) == String(element2["file_id"]) && element2["deleted_at"] != null) {
+                    deleted.push(element["_id"])
+                }
+            }
+        }
+
+        for (let index3 = 0; index3 < deleted.length; index3++) {
+            const element = deleted[index3];
+            const indexF = files.findIndex(x => String(x._id) == String(element));
+            if (indexF >= -1) {
+                files.splice(indexF, 1)
+            }
+        }
+    }
+
+    for (let i = 0; i < res.length; i++) {
+        for (let k = 0; k < res[i].files.length; k++) {
+            res[i].files[k] = {
+                "_id": res[i].files[k]._id,
+                "fieldname": res[i].files[k].fieldname,
+                "name": res[i].files[k].originalname,
+                "filename": res[i].files[k].filename,
+                "size": res[i].files[k].size,
+            };
+        }
+    }
+    return res;
 };
 
 /**
- * update document cat data  
+ * update Document data  
  */
-DocumentHelper.updateDocumentData = function updateDocumentData(data) {
-    return new Promise((resolve, reject) => {
-        const Document = mongoose.model('Document');
-        Document.findByIdAndUpdate(data._id, data, {
-                useFindAndModify: false, new: true
-            })
-            .then(res => {
-                resolve(res);
-            })
-            .catch(err => reject(err));
-    });
+DocumentHelper.updateDocumentData = async function updateDocumentData(data) {
+    const Document = mongoose.model('Document');
+    let res2 = await Document.findByIdAndUpdate(data._id, data, { useFindAndModify: false, new: true });
+
+    const pipeline = [
+        {
+            $match: {
+                _id: res2._id,
+            }
+        },
+        {
+            $lookup: {
+                from: "departments",
+                localField: "department_id",
+                foreignField: "_id",
+                as: "dep"
+            }
+        },
+        {
+            $unwind: "$dep"
+        },
+        {
+            $lookup: {
+                from: "document_type",
+                localField: "department_type_id",
+                foreignField: "_id",
+                as: "doctype"
+            }
+        },
+        {
+            $unwind: "$doctype"
+        },
+        {
+            $unwind: {
+                path: "$files",
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $lookup: {
+                from: "files",
+                localField: "files.file_id",
+                foreignField: "_id",
+                as: "ffile"
+            }
+        },
+        {
+            $unwind: {
+                path: "$ffile",
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $project: {
+                "ffile.encoding": 0,
+                "ffile.mimetype": 0,
+                "ffile.destination": 0,
+                "ffile.user_id": 0,
+                "ffile.path": 0,
+            }
+        },
+        {
+            $group: {
+                _id: "$_id",
+                title: {
+                    $last: "$title"
+                },
+                body: {
+                    $last: "$body"
+                },
+                oldFiles: {
+                    $push: "$files"
+                },
+                files: {
+                    $push: "$ffile"
+                },
+                is_active: {
+                    $last: "$is_active"
+                },
+                created_at: {
+                    $last: "$created_at"
+                },
+                dep: {
+                    $last: "$dep"
+                },
+                doctype: {
+                    $last: "$doctype"
+                }
+            }
+        },
+        {
+            $sort: {
+                created_at: -1
+            }
+        }
+    ];
+
+    let res = await Document.aggregate(pipeline);
+    for (let resI = 0; resI < res.length; resI++) {
+
+        let oldFiles = res[resI].oldFiles;
+        let files = res[resI].files;
+        let deleted = [];
+        for (let index = 0; index < files.length; index++) {
+            const element = files[index];
+            for (let index2 = 0; index2 < oldFiles.length; index2++) {
+                const element2 = oldFiles[index2];
+                if (String(element["_id"]) == String(element2["file_id"]) && element2["deleted_at"] != null) {
+                    deleted.push(element["_id"])
+                }
+            }
+        }
+
+        for (let index3 = 0; index3 < deleted.length; index3++) {
+            const element = deleted[index3];
+            const indexF = files.findIndex(x => String(x._id) == String(element));
+            if (indexF >= -1) {
+                files.splice(indexF, 1)
+            }
+        }
+    }
+
+    for (let i = 0; i < res.length; i++) {
+        for (let k = 0; k < res[i].files.length; k++) {
+            res[i].files[k] = {
+                "_id": res[i].files[k]._id,
+                "fieldname": res[i].files[k].fieldname,
+                "name": res[i].files[k].originalname,
+                "filename": res[i].files[k].filename,
+                "size": res[i].files[k].size,
+            };
+        }
+    }
+    return res;
 };
 
 /**
- * delete document cat data  
+ * delete document data  
  */
-DocumentHelper.deleteDocumentData = function deleteDocumentData(data) {
+DocumentHelper.deleteDocument = function deleteDocument(data) {
     return new Promise((resolve, reject) => {
         const Document = mongoose.model('Document');
-
-        Document.findOneAndUpdate(data._id, {
-                is_active: false
-            }, {
-                useFindAndModify: false, new: true
-            })
+        Document.findByIdAndUpdate(data._id, { is_active: false }, { useFindAndModify: false, new: true })
             .then(res => {
                 resolve(res);
             })
             .catch(err => reject(err));
     });
 };
+

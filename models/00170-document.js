@@ -55,7 +55,7 @@ Model.model = function model() {
         },
         'document_type_id': {
             type: ObjectId,
-            required: true
+            required: false
         },
         'department_id': {
             type: ObjectId,

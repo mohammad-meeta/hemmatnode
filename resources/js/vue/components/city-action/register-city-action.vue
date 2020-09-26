@@ -20,10 +20,10 @@
                 )
                     option(
                         v-for="city in cities"
-                        :value="city.id"
-                        :key="city.id"
+                        :value="city._id"
+                        :key="city._id"
                     )
-                        {{ city.name }}
+                        | {{ city.name }}
         .field
             label.label عنوان
             .control
@@ -131,6 +131,10 @@ export default {
             type: String,
             default: "",
         },
+        cityUrl: {
+            type: String,
+            default: "",
+        },
     },
 
     computed: {
@@ -191,33 +195,13 @@ export default {
         },
 
         loadCities() {
-            cities = [
-                {
-                    id: 1,
-                    name: "آبیک",
-                },
-                {
-                    id: 2,
-                    name: "البرز",
-                },
-                {
-                    id: 3,
-                    name: "آوج",
-                },
-                {
-                    id: 4,
-                    name: "بوئین زهرا",
-                },
-                {
-                    id: 5,
-                    name: "تاکستان",
-                },
-                {
-                    id: 6,
-                    name: "قزوین",
-                },
-            ];
-            Vue.set(this, "cities", cities);
+            let url = this.listUrl
+                .replace(/\$page\$/g, 1)
+                .replace(/\$pageSize\$/g, 1000);
+            AxiosHelper.send("get", url, "").then((res) => {
+                const resData = res.data;
+                Vue.set(this, "cities", resData.data.data);
+            });
         },
 
         /**

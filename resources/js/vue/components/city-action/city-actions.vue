@@ -120,6 +120,11 @@ export default {
             default: null,
         },
 
+        cityUrl: {
+            type: String,
+            default: null,
+        },
+
         registerUrl: {
             type: String,
             default: null,

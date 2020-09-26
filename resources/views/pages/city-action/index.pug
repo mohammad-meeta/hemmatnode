@@ -10,6 +10,7 @@ block content
             register-url=route('cityaction.store', { department: departmentId }),
             edit-url=route('cityaction.update', { id :'$id$'}),
             department-id=departmentId,
+            city-url=route('api.cityaction', { page: '$page$', size: '$pageSize$' }),
         )
 
 block scripts

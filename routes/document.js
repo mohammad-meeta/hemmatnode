@@ -15,12 +15,18 @@ const {
     clearAuth
 } = use('core/helpers/auth-helper');
 
-Router.get('/document/:department/:year', [
+Router.get('/document/:department/:year?', [
     checkSession,
     Rule.canAsync('user.permision', 'document.index'),
     'Document@index'
 ])
     .as('document.index');
+
+Router.get("/api/documents/:page/:size?", [
+    checkSession,
+    Rule.canAsync("user.permision", "api.document"),
+    "Document@paginateDocumentAll"
+]).as("api.document.all");
 
 Router.get("/api/documents/:group/:page/:size?", [
     checkSession,

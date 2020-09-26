@@ -64,6 +64,10 @@ PugView.viewPath = {
     'actioncreative.index': 'pages/action-creative/index.pug',
     'actioncreative.create': 'pages/action-creative/register.pug',
 
+    /* cityaction */
+    'cityaction.index': 'pages/city-action/index.pug',
+    'cityaction.create': 'pages/city-action/register.pug',
+
     /* request */
     'request.index': 'pages/request/index.pug',
     'request.create': 'pages/request/register.pug',

@@ -4,20 +4,20 @@
 const mongoose = require('mongoose');
 
 /**
- * Document controller
+ * Cityaction controller
  */
-function DocumentHelper() { }
-module.exports = DocumentHelper;
+function CityactionHelper() { }
+module.exports = CityactionHelper;
 
 /**
  * find all dep cat data result 
  */
-DocumentHelper.loadAllDocumentData = async function loadAllDocumentData(req, dataPaginate, group) {
+CityactionHelper.loadAllCityactionData = async function loadAllCityactionData(req, dataPaginate, group) {
     const page = parseInt(dataPaginate.page);
     const pageSize = parseInt(dataPaginate.pageSize);
     const skip = page > 0 ? (page - 1) * pageSize : 0;
     const ObjectId = require("mongoose").Types.ObjectId;
-    const Document = mongoose.model("Document");
+    const Cityaction = mongoose.model("Cityaction");
 
     const userId = req.session.auth.userId;
     const pipeline = [
@@ -38,17 +38,6 @@ DocumentHelper.loadAllDocumentData = async function loadAllDocumentData(req, dat
             $unwind: "$dep"
         },
         {
-            $lookup: {
-                from: "document_type",
-                localField: "department_type_id",
-                foreignField: "_id",
-                as: "doctype"
-            }
-        },
-        {
-            $unwind: "$doctype"
-        },
-        {
             $unwind: {
                 path: "$files",
                 preserveNullAndEmptyArrays: true
@@ -83,8 +72,17 @@ DocumentHelper.loadAllDocumentData = async function loadAllDocumentData(req, dat
                 title: {
                     $last: "$title"
                 },
-                body: {
-                    $last: "$body"
+                date: {
+                    $last: "$date"
+                },
+                responsible: {
+                    $last: "$responsible"
+                },
+                description: {
+                    $last: "$description"
+                },
+                reason: {
+                    $last: "$responsible"
                 },
                 oldFiles: {
                     $push: "$files"
@@ -100,9 +98,6 @@ DocumentHelper.loadAllDocumentData = async function loadAllDocumentData(req, dat
                 },
                 dep: {
                     $last: "$dep"
-                },
-                doctype: {
-                    $last: "$doctype"
                 }
             }
         },
@@ -118,7 +113,7 @@ DocumentHelper.loadAllDocumentData = async function loadAllDocumentData(req, dat
             $limit: pageSize
         }
     ];
-    let res = await Document.aggregate(pipeline);
+    let res = await Cityaction.aggregate(pipeline);
 
     for (let resI = 0; resI < res.length; resI++) {
 
@@ -160,155 +155,12 @@ DocumentHelper.loadAllDocumentData = async function loadAllDocumentData(req, dat
 /**
  * find all dep cat data result 
  */
-DocumentHelper.loadAllDocumentDataAll = async function loadAllDocumentDataAll(req, dataPaginate) {
+CityactionHelper.loadAllCityactionYearData = async function loadAllCityactionYearData(req, dataPaginate, group, year) {
     const page = parseInt(dataPaginate.page);
     const pageSize = parseInt(dataPaginate.pageSize);
     const skip = page > 0 ? (page - 1) * pageSize : 0;
     const ObjectId = require("mongoose").Types.ObjectId;
-    const Document = mongoose.model("Document");
-
-    const userId = req.session.auth.userId;
-    const pipeline = [
-        {
-            $lookup: {
-                from: "departments",
-                localField: "department_id",
-                foreignField: "_id",
-                as: "dep"
-            }
-        },
-        {
-            $unwind: "$dep"
-        },
-        {
-            $lookup: {
-                from: "document_type",
-                localField: "department_type_id",
-                foreignField: "_id",
-                as: "doctype"
-            }
-        },
-        {
-            $unwind: "$doctype"
-        },
-        {
-            $unwind: {
-                path: "$files",
-                preserveNullAndEmptyArrays: true
-            }
-        },
-        {
-            $lookup: {
-                from: "files",
-                localField: "files.file_id",
-                foreignField: "_id",
-                as: "ffile"
-            }
-        },
-        {
-            $unwind: {
-                path: "$ffile",
-                preserveNullAndEmptyArrays: true
-            }
-        },
-        {
-            $project: {
-                "ffile.encoding": 0,
-                "ffile.mimetype": 0,
-                "ffile.destination": 0,
-                "ffile.user_id": 0,
-                "ffile.path": 0,
-            }
-        },
-        {
-            $group: {
-                _id: "$_id",
-                title: {
-                    $last: "$title"
-                },
-                body: {
-                    $last: "$body"
-                },
-                oldFiles: {
-                    $push: "$files"
-                },
-                files: {
-                    $push: "$ffile"
-                },
-                is_active: {
-                    $last: "$is_active"
-                },
-                created_at: {
-                    $last: "$created_at"
-                },
-                dep: {
-                    $last: "$dep"
-                },
-                doctype: {
-                    $last: "$doctype"
-                }
-            }
-        },
-        {
-            $sort: {
-                created_at: -1
-            }
-        },
-        {
-            $skip: skip
-        },
-        {
-            $limit: pageSize
-        }
-    ];
-    let res = await Document.aggregate(pipeline);
-
-    for (let resI = 0; resI < res.length; resI++) {
-
-        let oldFiles = res[resI].oldFiles;
-        let files = res[resI].files;
-        let deleted = [];
-        for (let index = 0; index < files.length; index++) {
-            const element = files[index];
-            for (let index2 = 0; index2 < oldFiles.length; index2++) {
-                const element2 = oldFiles[index2];
-                if (String(element["_id"]) == String(element2["file_id"]) && element2["deleted_at"] != null) {
-                    deleted.push(element["_id"])
-                }
-            }
-        }
-
-        for (let index3 = 0; index3 < deleted.length; index3++) {
-            const element = deleted[index3];
-            const indexF = files.findIndex(x => String(x._id) == String(element));
-            if (indexF >= -1) {
-                files.splice(indexF, 1)
-            }
-        }
-    }
-
-    for (let i = 0; i < res.length; i++) {
-        for (let k = 0; k < res[i].files.length; k++) {
-            res[i].files[k] = {
-                "_id": res[i].files[k]._id,
-                "fieldname": res[i].files[k].fieldname,
-                "name": res[i].files[k].originalname,
-                "filename": res[i].files[k].filename,
-                "size": res[i].files[k].size,
-            };
-        }
-    }
-    return res;
-};
-/**
- * find all dep cat data result 
- */
-DocumentHelper.loadAllDocumentYearData = async function loadAllDocumentYearData(req, dataPaginate, group, year) {
-    const page = parseInt(dataPaginate.page);
-    const pageSize = parseInt(dataPaginate.pageSize);
-    const skip = page > 0 ? (page - 1) * pageSize : 0;
-    const ObjectId = require("mongoose").Types.ObjectId;
-    const Document = mongoose.model("Document");
+    const Cityaction = mongoose.model("Cityaction");
 
     const userId = req.session.auth.userId;
     const pipeline = [
@@ -330,17 +182,6 @@ DocumentHelper.loadAllDocumentYearData = async function loadAllDocumentYearData(
             $unwind: "$dep"
         },
         {
-            $lookup: {
-                from: "document_type",
-                localField: "department_type_id",
-                foreignField: "_id",
-                as: "doctype"
-            }
-        },
-        {
-            $unwind: "$doctype"
-        },
-        {
             $unwind: {
                 path: "$files",
                 preserveNullAndEmptyArrays: true
@@ -375,8 +216,17 @@ DocumentHelper.loadAllDocumentYearData = async function loadAllDocumentYearData(
                 title: {
                     $last: "$title"
                 },
-                body: {
-                    $last: "$body"
+                date: {
+                    $last: "$date"
+                },
+                responsible: {
+                    $last: "$responsible"
+                },
+                description: {
+                    $last: "$description"
+                },
+                reason: {
+                    $last: "$responsible"
                 },
                 oldFiles: {
                     $push: "$files"
@@ -392,9 +242,6 @@ DocumentHelper.loadAllDocumentYearData = async function loadAllDocumentYearData(
                 },
                 dep: {
                     $last: "$dep"
-                },
-                doctype: {
-                    $last: "$doctype"
                 }
             }
         },
@@ -410,7 +257,7 @@ DocumentHelper.loadAllDocumentYearData = async function loadAllDocumentYearData(
             $limit: pageSize
         }
     ];
-    let res = await Document.aggregate(pipeline);
+    let res = await Cityaction.aggregate(pipeline);
 
     for (let resI = 0; resI < res.length; resI++) {
 
@@ -450,11 +297,11 @@ DocumentHelper.loadAllDocumentYearData = async function loadAllDocumentYearData(
     return res;
 };
 /**
- * group date document 
+ * group date actioncreative 
  */
-DocumentHelper.loadGroupDate = async function loadGroupDate(req, group) {
+CityactionHelper.loadGroupDate = async function loadGroupDate(req, group) {
     const ObjectId = require("mongoose").Types.ObjectId;
-    const Document = mongoose.model("Document");
+    const Cityaction = mongoose.model("Cityaction");
 
     const pipeline = [
         {
@@ -471,21 +318,21 @@ DocumentHelper.loadGroupDate = async function loadGroupDate(req, group) {
             $sort: { _id: 1 }
         }
     ];
-    let res = await Document.aggregate(pipeline);
+    let res = await Cityaction.aggregate(pipeline);
     return res;
 };
 /**
  * find all dep cat count data result 
  */
-DocumentHelper.loadAllDocumentCountData = function loadAllDocumentCountData(group) {
-    const Document = mongoose.model('Document');
+CityactionHelper.loadAllCityactionCountData = function loadAllCityactionCountData(group) {
+    const Cityaction = mongoose.model('Cityaction');
 
     const filterQuery = {
         department_id: group
     };
 
     return new Promise((resolve, reject) => {
-        Document.countDocuments(filterQuery)
+        Cityaction.countDocuments(filterQuery)
             .then(res => {
 
                 resolve(res);
@@ -496,26 +343,8 @@ DocumentHelper.loadAllDocumentCountData = function loadAllDocumentCountData(grou
 /**
  * find all dep cat count data result 
  */
-DocumentHelper.loadAllDocumentCountDataAll = function loadAllDocumentCountDataAll() {
-    const Document = mongoose.model('Document');
-
-    const filterQuery = {
-    };
-
-    return new Promise((resolve, reject) => {
-        Document.countDocuments(filterQuery)
-            .then(res => {
-
-                resolve(res);
-            })
-            .catch(err => reject(err));
-    });
-};
-/**
- * find all dep cat count data result 
- */
-DocumentHelper.loadAllDocumentCountYearData = function loadAllDocumentCountYearData(group, year) {
-    const Document = mongoose.model('Document');
+CityactionHelper.loadAllCityactionCountYearData = function loadAllCityactionCountYearData(group, year) {
+    const Cityaction = mongoose.model('Cityaction');
 
     const filterQuery = {
         department_id: group,
@@ -523,7 +352,7 @@ DocumentHelper.loadAllDocumentCountYearData = function loadAllDocumentCountYearD
     };
 
     return new Promise((resolve, reject) => {
-        Document.countDocuments(filterQuery)
+        Cityaction.countDocuments(filterQuery)
             .then(res => {
 
                 resolve(res);
@@ -533,10 +362,10 @@ DocumentHelper.loadAllDocumentCountYearData = function loadAllDocumentCountYearD
 };
 
 /**
- * find Document data result 
+ * find Cityaction data result 
  */
-DocumentHelper.loadDocumentData = function loadDocumentData(id) {
-    const Document = mongoose.model('Document');
+CityactionHelper.loadCityactionData = function loadCityactionData(id) {
+    const Cityaction = mongoose.model('Cityaction');
 
     const filterQuery = {
         _id: id
@@ -544,7 +373,7 @@ DocumentHelper.loadDocumentData = function loadDocumentData(id) {
     const projection = {};
 
     return new Promise((resolve, reject) => {
-        Document.findOne(filterQuery, projection, {})
+        Cityaction.findOne(filterQuery, projection, {})
             .then(res => {
                 resolve(res);
             })
@@ -553,14 +382,14 @@ DocumentHelper.loadDocumentData = function loadDocumentData(id) {
 };
 
 /**
- * insert Document data  
+ * insert Cityaction data  
  */
-DocumentHelper.insertNewDocument = async function insertNewDocument(data) {
+CityactionHelper.insertNewCityaction = async function insertNewCityaction(data) {
 
-    const Document = mongoose.model('Document');
-    const document = new Document(data)
+    const Cityaction = mongoose.model('Cityaction');
+    const actioncreative = new Cityaction(data)
 
-    let res2 = await document.save();
+    let res2 = await actioncreative.save();
     const pipeline = [
         {
             $match: {
@@ -577,17 +406,6 @@ DocumentHelper.insertNewDocument = async function insertNewDocument(data) {
         },
         {
             $unwind: "$dep"
-        },
-        {
-            $lookup: {
-                from: "document_type",
-                localField: "department_type_id",
-                foreignField: "_id",
-                as: "doctype"
-            }
-        },
-        {
-            $unwind: "$doctype"
         },
         {
             $unwind: {
@@ -624,8 +442,17 @@ DocumentHelper.insertNewDocument = async function insertNewDocument(data) {
                 title: {
                     $last: "$title"
                 },
-                body: {
-                    $last: "$body"
+                date: {
+                    $last: "$date"
+                },
+                responsible: {
+                    $last: "$responsible"
+                },
+                description: {
+                    $last: "$description"
+                },
+                reason: {
+                    $last: "$responsible"
                 },
                 oldFiles: {
                     $push: "$files"
@@ -641,9 +468,6 @@ DocumentHelper.insertNewDocument = async function insertNewDocument(data) {
                 },
                 dep: {
                     $last: "$dep"
-                },
-                doctype: {
-                    $last: "$doctype"
                 }
             }
         },
@@ -654,7 +478,7 @@ DocumentHelper.insertNewDocument = async function insertNewDocument(data) {
         }
     ];
 
-    let res = await Document.aggregate(pipeline);
+    let res = await Cityaction.aggregate(pipeline);
     for (let resI = 0; resI < res.length; resI++) {
 
         let oldFiles = res[resI].oldFiles;
@@ -694,11 +518,11 @@ DocumentHelper.insertNewDocument = async function insertNewDocument(data) {
 };
 
 /**
- * update Document data  
+ * update Cityaction data  
  */
-DocumentHelper.updateDocumentData = async function updateDocumentData(data) {
-    const Document = mongoose.model('Document');
-    let res2 = await Document.findByIdAndUpdate(data._id, data, { useFindAndModify: false, new: true });
+CityactionHelper.updateCityactionData = async function updateCityactionData(data) {
+    const Cityaction = mongoose.model('Cityaction');
+    let res2 = await Cityaction.findByIdAndUpdate(data._id, data, { useFindAndModify: false, new: true });
 
     const pipeline = [
         {
@@ -716,17 +540,6 @@ DocumentHelper.updateDocumentData = async function updateDocumentData(data) {
         },
         {
             $unwind: "$dep"
-        },
-        {
-            $lookup: {
-                from: "document_type",
-                localField: "department_type_id",
-                foreignField: "_id",
-                as: "doctype"
-            }
-        },
-        {
-            $unwind: "$doctype"
         },
         {
             $unwind: {
@@ -763,8 +576,17 @@ DocumentHelper.updateDocumentData = async function updateDocumentData(data) {
                 title: {
                     $last: "$title"
                 },
-                body: {
-                    $last: "$body"
+                date: {
+                    $last: "$date"
+                },
+                responsible: {
+                    $last: "$responsible"
+                },
+                description: {
+                    $last: "$description"
+                },
+                reason: {
+                    $last: "$responsible"
                 },
                 oldFiles: {
                     $push: "$files"
@@ -780,9 +602,6 @@ DocumentHelper.updateDocumentData = async function updateDocumentData(data) {
                 },
                 dep: {
                     $last: "$dep"
-                },
-                doctype: {
-                    $last: "$doctype"
                 }
             }
         },
@@ -793,7 +612,7 @@ DocumentHelper.updateDocumentData = async function updateDocumentData(data) {
         }
     ];
 
-    let res = await Document.aggregate(pipeline);
+    let res = await Cityaction.aggregate(pipeline);
     for (let resI = 0; resI < res.length; resI++) {
 
         let oldFiles = res[resI].oldFiles;
@@ -833,12 +652,12 @@ DocumentHelper.updateDocumentData = async function updateDocumentData(data) {
 };
 
 /**
- * delete document data  
+ * delete actioncreative data  
  */
-DocumentHelper.deleteDocument = function deleteDocument(data) {
+CityactionHelper.deleteCityaction = function deleteCityaction(data) {
     return new Promise((resolve, reject) => {
-        const Document = mongoose.model('Document');
-        Document.findByIdAndUpdate(data._id, { is_active: false }, { useFindAndModify: false, new: true })
+        const Cityaction = mongoose.model('Cityaction');
+        Cityaction.findByIdAndUpdate(data._id, { is_active: false }, { useFindAndModify: false, new: true })
             .then(res => {
                 resolve(res);
             })

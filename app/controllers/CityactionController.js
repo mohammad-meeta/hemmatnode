@@ -1,30 +1,29 @@
 'use strict';
 const PugView = use('app/helpers/pug-view');
-const DocumentHelper = use('app/helpers/document-helper');
+const CityactionHelper = use('app/helpers/cityaction-helper');
 const FileHelper = use('app/helpers/file-helper');
 /**
  * Dep cat controller
  */
-function Document() { }
-module.exports = Document;
+function Cityaction() { }
+module.exports = Cityaction;
 
 /**
  * Index route
  */
-Document.index = async function index(req, res, next) {
-    const pageRoute = 'document.index';
+Cityaction.index = async function index(req, res, next) {
+    const pageRoute = 'cityaction.index';
 
     res.render(PugView.getView(pageRoute), {
         req,
         pageRoute,
         departmentId: req.params.department,
-        year: req.params.year,
     });
 };
 /**
  * paginate route
  */
-Document.paginateDocument = async function paginateDocument(req, res, next) {
+Cityaction.paginateCityaction = async function paginateCityaction(req, res, next) {
     const group = req.params.group;
 
     const dataPaginate = {
@@ -35,10 +34,10 @@ Document.paginateDocument = async function paginateDocument(req, res, next) {
     try {
         let result = {};
 
-        let data = await DocumentHelper.loadAllDocumentCountData(group);
+        let data = await CityactionHelper.loadAllCityactionCountData(group);
         let count = data.data;
 
-        data = await DocumentHelper.loadAllDocumentData(req, dataPaginate, group);
+        data = await CityactionHelper.loadAllCityactionData(req, dataPaginate, group);
         result = {
             success: true,
             data: {
@@ -61,112 +60,13 @@ Document.paginateDocument = async function paginateDocument(req, res, next) {
             .end();
     }
 };
-/**
- * paginate all route
- */
-Document.paginateDocumentAll = async function paginateDocumentAll(req, res, next) {
-    const dataPaginate = {
-        page: req.params.page,
-        pageSize: req.params.size || 10
-    };
-
-    try {
-        let result = {};
-
-        let data = await DocumentHelper.loadAllDocumentCountDataAll();
-        let count = data.data;
-
-        data = await DocumentHelper.loadAllDocumentDataAll(req, dataPaginate);
-        result = {
-            success: true,
-            data: {
-                data: data,
-                count: count
-            }
-        };
-
-        res.status(200)
-            .send(result)
-            .end();
-
-    }
-    catch (err) {
-
-        Logger.error(err);
-
-        res.status(500)
-            .send(err)
-            .end();
-    }
-};
-/**
- * paginate by year route
- */
-Document.paginateDocumentYear = async function paginateDocumentYear(req, res, next) {
-    const group = req.params.group;
-    const year = req.params.year;
-
-    const dataPaginate = {
-        page: req.params.page,
-        pageSize: req.params.size || 10
-    };
-
-    try {
-        let result = {};
-
-        let data = await DocumentHelper.loadAllDocumentCountYearData(group, year);
-        let count = data.data;
-
-        data = await DocumentHelper.loadAllDocumentYearData(req, dataPaginate, group, year);
-        result = {
-            success: true,
-            data: {
-                data: data,
-                count: count
-            }
-        };
-
-        res.status(200)
-            .send(result)
-            .end();
-
-    }
-    catch (err) {
-
-        Logger.error(err);
-
-        res.status(500)
-            .send(err)
-            .end();
-    }
-};
-/**
- * group date document
- */
-Document.groupDate = async function groupDate(req, res, next) {
-    const group = req.params.group;
-
-    const data = await DocumentHelper.loadGroupDate(req, group);
-    const result = {
-        success: true,
-        data: data
-    };
-
-    res.status(200)
-        .send(result)
-        .end();
-};
-
-/**
- * show route
- */
 /**
  * load data with id
  */
-Document.show = async function show(req, res, next) {
-    const Id = req.params.document;
+Cityaction.show = async function show(req, res, next) {
+    const Id = req.params.cityaction;
 
-    DocumentHelper.loadDocumentData(Id)
+    CityactionHelper.loadCityactionData(Id)
 
         .then(data => {
             const result = {
@@ -185,12 +85,12 @@ Document.show = async function show(req, res, next) {
 /**
  * delete data dep cat
  */
-Document.destroy = async function destroy(req, res, next) {
+Cityaction.destroy = async function destroy(req, res, next) {
     const data = {
         "_id": req.body._id
     };
 
-    DocumentHelper.deleteDocumentData(data)
+    CityactionHelper.deleteCityactionData(data)
         .then(data => {
             const result = {
                 success: true,
@@ -206,8 +106,8 @@ Document.destroy = async function destroy(req, res, next) {
 /**
  * Create route return page
  */
-Document.create = async function create(req, res, next) {
-    const pageRoute = PugView.getView('document.create');
+Cityaction.create = async function create(req, res, next) {
+    const pageRoute = PugView.getView('cityaction.create');
 
     res.render(pageRoute, {
         req,
@@ -218,7 +118,7 @@ Document.create = async function create(req, res, next) {
 /**
  * store data
  */
-Document.store = async function store(req, res, next) {
+Cityaction.store = async function store(req, res, next) {
     const files = req.files || [];
     let fileList = [];
 
@@ -241,15 +141,17 @@ Document.store = async function store(req, res, next) {
 
     const data = {
         "title": req.body.title,
-        "body": req.body.executor,
+        "description": req.body.description,
+        "reason": req.body.reason,
+        "responsible": req.body.responsible,
+        "date": req.body.date,
         "user_id": req.session.auth.userId,
         "is_active": req.body.is_active,
-        "document_type_id": req.body.document_type_id,
-        "department_id": req.body.department_id,
+        "department_id": req.body.departmentId,
         "files": fileList
     };
 
-    DocumentHelper.insertNewDocument(data)
+    CityactionHelper.insertNewCityaction(data)
         .then(dataRes => {
             const result = {
                 success: true,
@@ -265,7 +167,7 @@ Document.store = async function store(req, res, next) {
 /**
  * update data
  */
-Document.update = async function update(req, res, next) {
+Cityaction.update = async function update(req, res, next) {
     let data = {};
     const files = req.files || [];
     let fileList = [];
@@ -289,11 +191,11 @@ Document.update = async function update(req, res, next) {
 
     const deletedOldFiles = JSON.parse(req.body.deletedOldFiles || null) || [];
 
-    let documentRes = await DocumentHelper.loadDocumentData(req.body._id);
-    const documentLFiles = (documentRes || {}).files || [];
+    let cityactionRes = await CityactionHelper.loadCityactionData(req.body._id);
+    const cityactionLFiles = (cityactionRes || {}).files || [];
 
-    for (let index = 0; index < documentLFiles.length; index++) {
-        const element = documentLFiles[index];
+    for (let index = 0; index < cityactionLFiles.length; index++) {
+        const element = cityactionLFiles[index];
         fileList.push(element)
     }
 
@@ -310,15 +212,17 @@ Document.update = async function update(req, res, next) {
     data = {
         "_id": req.body._id,
         "title": req.body.title,
-        "body": req.body.executor,
+        "description": req.body.description,
+        "reason": req.body.reason,
+        "responsible": req.body.responsible,
+        "date": req.body.date,
         "user_id": req.session.auth.userId,
         "is_active": req.body.is_active,
-        "document_type_id": req.body.document_type_id,
-        "department_id": req.body.department_id,
+        "department_id": req.body.departmentId,
         "files": fileList
     };
 
-    let result = await DocumentHelper.updateDocumentData(data);
+    let result = await CityactionHelper.updateCityactionData(data);
     const result2 = {
         success: true,
         data: result,

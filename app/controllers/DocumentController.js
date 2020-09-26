@@ -241,10 +241,10 @@ Document.store = async function store(req, res, next) {
 
     const data = {
         "title": req.body.title,
-        "body": req.body.executor,
+        "date": req.body.date,
         "user_id": req.session.auth.userId,
         "is_active": req.body.is_active,
-        "document_type_id": req.body.document_type_id,
+        // "document_type_id": req.body.document_type_id,
         "department_id": req.body.department_id,
         "files": fileList
     };
@@ -310,10 +310,10 @@ Document.update = async function update(req, res, next) {
     data = {
         "_id": req.body._id,
         "title": req.body.title,
-        "body": req.body.executor,
+        "date": req.body.date,
         "user_id": req.session.auth.userId,
         "is_active": req.body.is_active,
-        "document_type_id": req.body.document_type_id,
+        // "document_type_id": req.body.document_type_id,
         "department_id": req.body.department_id,
         "files": fileList
     };

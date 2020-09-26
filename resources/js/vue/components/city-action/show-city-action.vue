@@ -5,14 +5,14 @@
             h1 در حال بارگذاری
         .column.is-full(v-show="! isLoadingMode")
             .info-card
-                .info-card-title {{ actionCreativeData.title }}
+                .info-card-title {{ cityActionData.title }}
                 .info-card-details
                     .info-card-item
                         .info-card-label نام پیوست سلامت:
-                        .info-card-value {{ actionCreativeData.title }}
+                        .info-card-value {{ cityActionData.title }}
                     .info-card-item
                         .info-card-label پیوست سلامت:
-                        .info-card-value {{ actionCreativeData.actionCreative_id }}
+                        .info-card-value {{ cityActionData.cityAction_id }}
 </template>
 
 <script>
@@ -21,18 +21,19 @@
 const ENUMS = require("JS-HELPERS/enums");
 
 export default {
-    name: "ShowActionCreative",
+    name: "ShowCityAction",
 
     data: () => ({
         ENUMS,
-        actionCreatives: [],
-        actionCreativeData: {
+        cityActions: [],
+        cityActionData: {
             _id: null,
             title: null,
-            actionCreative_id: null,
-            description: null,
-            reason: null,
+            cityAction_id: null,
             responsible: null,
+            description: null,
+            city: null,
+            date: null,
             files: {},
             is_active: false,
         },
@@ -40,7 +41,7 @@ export default {
     }),
 
     props: {
-        actionCreativesUrl: {
+        cityActionsUrl: {
             type: String,
             default: "",
         },
@@ -53,21 +54,22 @@ export default {
 
     methods: {
         /**
-         * Load specific actionCreative
+         * Load specific cityAction
          */
-        loadActionCreativeData(data) {
+        loadCityActionData(data) {
             const temp = {
                 _id: data._id,
                 title: data.title,
-                actionCreative_id: data.actionCreative_id,
+                cityAction_id: data.cityAction_id,
+                city: data.city,
+                date: data.date,
                 description: data.description,
-                reason: data.reason,
                 responsible: data.responsible,
                 files: {},
                 is_active: data.is_active,
             };
 
-            Vue.set(this, "actionCreativeData", temp);
+            Vue.set(this, "cityActionData", temp);
         },
 
         /**

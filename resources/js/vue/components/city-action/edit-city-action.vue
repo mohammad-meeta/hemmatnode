@@ -9,14 +9,49 @@
 
     .column.is-full(v-show="isLoadingMode")
         h1 در حال بارگذاری
+
     .form-small(v-show="! isLoadingMode")
+        .field
+            b-field(
+                label="شهرستان",
+            )
+                b-select(
+                    placeholder="انتخاب شهرستان",
+                )
+                    option(
+                        v-for="city in cities"
+                        :value="city.id"
+                        :key="city.id"
+                    )
+                        {{ city.name }}
         .field
             label.label عنوان
             .control
                 input.input(
                     type="text",
-                    placeholder="نام",
-                    v-model="documentData.title",
+                    placeholder="عنوان",
+                    autofocus,
+                    v-model="cityActionData.title",
+                    required
+                )
+
+        .field
+            label.label شرح
+            .control
+                textarea.textarea(
+                    placeholder="شرح",
+                    v-model="cityActionData.description",
+                    required
+                )
+
+        .field
+            label.label مسئول اقدام
+            .control
+                input.input(
+                    type="text",
+                    placeholder="مسئول اقدام",
+                    autofocus,
+                    v-model="cityActionData.responsible",
                     required
                 )
 
@@ -32,27 +67,17 @@
                 )
 
         .field
-            b-field(label='دسته بندی')
-                b-autocomplete(
-                    rounded='',
-                    v-model='documentData.category',
-                    :data='categories',
-                    placeholder='دسته بندی را انتخاب کنید',
-                    icon='magnify', clearable='',
-                    @select='option => selected = option'
-                )
-                template(slot='empty') دسته بندی مورد نظر وجود ندارد
-
-        .field
             .panel
                 .panel-heading
                     | فایل های ضمیمه
                 .panel-block
-                    file-manager(ref="fileManager", v-model="oldFiles")
+                    file-upload(ref="fileUpload", :old-files="oldFiles")
+
         .field
             label.checkbox
-                input(type="checkbox", v-model="documentData.isActive")
+                input(type="checkbox", v-model="cityActionData.isActive")
                 | فعال
+
             .field.is-grouped
                 .control(v-show="! isLoadingMode")
                     a.button.is-link.is-rounded(
@@ -67,16 +92,16 @@
 
 const Buefy = require("buefy").default;
 const AxiosHelper = require("JS-HELPERS/axios-helper");
-const DocumentValidator = require("JS-VALIDATORS/document-register-validator");
+const CityActionValidator = require("JS-VALIDATORS/city-action-register-validator");
 const ENUMS = require("JS-HELPERS/enums");
 const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
-const FileManager = require("VUE-COMPONENTS/general/file-manager.vue").default;
+const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 
 export default {
-    name: "EditDocument",
+    name: "EditCityAction",
     components: {
-        FileManager,
+        FileUpload,
         DatePicker: VuePersianDatetimePicker,
         Notification,
     },
@@ -86,21 +111,19 @@ export default {
         files: [],
         deletedOldFiles: [],
         oldFiles: [],
-        documentData: {
+        cityActionData: {
             title: null,
+            city: null,
             department_id: null,
+            description: null,
             date: null,
-            category: null,
+            responsible: null,
             files: {},
             oldFiles: [],
             isActive: false,
             deletedOldFiles: [],
         },
-        categories: [
-            'اسناد مربوط به کارگروه سلامت و امنیت غذایی',
-            'شیوه نامه های کارگروه سلامت و امنیت غذایی'
-        ],
-
+        cities: [],
         notificationMessage: null,
         notificationType: "is-info",
         showLoadingFlag: false,
@@ -118,11 +141,13 @@ export default {
         },
     },
 
+    /**
+     * Created
+     */
     created() {
-        Vue.set(this.documentData, "department_id", this.departmentId);
+        Vue.set(this.cityActionData, "department_id", this.departmentId);
+        this.loadCities();
     },
-
-    mounted() {},
 
     computed: {
         isLoadingMode: (state) => state.showLoadingFlag == true,
@@ -133,18 +158,20 @@ export default {
         /**
          * Load specific user
          */
-        loadDocumentData(data) {
+        loadCityActionData(data) {
             let temp = {
                 _id: data._id,
                 title: data.title,
-                date: data.date,
-                category: data.category,
-                department_id: this.documentData.department_id,
+                city:  data.city,
+                description: data.description,
+                date: data.reason,
+                responsible: data.responsible,
+                department_id: data.department_id,
                 files: data.files,
                 isActive: data.is_active,
             };
             Vue.set(this, "oldFiles", data.files);
-            Vue.set(this, "documentData", temp);
+            Vue.set(this, "cityActionData", temp);
             this.$refs.fileUpload.updateOldFiles(data.files);
         },
 
@@ -156,7 +183,7 @@ export default {
         commandClick(arg) {
             switch (arg) {
                 case ENUMS.COMMAND.SAVE:
-                    this.editDocument();
+                    this.EditCityAction();
                     break;
             }
         },
@@ -190,10 +217,40 @@ export default {
             this.setNotification(null);
         },
 
+        loadCities() {
+            cities = [
+                {
+                    id: 1,
+                    name: "آبیک",
+                },
+                {
+                    id: 2,
+                    name: "البرز",
+                },
+                {
+                    id: 3,
+                    name: "آوج",
+                },
+                {
+                    id: 4,
+                    name: "بوئین زهرا",
+                },
+                {
+                    id: 5,
+                    name: "تاکستان",
+                },
+                {
+                    id: 6,
+                    name: "قزوین",
+                },
+            ];
+            Vue.set(this, "cities", cities);
+        },
+
         /**
-         * Edit document
+         * Edit city action
          */
-        async editDocument() {
+        async EditCityAction() {
             const isValid = this.validate();
 
             if (!isValid) {
@@ -211,32 +268,43 @@ export default {
             let deleteUploaded = deletedFiles.map((x) => x._id);
             Vue.set(this, "deletedOldFiles", deleteUploaded);
 
-            let documentData = {
-                _id: this.documentData._id,
-                title: this.documentData.title,
-                data: this.documentData.year,
-                category: this.documentData.category,
-                department_id: this.documentData.department_id,
-                is_active: this.documentData.isActive,
+            let cityActionData = {
+                _id: this.cityActionData._id,
+                title: this.cityActionData.title,
+                description: this.cityActionData.description,
+                date: this.cityActionData.date,
+                responsible: this.cityActionData.responsible,
+                is_active: this.cityActionData.isActive,
                 files: this.files,
                 oldFiles: this.oldFiles,
                 deletedOldFiles: this.deletedOldFiles,
             };
 
+            const url = this.editUrl.replace("$id$", cityActionData._id);
+
             try {
-                const url = this.editUrl.replace("$id$", documentData._id);
-                let res = await AxiosHelper.send("patch", url, documentData, {
-                    sendAsFormData: true,
-                    filesArray: "files",
-                });
+                let res = await AxiosHelper.send(
+                    "patch",
+                    url,
+                    cityActionData,
+                    {
+                        sendAsFormData: true,
+                        filesArray: "files",
+                    }
+                );
 
                 const data = res.data;
+
                 this.$emit("on-update", {
                     sender: this,
                     data,
                 });
             } catch (err) {
-                this.setNotification(".خطا در ویرایش پیوست سلامت", "is-danger");
+                console.error(err);
+                this.setNotification(
+                    ".خطا در ویرایش اقدامات متناظر شهرستان",
+                    "is-danger"
+                );
             }
 
             this.hideLoading();
@@ -246,7 +314,9 @@ export default {
          * Validate
          */
         validate() {
-            const result = DocumentValidator.validateEdit(this.documentData);
+            const result = CityActionValidator.validateEdit(
+                this.cityActionData
+            );
 
             if (result.passes) {
                 this.closeNotification();
@@ -258,7 +328,9 @@ export default {
                 .map((key) => errors[key].join("\n"))
                 .join("</br>");
 
+            console.log(error);
             this.setNotification(error, "is-danger");
+
             return false;
         },
     },

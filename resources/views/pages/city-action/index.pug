@@ -1,0 +1,18 @@
+extends ../../layout/app.pug
+
+block title
+    | اقدامات متناظر شهرستان
+
+block content
+    .container
+        city-actions(
+            list-url=route('api.cityaction', { page: '$page$', size: '$pageSize$', group: departmentId }),
+            register-url=route('cityaction.store', { department: departmentId }),
+            edit-url=route('cityaction.update', { id :'$id$'}),
+            department-id=departmentId,
+        )
+
+block scripts
+    script(defer, src=mix('js/pages/city-action/index/index.js'))
+
+

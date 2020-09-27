@@ -18,7 +18,7 @@ Model.setup = function setup() {
     Model.plugins(schema);
     Model.extraFunctions(schema);
 
-    mongoose.model('Document', schema, "documents");
+    mongoose.model('Power', schema, "powers");
 };
 
 /**
@@ -42,6 +42,10 @@ Model.model = function model() {
             type: String,
             required: true
         },
+        'description': {
+            type: String,
+            required: true
+        },
         'date': {
             type: Date
         },
@@ -53,10 +57,6 @@ Model.model = function model() {
             default: true,
             required: true
         },
-        // 'document_type_id': {
-        //     type: ObjectId,
-        //     required: false
-        // },
         'department_id': {
             type: ObjectId,
             required: true

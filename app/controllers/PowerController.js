@@ -1,18 +1,18 @@
 'use strict';
 const PugView = use('app/helpers/pug-view');
-const DocumentHelper = use('app/helpers/document-helper');
+const PowerHelper = use('app/helpers/power-helper');
 const FileHelper = use('app/helpers/file-helper');
 /**
  * Dep cat controller
  */
-function Document() { }
-module.exports = Document;
+function Power() { }
+module.exports = Power;
 
 /**
  * Index route
  */
-Document.index = async function index(req, res, next) {
-    const pageRoute = 'document.index';
+Power.index = async function index(req, res, next) {
+    const pageRoute = 'power.index';
 
     res.render(PugView.getView(pageRoute), {
         req,
@@ -24,7 +24,7 @@ Document.index = async function index(req, res, next) {
 /**
  * paginate route
  */
-Document.paginateDocument = async function paginateDocument(req, res, next) {
+Power.paginatePower = async function paginatePower(req, res, next) {
     const group = req.params.group;
 
     const dataPaginate = {
@@ -35,10 +35,10 @@ Document.paginateDocument = async function paginateDocument(req, res, next) {
     try {
         let result = {};
 
-        let data = await DocumentHelper.loadAllDocumentCountData(group);
+        let data = await PowerHelper.loadAllPowerCountData(group);
         let count = data.data;
 
-        data = await DocumentHelper.loadAllDocumentData(req, dataPaginate, group);
+        data = await PowerHelper.loadAllPowerData(req, dataPaginate, group);
         result = {
             success: true,
             data: {
@@ -64,7 +64,7 @@ Document.paginateDocument = async function paginateDocument(req, res, next) {
 /**
  * paginate all route
  */
-Document.paginateDocumentAll = async function paginateDocumentAll(req, res, next) {
+Power.paginatePowerAll = async function paginatePowerAll(req, res, next) {
     const dataPaginate = {
         page: req.params.page,
         pageSize: req.params.size || 10
@@ -73,10 +73,10 @@ Document.paginateDocumentAll = async function paginateDocumentAll(req, res, next
     try {
         let result = {};
 
-        let data = await DocumentHelper.loadAllDocumentCountDataAll();
+        let data = await PowerHelper.loadAllPowerCountDataAll();
         let count = data.data;
 
-        data = await DocumentHelper.loadAllDocumentDataAll(req, dataPaginate);
+        data = await PowerHelper.loadAllPowerDataAll(req, dataPaginate);
         result = {
             success: true,
             data: {
@@ -102,7 +102,7 @@ Document.paginateDocumentAll = async function paginateDocumentAll(req, res, next
 /**
  * paginate by year route
  */
-Document.paginateDocumentYear = async function paginateDocumentYear(req, res, next) {
+Power.paginatePowerYear = async function paginatePowerYear(req, res, next) {
     const group = req.params.group;
     const year = req.params.year;
 
@@ -114,10 +114,10 @@ Document.paginateDocumentYear = async function paginateDocumentYear(req, res, ne
     try {
         let result = {};
 
-        let data = await DocumentHelper.loadAllDocumentCountYearData(group, year);
+        let data = await PowerHelper.loadAllPowerCountYearData(group, year);
         let count = data.data;
 
-        data = await DocumentHelper.loadAllDocumentYearData(req, dataPaginate, group, year);
+        data = await PowerHelper.loadAllPowerYearData(req, dataPaginate, group, year);
         result = {
             success: true,
             data: {
@@ -141,12 +141,12 @@ Document.paginateDocumentYear = async function paginateDocumentYear(req, res, ne
     }
 };
 /**
- * group date document
+ * group date power
  */
-Document.groupDate = async function groupDate(req, res, next) {
+Power.groupDate = async function groupDate(req, res, next) {
     const group = req.params.group;
 
-    const data = await DocumentHelper.loadGroupDate(req, group);
+    const data = await PowerHelper.loadGroupDate(req, group);
     const result = {
         success: true,
         data: data
@@ -163,10 +163,10 @@ Document.groupDate = async function groupDate(req, res, next) {
 /**
  * load data with id
  */
-Document.show = async function show(req, res, next) {
-    const Id = req.params.document;
+Power.show = async function show(req, res, next) {
+    const Id = req.params.power;
 
-    DocumentHelper.loadDocumentData(Id)
+    PowerHelper.loadPowerData(Id)
 
         .then(data => {
             const result = {
@@ -185,12 +185,12 @@ Document.show = async function show(req, res, next) {
 /**
  * delete data dep cat
  */
-Document.destroy = async function destroy(req, res, next) {
+Power.destroy = async function destroy(req, res, next) {
     const data = {
         "_id": req.body._id
     };
 
-    DocumentHelper.deleteDocumentData(data)
+    PowerHelper.deletePowerData(data)
         .then(data => {
             const result = {
                 success: true,
@@ -206,8 +206,8 @@ Document.destroy = async function destroy(req, res, next) {
 /**
  * Create route return page
  */
-Document.create = async function create(req, res, next) {
-    const pageRoute = PugView.getView('document.create');
+Power.create = async function create(req, res, next) {
+    const pageRoute = PugView.getView('power.create');
 
     res.render(pageRoute, {
         req,
@@ -218,7 +218,7 @@ Document.create = async function create(req, res, next) {
 /**
  * store data
  */
-Document.store = async function store(req, res, next) {
+Power.store = async function store(req, res, next) {
     const files = req.files || [];
     let fileList = [];
 
@@ -241,15 +241,15 @@ Document.store = async function store(req, res, next) {
 
     const data = {
         "title": req.body.title,
+        "description": req.body.description,
         "date": req.body.date,
         "user_id": req.session.auth.userId,
         "is_active": req.body.is_active,
-        // "document_type_id": req.body.document_type_id,
         "department_id": req.body.department_id,
         "files": fileList
     };
     console.log(data)
-    DocumentHelper.insertNewDocument(data)
+    PowerHelper.insertNewPower(data)
         .then(dataRes => {
             const result = {
                 success: true,
@@ -265,7 +265,7 @@ Document.store = async function store(req, res, next) {
 /**
  * update data
  */
-Document.update = async function update(req, res, next) {
+Power.update = async function update(req, res, next) {
     let data = {};
     const files = req.files || [];
     let fileList = [];
@@ -289,11 +289,11 @@ Document.update = async function update(req, res, next) {
 
     const deletedOldFiles = JSON.parse(req.body.deletedOldFiles || null) || [];
 
-    let documentRes = await DocumentHelper.loadDocumentData(req.body._id);
-    const documentLFiles = (documentRes || {}).files || [];
+    let powerRes = await PowerHelper.loadPowerData(req.body._id);
+    const powerLFiles = (powerRes || {}).files || [];
 
-    for (let index = 0; index < documentLFiles.length; index++) {
-        const element = documentLFiles[index];
+    for (let index = 0; index < powerLFiles.length; index++) {
+        const element = powerLFiles[index];
         fileList.push(element)
     }
 
@@ -310,15 +310,15 @@ Document.update = async function update(req, res, next) {
     data = {
         "_id": req.body._id,
         "title": req.body.title,
+        "description": req.body.description,
         "date": req.body.date,
         "user_id": req.session.auth.userId,
         "is_active": req.body.is_active,
-        // "document_type_id": req.body.document_type_id,
         "department_id": req.body.department_id,
         "files": fileList
     };
 
-    let result = await DocumentHelper.updateDocumentData(data);
+    let result = await PowerHelper.updatePowerData(data);
     const result2 = {
         success: true,
         data: result,

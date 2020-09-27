@@ -93,8 +93,8 @@ export default {
          */
         loadHealths(pageId) {
             let url = this.listUrl
-                            .replace(/\$page\$/g, pageId)
-                            .replace(/\$pageSize\$/g, 50);
+                .replace(/\$page\$/g, pageId)
+                .replace(/\$pageSize\$/g, 50);
             AxiosHelper.send("get", url, "").then((res) => {
                 const resData = res.data;
                 Vue.set(this, "healths", resData.data.data);
@@ -133,7 +133,7 @@ export default {
             const newHealthData = {
                 _id: payload._id,
                 title: payload.title,
-                year: payload.year,
+                date: payload.date,
                 executor: payload.executor,
                 files: payload.files,
                 is_active: payload.is_active,
@@ -147,7 +147,7 @@ export default {
                 _id: payload.data.data[0]._id,
                 title: payload.data.data[0].title,
                 executor: payload.data.data[0].executor,
-                year: payload.data.data[0].year,
+                date: payload.data.data[0].date,
                 is_active: payload.data.data[0].is_active,
                 files: payload.data.data[0].files,
                 created_at: payload.data.data[0].created_at,

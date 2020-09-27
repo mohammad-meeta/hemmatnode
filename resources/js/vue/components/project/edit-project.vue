@@ -171,7 +171,6 @@
                                     type="checkbox",
                                     v-model="projectData.target_corresponding"
                                 )
-                                |
                                 | تناظر با اهداف راهبردی و اسناد بالادستی سازمان؟
                         .field
                             label.label به ارتقای کدام شاخص اثر کمک می کند؟
@@ -185,7 +184,6 @@
                                     )
                         .field
                             label.label
-                                |
                                 | سایر فواید پروژه درحیطه
                             .control
                                 textarea.textarea(

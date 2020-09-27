@@ -24,7 +24,7 @@
             label.label سال
             .control
                 date-picker(
-                    v-model="healthData.year",
+                    v-model="healthData.date",
                     type="year",
                     display-format="jYYYY",
                     required
@@ -85,7 +85,7 @@ export default {
         healthData: {
             department_id: null,
             title: null,
-            year: null,
+            date: null,
             executor: null,
             files: [],
             deletedOldFiles: [],
@@ -101,7 +101,7 @@ export default {
             type: String,
             default: null,
         },
-        year: {
+        date: {
             type: String,
             default: null,
         },
@@ -116,7 +116,7 @@ export default {
     },
 
     mounted() {
-        Vue.set(this.documentData, "department_id", this.departmentId);
+        Vue.set(this.healthData, "department_id", this.departmentId);
     },
 
     computed: {
@@ -204,6 +204,8 @@ export default {
 
             try {
                 const url = this.registerUrl;
+                console.log(url);
+                console.log(healthData);
                 let res = await AxiosHelper.send("post", url, healthData, {
                     sendAsFormData: true,
                     filesArray: "files",
@@ -255,7 +257,7 @@ export default {
             const healthData = {
                 title: null,
                 executor: null,
-                year: null,
+                date: null,
                 files: [],
                 deletedOldFiles: [],
                 is_active: true,

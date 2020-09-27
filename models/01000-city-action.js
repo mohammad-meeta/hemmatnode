@@ -43,15 +43,15 @@ Model.model = function model() {
             required: true
         },
         'date': {
-            type: String,
+            type: Date,
             required: true
         },
         'description': {
             type: String,
             required: true
         },
-        'reason': {
-            type: String,
+        'city_id': {
+            type: ObjectId,
             required: true
         },
         'responsible': {

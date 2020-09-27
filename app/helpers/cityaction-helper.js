@@ -81,8 +81,8 @@ CityactionHelper.loadAllCityactionData = async function loadAllCityactionData(re
                 description: {
                     $last: "$description"
                 },
-                reason: {
-                    $last: "$responsible"
+                city_id: {
+                    $last: "$city_id"
                 },
                 oldFiles: {
                     $push: "$files"
@@ -225,8 +225,8 @@ CityactionHelper.loadAllCityactionYearData = async function loadAllCityactionYea
                 description: {
                     $last: "$description"
                 },
-                reason: {
-                    $last: "$responsible"
+                city_id: {
+                    $last: "$city_id"
                 },
                 oldFiles: {
                     $push: "$files"
@@ -451,8 +451,8 @@ CityactionHelper.insertNewCityaction = async function insertNewCityaction(data) 
                 description: {
                     $last: "$description"
                 },
-                reason: {
-                    $last: "$responsible"
+                city_id: {
+                    $last: "$city_id"
                 },
                 oldFiles: {
                     $push: "$files"
@@ -585,8 +585,8 @@ CityactionHelper.updateCityactionData = async function updateCityactionData(data
                 description: {
                     $last: "$description"
                 },
-                reason: {
-                    $last: "$responsible"
+                city_id: {
+                    $last: "$city_id"
                 },
                 oldFiles: {
                     $push: "$files"

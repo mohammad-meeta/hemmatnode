@@ -142,7 +142,7 @@ Cityaction.store = async function store(req, res, next) {
     const data = {
         "title": req.body.title,
         "description": req.body.description,
-        "reason": req.body.reason,
+        "city_id": req.body.city_id,
         "responsible": req.body.responsible,
         "date": req.body.date,
         "user_id": req.session.auth.userId,
@@ -213,7 +213,7 @@ Cityaction.update = async function update(req, res, next) {
         "_id": req.body._id,
         "title": req.body.title,
         "description": req.body.description,
-        "reason": req.body.reason,
+        "city_id": req.body.city_id,
         "responsible": req.body.responsible,
         "date": req.body.date,
         "user_id": req.session.auth.userId,

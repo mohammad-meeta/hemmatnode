@@ -60,6 +60,14 @@ PugView.viewPath = {
     'health.index': 'pages/health/index.pug',
     'health.create': 'pages/health/register.pug',
 
+    /* power */
+    'power.index': 'pages/power/index.pug',
+    'power.create': 'pages/power/register.pug',
+
+    /* monitoringtype */
+    'monitoringtype.index': 'pages/monitoringtype/index.pug',
+    'monitoringtype.create': 'pages/monitoringtype/register.pug',
+
     /* actioncreative */
     'actioncreative.index': 'pages/action-creative/index.pug',
     'actioncreative.create': 'pages/action-creative/register.pug',

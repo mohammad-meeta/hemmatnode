@@ -15,7 +15,7 @@ const {
     clearAuth
 } = use('core/helpers/auth-helper');
 
-Router.get('/power/:department/:year?', [
+Router.get('/power', [
     checkSession,
     Rule.canAsync('user.permision', 'power.index'),
     'Power@index'
@@ -28,7 +28,7 @@ Router.get('/power/:department/:year?', [
 //     "Power@paginatePowerAll"
 // ]).as("api.power.all");
 
-Router.get("/api/powers/:group/:page/:size?", [
+Router.get("/api/powers/:page/:size?", [
     checkSession,
     Rule.canAsync("user.permision", "api.power"),
     "Power@paginatePower"

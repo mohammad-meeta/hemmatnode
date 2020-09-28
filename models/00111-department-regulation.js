@@ -18,7 +18,7 @@ Model.setup = function setup() {
     Model.plugins(schema);
     Model.extraFunctions(schema);
 
-    mongoose.model('DepartmentRegulation', schema, "department_regulations");
+    mongoose.model('Regulation', schema, "regulations");
 };
 
 /**
@@ -41,9 +41,6 @@ Model.model = function model() {
         'title': {
             type: String,
             required: true
-        },
-        'description': {
-            type: String
         },
         'files': {
             type: [FileD]

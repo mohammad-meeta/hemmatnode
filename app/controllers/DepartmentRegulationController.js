@@ -1,110 +1,142 @@
 'use strict';
 const PugView = use('app/helpers/pug-view');
-const DepartmentRegulationHelper = use('app/helpers/department-regulation-helper');
+const RegulationHelper = use('app/helpers/department-regulation-helper');
 const FileHelper = use('app/helpers/file-helper');
+
 /**
  * Dep cat controller
  */
-function DepartmentRegulation() {}
-module.exports = DepartmentRegulation;
+function Regulation() { }
+module.exports = Regulation;
 
 /**
  * Index route
  */
-DepartmentRegulation.index = async function index(req, res, next) {
+Regulation.index = async function index(req, res, next) {
     const pageRoute = 'department.regulation.index';
+
     res.render(PugView.getView(pageRoute), {
         req,
-        pageRoute
+        pageRoute,
+        departmentId: req.params.department,
+        year: req.params.year,
     });
 };
 /**
  * paginate route
  */
-DepartmentRegulation.paginateDepartmentRegulation = async function paginateDepartmentRegulation(req, res, next) {
+Regulation.paginateRegulation = async function paginateRegulation(req, res, next) {
+    const group = req.params.group;
+
     const dataPaginate = {
         page: req.params.page,
         pageSize: req.params.size || 10
     };
 
-    DepartmentRegulationHelper.loadAllDepartmentRegulationCountData()
-        .then(data => {
-            let count = data.data;
+    try {
+        let result = {};
 
-            DepartmentRegulationHelper.loadAllDepartmentRegulationData(dataPaginate)
-                .then(data => {
-                    const result = {
-                        success: true,
-                        data: {
-                            data: data,
-                            count: count
-                        }
-                    };
+        let data = await RegulationHelper.loadAllRegulationCountData(group);
+        let count = data.data;
 
-                    res.status(200)
-                        .send(result)
-                        .end();
-                })
-                .catch(err => {
-                    Logger.error(err);
+        data = await RegulationHelper.loadAllRegulationData(req, dataPaginate, group);
+        result = {
+            success: true,
+            data: {
+                data: data,
+                count: count
+            }
+        };
 
-                    res.status(500)
-                        .send(err)
-                        .end();
-                });
-        })
-        .catch(err => {
-            Logger.error(err);
+        res.status(200)
+            .send(result)
+            .end();
 
-            res.status(500)
-                .send(err)
-                .end();
-        });
+    }
+    catch (err) {
+
+        Logger.error(err);
+
+        res.status(500)
+            .send(err)
+            .end();
+    }
+};
+/**
+ * paginate by year route
+ */
+Regulation.paginateRegulationYear = async function paginateRegulationYear(req, res, next) {
+    const group = req.params.group;
+    const year = req.params.year;
+
+    const dataPaginate = {
+        page: req.params.page,
+        pageSize: req.params.size || 10
+    };
+
+    try {
+        let result = {};
+
+        let data = await RegulationHelper.loadAllRegulationCountYearData(group, year);
+        let count = data.data;
+
+        data = await RegulationHelper.loadAllRegulationYearData(req, dataPaginate, group, year);
+        result = {
+            success: true,
+            data: {
+                data: data,
+                count: count
+            }
+        };
+
+        res.status(200)
+            .send(result)
+            .end();
+
+    }
+    catch (err) {
+
+        Logger.error(err);
+
+        res.status(500)
+            .send(err)
+            .end();
+    }
+};
+/**
+ * group date regulation
+ */
+Regulation.groupDate = async function groupDate(req, res, next) {
+    const group = req.params.group;
+
+    const data = await RegulationHelper.loadGroupDate(req, group);
+    const result = {
+        success: true,
+        data: data
+    };
+
+    res.status(200)
+        .send(result)
+        .end();
 };
 
 /**
  * show route
  */
-DepartmentRegulation.show = async function show(req, res, next) {
-    const DepartmentTitle = req.params.departmentData;
-    const pageRoute = 'department.regulation.show';
-    DepartmentRegulationHelper.loadDepartmentRegulationData(DepartmentTitle)
+/**
+ * load data with id
+ */
+Regulation.show = async function show(req, res, next) {
+    const Id = req.params.regulation;
+
+    RegulationHelper.loadRegulationData(Id)
+
         .then(data => {
             const result = {
                 success: true,
-                data: data
-            };
-            res.render(PugView.getView(pageRoute), {
-                req,
-                pageRoute,
-                result
-            });
-        })
-        .catch(err => console.error(err));
-};
-
-/**
- * edit page route
- */
-DepartmentRegulation.edit = async function edit(req, res, next) {
-    const pageRoute = 'department.regulation.edit';
-    res.render(PugView.getView(pageRoute), {
-        req,
-        pageRoute
-    });
-};
-
-/**
- * return edit data route
- */
-DepartmentRegulation.editDepartmentRegulationData = async function editDepartmentRegulationData(req, res, next) {
-    const title = req.params.departmentData;
-
-    DepartmentRegulationHelper.loadDepartmentRegulationData(title)
-        .then(data => {
-            const result = {
-                success: true,
-                data: data
+                data: {
+                    data: data,
+                }
             };
             res.status(200)
                 .send(result)
@@ -114,43 +146,14 @@ DepartmentRegulation.editDepartmentRegulationData = async function editDepartmen
 };
 
 /**
- * update data dep cat
- */
-DepartmentRegulation.update = async function update(req, res, next) {
-    let data = {};
-    const files = req.body.files || [];
-
-    let fileList = [];
-    files.forEach(element => {
-        const fileData = element;
-        FileHelper.insertFileData(fileData)
-            .then(data => {
-                console.log(data);
-            })
-            .catch(err => console.error(err));
-    });
-
-    data = {
-        "_id": req.body._id,
-        "title": req.body.title,
-        "user_id": req.session.auth.userId,
-        "is_active": req.body.is_active,
-        "department_category_id": req.body.department_category_id,
-        "description": req.body.description || '',
-        "files": fileList,
-        "regulation": req.body.regulation || []
-    };
-};
-
-/**
  * delete data dep cat
  */
-DepartmentRegulation.destroy = async function destroy(req, res, next) {
+Regulation.destroy = async function destroy(req, res, next) {
     const data = {
         "_id": req.body._id
     };
 
-    const UserDelete = DepartmentRegulationHelper.deleteDepartmentRegulationData(data)
+    RegulationHelper.deleteRegulationData(data)
         .then(data => {
             const result = {
                 success: true,
@@ -166,7 +169,7 @@ DepartmentRegulation.destroy = async function destroy(req, res, next) {
 /**
  * Create route return page
  */
-DepartmentRegulation.create = async function create(req, res, next) {
+Regulation.create = async function create(req, res, next) {
     const pageRoute = PugView.getView('department.regulation.create');
 
     res.render(pageRoute, {
@@ -176,12 +179,10 @@ DepartmentRegulation.create = async function create(req, res, next) {
 };
 
 /**
- * store data dep cat
+ * store data
  */
-DepartmentRegulation.store = async function store(req, res, next) {
-
+Regulation.store = async function store(req, res, next) {
     const files = req.files || [];
-
     let fileList = [];
 
     for (let i = 0; i < files.length; ++i) {
@@ -191,11 +192,11 @@ DepartmentRegulation.store = async function store(req, res, next) {
 
             const data = await FileHelper.insertFileData(el);
 
-            const temp = {
-                "file_id": data[0]._id,
-                "deleted_at": null
+            const tempFileData = {
+                file_id: data[0]._id,
+                deleted_at: null,
             };
-            fileList.push(temp);
+            fileList.push(tempFileData);
         } catch (err) {
             Logger.error(err);
         }
@@ -204,21 +205,85 @@ DepartmentRegulation.store = async function store(req, res, next) {
     const data = {
         "title": req.body.title,
         "user_id": req.session.auth.userId,
-        "is_active": req.body.is_active || false,
-        "department_id": req.body.department_id,
-        "description": req.body.description || '',
-        "files": fileList || []
+        "is_active": req.body.is_active,
+        "department_id": req.body.departmentId,
+        "files": fileList
     };
 
-    DepartmentRegulationHelper.insertNewDepartmentRegulation(data)
-        .then(data => {
+    RegulationHelper.insertNewRegulation(data)
+        .then(dataRes => {
             const result = {
                 success: true,
-                data: data
+                data: dataRes
             };
             res.status(200)
                 .send(result)
                 .end();
         })
         .catch(err => console.error(err));
+};
+
+/**
+ * update data
+ */
+Regulation.update = async function update(req, res, next) {
+    let data = {};
+    const files = req.files || [];
+    let fileList = [];
+
+    for (let i = 0; i < files.length; ++i) {
+        try {
+            const el = files[i];
+            el.user_id = req.session.auth.userId;
+
+            const data = await FileHelper.insertFileData(el);
+
+            const tempFileData = {
+                file_id: data[0]._id,
+                deleted_at: null,
+            };
+            fileList.push(tempFileData);
+        } catch (err) {
+            Logger.error(err);
+        }
+    }
+
+    const deletedOldFiles = JSON.parse(req.body.deletedOldFiles || null) || [];
+
+    let regulationRes = await RegulationHelper.loadRegulationData(req.body._id);
+    const regulationLFiles = (regulationRes || {}).files || [];
+
+    for (let index = 0; index < regulationLFiles.length; index++) {
+        const element = regulationLFiles[index];
+        fileList.push(element)
+    }
+
+    for (let index = 0; index < deletedOldFiles.length; index++) {
+        const element = deletedOldFiles[index];
+        for (let oil = 0; oil < fileList.length; oil++) {
+            const Fele = fileList[oil];
+            if (Fele.file_id == element) {
+                Fele.deleted_at = Date()
+            }
+        }
+    }
+
+    data = {
+        "_id": req.body._id,
+        "title": req.body.title,
+        "user_id": req.session.auth.userId,
+        "is_active": req.body.is_active,
+        "department_id": req.body.departmentId,
+        "files": fileList
+    };
+
+    let result = await RegulationHelper.updateRegulationData(data);
+    const result2 = {
+        success: true,
+        data: result,
+    };
+
+    res.status(200)
+        .send(result2)
+        .end();
 };

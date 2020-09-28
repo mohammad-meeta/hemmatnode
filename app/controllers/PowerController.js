@@ -17,15 +17,12 @@ Power.index = async function index(req, res, next) {
     res.render(PugView.getView(pageRoute), {
         req,
         pageRoute,
-        departmentId: req.params.department,
-        year: req.params.year,
     });
 };
 /**
  * paginate route
  */
 Power.paginatePower = async function paginatePower(req, res, next) {
-    const group = req.params.group;
 
     const dataPaginate = {
         page: req.params.page,
@@ -35,10 +32,10 @@ Power.paginatePower = async function paginatePower(req, res, next) {
     try {
         let result = {};
 
-        let data = await PowerHelper.loadAllPowerCountData(group);
+        let data = await PowerHelper.loadAllPowerCountData();
         let count = data.data;
 
-        data = await PowerHelper.loadAllPowerData(req, dataPaginate, group);
+        data = await PowerHelper.loadAllPowerData(req, dataPaginate);
         result = {
             success: true,
             data: {
@@ -103,8 +100,6 @@ Power.paginatePowerAll = async function paginatePowerAll(req, res, next) {
  * paginate by year route
  */
 Power.paginatePowerYear = async function paginatePowerYear(req, res, next) {
-    const group = req.params.group;
-    const year = req.params.year;
 
     const dataPaginate = {
         page: req.params.page,
@@ -114,10 +109,10 @@ Power.paginatePowerYear = async function paginatePowerYear(req, res, next) {
     try {
         let result = {};
 
-        let data = await PowerHelper.loadAllPowerCountYearData(group, year);
+        let data = await PowerHelper.loadAllPowerCountYearData();
         let count = data.data;
 
-        data = await PowerHelper.loadAllPowerYearData(req, dataPaginate, group, year);
+        data = await PowerHelper.loadAllPowerYearData(req, dataPaginate);
         result = {
             success: true,
             data: {
@@ -144,9 +139,8 @@ Power.paginatePowerYear = async function paginatePowerYear(req, res, next) {
  * group date power
  */
 Power.groupDate = async function groupDate(req, res, next) {
-    const group = req.params.group;
 
-    const data = await PowerHelper.loadGroupDate(req, group);
+    const data = await PowerHelper.loadGroupDate(req);
     const result = {
         success: true,
         data: data

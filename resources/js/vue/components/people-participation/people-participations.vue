@@ -26,6 +26,11 @@
                         .inline-card-body
                             .inline-card-body-item(v-for='dep in departmentCategory.department', :key='dep._id')
                                 a(:href="getUrl(dep._id)") {{ dep.title }}
+                    .inline-card.w-100
+                        .inline-card-head
+                            a(href="/power")
+                                h2
+                                    | ثبت اقدامات توانمندسازی
 
 
 </template>
@@ -96,7 +101,6 @@ export default {
          */
         getUrl(id) {
             const url = this.departmentLinkUrl.replace(/\$id\$/g, id);
-
             return url;
         },
 

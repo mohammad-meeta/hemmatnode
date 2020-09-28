@@ -17,6 +17,7 @@
             )
                 b-select(
                     placeholder="انتخاب شهرستان",
+                    v-model="cityActionData.city_id",
                 )
                     option(
                         v-for="city in cities"
@@ -57,10 +58,10 @@
             label.label تاریخ
             .control
                 date-picker(
-                    v-model="documentData.date",
-                    format="YYYY-MM-DD HH:mm:ss"
-                    display-format="jDD/jMM/jYYYY HH:mm"
-                    type="datetime"
+                    v-model="cityActionData.date",
+                    format="YYYY-MM-DD"
+                    display-format="jDD/jMM/jYYYY"
+                    type="date"
                     required
                 )
         .field
@@ -108,7 +109,7 @@ export default {
         oldFiles: [],
         cityActionData: {
             title: null,
-            city: null,
+            city_id: null,
             description: null,
             responsible: null,
             date: null,
@@ -195,9 +196,10 @@ export default {
         },
 
         loadCities() {
-            let url = this.listUrl
+            let url = this.cityUrl
                 .replace(/\$page\$/g, 1)
                 .replace(/\$pageSize\$/g, 1000);
+            console.log(url);
             AxiosHelper.send("get", url, "").then((res) => {
                 const resData = res.data;
                 Vue.set(this, "cities", resData.data.data);

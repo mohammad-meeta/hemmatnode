@@ -136,8 +136,9 @@ export default {
             const newActionCreativeData = {
                 _id: payload._id,
                 title: payload.title,
-                date: payload.date,
-                executor: payload.executor,
+                reason: payload.reason,
+                description: payload.description,
+                responsible: payload.responsible,
                 files: payload.files,
                 is_active: payload.is_active,
                 created_at: payload.created_at,

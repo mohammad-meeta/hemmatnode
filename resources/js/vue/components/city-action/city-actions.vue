@@ -49,7 +49,8 @@
                 @on-command="onCommand",
                 @on-register="onCityActionRegister",
                 :register-url="registerUrl",
-                :department-id="departmentId"
+                :department-id="departmentId",
+                :city-url="cityUrl"
             )
 
         .column(v-show="!modeLoading && modeEdit")
@@ -58,7 +59,8 @@
                 @on-command="onCommand",
                 @on-update="onCityActionUpdate",
                 :edit-url="editUrl",
-                :department-id="departmentId"
+                :department-id="departmentId",
+                :city-url="cityUrl"
             )
 
         .column(v-show="!modeLoading && modeShow")

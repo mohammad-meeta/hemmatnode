@@ -17,6 +17,7 @@
             )
                 b-select(
                     placeholder="انتخاب شهرستان",
+                    v-model="cityActionData.city_id",
                 )
                     option(
                         v-for="city in cities"
@@ -59,10 +60,10 @@
             label.label تاریخ
             .control
                 date-picker(
-                    v-model="documentData.date",
-                    format="YYYY-MM-DD HH:mm:ss"
-                    display-format="jDD/jMM/jYYYY HH:mm"
-                    type="datetime"
+                    v-model="cityActionData.date",
+                    format="YYYY-MM-DD"
+                    display-format="jDD/jMM/jYYYY"
+                    type="date"
                     required
                 )
 
@@ -113,7 +114,7 @@ export default {
         oldFiles: [],
         cityActionData: {
             title: null,
-            city: null,
+            city_id: null,
             department_id: null,
             description: null,
             date: null,
@@ -167,9 +168,9 @@ export default {
             let temp = {
                 _id: data._id,
                 title: data.title,
-                city:  data.city,
+                city_id:  data.city_id,
                 description: data.description,
-                date: data.reason,
+                date: data.date,
                 responsible: data.responsible,
                 department_id: data.department_id,
                 files: data.files,
@@ -223,7 +224,7 @@ export default {
         },
 
         loadCities() {
-            let url = this.listUrl
+            let url = this.cityUrl
                 .replace(/\$page\$/g, 1)
                 .replace(/\$pageSize\$/g, 1000);
             AxiosHelper.send("get", url, "").then((res) => {

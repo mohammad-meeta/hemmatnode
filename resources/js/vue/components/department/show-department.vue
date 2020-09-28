@@ -40,7 +40,7 @@
                 .inline-card-body-item
                     a(:href="actionCreativeLink") اقدامات خلاق
                 .inline-card-body-item
-                    a(href="#") اقدامات متناظر شهرستان
+                    a(:href="cityActionLink") اقدامات متناظر شهرستان
             .column.is-4
                 .intro-card
                     .intro-card-head
@@ -49,7 +49,7 @@
                         a(:href="item.link") {{ item.text }}
             .column.is-4
                 .big-button
-                    a(href="/document-list")
+                    a(:href="documentLink")
                         span.big-button-icon
                             i.fa.fa-book
                         span.big-button-text
@@ -271,6 +271,8 @@ export default {
             id = id || this.departmentId;
             this.healthLink = "/health/" + id;
             this.actionCreativeLink = "/actioncreative/" + id;
+            this.cityActionLink = "/cityaction/" + id;
+            this.documentLink = "/document/" + id;
         },
 
         /**

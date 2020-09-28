@@ -11,13 +11,21 @@
         h1 در حال بارگذاری
     .form-small(v-show="! isLoadingMode")
         .field
-            label.label نام گزارش
+            label.label عنوان
             .control
                 input.input(
                     type="text",
                     placeholder="عنوان",
                     autofocus,
                     v-model="powerData.title",
+                    required
+                )
+        .field
+            label.label شرح
+            .control
+                textarea.textarea(
+                    placeholder="شرح",
+                    v-model="actionCreativeData.description",
                     required
                 )
         .field
@@ -89,10 +97,7 @@ export default {
     }),
 
     props: {
-        departmentId: {
-            type: String,
-            default: null,
-        },
+
         date: {
             type: String,
             default: null,
@@ -104,11 +109,9 @@ export default {
     },
     created() {
         this.clearFormData();
-        this.powerData.departmentId = this.departmentId;
     },
 
     mounted() {
-        Vue.set(this.powerData, "department_id", this.departmentId);
     },
 
     computed: {
@@ -248,7 +251,7 @@ export default {
         clearFormData() {
             const powerData = {
                 title: null,
-                executor: null,
+                description: null,
                 date: null,
                 files: [],
                 deletedOldFiles: [],

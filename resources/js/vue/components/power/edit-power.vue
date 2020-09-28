@@ -11,11 +11,11 @@
         h1 در حال بارگذاری
     .form-small(v-show="! isLoadingMode")
         .field
-            label.label نام گزارش
+            label.label عنوان
             .control
                 input.input(
                     type="text",
-                    placeholder="نام",
+                    placeholder="عنوان",
                     v-model="powerData.title",
                     required
                 )
@@ -107,14 +107,10 @@ export default {
             default: "",
         },
 
-        departmentId: {
-            type: String,
-            default: null,
-        },
     },
 
     created() {
-        Vue.set(this.powerData, "department_id", this.departmentId);
+
     },
 
     mounted() {},
@@ -231,7 +227,7 @@ export default {
                     data,
                 });
             } catch (err) {
-                this.setNotification(".خطا در ویرایش پیوست سلامت", "is-danger");
+                this.setNotification(".خطا در ویرایش اقدامات توانمندسازی", "is-danger");
             }
 
             this.hideLoading();

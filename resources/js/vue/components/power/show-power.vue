@@ -5,14 +5,14 @@
             h1 در حال بارگذاری
         .column.is-full(v-show="! isLoadingMode")
             .info-card
-                .info-card-title {{ healthData.title }}
+                .info-card-title {{ powerData.title }}
                 .info-card-details
                     .info-card-item
-                        .info-card-label نام پیوست سلامت:
-                        .info-card-value {{ healthData.title }}
+                        .info-card-label عنوان اقدامات توانمندسازی:
+                        .info-card-value {{ powerData.title }}
                     .info-card-item
-                        .info-card-label پیوست سلامت:
-                        .info-card-value {{ healthData.health_id }}
+                        .info-card-label اقدامات توانمندسازی:
+                        .info-card-value {{ powerData.power_id }}
 </template>
 <script>
 "use strict";
@@ -20,16 +20,16 @@
 const ENUMS = require("JS-HELPERS/enums");
 
 export default {
-    name: "ShowHealth",
+    name: "ShowPower",
 
     data: () => ({
         ENUMS,
-        healths: [],
-        healthData: {
+        powers: [],
+        powerData: {
             _id: null,
             title: null,
-            health_id: null,
-            executor: null,
+            power_id: null,
+            description: null,
             date: null,
             files: {},
             is_active: false,
@@ -37,7 +37,7 @@ export default {
         showLoadingFlag: false,
     }),
     props: {
-        healthsUrl: {
+        powersUrl: {
             type: String,
             default: "",
         },
@@ -50,20 +50,20 @@ export default {
 
     methods: {
         /**
-         * Load specific health
+         * Load specific power
          */
-        loadHealthData(data) {
+        loadPowerData(data) {
             const temp = {
                 _id: data._id,
                 title: data.title,
-                health_id: data.health_id,
+                power_id: data.power_id,
                 date: data.date,
-                executor: data.executor,
+                description: data.description,
                 files: {},
                 is_active: data.is_active,
             };
 
-            Vue.set(this, "healthData", temp);
+            Vue.set(this, "powerData", temp);
         },
 
         /**

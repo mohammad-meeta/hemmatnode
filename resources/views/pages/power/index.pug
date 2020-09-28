@@ -1,0 +1,17 @@
+extends ../../layout/app.pug
+
+block title
+    | پیوست سلامت
+
+block content
+    .container
+        powers(
+            list-url=route('api.power', { page: '$page$', size: '$pageSize$' }),
+            register-url=route('power.store', { department: departmentId }),
+            edit-url=route('power.update', { id :'$id$'}),
+        )
+
+block scripts
+    script(defer, src=mix('js/pages/power/index/index.js'))
+
+

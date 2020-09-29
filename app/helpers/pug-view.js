@@ -64,6 +64,10 @@ PugView.viewPath = {
     'power.index': 'pages/power/index.pug',
     'power.create': 'pages/power/register.pug',
 
+    /* index */
+    'index.index': 'pages/index/index.pug',
+    'index.create': 'pages/index/register.pug',
+
     /* monitoringtype */
     'monitoringtype.index': 'pages/monitoringtype/index.pug',
     'monitoringtype.create': 'pages/monitoringtype/register.pug',

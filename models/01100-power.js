@@ -59,7 +59,7 @@ Model.model = function model() {
         },
         'department_id': {
             type: ObjectId,
-            required: true
+            required: false
         },
         'user_id': {
             type: ObjectId,

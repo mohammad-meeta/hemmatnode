@@ -1,58 +1,67 @@
 <template lang="pug">
-    .container-parent
-        section.hero
-            notification(:notification-type="notificationType",
-                        @on-close="closeNotification",
-                        v-if="showNotification")
-                span(v-html="notificationMessage")
-            .container.page-header
-                .title
-                    h1(v-show="modeList") آیین نامه ها
-                    h1(v-show="modeRegister") ایجاد آیین نامه
-                    h1(v-show="modeEdit") ویرایش آیین نامه
+.container-parent
+    section.hero
+        notification(
+            :notification-type="notificationType",
+            @on-close="closeNotification",
+            v-if="showNotification"
+        )
+            span(v-html="notificationMessage")
+        .container.page-header
+            .title
+                h1(v-show="modeList") آئین نامه
+                h1(v-show="modeRegister") ایجاد آئین نامه
 
-        .columns.exposed-form(v-show="!modeLoading")
-            .column.is-one-fifth(v-show="modeList")
-                a.button.is-primary.is-rounded(href="#",
-                @click.prevent="commandClick(ENUMS.COMMAND.NEW)")
-                    span.icon.is-small
-                        i.material-icons.icon check_circle
-                    span ایجاد
+    .columns.exposed-form(v-show="!modeLoading")
+        .column.is-one-fifth(v-show="modeList")
+            a.button.is-primary.is-rounded(
+                href="#",
+                @click.prevent="commandClick(ENUMS.COMMAND.NEW)"
+            )
+                span.icon.is-small
+                    i.material-icons.icon check_circle
+                span ایجاد
 
-            .column.is-one-fifth(v-show="!modeList")
-                a.button.is-warning.is-rounded(href="#",
-                @click.prevent="commandClick(ENUMS.COMMAND.CANCEL)")
-                    span.icon.is-small
-                        i.material-icons.icon check_circle
-                    span بازگشت
+        .column.is-one-fifth(v-show="!modeList")
+            a.button.is-warning.is-rounded(
+                href="#",
+                @click.prevent="commandClick(ENUMS.COMMAND.CANCEL)"
+            )
+                span.icon.is-small
+                    i.material-icons.icon check_circle
+                span بازگشت
 
-        .columns.is-vcentered
-            .column(v-if="modeLoading")
-                loading
+    .columns.is-vcentered
+        .column(v-if="modeLoading")
+            loading
 
-            .column(v-show="!modeLoading && modeList")
-                list-regulation(ref="regulationList",
-                    @on-command="onCommand",
-                    :department-id="departmentId",
-                    :list-url="listUrl")
+        .column(v-show="!modeLoading && modeList")
+            list-regulation(
+                ref="regulationList",
+                @on-command="onCommand",
+                :list-url="listUrl"
+            )
 
-            .column(v-show="!modeLoading && modeRegister")
-                register-regulation(ref="regulationRegister",
-                    :department-id="departmentId"
-                    @on-command="onCommand",
-                    @on-register="onRegulationRegister"
-                    :register-url="registerUrl",
-                    :departments-url="departmentsUrl",
-                    :users-url="usersUrl")
+        .column(v-show="!modeLoading && modeRegister")
+            register-regulation(
+                ref="regulationRegister",
+                @on-command="onCommand",
+                @on-register="onRegulationRegister",
+                :register-url="registerUrl",
+                :department-id="departmentId",
+            )
 
-            //.column(v-show="!modeLoading && modeEdit")
-                edit-department(ref="departmentEdit", @on-command="onCommand",
-                @on-update="onRegulationUpdate"
+        .column(v-show="!modeLoading && modeEdit")
+            edit-regulation(
+                ref="regulationEdit",
+                @on-command="onCommand",
+                @on-update="onRegulationUpdate",
                 :edit-url="editUrl",
-                :departmentCategories-url="departmentCategoriesUrl")
+                :department-id="departmentId"
+            )
 
-            .column(v-show="!modeLoading && modeShow")
-                show-regulation(ref="regulationShow", @on-command="onCommand")
+        .column(v-show="!modeLoading && modeShow")
+            show-regulation(ref="regulationShow", @on-command="onCommand")
 </template>
 
 <script>
@@ -63,11 +72,9 @@ const ENUMS = require("JS-HELPERS/enums");
 const Loading = require("VUE-COMPONENTS/general/loading.vue").default;
 const RegisterRegulation = require("VUE-COMPONENTS/regulation/register-regulation.vue")
     .default;
-const ListRegulation = require("VUE-COMPONENTS/regulation/list-regulation.vue")
-    .default;
-//const EditRegulation = require("VUE-COMPONENTS/regulation/edit-regulation.vue").default;
-const ShowRegulation = require("VUE-COMPONENTS/regulation/show-regulation.vue")
-    .default;
+const EditRegulation = require("VUE-COMPONENTS/regulation/edit-regulation.vue").default;
+const ListRegulation = require("VUE-COMPONENTS/regulation/list-regulation.vue").default;
+const ShowRegulation = require("VUE-COMPONENTS/regulation/show-regulation.vue").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
 export default {
@@ -77,9 +84,9 @@ export default {
         Loading,
         ListRegulation,
         RegisterRegulation,
-        //EditRegulation,
+        EditRegulation,
         ShowRegulation,
-        Notification
+        Notification,
     },
 
     data: () => ({
@@ -87,64 +94,58 @@ export default {
         formModeStack: [],
         regulations: [],
         notificationMessage: null,
-        notificationType: "is-info"
+        notificationType: "is-info",
     }),
 
     props: {
         departmentId: {
             type: String,
-            default: null
+            default: null,
         },
 
         title: {
             type: String,
-            default: null
+            default: null,
         },
 
         listUrl: {
             type: String,
-            default: null
+            default: null,
+        },
+        showRegulationYearUrl: {
+            type: String,
+            default: null,
         },
 
         registerUrl: {
             type: String,
-            default: null
-        },
-
-        departmentsUrl: {
-            type: String,
-            default: null
+            default: null,
         },
 
         editUrl: {
             type: String,
-            default: null
+            default: null,
         },
-
-        usersUrl: {
-            type: String,
-            default: null
-        }
     },
 
     computed: {
-        formMode: state => state.formModeStack[state.formModeStack.length - 1],
+        formMode: (state) =>
+            state.formModeStack[state.formModeStack.length - 1],
 
-        modeLoading: state => state.formMode == ENUMS.FORM_MODE.LOADING,
-        modeList: state => state.formMode == ENUMS.FORM_MODE.LIST,
-        modeRegister: state => state.formMode == ENUMS.FORM_MODE.REGISTER,
-        modeEdit: state => state.formMode == ENUMS.FORM_MODE.EDIT,
-        modeShow: state => state.formMode == ENUMS.FORM_MODE.SHOW,
-        showNotification: state => state.notificationMessage != null
+        modeLoading: (state) => state.formMode == ENUMS.FORM_MODE.LOADING,
+        modeList: (state) => state.formMode == ENUMS.FORM_MODE.LIST,
+        modeRegister: (state) => state.formMode == ENUMS.FORM_MODE.REGISTER,
+        modeEdit: (state) => state.formMode == ENUMS.FORM_MODE.EDIT,
+        modeShow: (state) => state.formMode == ENUMS.FORM_MODE.SHOW,
+        showNotification: (state) => state.notificationMessage != null,
     },
 
-    created() {
-        this.init();
-    },
-
+    /**
+     * Mounted
+     */
     mounted() {
+        this.init();
         this.changeFormMode(ENUMS.FORM_MODE.LIST);
-        this.$refs.regulationList.loadRegulations(1);
     },
 
     methods: {
@@ -153,27 +154,21 @@ export default {
          */
         onRegulationRegister(payload) {
             //***update vue list****
-            this.$refs.regulationList.addToRegulationList(
-                payload.data.data
-            );
-            this.changeFormMode(ENUMS.FORM_MODE.LIST);
+            this.$refs.regulationList.addToRegulationList(payload.data.data.data[0]);
             this.setNotification(
-                ".آیین نامه با موفقیت ذخیره شد",
+                ".آئین نامه با موفقیت ذخیره شد",
                 "is-success"
             );
+            this.changeFormMode(ENUMS.FORM_MODE.LIST);
         },
-
         /**
-         * On Update regulation
+         * On Update
          */
         onRegulationUpdate(payload) {
-            this.$refs.regulationList.editInRegulationList(payload.data);
+            this.$refs.regulationList.editRegulationList(payload);
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
 
-            this.setNotification(
-                ".آیین نامه با موفقیت ویرایش شد",
-                "is-success"
-            );
+            this.setNotification(".آئین نامه با موفقیت ویرایش شد", "is-success");
         },
 
         /**
@@ -196,7 +191,7 @@ export default {
                     break;
 
                 case ENUMS.COMMAND.EDIT:
-                    /* TODO: REGISTER NEW Regulation */
+                    /* TODO: Edit InviteSession */
                     this.$refs.regulationEdit.loadRegulationData(data);
                     this.changeFormMode(ENUMS.FORM_MODE.EDIT);
                     break;
@@ -226,6 +221,7 @@ export default {
          */
         init() {
             this.changeFormMode(ENUMS.FORM_MODE.LOADING);
+            this.$refs.regulationList.loadRegulations(1);
         },
 
         /**
@@ -234,7 +230,7 @@ export default {
         changeFormMode(mode, options) {
             const opts = Object.assign(
                 {
-                    pop: false
+                    pop: false,
                 },
                 options
             );
@@ -264,7 +260,7 @@ export default {
          */
         closeNotification() {
             this.setNotification(null);
-        }
-    }
+        },
+    },
 };
 </script>

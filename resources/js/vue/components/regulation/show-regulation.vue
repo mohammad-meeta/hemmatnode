@@ -1,21 +1,18 @@
 <template lang="pug">
-    .container
-        .columns
-            .column.is-full(v-show="isLoadingMode")
-                h1 در حال بارگذاری
-            .column.is-full(v-show="! isLoadingMode")
-                .print-form
-                    .print-form-head.columns
-                        .column.is-3.print-form-logo
-                            img(src='/images/logo.png')
-                        .column.is-6.print-form-title
-                            h2 فرم صورتجلسه
-                        .column.is-3.print-form-number
-                            span شماره مدرک
-                    .print-form-body
-                        .print-form-agenda.columns
-                            .column.is-6.print-form-title
-                                h3 {{ regulationData.agenda }}
+.container
+    .columns.is-vcentered
+        .column.is-full(v-show="isLoadingMode")
+            h1 در حال بارگذاری
+        .column.is-full(v-show="! isLoadingMode")
+            .info-card
+                .info-card-title {{ regulationData.title }}
+                .info-card-details
+                    .info-card-item
+                        .info-card-label نام آئین نامه:
+                        .info-card-value {{ regulationData.title }}
+                    .info-card-item
+                        .info-card-label آئین نامه:
+                        .info-card-value {{ regulationData.regulation_id }}
 </template>
 <script>
 "use strict";
@@ -27,20 +24,26 @@ export default {
 
     data: () => ({
         ENUMS,
+        regulations: [],
         regulationData: {
             _id: null,
             title: null,
-            body: null,
-            department_id: null,
+            regulation_id: null,
             files: {},
-            is_active: false
+            is_active: false,
         },
-        showLoadingFlag: false
+        showLoadingFlag: false,
     }),
+    props: {
+        regulationsUrl: {
+            type: String,
+            default: "",
+        },
+    },
 
     computed: {
-        isLoadingMode: state => state.showLoadingFlag == true,
-        showNotification: state => state.notificationMessage != null
+        isLoadingMode: (state) => state.showLoadingFlag == true,
+        showNotification: (state) => state.notificationMessage != null,
     },
 
     methods: {
@@ -51,11 +54,11 @@ export default {
             const temp = {
                 _id: data._id,
                 title: data.title,
-                body: data.body,
-                department_id: data.department_id,
-                files: data.files,
-                is_active: data.is_active
+                regulation_id: data.regulation_id,
+                files: {},
+                is_active: data.is_active,
             };
+
             Vue.set(this, "regulationData", temp);
         },
 
@@ -72,7 +75,6 @@ export default {
         hideLoading() {
             Vue.set(this, "showLoadingFlag", false);
         },
-
-    }
+    },
 };
 </script>

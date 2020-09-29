@@ -1,6 +1,6 @@
 <template lang="pug">
 .container-child
-    h1(v-if="! hasRegulation") هیچ آیین نامه ای ایجاد نشده
+    h1(v-if="!hasRegulation") هیچ آئین نامه ای ایجاد نشده
     table.table.is-striped.is-hoverable.is-fullwidth(v-if="hasRegulation")
         thead
             tr
@@ -9,25 +9,45 @@
                 th تاریخ ایجاد
                 th عملیات
         tbody
-            tr(v-for='regulation in regulations', :key='regulation.id')
-                td(v-html="getTitles(regulation.extra)")
+            tr(v-for="regulation in regulations", :key="regulation.id")
+                td {{ regulation.title }}
                 td {{ regulation.is_active }}
                 td {{ toPersianDate(regulation.created_at) }}
                 td.function-links
-                    a.button.is-primary.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.EDIT, regulation)")
-                        span.icon.is-small
-                            i.material-icons.icon check_circle
-                        span ویرایش
-                    a.button.is-warning.is-rounded.mt-2(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SHOW, regulation)")
+                    a.button.is-warning.is-rounded.mt-2(
+                        href="#",
+                        @click.prevent="commandClick(ENUMS.COMMAND.SHOW, regulation)"
+                    )
                         span.icon.is-small
                             i.material-icons.icon swap_horizontal_circle
                         span مشاهده
 
-    paginate(:page-count='pageCount',
-        :click-handler='paginatorClick',
-        :prev-text="'Prev'",
-        :next-text="'Next'",
-        :container-class="'pagination-list'")
+                    a.button.is-primary.is-rounded(
+                        href="#",
+                        @click.prevent="commandClick(ENUMS.COMMAND.EDIT, regulation)"
+                    )
+                        span.icon.is-small
+                            i.material-icons.icon check_circle
+                        span ویرایش آئین نامه
+
+    b-pagination(
+        :total="pagination.total",
+        :current.sync="pagination.current",
+        :range-before="pagination.rangeBefore",
+        :range-after="pagination.rangeAfter",
+        :order="pagination.order",
+        :size="pagination.size",
+        :simple="pagination.isSimple",
+        :rounded="pagination.isRounded",
+        :per-page="pagination.perPage",
+        :icon-prev="pagination.prevIcon",
+        :icon-next="pagination.nextIcon",
+        aria-next-label="Next page",
+        aria-previous-label="Previous page",
+        aria-page-label="Page",
+        aria-current-label="Current page",
+        @change="loadMemorandums(pagination.current)"
+    )
 </template>
 
 <script>
@@ -35,43 +55,39 @@
 
 const ENUMS = require("JS-HELPERS/enums");
 
-const Paginate = require("vuejs-paginate");
-Vue.component("paginate", Paginate);
 export default {
     props: {
         listUrl: {
             type: String,
-            default: ""
-        },
-
-        departmentId: {
-            type: String,
-            default: ""
+            default: "",
         },
     },
 
     data: () => ({
-        departmentData: null,
         ENUMS,
+        pagination: {
+            total: 0,
+            current: 1,
+            perPage: 50,
+            rangeBefore: 3,
+            rangeAfter: 1,
+            order: "",
+            size: "",
+            isSimple: false,
+            isRounded: false,
+            prevIcon: "chevron-left",
+            nextIcon: "chevron-right",
+        },
         regulations: [],
         regulationsCount: 0,
-        pageCount: 0
+        pageCount: 0,
     }),
 
     computed: {
-        hasRegulation: state => (state.regulations || []).length
+        hasRegulation: (state) => (state.regulations || []).length,
     },
 
     methods: {
-        /**
-         * Create titles
-         */
-        getTitles(extra) {
-            let res = extra.map(x => x.title).join("<br/>");
-
-            return res;
-        },
-
         /**
          * Load regulations
          */
@@ -79,15 +95,12 @@ export default {
             let url = this.listUrl
                 .replace(/\$page\$/g, pageId)
                 .replace(/\$pageSize\$/g, 50);
-
-            AxiosHelper.send("get", url, "").then(res => {
+            AxiosHelper.send("get", url, "").then((res) => {
                 const resData = res.data;
-                const regulationData = resData.data.data;
-
-                Vue.set(this, "regulations", regulationData);
-                Vue.set(this, "regulationsCount", regulationData.count);
-
-                this.paginator();
+                console.log(resData);
+                Vue.set(this, "regulations", resData.data.data);
+                Vue.set(this, "regulationsCount", resData.data.count);
+                Vue.set(this.pagination, "total", resData.data.count);
             });
         },
 
@@ -108,51 +121,40 @@ export default {
         },
 
         /**
-         * Paginator
-         */
-        paginator() {
-            let pageCount = Math.ceil(this.regulationsCount / 50);
-            Vue.set(this, "pageCount", pageCount);
-        },
-        /**
          * paginator click link
          */
         paginatorClick(id) {
-            this.loadRegulations(id);
+            this.loadMemorandums(id);
         },
+
         /**
-         * add new regulations data to list data
+         * add new Regulation data to list data
          */
         addToRegulationList(payload) {
-            const newRegulationsData = {
+            const newRegulationData = {
                 _id: payload._id,
-                agenda: payload.agrnda,
+                title: payload.title,
+                files: payload.files,
                 is_active: payload.is_active,
-                created_at: payload.created_at
+                created_at: payload.created_at,
             };
 
-            this.regulations.unshift(newRegulationsData);
+            this.regulations.unshift(newRegulationData);
         },
-
-        editInRegulationsList(payload) {
-            const editedRegulationsData = {
-                _id: payload._id,
-                title: payload.agenda,
-                is_active: payload.is_active,
-                created_at: payload.created_at
+        editRegulationList(payload) {
+            const editedRegulationData = {
+                _id: payload.data.data[0]._id,
+                is_active: payload.data.data[0].is_active,
+                files: payload.data.data[0].files,
+                created_at: payload.data.data[0].created_at,
             };
 
             let foundIndex = this.regulations.findIndex(
-                x => x._id == editedRegulationsData._id
+                (x) => x._id == editedRegulationData._id
             );
-            this.regulations[foundIndex].agenda =
-                editedRegulationsData.agenda;
-            this.regulations[foundIndex].is_active =
-                editedRegulationsData.is_active;
-        }
-    }
+
+            Vue.set(this.regulations, foundIndex, editedRegulationData);
+        },
+    },
 };
 </script>
-
-<style scoped>
-</style>

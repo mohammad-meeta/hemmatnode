@@ -1,16 +1,15 @@
 extends ../../layout/app.pug
 
 block title
-    | آیین نامه
+    | آئین نامه
 
 block content
     .container
-        regulations(list-url=route('api.regulation', { page: '$page$', size: '$pageSize$', group: departmentId }),
-            departments-url=route('api.department', { page: 1, size: 1000 }),
+        regulations(
+            list-url=route('api.regulation', { page: '$page$', size: '$pageSize$', group: departmentId }),
             register-url=route('regulation.store', { department: departmentId }),
             edit-url=route('regulation.update', { id :'$id$'}),
-            users-url=route('api.user', { page: 1, size: 1000 }),
-            department-id=departmentId
+            department-id=departmentId,
         )
 
 block scripts

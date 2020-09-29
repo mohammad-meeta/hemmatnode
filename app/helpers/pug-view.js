@@ -107,10 +107,10 @@ PugView.viewPath = {
     'session.edit': 'pages/session/edit.pug',
 
     /* DepartmentRegulation */
-    'department.regulation.index': 'pages/department-regulation/index.pug',
-    'department.regulation.create': 'pages/department-regulation/register.pug',
-    'department.regulation.show': 'pages/department-regulation/show.pug',
-    'department.regulation.edit': 'pages/department-regulation/edit.pug',
+    'department.regulation.index': 'pages/regulation/index.pug',
+    'department.regulation.create': 'pages/regulation/register.pug',
+    'department.regulation.show': 'pages/regulation/show.pug',
+    'department.regulation.edit': 'pages/regulation/edit.pug',
 
     /* articletype */
     'articletype.index': 'pages/articletype/index.pug',

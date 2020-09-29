@@ -16,7 +16,6 @@
                 input.input(
                     type="text",
                     placeholder="عنوان",
-                    autofocus,
                     v-model="regulationData.title",
                     required
                 )
@@ -29,34 +28,34 @@
                     file-upload(ref="fileUpload", :old-files="oldFiles")
         .field
             label.checkbox
-                input(type="checkbox", v-model="regulationData.is_active")
+                input(type="checkbox", v-model="regulationData.isActive")
                 | فعال
-        .field.is-grouped
-            .control(v-show="! isLoadingMode")
-                a.button.is-link.is-rounded(
-                    href="#",
-                    @click.prevent="commandClick(ENUMS.COMMAND.SAVE)"
-                )
-                    | ایجاد
+            .field.is-grouped
+                .control(v-show="! isLoadingMode")
+                    a.button.is-link.is-rounded(
+                        href="#",
+                        @click.prevent="commandClick(ENUMS.COMMAND.SAVE)"
+                    )
+                        | ویرایش
 </template>
 
 <script>
 "use strict";
 
+const Buefy = require("buefy").default;
 const AxiosHelper = require("JS-HELPERS/axios-helper");
-const ENUMS = require("JS-HELPERS/enums");
 const RegulationValidator = require("JS-VALIDATORS/regulation-register-validator");
+const ENUMS = require("JS-HELPERS/enums");
 const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 
 export default {
-    name: "RegisterRegulation",
-
+    name: "EditRegulation",
     components: {
-        Notification,
-        DatePicker: VuePersianDatetimePicker,
         FileUpload,
+        DatePicker: VuePersianDatetimePicker,
+        Notification,
     },
 
     data: () => ({
@@ -65,39 +64,36 @@ export default {
         deletedOldFiles: [],
         oldFiles: [],
         regulationData: {
-            department_id: null,
             title: null,
-            files: [],
+            department_id: null,
+            files: {},
+            oldFiles: [],
+            isActive: false,
             deletedOldFiles: [],
-            is_active: true,
         },
+
         notificationMessage: null,
         notificationType: "is-info",
         showLoadingFlag: false,
     }),
 
     props: {
+        editUrl: {
+            type: String,
+            default: "",
+        },
+
         departmentId: {
             type: String,
             default: null,
         },
-        date: {
-            type: String,
-            default: null,
-        },
-        registerUrl: {
-            type: String,
-            default: "",
-        },
-    },
-    created() {
-        this.clearFormData();
-        this.regulationData.departmentId = this.departmentId;
     },
 
-    mounted() {
+    created() {
         Vue.set(this.regulationData, "department_id", this.departmentId);
     },
+
+    mounted() {},
 
     computed: {
         isLoadingMode: (state) => state.showLoadingFlag == true,
@@ -106,12 +102,19 @@ export default {
 
     methods: {
         /**
-         * Set attachments
+         * Load specific user
          */
-        setAttachment(sender) {
-            const files = sender.target.files;
-
-            Vue.set(this, "files", files);
+        loadRegulationData(data) {
+            let temp = {
+                _id: data._id,
+                title: data.title,
+                department_id: this.regulationData.department_id,
+                files: data.files,
+                isActive: data.is_active,
+            };
+            Vue.set(this, "oldFiles", data.files);
+            Vue.set(this, "regulationData", temp);
+            this.$refs.fileUpload.updateOldFiles(data.files);
         },
 
         /**
@@ -122,7 +125,7 @@ export default {
         commandClick(arg) {
             switch (arg) {
                 case ENUMS.COMMAND.SAVE:
-                    this.registerRegulation();
+                    this.editRegulation();
                     break;
             }
         },
@@ -157,9 +160,9 @@ export default {
         },
 
         /**
-         * Register new regulation
+         * Edit regulation
          */
-        async registerRegulation() {
+        async editRegulation() {
             const isValid = this.validate();
 
             if (!isValid) {
@@ -177,45 +180,40 @@ export default {
             let deleteUploaded = deletedFiles.map((x) => x._id);
             Vue.set(this, "deletedOldFiles", deleteUploaded);
 
-            Vue.set(this.regulationData, "files", this.files);
-            Vue.set(this.regulationData, "deletedOldFiles", this.deletedOldFiles);
-
-            let regulationData = this.regulationData;
+            let regulationData = {
+                _id: this.regulationData._id,
+                title: this.regulationData.title,
+                department_id: this.regulationData.department_id,
+                is_active: this.regulationData.isActive,
+                files: this.files,
+                oldFiles: this.oldFiles,
+                deletedOldFiles: this.deletedOldFiles,
+            };
 
             try {
-                const url = this.registerUrl;
-                console.log(url);
-                console.log(regulationData);
-                let res = await AxiosHelper.send("post", url, regulationData, {
+                const url = this.editUrl.replace("$id$", regulationData._id);
+                let res = await AxiosHelper.send("patch", url, regulationData, {
                     sendAsFormData: true,
                     filesArray: "files",
                 });
 
                 const data = res.data;
-                if (data.success) {
-                    this.clearFormData();
-                    this.$emit("on-register", {
-                        sender: this,
-                        data: {
-                            data: data,
-                            dep_title: 0,
-                        },
-                    });
-                }
+                this.$emit("on-update", {
+                    sender: this,
+                    data,
+                });
             } catch (err) {
-                const data = err.response.data;
-                this.setNotification(data, "is-danger");
+                this.setNotification(".خطا در ویرایش آئین نامه", "is-danger");
             }
-            this.hideLoading();
 
-            this.clearFormData();
+            this.hideLoading();
         },
 
         /**
-         * Validate new regulation data
+         * Validate
          */
         validate() {
-            const result = RegulationValidator.validate(this.regulationData);
+            const result = RegulationValidator.validateEdit(this.regulationData);
 
             if (result.passes) {
                 this.closeNotification();
@@ -229,25 +227,6 @@ export default {
 
             this.setNotification(error, "is-danger");
             return false;
-        },
-        /**
-         * clear form data
-         */
-        clearFormData() {
-            const regulationData = {
-                title: null,
-                files: [],
-                deletedOldFiles: [],
-                is_active: true,
-            };
-
-            Vue.set(this, "regulationData", regulationData);
-            Vue.set(this, "files", []);
-            Vue.set(this, "deletedOldFiles", []);
-            Vue.set(this, "oldFiles", []);
-            this.files = [];
-            this.deletedOldFiles = [];
-            this.oldFiles = [];
         },
     },
 };

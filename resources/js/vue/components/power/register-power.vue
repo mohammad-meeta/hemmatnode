@@ -25,7 +25,7 @@
             .control
                 textarea.textarea(
                     placeholder="شرح",
-                    v-model="actionCreativeData.description",
+                    v-model="powerData.description",
                     required
                 )
         .field
@@ -199,8 +199,6 @@ export default {
 
             try {
                 const url = this.registerUrl;
-                console.log(url);
-                console.log(powerData);
                 let res = await AxiosHelper.send("post", url, powerData, {
                     sendAsFormData: true,
                     filesArray: "files",

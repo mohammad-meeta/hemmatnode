@@ -25,7 +25,7 @@
             .control
                 textarea.textarea(
                     placeholder="شرح",
-                    v-model="actionCreativeData.description",
+                    v-model="powerData.description",
                     required
                 )
 

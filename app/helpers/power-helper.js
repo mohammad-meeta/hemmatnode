@@ -455,7 +455,7 @@ PowerHelper.loadAllPowerCountData = function loadAllPowerCountData(group) {
     };
 
     return new Promise((resolve, reject) => {
-        Power.countPowers(filterQuery)
+        Power.countDocuments(filterQuery)
             .then(res => {
 
                 resolve(res);
@@ -473,7 +473,7 @@ PowerHelper.loadAllPowerCountDataAll = function loadAllPowerCountDataAll() {
     };
 
     return new Promise((resolve, reject) => {
-        Power.countPowers(filterQuery)
+        Power.countDocuments(filterQuery)
             .then(res => {
 
                 resolve(res);
@@ -493,7 +493,7 @@ PowerHelper.loadAllPowerCountYearData = function loadAllPowerCountYearData(group
     };
 
     return new Promise((resolve, reject) => {
-        Power.countPowers(filterQuery)
+        Power.countDocuments(filterQuery)
             .then(res => {
 
                 resolve(res);

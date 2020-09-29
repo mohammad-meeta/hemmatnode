@@ -47,9 +47,7 @@
                 ref="powerRegister",
                 @on-command="onCommand",
                 @on-register="onPowerRegister",
-                :register-url="registerUrl",
-                :department-id="departmentId",
-                :year="year"
+                :register-url="registerUrl"
             )
 
         .column(v-show="!modeLoading && modeEdit")
@@ -57,8 +55,7 @@
                 ref="powerEdit",
                 @on-command="onCommand",
                 @on-update="onPowerUpdate",
-                :edit-url="editUrl",
-                :department-id="departmentId"
+                :edit-url="editUrl"
             )
 
         .column(v-show="!modeLoading && modeShow")

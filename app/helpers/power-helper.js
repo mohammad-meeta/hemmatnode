@@ -12,7 +12,7 @@ module.exports = PowerHelper;
 /**
  * find all dep cat data result 
  */
-PowerHelper.loadAllPowerData = async function loadAllPowerData(req, dataPaginate, group) {
+PowerHelper.loadAllPowerData = async function loadAllPowerData(req, dataPaginate) {
     const page = parseInt(dataPaginate.page);
     const pageSize = parseInt(dataPaginate.pageSize);
     const skip = page > 0 ? (page - 1) * pageSize : 0;
@@ -21,22 +21,6 @@ PowerHelper.loadAllPowerData = async function loadAllPowerData(req, dataPaginate
 
     const userId = req.session.auth.userId;
     const pipeline = [
-        {
-            $match: {
-                department_id: new ObjectId(group),
-            }
-        },
-        {
-            $lookup: {
-                from: "departments",
-                localField: "department_id",
-                foreignField: "_id",
-                as: "dep"
-            }
-        },
-        {
-            $unwind: "$dep"
-        },
         {
             $unwind: {
                 path: "$files",
@@ -89,9 +73,6 @@ PowerHelper.loadAllPowerData = async function loadAllPowerData(req, dataPaginate
                 },
                 created_at: {
                     $last: "$created_at"
-                },
-                dep: {
-                    $last: "$dep"
                 },
             }
         },
@@ -159,17 +140,6 @@ PowerHelper.loadAllPowerDataAll = async function loadAllPowerDataAll(req, dataPa
     const userId = req.session.auth.userId;
     const pipeline = [
         {
-            $lookup: {
-                from: "departments",
-                localField: "department_id",
-                foreignField: "_id",
-                as: "dep"
-            }
-        },
-        {
-            $unwind: "$dep"
-        },
-        {
             $unwind: {
                 path: "$files",
                 preserveNullAndEmptyArrays: true
@@ -222,12 +192,6 @@ PowerHelper.loadAllPowerDataAll = async function loadAllPowerDataAll(req, dataPa
                 created_at: {
                     $last: "$created_at"
                 },
-                dep: {
-                    $last: "$dep"
-                },
-                doctype: {
-                    $last: "$doctype"
-                }
             }
         },
         {
@@ -284,7 +248,7 @@ PowerHelper.loadAllPowerDataAll = async function loadAllPowerDataAll(req, dataPa
 /**
  * find all dep cat data result 
  */
-PowerHelper.loadAllPowerYearData = async function loadAllPowerYearData(req, dataPaginate, group, year) {
+PowerHelper.loadAllPowerYearData = async function loadAllPowerYearData(req, dataPaginate) {
     const page = parseInt(dataPaginate.page);
     const pageSize = parseInt(dataPaginate.pageSize);
     const skip = page > 0 ? (page - 1) * pageSize : 0;
@@ -293,23 +257,6 @@ PowerHelper.loadAllPowerYearData = async function loadAllPowerYearData(req, data
 
     const userId = req.session.auth.userId;
     const pipeline = [
-        {
-            $match: {
-                department_id: new ObjectId(group),
-                date: year
-            }
-        },
-        {
-            $lookup: {
-                from: "departments",
-                localField: "department_id",
-                foreignField: "_id",
-                as: "dep"
-            }
-        },
-        {
-            $unwind: "$dep"
-        },
         {
             $unwind: {
                 path: "$files",
@@ -362,9 +309,6 @@ PowerHelper.loadAllPowerYearData = async function loadAllPowerYearData(req, data
                 },
                 created_at: {
                     $last: "$created_at"
-                },
-                dep: {
-                    $last: "$dep"
                 },
             }
         },
@@ -447,11 +391,10 @@ PowerHelper.loadGroupDate = async function loadGroupDate(req, group) {
 /**
  * find all dep cat count data result 
  */
-PowerHelper.loadAllPowerCountData = function loadAllPowerCountData(group) {
+PowerHelper.loadAllPowerCountData = function loadAllPowerCountData() {
     const Power = mongoose.model('Power');
 
     const filterQuery = {
-        department_id: group
     };
 
     return new Promise((resolve, reject) => {
@@ -538,17 +481,6 @@ PowerHelper.insertNewPower = async function insertNewPower(data) {
             }
         },
         {
-            $lookup: {
-                from: "departments",
-                localField: "department_id",
-                foreignField: "_id",
-                as: "dep"
-            }
-        },
-        {
-            $unwind: "$dep"
-        },
-        {
             $unwind: {
                 path: "$files",
                 preserveNullAndEmptyArrays: true
@@ -601,12 +533,6 @@ PowerHelper.insertNewPower = async function insertNewPower(data) {
                 created_at: {
                     $last: "$created_at"
                 },
-                dep: {
-                    $last: "$dep"
-                },
-                doctype: {
-                    $last: "$doctype"
-                }
             }
         },
         {
@@ -669,17 +595,6 @@ PowerHelper.updatePowerData = async function updatePowerData(data) {
             }
         },
         {
-            $lookup: {
-                from: "departments",
-                localField: "department_id",
-                foreignField: "_id",
-                as: "dep"
-            }
-        },
-        {
-            $unwind: "$dep"
-        },
-        {
             $unwind: {
                 path: "$files",
                 preserveNullAndEmptyArrays: true
@@ -732,12 +647,6 @@ PowerHelper.updatePowerData = async function updatePowerData(data) {
                 created_at: {
                     $last: "$created_at"
                 },
-                dep: {
-                    $last: "$dep"
-                },
-                doctype: {
-                    $last: "$doctype"
-                }
             }
         },
         {

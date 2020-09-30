@@ -1,18 +1,17 @@
 'use strict';
 const PugView = use('app/helpers/pug-view');
-const IndexHelper = use('app/helpers/index-helper');
-const FileHelper = use('app/helpers/file-helper');
+const MonitoringHelper = use('app/helpers/monitoring-helper');
 /**
  * Dep cat controller
  */
-function Index() { }
-module.exports = Index;
+function Monitoring() { }
+module.exports = Monitoring;
 
 /**
- * Index route
+ * Monitoring route
  */
-Index.index = async function index(req, res, next) {
-    const pageRoute = 'index.index';
+Monitoring.index = async function index(req, res, next) {
+    const pageRoute = 'monitoring.index';
 
     res.render(PugView.getView(pageRoute), {
         req,
@@ -22,7 +21,7 @@ Index.index = async function index(req, res, next) {
 /**
  * paginate route
  */
-Index.paginateIndex = async function paginateIndex(req, res, next) {
+Monitoring.paginateMonitoring = async function paginateMonitoring(req, res, next) {
 
     const dataPaginate = {
         page: req.params.page,
@@ -33,10 +32,10 @@ Index.paginateIndex = async function paginateIndex(req, res, next) {
     try {
         let result = {};
 
-        let data = await IndexHelper.loadAllIndexCountData(type);
+        let data = await MonitoringHelper.loadAllMonitoringCountData(type);
         let count = data.data;
 
-        data = await IndexHelper.loadAllIndexData(req, dataPaginate, type);
+        data = await MonitoringHelper.loadAllMonitoringData(req, dataPaginate, type);
         result = {
             success: true,
             data: {
@@ -62,7 +61,7 @@ Index.paginateIndex = async function paginateIndex(req, res, next) {
 /**
  * paginate all route
  */
-Index.paginateIndexAll = async function paginateIndexAll(req, res, next) {
+Monitoring.paginateMonitoringAll = async function paginateMonitoringAll(req, res, next) {
     const dataPaginate = {
         page: req.params.page,
         pageSize: req.params.size || 10
@@ -71,10 +70,10 @@ Index.paginateIndexAll = async function paginateIndexAll(req, res, next) {
     try {
         let result = {};
 
-        let data = await IndexHelper.loadAllIndexCountDataAll();
+        let data = await MonitoringHelper.loadAllMonitoringCountDataAll();
         let count = data.data;
 
-        data = await IndexHelper.loadAllIndexDataAll(req, dataPaginate);
+        data = await MonitoringHelper.loadAllMonitoringDataAll(req, dataPaginate);
         result = {
             success: true,
             data: {
@@ -101,10 +100,10 @@ Index.paginateIndexAll = async function paginateIndexAll(req, res, next) {
 /**
  * load data with id
  */
-Index.show = async function show(req, res, next) {
+Monitoring.show = async function show(req, res, next) {
     const Id = req.params.index;
 
-    IndexHelper.loadIndexData(Id)
+    MonitoringHelper.loadMonitoringData(Id)
 
         .then(data => {
             const result = {
@@ -123,12 +122,12 @@ Index.show = async function show(req, res, next) {
 /**
  * delete data dep cat
  */
-Index.destroy = async function destroy(req, res, next) {
+Monitoring.destroy = async function destroy(req, res, next) {
     const data = {
         "_id": req.body._id
     };
 
-    IndexHelper.deleteIndexData(data)
+    MonitoringHelper.deleteMonitoringData(data)
         .then(data => {
             const result = {
                 success: true,
@@ -144,8 +143,8 @@ Index.destroy = async function destroy(req, res, next) {
 /**
  * Create route return page
  */
-Index.create = async function create(req, res, next) {
-    const pageRoute = PugView.getView('index.create');
+Monitoring.create = async function create(req, res, next) {
+    const pageRoute = PugView.getView('monitoring.create');
 
     res.render(pageRoute, {
         req,
@@ -156,18 +155,16 @@ Index.create = async function create(req, res, next) {
 /**
  * store data
  */
-Index.store = async function store(req, res, next) {
+Monitoring.store = async function store(req, res, next) {
     const data = {
-        "title": req.body.title,
-        "description": req.body.description,
-        "unit": req.body.unit,
-        "type_id": req.body.type_id,
-        "department_id": req.body.department_id,
+        "date": req.body.date,
+        "value": req.body.value,
+        "index_id": req.body.index,
         "user_id": req.session.auth.userId,
         "is_active": req.body.is_active,
     };
 
-    IndexHelper.insertNewIndex(data)
+    MonitoringHelper.insertNewMonitoring(data)
         .then(dataRes => {
             const result = {
                 success: true,
@@ -183,21 +180,19 @@ Index.store = async function store(req, res, next) {
 /**
  * update data
  */
-Index.update = async function update(req, res, next) {
+Monitoring.update = async function update(req, res, next) {
     let data = {};
 
     data = {
         "_id": req.body._id,
-        "title": req.body.title,
-        "description": req.body.description,
-        "type_id": req.body.type_id,
-        "unit": req.body.unit,
-        "department_id": req.body.department_id,
+        "date": req.body.date,
+        "value": req.body.value,
+        "index_id": req.body.index_id,
         "user_id": req.session.auth.userId,
         "is_active": req.body.is_active,
     };
 
-    let result = await IndexHelper.updateIndexData(data);
+    let result = await MonitoringHelper.updateMonitoringData(data);
     const result2 = {
         success: true,
         data: result,

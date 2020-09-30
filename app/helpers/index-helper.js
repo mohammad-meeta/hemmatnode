@@ -33,6 +33,17 @@ IndexHelper.loadAllIndexData = async function loadAllIndexData(req, dataPaginate
             $unwind: "$dep"
         },
         {
+            $lookup: {
+                from: "monitoring_types",
+                localField: "type_id",
+                foreignField: "_id",
+                as: "montype"
+            }
+        },
+        {
+            $unwind: "$montype"
+        },
+        {
             $group: {
                 _id: "$_id",
                 title: {
@@ -52,7 +63,10 @@ IndexHelper.loadAllIndexData = async function loadAllIndexData(req, dataPaginate
                 },
                 dep: {
                     $last: "$dep"
-                }
+                },
+                montype: {
+                    $last: "$montype"
+                },
             }
         },
         {
@@ -136,6 +150,17 @@ IndexHelper.insertNewIndex = async function insertNewIndex(data) {
             $unwind: "$dep"
         },
         {
+            $lookup: {
+                from: "monitoring_types",
+                localField: "type_id",
+                foreignField: "_id",
+                as: "montype"
+            }
+        },
+        {
+            $unwind: "$montype"
+        },
+        {
             $group: {
                 _id: "$_id",
                 title: {
@@ -155,6 +180,9 @@ IndexHelper.insertNewIndex = async function insertNewIndex(data) {
                 },
                 dep: {
                     $last: "$dep"
+                },
+                montype: {
+                    $last: "$montype"
                 }
             }
         },
@@ -193,6 +221,17 @@ IndexHelper.updateIndexData = async function updateIndexData(data) {
             $unwind: "$dep"
         },
         {
+            $lookup: {
+                from: "monitoring_types",
+                localField: "type_id",
+                foreignField: "_id",
+                as: "montype"
+            }
+        },
+        {
+            $unwind: "$montype"
+        },
+        {
             $group: {
                 _id: "$_id",
                 title: {
@@ -212,6 +251,9 @@ IndexHelper.updateIndexData = async function updateIndexData(data) {
                 },
                 dep: {
                     $last: "$dep"
+                },
+                montype: {
+                    $last: "$montype"
                 }
             }
         },

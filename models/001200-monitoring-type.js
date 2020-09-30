@@ -3,7 +3,7 @@
 const mongoose = require('mongoose');
 
 /**
- * Article model
+ * ArticleType model
  */
 function Model() { }
 module.exports = Model;
@@ -18,7 +18,7 @@ Model.setup = function setup() {
     Model.plugins(schema);
     Model.extraFunctions(schema);
 
-    mongoose.model('Index', schema, "indexes");
+    mongoose.model('MonitoringType', schema, 'monitoring_types');
 };
 
 /**
@@ -32,25 +32,9 @@ Model.model = function model() {
             type: String,
             required: true
         },
-        'description': {
-            type: String,
-            required: true
-        },
-        'unit': {
-            type: String
-        },
         'is_active': {
             type: Boolean,
-            default: true,
-            required: true
-        },
-        'department_id': {
-            type: ObjectId,
-            required: false
-        },
-        'type_id': {
-            type: ObjectId,
-            required: false
+            default: false
         },
         'user_id': {
             type: ObjectId,
@@ -67,7 +51,8 @@ Model.plugins = function plugins(schema) {
 
     schema.plugin(timestamps, {
         createdAt: 'created_at',
-        updatedAt: 'updated_at'
+        updatedAt: 'updated_at',
+        deletedAt: 'deleted_at'
     });
 };
 
@@ -77,34 +62,35 @@ Model.plugins = function plugins(schema) {
  * @param      {Object}  schema  The schema
  */
 Model.extraFunctions = function extraFunctions(schema) {
-    schema.statics.newIndex = Model.newIndex;
+    schema.statics.newArticleType = Model.newArticleType;
 
     schema.methods.enable = Model.enable;
     schema.methods.disable = Model.disable;
-}
+
+};
 
 /**
  * Insert user function
  */
-Model.newIndex = function newIndex(newIndex) {
-    let result = new this(newIndex);
+Model.newArticleType = async function newArticleType(newArticleType) {
+    let result = new this(newArticleType);
 
     return result.save();
 };
 
 /**
- * Enable the department
+ * Enable an article type
  */
-Model.enable = function enable(callback) {
+Model.enable = function enable() {
     this.is_active = true;
 
     return this.save();
 };
 
 /**
- * Disable the department
+ * Disable an article type
  */
-Model.disable = function disable(callback) {
+Model.disable = function disable() {
     this.is_active = false;
 
     return this.save();

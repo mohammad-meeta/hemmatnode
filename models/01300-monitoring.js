@@ -18,7 +18,7 @@ Model.setup = function setup() {
     Model.plugins(schema);
     Model.extraFunctions(schema);
 
-    mongoose.model('Index', schema, "indexes");
+    mongoose.model('Monitoring', schema, "monitorings");
 };
 
 /**
@@ -28,27 +28,20 @@ Model.model = function model() {
     const ObjectId = mongoose.Schema.ObjectId;
 
     return {
-        'title': {
-            type: String,
+        'date': {
+            type: Date,
             required: true
         },
-        'description': {
-            type: String,
+        'value': {
+            type: Number,
             required: true
-        },
-        'unit': {
-            type: String
         },
         'is_active': {
             type: Boolean,
             default: true,
             required: true
         },
-        'department_id': {
-            type: ObjectId,
-            required: false
-        },
-        'type_id': {
+        'index_id': {
             type: ObjectId,
             required: false
         },
@@ -77,7 +70,7 @@ Model.plugins = function plugins(schema) {
  * @param      {Object}  schema  The schema
  */
 Model.extraFunctions = function extraFunctions(schema) {
-    schema.statics.newIndex = Model.newIndex;
+    schema.statics.newMonitoring = Model.newMonitoring;
 
     schema.methods.enable = Model.enable;
     schema.methods.disable = Model.disable;
@@ -86,8 +79,8 @@ Model.extraFunctions = function extraFunctions(schema) {
 /**
  * Insert user function
  */
-Model.newIndex = function newIndex(newIndex) {
-    let result = new this(newIndex);
+Model.newMonitoring = function newMonitoring(newMonitoring) {
+    let result = new this(newMonitoring);
 
     return result.save();
 };

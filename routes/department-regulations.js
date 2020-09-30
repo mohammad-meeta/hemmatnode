@@ -38,13 +38,13 @@ Router.get('/regulation/create', [
 Router.post('/regulation', [
     upload.array('files'),
     checkSession,
-    Rule.canAsync('user.permision', 'departmentregulation.store'),
+    Rule.canAsync('user.permision', 'department.regulation.store'),
     // validator.validate,
     'DepartmentRegulation@store'
 ])
-    .as('departmentregulation.store');
+    .as('department.regulation.store');
 
-Router.patch("/regulation/:id/edit", [
+Router.patch("/department/regulation/:id/edit", [
     upload.array("files"),
     checkSession,
     Rule.canAsync("user.permision", "department.regulation.update"),

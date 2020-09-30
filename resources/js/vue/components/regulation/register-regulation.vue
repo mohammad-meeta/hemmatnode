@@ -178,14 +178,16 @@ export default {
             Vue.set(this, "deletedOldFiles", deleteUploaded);
 
             Vue.set(this.regulationData, "files", this.files);
-            Vue.set(this.regulationData, "deletedOldFiles", this.deletedOldFiles);
+            Vue.set(
+                this.regulationData,
+                "deletedOldFiles",
+                this.deletedOldFiles
+            );
 
             let regulationData = this.regulationData;
 
             try {
                 const url = this.registerUrl;
-                console.log(url);
-                console.log(regulationData);
                 let res = await AxiosHelper.send("post", url, regulationData, {
                     sendAsFormData: true,
                     filesArray: "files",

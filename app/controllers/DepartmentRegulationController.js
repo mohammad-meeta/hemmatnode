@@ -273,7 +273,7 @@ Regulation.update = async function update(req, res, next) {
         "title": req.body.title,
         "user_id": req.session.auth.userId,
         "is_active": req.body.is_active,
-        "department_id": req.body.departmentId,
+        "department_id": req.body.department_id,
         "files": fileList
     };
 

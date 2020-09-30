@@ -145,6 +145,7 @@ export default {
         editRegulationList(payload) {
             const editedRegulationData = {
                 _id: payload.data.data[0]._id,
+                title: payload.data.data[0].title,
                 is_active: payload.data.data[0].is_active,
                 files: payload.data.data[0].files,
                 created_at: payload.data.data[0].created_at,

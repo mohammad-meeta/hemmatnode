@@ -213,7 +213,9 @@ export default {
          * Validate
          */
         validate() {
-            const result = RegulationValidator.validateEdit(this.regulationData);
+            const result = RegulationValidator.validateEdit(
+                this.regulationData
+            );
 
             if (result.passes) {
                 this.closeNotification();

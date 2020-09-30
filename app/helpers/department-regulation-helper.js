@@ -616,4 +616,3 @@ RegulationHelper.deleteRegulation = function deleteRegulation(data) {
             .catch(err => reject(err));
     });
 };
-

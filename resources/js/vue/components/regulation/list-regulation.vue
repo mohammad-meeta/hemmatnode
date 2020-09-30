@@ -95,6 +95,7 @@ export default {
             let url = this.listUrl
                 .replace(/\$page\$/g, pageId)
                 .replace(/\$pageSize\$/g, 50);
+            console.log(this.listUrl);
             AxiosHelper.send("get", url, "").then((res) => {
                 const resData = res.data;
                 console.log(resData);

@@ -3,7 +3,7 @@
 /**
  * RegulationIndexPage class
  */
-const RegulationIndexPage = function () {}
+const RegulationIndexPage = function () { }
 module.exports = RegulationIndexPage;
 
 
@@ -40,12 +40,12 @@ RegulationIndexPage.initVue = function () {
                 },
 
                 loadRegulations() {
-                    //this.$refs.Regulations.loadRegulations();
+                    // this.$refs.Regulations.loadRegulations();
                 }
             }
         });
 }
 
- /* Boot */
+/* Boot */
 RegulationIndexPage.boot();
 

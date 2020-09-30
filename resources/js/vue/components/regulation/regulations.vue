@@ -72,9 +72,12 @@ const ENUMS = require("JS-HELPERS/enums");
 const Loading = require("VUE-COMPONENTS/general/loading.vue").default;
 const RegisterRegulation = require("VUE-COMPONENTS/regulation/register-regulation.vue")
     .default;
-const EditRegulation = require("VUE-COMPONENTS/regulation/edit-regulation.vue").default;
-const ListRegulation = require("VUE-COMPONENTS/regulation/list-regulation.vue").default;
-const ShowRegulation = require("VUE-COMPONENTS/regulation/show-regulation.vue").default;
+const EditRegulation = require("VUE-COMPONENTS/regulation/edit-regulation.vue")
+    .default;
+const ListRegulation = require("VUE-COMPONENTS/regulation/list-regulation.vue")
+    .default;
+const ShowRegulation = require("VUE-COMPONENTS/regulation/show-regulation.vue")
+    .default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
 export default {
@@ -154,11 +157,10 @@ export default {
          */
         onRegulationRegister(payload) {
             //***update vue list****
-            this.$refs.regulationList.addToRegulationList(payload.data.data.data[0]);
-            this.setNotification(
-                ".آئین نامه با موفقیت ذخیره شد",
-                "is-success"
+            this.$refs.regulationList.addToRegulationList(
+                payload.data.data.data[0]
             );
+            this.setNotification(".آئین نامه با موفقیت ذخیره شد", "is-success");
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
         },
         /**
@@ -168,7 +170,10 @@ export default {
             this.$refs.regulationList.editRegulationList(payload);
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
 
-            this.setNotification(".آئین نامه با موفقیت ویرایش شد", "is-success");
+            this.setNotification(
+                ".آئین نامه با موفقیت ویرایش شد",
+                "is-success"
+            );
         },
 
         /**
@@ -220,6 +225,7 @@ export default {
          * Init method
          */
         init() {
+            console.log(this.listUrl);
             this.changeFormMode(ENUMS.FORM_MODE.LOADING);
             this.$refs.regulationList.loadRegulations(1);
         },

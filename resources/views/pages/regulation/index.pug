@@ -6,7 +6,7 @@ block title
 block content
     .container
         regulations(
-            list-url=route('api.regulation', { page: '$page$', size: '$pageSize$', group: departmentId }),
+            list-url=route('api.department.regulation', { page: '$page$', size: '$pageSize$', group: departmentId }),
             register-url=route('regulation.store', { department: departmentId }),
             edit-url=route('regulation.update', { id :'$id$'}),
             department-id=departmentId,

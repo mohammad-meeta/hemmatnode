@@ -38,6 +38,7 @@ Router.get('/monitoringtype/create', [
 Router.post('/monitoringtype', [
     checkSession,
     Rule.canAsync('user.permision', 'monitoringtype.store'),
+    upload.any(),
     // validator.validate,
     'Monitoringtype@store'
 ])
@@ -46,6 +47,7 @@ Router.post('/monitoringtype', [
 Router.patch("/monitoringtype/:id/edit", [
     checkSession,
     Rule.canAsync("user.permision", "monitoringtype.update"),
+    upload.any(),
     // validator.validate,
     "Monitoringtype@update"
 ]).as("monitoringtype.update");

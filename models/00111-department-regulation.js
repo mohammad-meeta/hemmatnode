@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 /**
  * Article model
  */
-function Model() {}
+function Model() { }
 module.exports = Model;
 
 /**
@@ -27,15 +27,15 @@ Model.setup = function setup() {
 Model.model = function model() {
     const ObjectId = mongoose.Schema.ObjectId;
 
-    const FileD = {
+    const File = new mongoose.Schema({
         'file_id': {
-            type: String
+            type: ObjectId,
         },
         'deleted_at': {
             type: Date,
             default: null
         }
-    };
+    });
 
     return {
         'title': {
@@ -43,7 +43,7 @@ Model.model = function model() {
             required: true
         },
         'files': {
-            type: [FileD]
+            type: [File]
         },
         'department_id': {
             type: ObjectId,

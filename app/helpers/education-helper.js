@@ -4,20 +4,20 @@
 const mongoose = require('mongoose');
 
 /**
- * Cityaction controller
+ * Education controller
  */
-function CityactionHelper() { }
-module.exports = CityactionHelper;
+function Education() { }
+module.exports = Education;
 
 /**
  * find all dep cat data result 
  */
-CityactionHelper.loadAllCityactionData = async function loadAllCityactionData(req, dataPaginate, group) {
+Education.loadAllEducationData = async function loadAllEducationData(req, dataPaginate, group) {
     const page = parseInt(dataPaginate.page);
     const pageSize = parseInt(dataPaginate.pageSize);
     const skip = page > 0 ? (page - 1) * pageSize : 0;
     const ObjectId = require("mongoose").Types.ObjectId;
-    const Cityaction = mongoose.model("Cityaction");
+    const Education = mongoose.model("Education");
 
     const userId = req.session.auth.userId;
     const pipeline = [
@@ -36,6 +36,17 @@ CityactionHelper.loadAllCityactionData = async function loadAllCityactionData(re
         },
         {
             $unwind: "$dep"
+        },
+        {
+            $lookup: {
+                from: "programs",
+                localField: "program_id",
+                foreignField: "_id",
+                as: "prog"
+            }
+        },
+        {
+            $unwind: "$prog"
         },
         {
             $unwind: {
@@ -75,14 +86,8 @@ CityactionHelper.loadAllCityactionData = async function loadAllCityactionData(re
                 date: {
                     $last: "$date"
                 },
-                responsible: {
-                    $last: "$responsible"
-                },
-                description: {
-                    $last: "$description"
-                },
-                city_id: {
-                    $last: "$city_id"
+                way_id: {
+                    $last: "$way_id"
                 },
                 oldFiles: {
                     $push: "$files"
@@ -98,6 +103,9 @@ CityactionHelper.loadAllCityactionData = async function loadAllCityactionData(re
                 },
                 dep: {
                     $last: "$dep"
+                },
+                prog: {
+                    $last: "$prog"
                 }
             }
         },
@@ -113,7 +121,7 @@ CityactionHelper.loadAllCityactionData = async function loadAllCityactionData(re
             $limit: pageSize
         }
     ];
-    let res = await Cityaction.aggregate(pipeline);
+    let res = await Education.aggregate(pipeline);
 
     for (let resI = 0; resI < res.length; resI++) {
 
@@ -155,12 +163,12 @@ CityactionHelper.loadAllCityactionData = async function loadAllCityactionData(re
 /**
  * find all dep cat data result 
  */
-CityactionHelper.loadAllCityactionYearData = async function loadAllCityactionYearData(req, dataPaginate, group, year) {
+Education.loadAllEducationYearData = async function loadAllEducationYearData(req, dataPaginate, group, year) {
     const page = parseInt(dataPaginate.page);
     const pageSize = parseInt(dataPaginate.pageSize);
     const skip = page > 0 ? (page - 1) * pageSize : 0;
     const ObjectId = require("mongoose").Types.ObjectId;
-    const Cityaction = mongoose.model("Cityaction");
+    const Education = mongoose.model("Education");
 
     const userId = req.session.auth.userId;
     const pipeline = [
@@ -182,6 +190,17 @@ CityactionHelper.loadAllCityactionYearData = async function loadAllCityactionYea
             $unwind: "$dep"
         },
         {
+            $lookup: {
+                from: "programs",
+                localField: "program_id",
+                foreignField: "_id",
+                as: "prog"
+            }
+        },
+        {
+            $unwind: "$prog"
+        },
+        {
             $unwind: {
                 path: "$files",
                 preserveNullAndEmptyArrays: true
@@ -219,14 +238,8 @@ CityactionHelper.loadAllCityactionYearData = async function loadAllCityactionYea
                 date: {
                     $last: "$date"
                 },
-                responsible: {
-                    $last: "$responsible"
-                },
-                description: {
-                    $last: "$description"
-                },
-                city_id: {
-                    $last: "$city_id"
+                way_id: {
+                    $last: "$way_id"
                 },
                 oldFiles: {
                     $push: "$files"
@@ -242,6 +255,9 @@ CityactionHelper.loadAllCityactionYearData = async function loadAllCityactionYea
                 },
                 dep: {
                     $last: "$dep"
+                },
+                prog: {
+                    $last: "$prog"
                 }
             }
         },
@@ -257,7 +273,7 @@ CityactionHelper.loadAllCityactionYearData = async function loadAllCityactionYea
             $limit: pageSize
         }
     ];
-    let res = await Cityaction.aggregate(pipeline);
+    let res = await Education.aggregate(pipeline);
 
     for (let resI = 0; resI < res.length; resI++) {
 
@@ -297,62 +313,17 @@ CityactionHelper.loadAllCityactionYearData = async function loadAllCityactionYea
     return res;
 };
 /**
- * group date actioncreative 
- */
-CityactionHelper.loadGroupDate = async function loadGroupDate(req, group) {
-    const ObjectId = require("mongoose").Types.ObjectId;
-    const Cityaction = mongoose.model("Cityaction");
-
-    const pipeline = [
-        {
-            $match: {
-                department_id: new ObjectId(group),
-            }
-        },
-        {
-            $group: {
-                _id: "$date"
-            }
-        },
-        {
-            $sort: { _id: 1 }
-        }
-    ];
-    let res = await Cityaction.aggregate(pipeline);
-    return res;
-};
-/**
  * find all dep cat count data result 
  */
-CityactionHelper.loadAllCityactionCountData = function loadAllCityactionCountData(group) {
-    const Cityaction = mongoose.model('Cityaction');
+Education.loadAllEducationCountData = function loadAllEducationCountData(group) {
+    const Education = mongoose.model('Education');
 
     const filterQuery = {
         department_id: group
     };
 
     return new Promise((resolve, reject) => {
-        Cityaction.countDocuments(filterQuery)
-            .then(res => {
-
-                resolve(res);
-            })
-            .catch(err => reject(err));
-    });
-};
-/**
- * find all dep cat count data result 
- */
-CityactionHelper.loadAllCityactionCountYearData = function loadAllCityactionCountYearData(group, year) {
-    const Cityaction = mongoose.model('Cityaction');
-
-    const filterQuery = {
-        department_id: group,
-        date: year
-    };
-
-    return new Promise((resolve, reject) => {
-        Cityaction.countDocuments(filterQuery)
+        Education.countDocuments(filterQuery)
             .then(res => {
 
                 resolve(res);
@@ -362,10 +333,10 @@ CityactionHelper.loadAllCityactionCountYearData = function loadAllCityactionCoun
 };
 
 /**
- * find Cityaction data result 
+ * find Education data result 
  */
-CityactionHelper.loadCityactionData = function loadCityactionData(id) {
-    const Cityaction = mongoose.model('Cityaction');
+Education.loadEducationData = function loadEducationData(id) {
+    const Education = mongoose.model('Education');
 
     const filterQuery = {
         _id: id
@@ -373,7 +344,7 @@ CityactionHelper.loadCityactionData = function loadCityactionData(id) {
     const projection = {};
 
     return new Promise((resolve, reject) => {
-        Cityaction.findOne(filterQuery, projection, {})
+        Education.findOne(filterQuery, projection, {})
             .then(res => {
                 resolve(res);
             })
@@ -382,12 +353,12 @@ CityactionHelper.loadCityactionData = function loadCityactionData(id) {
 };
 
 /**
- * insert Cityaction data  
+ * insert Education data  
  */
-CityactionHelper.insertNewCityaction = async function insertNewCityaction(data) {
+Education.insertNewEducation = async function insertNewEducation(data) {
 
-    const Cityaction = mongoose.model('Cityaction');
-    const actioncreative = new Cityaction(data)
+    const Education = mongoose.model('Education');
+    const actioncreative = new Education(data)
 
     let res2 = await actioncreative.save();
     const pipeline = [
@@ -408,6 +379,17 @@ CityactionHelper.insertNewCityaction = async function insertNewCityaction(data) 
             $unwind: "$dep"
         },
         {
+            $lookup: {
+                from: "programs",
+                localField: "program_id",
+                foreignField: "_id",
+                as: "prog"
+            }
+        },
+        {
+            $unwind: "$prog"
+        },
+        {
             $unwind: {
                 path: "$files",
                 preserveNullAndEmptyArrays: true
@@ -445,14 +427,8 @@ CityactionHelper.insertNewCityaction = async function insertNewCityaction(data) 
                 date: {
                     $last: "$date"
                 },
-                responsible: {
-                    $last: "$responsible"
-                },
-                description: {
-                    $last: "$description"
-                },
-                city_id: {
-                    $last: "$city_id"
+                way_id: {
+                    $last: "$way_id"
                 },
                 oldFiles: {
                     $push: "$files"
@@ -468,6 +444,9 @@ CityactionHelper.insertNewCityaction = async function insertNewCityaction(data) 
                 },
                 dep: {
                     $last: "$dep"
+                },
+                prog: {
+                    $last: "$prog"
                 }
             }
         },
@@ -478,7 +457,7 @@ CityactionHelper.insertNewCityaction = async function insertNewCityaction(data) 
         }
     ];
 
-    let res = await Cityaction.aggregate(pipeline);
+    let res = await Education.aggregate(pipeline);
     for (let resI = 0; resI < res.length; resI++) {
 
         let oldFiles = res[resI].oldFiles;
@@ -518,11 +497,11 @@ CityactionHelper.insertNewCityaction = async function insertNewCityaction(data) 
 };
 
 /**
- * update Cityaction data  
+ * update Education data  
  */
-CityactionHelper.updateCityactionData = async function updateCityactionData(data) {
-    const Cityaction = mongoose.model('Cityaction');
-    let res2 = await Cityaction.findByIdAndUpdate(data._id, data, { useFindAndModify: false, new: true });
+Education.updateEducationData = async function updateEducationData(data) {
+    const Education = mongoose.model('Education');
+    let res2 = await Education.findByIdAndUpdate(data._id, data, { useFindAndModify: false, new: true });
 
     const pipeline = [
         {
@@ -540,6 +519,17 @@ CityactionHelper.updateCityactionData = async function updateCityactionData(data
         },
         {
             $unwind: "$dep"
+        },
+        {
+            $lookup: {
+                from: "programs",
+                localField: "program_id",
+                foreignField: "_id",
+                as: "prog"
+            }
+        },
+        {
+            $unwind: "$prog"
         },
         {
             $unwind: {
@@ -579,14 +569,8 @@ CityactionHelper.updateCityactionData = async function updateCityactionData(data
                 date: {
                     $last: "$date"
                 },
-                responsible: {
-                    $last: "$responsible"
-                },
-                description: {
-                    $last: "$description"
-                },
-                city_id: {
-                    $last: "$city_id"
+                way_id: {
+                    $last: "$way_id"
                 },
                 oldFiles: {
                     $push: "$files"
@@ -602,6 +586,9 @@ CityactionHelper.updateCityactionData = async function updateCityactionData(data
                 },
                 dep: {
                     $last: "$dep"
+                },
+                prog: {
+                    $last: "$prog"
                 }
             }
         },
@@ -612,7 +599,7 @@ CityactionHelper.updateCityactionData = async function updateCityactionData(data
         }
     ];
 
-    let res = await Cityaction.aggregate(pipeline);
+    let res = await Education.aggregate(pipeline);
     for (let resI = 0; resI < res.length; resI++) {
 
         let oldFiles = res[resI].oldFiles;
@@ -654,10 +641,10 @@ CityactionHelper.updateCityactionData = async function updateCityactionData(data
 /**
  * delete actioncreative data  
  */
-CityactionHelper.deleteCityaction = function deleteCityaction(data) {
+Education.deleteEducation = function deleteEducation(data) {
     return new Promise((resolve, reject) => {
-        const Cityaction = mongoose.model('Cityaction');
-        Cityaction.findByIdAndUpdate(data._id, { is_active: false }, { useFindAndModify: false, new: true })
+        const Education = mongoose.model('Education');
+        Education.findByIdAndUpdate(data._id, { is_active: false }, { useFindAndModify: false, new: true })
             .then(res => {
                 resolve(res);
             })

@@ -135,7 +135,6 @@ export default {
             this.showLoading();
 
             const url = this.registerUrl;
-            console.log(this.monitoringTypeData);
             try {
                 let res = await AxiosHelper.send(
                     "post",
@@ -147,13 +146,13 @@ export default {
                     }
                 );
                 const data = res.data;
-                console.log(data);
                 if (data.success) {
                     this.clearFormData();
                     this.$emit("on-register", {
                         sender: this,
                         data: {
                             data: data,
+                            dep_title: 0,
                         },
                     });
                 }

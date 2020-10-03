@@ -204,8 +204,6 @@ export default {
 
             try {
                 const url = this.registerUrl;
-                console.log(url);
-                console.log(healthData);
                 let res = await AxiosHelper.send("post", url, healthData, {
                     sendAsFormData: true,
                     filesArray: "files",

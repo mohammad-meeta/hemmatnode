@@ -61,35 +61,114 @@ mix.copyDirectory('resources/images', `${output}/images`)
     .copyDirectory('resources/fonts', `${output}/fonts`);
 
 /* JS */
-mix.js('resources/js/core/kernel.js', `${output}/js/core`)
-    .js('resources/js/global/app.js', `${output}/js/global`)
-    .js('resources/js/pages/factory.js', `${output}/js/pages`)
+mix.js("resources/js/core/kernel.js", `${output}/js/core`)
+    .js("resources/js/global/app.js", `${output}/js/global`)
+    .js("resources/js/pages/factory.js", `${output}/js/pages`)
 
-    .js('resources/js/pages/department-category/index/index.js', `${output}/js/pages/department-category/index`)
-    .js('resources/js/pages/department/index/index.js', `${output}/js/pages/department/index`)
-    .js('resources/js/pages/department/show/index.js', `${output}/js/pages/department/show`)
-    .js('resources/js/pages/invite-session/index/index.js', `${output}/js/pages/invite-session/index`)
-    .js('resources/js/pages/memorandum/index/index.js', `${output}/js/pages/memorandum/index`)
-    .js('resources/js/pages/regulation/index/index.js', `${output}/js/pages/regulation/index`)
-    .js('resources/js/pages/home/internal-section/index.js', `${output}/js/pages/home/internal-section`)
-    .js('resources/js/pages/home/external-section/index.js', `${output}/js/pages/home/external-section`)
-    .js('resources/js/pages/home/people-participation/index.js', `${output}/js/pages/home/people-participation`)
-    .js('resources/js/pages/project/index/index.js', `${output}/js/pages/project/index`)
-    .js('resources/js/pages/program/index/index.js', `${output}/js/pages/program/index`)
-    .js('resources/js/pages/health/index/index.js', `${output}/js/pages/health/index`)
-    .js('resources/js/pages/power/index/index.js', `${output}/js/pages/power/index`)
-    .js('resources/js/pages/document/index/index.js', `${output}/js/pages/document/index`)
-    .js('resources/js/pages/action-creative/index/index.js', `${output}/js/pages/action-creative/index`)
-    .js('resources/js/pages/city-action/index/index.js', `${output}/js/pages/city-action/index`)
-    .js('resources/js/pages/request/index/index.js', `${output}/js/pages/request/index`)
-    .js('resources/js/pages/response/index/index.js', `${output}/js/pages/response/index`)
-    .js('resources/js/pages/result/index/index.js', `${output}/js/pages/result/index`)
-    .js('resources/js/pages/task/index/index.js', `${output}/js/pages/task/index`)
-    .js('resources/js/pages/auth/login/index.js', `${output}/js/pages/auth/login`)
-    .js('resources/js/pages/user/index/index.js', `${output}/js/pages/user/index`)
-    .js('resources/js/pages/home/event-list/index.js', `${output}/js/pages/home/event-list`)
-    .js('resources/js/pages/home/monitoring-page/index.js', `${output}/js/pages/home/monitoring-page`)
-    .js('resources/js/pages/home/document-list/index.js', `${output}/js/pages/home/document-list`);
+    .js(
+        "resources/js/pages/department-category/index/index.js",
+        `${output}/js/pages/department-category/index`
+    )
+    .js(
+        "resources/js/pages/department/index/index.js",
+        `${output}/js/pages/department/index`
+    )
+    .js(
+        "resources/js/pages/department/show/index.js",
+        `${output}/js/pages/department/show`
+    )
+    .js(
+        "resources/js/pages/invite-session/index/index.js",
+        `${output}/js/pages/invite-session/index`
+    )
+    .js(
+        "resources/js/pages/memorandum/index/index.js",
+        `${output}/js/pages/memorandum/index`
+    )
+    .js(
+        "resources/js/pages/regulation/index/index.js",
+        `${output}/js/pages/regulation/index`
+    )
+    .js(
+        "resources/js/pages/home/internal-section/index.js",
+        `${output}/js/pages/home/internal-section`
+    )
+    .js(
+        "resources/js/pages/home/external-section/index.js",
+        `${output}/js/pages/home/external-section`
+    )
+    .js(
+        "resources/js/pages/home/people-participation/index.js",
+        `${output}/js/pages/home/people-participation`
+    )
+    .js(
+        "resources/js/pages/project/index/index.js",
+        `${output}/js/pages/project/index`
+    )
+    .js(
+        "resources/js/pages/program/index/index.js",
+        `${output}/js/pages/program/index`
+    )
+    .js(
+        "resources/js/pages/health/index/index.js",
+        `${output}/js/pages/health/index`
+    )
+    .js(
+        "resources/js/pages/power/index/index.js",
+        `${output}/js/pages/power/index`
+    )
+    .js(
+        "resources/js/pages/monitoring-type/index/index.js",
+        `${output}/js/pages/monitoring-type/index`
+    )
+    .js(
+        "resources/js/pages/document/index/index.js",
+        `${output}/js/pages/document/index`
+    )
+    .js(
+        "resources/js/pages/action-creative/index/index.js",
+        `${output}/js/pages/action-creative/index`
+    )
+    .js(
+        "resources/js/pages/city-action/index/index.js",
+        `${output}/js/pages/city-action/index`
+    )
+    .js(
+        "resources/js/pages/request/index/index.js",
+        `${output}/js/pages/request/index`
+    )
+    .js(
+        "resources/js/pages/response/index/index.js",
+        `${output}/js/pages/response/index`
+    )
+    .js(
+        "resources/js/pages/result/index/index.js",
+        `${output}/js/pages/result/index`
+    )
+    .js(
+        "resources/js/pages/task/index/index.js",
+        `${output}/js/pages/task/index`
+    )
+    .js(
+        "resources/js/pages/auth/login/index.js",
+        `${output}/js/pages/auth/login`
+    )
+    .js(
+        "resources/js/pages/user/index/index.js",
+        `${output}/js/pages/user/index`
+    )
+    .js(
+        "resources/js/pages/home/event-list/index.js",
+        `${output}/js/pages/home/event-list`
+    )
+    .js(
+        "resources/js/pages/home/monitoring-page/index.js",
+        `${output}/js/pages/home/monitoring-page`
+    )
+    .js(
+        "resources/js/pages/home/document-list/index.js",
+        `${output}/js/pages/home/document-list`
+    );
 
 
 /* SASS */

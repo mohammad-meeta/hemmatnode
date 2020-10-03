@@ -10,14 +10,14 @@ function MonitoringtypeHelper() { }
 module.exports = MonitoringtypeHelper;
 
 /**
- * find all dep cat data result 
+ * find all dep cat data result
  */
 MonitoringtypeHelper.loadAllMonitoringtypeData = async function loadAllMonitoringtypeData(req, dataPaginate) {
     const page = parseInt(dataPaginate.page);
     const pageSize = parseInt(dataPaginate.pageSize);
     const skip = page > 0 ? (page - 1) * pageSize : 0;
     const ObjectId = require("mongoose").Types.ObjectId;
-    const Monitoringtype = mongoose.model("Monitoringtype");
+    const Monitoringtype = mongoose.model("MonitoringType");
 
     const userId = req.session.auth.userId;
     const pipeline = [
@@ -52,10 +52,10 @@ MonitoringtypeHelper.loadAllMonitoringtypeData = async function loadAllMonitorin
     return res;
 };
 /**
- * find all dep cat count data result 
+ * find all dep cat count data result
  */
 MonitoringtypeHelper.loadAllMonitoringtypeCountData = function loadAllMonitoringtypeCountData() {
-    const Monitoringtype = mongoose.model('Monitoringtype');
+    const Monitoringtype = mongoose.model('MonitoringType');
 
     const filterQuery = {
     };
@@ -71,10 +71,10 @@ MonitoringtypeHelper.loadAllMonitoringtypeCountData = function loadAllMonitoring
 };
 
 /**
- * find Monitoringtype data result 
+ * find Monitoringtype data result
  */
 MonitoringtypeHelper.loadMonitoringtypeData = function loadMonitoringtypeData(id) {
-    const Monitoringtype = mongoose.model('Monitoringtype');
+    const Monitoringtype = mongoose.model('MonitoringType');
 
     const filterQuery = {
         _id: id
@@ -91,11 +91,11 @@ MonitoringtypeHelper.loadMonitoringtypeData = function loadMonitoringtypeData(id
 };
 
 /**
- * insert Monitoringtype data  
+ * insert Monitoringtype data
  */
 MonitoringtypeHelper.insertNewMonitoringtype = async function insertNewMonitoringtype(data) {
 
-    const Monitoringtype = mongoose.model('Monitoringtype');
+    const Monitoringtype = mongoose.model('MonitoringType');
     const monitoringtype = new Monitoringtype(data)
 
     let res2 = await monitoringtype.save();
@@ -103,20 +103,20 @@ MonitoringtypeHelper.insertNewMonitoringtype = async function insertNewMonitorin
 };
 
 /**
- * update Monitoringtype data  
+ * update Monitoringtype data
  */
 MonitoringtypeHelper.updateMonitoringtypeData = async function updateMonitoringtypeData(data) {
-    const Monitoringtype = mongoose.model('Monitoringtype');
+    const Monitoringtype = mongoose.model('MonitoringType');
     let res2 = await Monitoringtype.findByIdAndUpdate(data._id, data, { useFindAndModify: false, new: true });
     return res2;
 };
 
 /**
- * delete monitoringtype data  
+ * delete monitoringtype data
  */
 MonitoringtypeHelper.deleteMonitoringtype = function deleteMonitoringtype(data) {
     return new Promise((resolve, reject) => {
-        const Monitoringtype = mongoose.model('Monitoringtype');
+        const Monitoringtype = mongoose.model('MonitoringType');
         Monitoringtype.findByIdAndUpdate(data._id, { is_active: false }, { useFindAndModify: false, new: true })
             .then(res => {
                 resolve(res);

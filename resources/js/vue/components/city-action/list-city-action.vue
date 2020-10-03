@@ -49,7 +49,7 @@
         aria-previous-label="Previous page",
         aria-page-label="Page",
         aria-current-label="Current page",
-        @change="loadMemorandums(pagination.current)"
+        @change="loadCityAction(pagination.current)"
     )
 </template>
 
@@ -126,7 +126,7 @@ export default {
          * paginator click link
          */
         paginatorClick(id) {
-            this.loadMemorandums(id);
+            this.loadCityAction(id);
         },
 
         /**

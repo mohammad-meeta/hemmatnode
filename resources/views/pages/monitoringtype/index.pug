@@ -1,0 +1,17 @@
+extends ../../layout/app.pug
+
+block title
+    | دسته بندی شاخص
+
+block content
+    .container
+        monitoring-types(
+            list-url=route('api.monitoringtype', { page: '$page$', size: '$pageSize$' }),
+            register-url=route('monitoringtype.store'),
+            edit-url=route('monitoringtype.update', { id :'$id$'}),
+        )
+
+block scripts
+    script(defer, src=mix('js/pages/monitoring-type/index/index.js'))
+
+

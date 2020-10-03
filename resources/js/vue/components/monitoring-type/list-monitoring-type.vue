@@ -1,7 +1,7 @@
 <template lang="pug">
 .container-child
-    h1(v-if="!hasActionCreative") هیچ اقدامات خلاقی ایجاد نشده
-    table.table.is-striped.is-hoverable.is-fullwidth(v-if="hasActionCreative")
+    h1(v-if="!hasMonitoringType") هیچ  دسته بندی شاخص ایجاد نشده
+    table.table.is-striped.is-hoverable.is-fullwidth(v-if="hasMonitoringType")
         thead
             tr
                 th عنوان
@@ -10,16 +10,16 @@
                 th عملیات
         tbody
             tr(
-                v-for="actionCreative in actionCreatives",
-                :key="actionCreative.id"
+                v-for="monitoringType in monitoringTypes",
+                :key="monitoringType.id"
             )
-                td {{ actionCreative.title }}
-                td {{ actionCreative.is_active }}
-                td {{ toPersianDate(actionCreative.created_at) }}
+                td {{ monitoringType.title }}
+                td {{ monitoringType.is_active }}
+                td {{ toPersianDate(monitoringType.created_at) }}
                 td.function-links
                     a.button.is-warning.is-rounded.mt-2(
                         href="#",
-                        @click.prevent="commandClick(ENUMS.COMMAND.SHOW, actionCreative)"
+                        @click.prevent="commandClick(ENUMS.COMMAND.SHOW, monitoringType)"
                     )
                         span.icon.is-small
                             i.material-icons.icon swap_horizontal_circle
@@ -27,7 +27,7 @@
 
                     a.button.is-primary.is-rounded(
                         href="#",
-                        @click.prevent="commandClick(ENUMS.COMMAND.EDIT, actionCreative)"
+                        @click.prevent="commandClick(ENUMS.COMMAND.EDIT, monitoringType)"
                     )
                         span.icon.is-small
                             i.material-icons.icon check_circle
@@ -49,7 +49,7 @@
         aria-previous-label="Previous page",
         aria-page-label="Page",
         aria-current-label="Current page",
-        @change="loadActionCreatives(pagination.current)"
+        @change="loadMonitoringTypes(pagination.current)"
     )
 </template>
 
@@ -81,27 +81,27 @@ export default {
             prevIcon: "chevron-left",
             nextIcon: "chevron-right",
         },
-        actionCreatives: [],
-        actionCreativesCount: 0,
+        monitoringTypes: [],
+        monitoringTypesCount: 0,
         pageCount: 0,
     }),
 
     computed: {
-        hasActionCreative: (state) => (state.actionCreatives || []).length,
+        hasMonitoringType: (state) => (state.monitoringTypes || []).length,
     },
 
     methods: {
         /**
-         * Load actionCreatives
+         * Load monitoringTypes
          */
-        loadActionCreatives(pageId) {
+        loadMonitoringTypes(pageId) {
             let url = this.listUrl
                 .replace(/\$page\$/g, pageId)
                 .replace(/\$pageSize\$/g, 50);
             AxiosHelper.send("get", url, "").then((res) => {
                 const resData = res.data;
-                Vue.set(this, "actionCreatives", resData.data.data);
-                Vue.set(this, "actionCreativesCount", resData.data.count);
+                Vue.set(this, "monitoringTypes", resData.data.data);
+                Vue.set(this, "monitoringTypesCount", resData.data.count);
                 Vue.set(this.pagination, "total", resData.data.count);
             });
         },
@@ -126,46 +126,39 @@ export default {
          * paginator click link
          */
         paginatorClick(id) {
-            this.loadActionCreatives(id);
+            this.loadMonitoringTypes(id);
         },
 
         /**
-         * add new ActionCreative data to list data
+         * add new MonitoringType data to list data
          */
-        addToActionCreativeList(payload) {
-            const newActionCreativeData = {
+        addToMonitoringTypeList(payload) {
+            const newMonitoringTypeData = {
                 _id: payload._id,
                 title: payload.title,
-                reason: payload.reason,
-                description: payload.description,
-                responsible: payload.responsible,
-                files: payload.files,
                 is_active: payload.is_active,
                 created_at: payload.created_at,
             };
 
-            this.actionCreatives.unshift(newActionCreativeData);
+            this.monitoringTypes.unshift(newMonitoringTypeData);
         },
 
         /**
-         * EditActionCreativeList
+         * EditMonitoringTypeList
          */
-        editActionCreativeList(payload) {
-            const editedActionCreativeData = {
+        editMonitoringTypeList(payload) {
+            const editedMonitoringTypeData = {
                 _id: payload.data.data[0]._id,
                 title: payload.data.data[0].title,
-                executor: payload.data.data[0].executor,
-                date: payload.data.data[0].date,
                 is_active: payload.data.data[0].is_active,
-                files: payload.data.data[0].files,
                 created_at: payload.data.data[0].created_at,
             };
 
-            let foundIndex = this.actionCreatives.findIndex(
-                (x) => x._id == editedActionCreativeData._id
+            let foundIndex = this.monitoringTypes.findIndex(
+                (x) => x._id == editedMonitoringTypeData._id
             );
 
-            Vue.set(this.actionCreatives, foundIndex, editedActionCreativeData);
+            Vue.set(this.monitoringTypes, foundIndex, editedMonitoringTypeData);
         },
     },
 };

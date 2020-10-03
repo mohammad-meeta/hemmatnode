@@ -46,7 +46,7 @@
         aria-previous-label="Previous page",
         aria-page-label="Page",
         aria-current-label="Current page",
-        @change="loadMemorandums(pagination.current)"
+        @change="loadPowers(pagination.current)"
     )
 </template>
 
@@ -123,7 +123,7 @@ export default {
          * paginator click link
          */
         paginatorClick(id) {
-            this.loadMemorandums(id);
+            this.loadPowers(id);
         },
 
         /**

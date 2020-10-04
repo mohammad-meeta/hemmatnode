@@ -158,7 +158,7 @@ export default {
         onMonitoringTypeRegister(payload) {
             //***update vue list****
             this.$refs.monitoringTypeList.addToMonitoringTypeList(
-                payload.data.data.data[0]
+                payload.data.data.data
             );
             this.setNotification(
                 ".دسته بندی شاخص با موفقیت ذخیره شد",
@@ -174,7 +174,10 @@ export default {
             this.$refs.monitoringTypeList.editMonitoringTypeList(payload);
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
 
-            this.setNotification(".دسته بندی شاخص با موفقیت ویرایش شد", "is-success");
+            this.setNotification(
+                ".دسته بندی شاخص با موفقیت ویرایش شد",
+                "is-success"
+            );
         },
 
         /**

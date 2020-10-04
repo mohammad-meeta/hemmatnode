@@ -1,8 +1,10 @@
 'use strict';
 
 /* Boot */
-const path = require('path');
-const server = require(path.resolve('core', 'server'));
+(async () => {
+    const path = require('path');
+    const server = require(path.resolve('core', 'server'));
 
-server.boot();
-server.run();
+    await server.boot();
+    server.run();
+})()

@@ -1,10 +1,6 @@
 'use strict';
 const Rule = use('core/helpers/rule-helper');
 // const validator = use('validators/cityaction-register-validator');
-const multer = require("multer");
-const upload = multer({
-    dest: "uploads/"
-});
 
 const {
     checkSession

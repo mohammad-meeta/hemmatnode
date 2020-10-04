@@ -12,7 +12,88 @@ module.exports = IndexHelper;
 /**
  * find all dep cat data index 
  */
-IndexHelper.loadAllIndexData = async function loadAllIndexData(req, dataPaginate) {
+IndexHelper.loadAllIndexData = async function loadAllIndexData(req, dataPaginate, type) {
+    const page = parseInt(dataPaginate.page);
+    const pageSize = parseInt(dataPaginate.pageSize);
+    const skip = page > 0 ? (page - 1) * pageSize : 0;
+    const ObjectId = require("mongoose").Types.ObjectId;
+    const Index = mongoose.model("Index");
+
+    const userId = req.session.auth.userId;
+    const pipeline = [
+        {
+            $match: {
+                type_id: ObjectId(type)
+            }
+        },
+        {
+            $lookup: {
+                from: "departments",
+                localField: "department_id",
+                foreignField: "_id",
+                as: "dep"
+            }
+        },
+        {
+            $unwind: "$dep"
+        },
+        {
+            $lookup: {
+                from: "monitoring_types",
+                localField: "type_id",
+                foreignField: "_id",
+                as: "montype"
+            }
+        },
+        {
+            $unwind: "$montype"
+        },
+        {
+            $group: {
+                _id: "$_id",
+                title: {
+                    $last: "$title"
+                },
+                description: {
+                    $last: "$description"
+                },
+                unit: {
+                    $last: "$unit"
+                },
+                is_active: {
+                    $last: "$is_active"
+                },
+                created_at: {
+                    $last: "$created_at"
+                },
+                dep: {
+                    $last: "$dep"
+                },
+                montype: {
+                    $last: "$montype"
+                },
+            }
+        },
+        {
+            $sort: {
+                created_at: -1
+            }
+        },
+        {
+            $skip: skip
+        },
+        {
+            $limit: pageSize
+        }
+    ];
+    let res = await Index.aggregate(pipeline);
+
+    return res;
+};
+/**
+ * find all dep cat data index 
+ */
+IndexHelper.loadAllIndexDataAll = async function loadAllIndexDataAll(req, dataPaginate) {
     const page = parseInt(dataPaginate.page);
     const pageSize = parseInt(dataPaginate.pageSize);
     const skip = page > 0 ? (page - 1) * pageSize : 0;
@@ -88,7 +169,27 @@ IndexHelper.loadAllIndexData = async function loadAllIndexData(req, dataPaginate
 /**
  * find all dep cat count data result 
  */
-IndexHelper.loadAllIndexCountData = function loadAllIndexCountData() {
+IndexHelper.loadAllIndexCountData = function loadAllIndexCountData(type) {
+    const Index = mongoose.model('Index');
+    const ObjectId = require("mongoose").Types.ObjectId;
+
+    const filterQuery = {
+        type_id: ObjectId(type)
+    };
+
+    return new Promise((resolve, reject) => {
+        Index.countDocuments(filterQuery)
+            .then(res => {
+
+                resolve(res);
+            })
+            .catch(err => reject(err));
+    });
+};
+/**
+ * find all dep cat count data result 
+ */
+IndexHelper.loadAllIndexCountDataAll = function loadAllIndexCountDataAll() {
     const Index = mongoose.model('Index');
 
     const filterQuery = {

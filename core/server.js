@@ -3,13 +3,13 @@
 /**
  * Server class
  */
-function Server() {}
+function Server() { }
 module.exports = Server;
 
 /**
  * Init server
  */
-Server.boot = function boot() {
+Server.boot = async function boot() {
     const path = require('path');
 
     /* DotEnv */
@@ -18,31 +18,31 @@ Server.boot = function boot() {
 
     /* Global Fucntions */
     const globalFunctions = require(path.resolve('core/modules/global-module'));
-    globalFunctions.setup(Server);
+    await globalFunctions.setup(Server);
 
     /* Logger */
     const logger = use('core/modules/logger-module');
-    logger.setup(Server);
+    await logger.setup(Server);
 
     /* Events */
     const events = use('core/modules/events-module');
-    events.setup(Server);
+    await events.setup(Server);
 
     /* Express */
     const express = use('core/modules/express-module');
-    express.setup(Server);
+    await express.setup(Server);
 
     /* Router */
     const router = use('core/modules/router-module');
-    router.setup(Server);
+    await router.setup(Server);
 
     /* Mongoose */
     const mongoose = use('core/modules/mongoose-module');
-    mongoose.setup(Server);
+    await mongoose.setup(Server);
 
     /* Services */
     const services = use('core/modules/services-module');
-    services.setup(Server);
+    await services.setup(Server);
 
     /* Add server to global variable */
     global.Server = Server;
@@ -53,7 +53,7 @@ Server.boot = function boot() {
 /**
  * Run server
  */
-Server.run = function run() {
+Server.run = async function run() {
     const appConfig = use('config/app');
     let engine;
     let server;
@@ -63,9 +63,9 @@ Server.run = function run() {
     } else {
         engine = Server.httpEngine(appConfig);
     }
-    
+
     /* Create server */
-    server = engine.server.createServer(engine.options, App);
+    server = await engine.server.createServer(engine.options, App);
 
     // server.listen(appConfig.port, appConfig.host, function () {
     server.listen(appConfig.port, function () {

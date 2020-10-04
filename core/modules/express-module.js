@@ -1,15 +1,22 @@
 'use strict';
 
+
+const FS = require("fs");
+const Multer = require("multer");
+const MkDirP = require("mkdirp");
+const uuidV4 = require("uuid").v4;
+const MimeTypes = require("mime-types");
+
 /**
  * Express module
  */
-function ExpressModule() {}
+function ExpressModule() { }
 module.exports = ExpressModule;
 
 /**
  * Setup function
  */
-ExpressModule.setup = function setup(server) {
+ExpressModule.setup = async function setup(server) {
     const express = require('express');
     const app = express();
 
@@ -22,13 +29,13 @@ ExpressModule.setup = function setup(server) {
     app.set('trust proxy', 1);
 
     /* Setup middlewares */
-    ExpressModule.setupMiddlewares(server);
+    await ExpressModule.setupMiddlewares(server);
 
     /* Setup user-middlewares */
-    ExpressModule.setupUserMiddlewares(server);
+    await ExpressModule.setupUserMiddlewares(server);
 
     /* Setup pug */
-    ExpressModule.setupPug(server);
+    await ExpressModule.setupPug(server);
 
     return server;
 };
@@ -37,12 +44,11 @@ ExpressModule.setup = function setup(server) {
  * Setup user-middlewares
  */
 ExpressModule.setupUserMiddlewares = function setupUserMiddlewares(server) {
-    const fs = require('fs');
     const path = rPath('app/middlewares');
     const app = server.App;
 
-    if (fs.existsSync(path)) {
-        const files = fs.readdirSync(path) || [];
+    if (FS.existsSync(path)) {
+        const files = FS.readdirSync(path) || [];
 
         files.forEach(file => {
             const Middleware = use(path, file);
@@ -55,7 +61,7 @@ ExpressModule.setupUserMiddlewares = function setupUserMiddlewares(server) {
 /**
  * Setup middlewares
  */
-ExpressModule.setupMiddlewares = function setupMiddlewares(server) {
+ExpressModule.setupMiddlewares = async function setupMiddlewares(server) {
     const app = server.App;
 
     /* Setup cors */
@@ -87,8 +93,40 @@ ExpressModule.setupMiddlewares = function setupMiddlewares(server) {
     /* Setup session */
     const session = require('express-session');
     const expressSessionHelper = use('core/helpers/express-session-helper');
-    const sessionConfig =  expressSessionHelper.setupConfig(session);
+    const sessionConfig = expressSessionHelper.setupConfig(session);
     app.use(session(sessionConfig));
+
+    /* Multer */
+    /* Setup multer */
+    const multerConfig = config("multer");
+
+    /* Create Diretory */
+    if (!FS.existsSync(multerConfig.storage)) {
+        await MkDirP(multerConfig.storage);
+    }
+
+    const storage = Multer.diskStorage({
+        destination: function (req, file, cb) {
+            cb(null, multerConfig.storage);
+        },
+        filename: function (req, file, cb) {
+            let ext = MimeTypes.extension(file.mimetype);
+
+            if (ext) {
+                ext = `.${ext}`;
+            } else {
+                ext = "";
+            }
+
+            let filename = `${uuidV4()}${ext}`;
+            cb(null, filename);
+        },
+    });
+
+    global.upload = Multer({
+        limits: { fieldSize: multerConfig.maxSize },
+        storage,
+    });
 
     return server;
 };

@@ -1,10 +1,6 @@
 'use strict';
 const validator = use('validators/user-register-validator');
 const Rule = use('core/helpers/rule-helper');
-const multer = require('multer');
-const upload = multer({
-    dest: 'uploads/'
-});
 
 const {
     checkSession

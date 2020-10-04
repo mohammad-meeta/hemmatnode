@@ -1,0 +1,20 @@
+extends ../../layout/app.pug
+
+block title
+    | بلاگ
+
+block content
+    .container
+        blogs(
+            list-url=route('api.blog', { page: '$page$', size: '$pageSize$', group: departmentId }),
+            register-url=route('blog.store', { department: departmentId }),
+            edit-url=route('blog.update', { id :'$id$'}),
+            upload-url-image=route('storage.get_image', {name: '__name'}),
+            upload-url-token=route('storage.upload_token'),
+            department-id=departmentId
+        )
+
+block scripts
+    script(defer, src=mix('js/pages/blog/index/index.js'))
+
+

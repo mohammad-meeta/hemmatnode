@@ -18,17 +18,17 @@ Router.get('/index', [
 ])
     .as('index.index');
 
-// Router.get("/api/indexs/:page/:size?", [
-//     checkSession,
-//     Rule.canAsync("user.permision", "api.index"),
-//     "Index@paginateIndexAll"
-// ]).as("api.index.all");
-
 Router.get("/api/indexs/:type/:page/:size?", [
     checkSession,
     Rule.canAsync("user.permision", "api.index"),
     "Index@paginateIndex"
 ]).as("api.index");
+
+Router.get("/api/indexs/all/:page/:size?", [
+    checkSession,
+    Rule.canAsync("user.permision", "api.all.index"),
+    "Index@paginateIndexAll"
+]).as("api.all.index");
 
 Router.get('/index/create', [
     checkSession,

@@ -1,6 +1,7 @@
 dump.rdb
 public/
 uploads/
+storate/uploads/
 logs/
 node_modules/
 .env

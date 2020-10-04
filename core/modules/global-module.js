@@ -5,7 +5,7 @@ const _ = require('lodash');
 /**
  * GlobalFunctions class
  */
-function GlobalFunctions() {}
+function GlobalFunctions() { }
 module.exports = GlobalFunctions;
 
 /**
@@ -27,9 +27,13 @@ GlobalFunctions.setup = function setup(server) {
  * Get config value
  */
 GlobalFunctions.config = function config(configFile, path, defaultValue = null) {
-    let configData = GlobalFunctions.use(`config/${configFile}`);
+    let configData = GlobalFunctions.use("config", configFile);
 
-    return _.get(configData, path, defaultValue);
+    if (null != path) {
+        return _.get(configData, path, defaultValue);
+    } else {
+        return configData || defaultValue;
+    }
 };
 
 /**
@@ -77,7 +81,7 @@ GlobalFunctions.asset = function asset(resource) {
  */
 GlobalFunctions.rPath = function rPath() {
     const path = require('path');
-    
+
     return path.resolve(...arguments);
 };
 

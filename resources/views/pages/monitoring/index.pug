@@ -5,13 +5,13 @@ block title
 
 block content
     .container
-        indicators(
+        monitorings(
             list-url=route('api.index', { page: '$page$', size: '$pageSize$' }),
             register-url=route('index.store'}),
             edit-url=route('index.update', { id :'$id$'}),
         )
 
 block scripts
-    script(defer, src=mix('js/pages/indicator/index/index.js'))
+    script(defer, src=mix('js/pages/monitoring/index/index.js'))
 
 

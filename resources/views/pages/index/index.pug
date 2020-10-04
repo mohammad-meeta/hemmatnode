@@ -1,0 +1,19 @@
+extends ../../layout/app.pug
+
+block title
+    | شاخص
+
+block content
+    .container
+        indicators(
+            list-url-parent=route('api.index', { page: '$page$', size: '$pageSize$' }),
+            list-url=route('api.all.index', { page: '$page$', size: '$pageSize$' }),
+            register-url=route('index.store'),
+            edit-url=route('index.update', { id :'$id$'}),
+            departments-url=route('indicatortypes.type', { indicator_type: '$indicator_type$'})
+        )
+
+block scripts
+    script(defer, src=mix('js/pages/indicator/index/index.js'))
+
+

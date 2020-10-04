@@ -48,7 +48,8 @@
                 @on-command="onCommand",
                 @on-register="onIndicatorRegister",
                 :register-url="registerUrl",
-                :indicator-type-id="indicatorTypeId"
+                :indicator-type-id="indicatorTypeId",
+                :indicator-types-url="indicatorTypesUrl",
             )
 
         .column(v-show="!modeLoading && modeEdit")
@@ -98,7 +99,12 @@ export default {
     }),
 
     props: {
-        departmentId: {
+        indicatorTypeId: {
+            type: String,
+            default: null,
+        },
+
+        indicatorTypesUrl: {
             type: String,
             default: null,
         },

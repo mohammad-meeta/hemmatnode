@@ -78,7 +78,6 @@ export default {
     components: {
         Notification,
         DatePicker: VuePersianDatetimePicker,
-        FileUpload,
     },
 
     data: () => ({
@@ -110,6 +109,7 @@ export default {
     created() {
         this.clearFormData();
         this.loadIndicatorTypes;
+        console.log("ffffffff");
     },
 
     mounted() {
@@ -128,7 +128,7 @@ export default {
          */
         async loadIndicatorTypes() {
             const url = this.indicatorTypesUrl;
-
+            console.log(url);
             let res = await AxiosHelper.send("get", url, "");
             const resData = res.data;
             const datas = resData.data.data;

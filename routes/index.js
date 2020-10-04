@@ -24,7 +24,7 @@ Router.get("/api/indexs/:type/:page/:size?", [
     "Index@paginateIndex"
 ]).as("api.index");
 
-Router.get("/api/indexs/all/:page/:size?", [
+Router.get("/api/all/indexs/:page/:size?", [
     checkSession,
     Rule.canAsync("user.permision", "api.all.index"),
     "Index@paginateIndexAll"

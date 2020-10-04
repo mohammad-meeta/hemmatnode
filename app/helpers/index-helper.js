@@ -172,7 +172,7 @@ IndexHelper.loadAllIndexDataAll = async function loadAllIndexDataAll(req, dataPa
 IndexHelper.loadAllIndexCountData = function loadAllIndexCountData(type) {
     const Index = mongoose.model('Index');
     const ObjectId = require("mongoose").Types.ObjectId;
-
+    console.log(type)
     const filterQuery = {
         type_id: ObjectId(type)
     };

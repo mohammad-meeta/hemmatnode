@@ -10,7 +10,7 @@ function IndexHelper() { }
 module.exports = IndexHelper;
 
 /**
- * find all dep cat data index 
+ * find all dep cat data index
  */
 IndexHelper.loadAllIndexData = async function loadAllIndexData(req, dataPaginate, type) {
     const page = parseInt(dataPaginate.page);
@@ -91,7 +91,7 @@ IndexHelper.loadAllIndexData = async function loadAllIndexData(req, dataPaginate
     return res;
 };
 /**
- * find all dep cat data index 
+ * find all dep cat data index
  */
 IndexHelper.loadAllIndexDataAll = async function loadAllIndexDataAll(req, dataPaginate) {
     const page = parseInt(dataPaginate.page);
@@ -167,7 +167,7 @@ IndexHelper.loadAllIndexDataAll = async function loadAllIndexDataAll(req, dataPa
     return res;
 };
 /**
- * find all dep cat count data result 
+ * find all dep cat count data result
  */
 IndexHelper.loadAllIndexCountData = function loadAllIndexCountData(type) {
     const Index = mongoose.model('Index');
@@ -187,7 +187,7 @@ IndexHelper.loadAllIndexCountData = function loadAllIndexCountData(type) {
     });
 };
 /**
- * find all dep cat count data result 
+ * find all dep cat count data result
  */
 IndexHelper.loadAllIndexCountDataAll = function loadAllIndexCountDataAll() {
     const Index = mongoose.model('Index');
@@ -205,7 +205,7 @@ IndexHelper.loadAllIndexCountDataAll = function loadAllIndexCountDataAll() {
     });
 };
 /**
- * find Index data result 
+ * find Index data result
  */
 IndexHelper.loadIndexData = function loadIndexData(id) {
     const Index = mongoose.model('Index');
@@ -225,10 +225,9 @@ IndexHelper.loadIndexData = function loadIndexData(id) {
 };
 
 /**
- * insert Index data  
+ * insert Index data
  */
 IndexHelper.insertNewIndex = async function insertNewIndex(data) {
-
     const Index = mongoose.model('Index');
     const index = new Index(data)
 
@@ -298,7 +297,7 @@ IndexHelper.insertNewIndex = async function insertNewIndex(data) {
 };
 
 /**
- * update Index data  
+ * update Index data
  */
 IndexHelper.updateIndexData = async function updateIndexData(data) {
     const Index = mongoose.model('Index');
@@ -369,7 +368,7 @@ IndexHelper.updateIndexData = async function updateIndexData(data) {
 };
 
 /**
- * delete index data  
+ * delete index data
  */
 IndexHelper.deleteIndex = function deleteIndex(data) {
     return new Promise((resolve, reject) => {

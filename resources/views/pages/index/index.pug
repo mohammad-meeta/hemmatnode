@@ -10,7 +10,7 @@ block content
             list-url=route('api.all.index', { page: '$page$', size: '$pageSize$' }),
             register-url=route('index.store'),
             edit-url=route('index.update', { id :'$id$'}),
-            departments-url=route('indicatortypes.type', { indicator_type: '$indicator_type$'})
+            indicator-types-url=route('api.monitoringtype', { page: 1, size: 1000 }),
         )
 
 block scripts

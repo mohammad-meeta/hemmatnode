@@ -58,7 +58,8 @@
                 @on-command="onCommand",
                 @on-update="onIndicatorUpdate",
                 :edit-url="editUrl",
-                :indicator-type-id="indicatorTypeId"
+                :indicator-type-id="indicatorTypeId",
+                :indicator-types-url="indicatorTypesUrl",
             )
 
         .column(v-show="!modeLoading && modeShow")

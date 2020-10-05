@@ -1,18 +1,18 @@
-'use strict';
-const PugView = use('app/helpers/pug-view');
-const IndexHelper = use('app/helpers/index-helper');
-const FileHelper = use('app/helpers/file-helper');
+"use strict";
+const PugView = use("app/helpers/pug-view");
+const IndexHelper = use("app/helpers/index-helper");
+const FileHelper = use("app/helpers/file-helper");
 /**
  * Dep cat controller
  */
-function Index() { }
+function Index() {}
 module.exports = Index;
 
 /**
  * Index route
  */
 Index.index = async function index(req, res, next) {
-    const pageRoute = 'index.index';
+    const pageRoute = "index.index";
 
     res.render(PugView.getView(pageRoute), {
         req,
@@ -23,10 +23,9 @@ Index.index = async function index(req, res, next) {
  * paginate route
  */
 Index.paginateIndex = async function paginateIndex(req, res, next) {
-
     const dataPaginate = {
         page: req.params.page,
-        pageSize: req.params.size || 10
+        pageSize: req.params.size || 10,
     };
     const type = req.params.type;
 
@@ -41,17 +40,14 @@ Index.paginateIndex = async function paginateIndex(req, res, next) {
             success: true,
             data: {
                 data: data,
-                count: count
-            }
+                count: count,
+            },
         };
 
         res.status(200)
             .send(result)
             .end();
-
-    }
-    catch (err) {
-
+    } catch (err) {
         Logger.error(err);
 
         res.status(500)
@@ -65,7 +61,7 @@ Index.paginateIndex = async function paginateIndex(req, res, next) {
 Index.paginateIndexAll = async function paginateIndexAll(req, res, next) {
     const dataPaginate = {
         page: req.params.page,
-        pageSize: req.params.size || 10
+        pageSize: req.params.size || 10,
     };
 
     try {
@@ -79,17 +75,14 @@ Index.paginateIndexAll = async function paginateIndexAll(req, res, next) {
             success: true,
             data: {
                 data: data,
-                count: count
-            }
+                count: count,
+            },
         };
 
         res.status(200)
             .send(result)
             .end();
-
-    }
-    catch (err) {
-
+    } catch (err) {
         Logger.error(err);
 
         res.status(500)
@@ -106,18 +99,18 @@ Index.show = async function show(req, res, next) {
 
     IndexHelper.loadIndexData(Id)
 
-        .then(data => {
+        .then((data) => {
             const result = {
                 success: true,
                 data: {
                     data: data,
-                }
+                },
             };
             res.status(200)
                 .send(result)
                 .end();
         })
-        .catch(err => console.error(err));
+        .catch((err) => console.error(err));
 };
 
 /**
@@ -125,31 +118,31 @@ Index.show = async function show(req, res, next) {
  */
 Index.destroy = async function destroy(req, res, next) {
     const data = {
-        "_id": req.body._id
+        _id: req.body._id,
     };
 
     IndexHelper.deleteIndexData(data)
-        .then(data => {
+        .then((data) => {
             const result = {
                 success: true,
-                data: data
+                data: data,
             };
             res.status(200)
                 .send(result)
                 .end();
         })
-        .catch(err => console.error(err));
+        .catch((err) => console.error(err));
 };
 
 /**
  * Create route return page
  */
 Index.create = async function create(req, res, next) {
-    const pageRoute = PugView.getView('index.create');
+    const pageRoute = PugView.getView("index.create");
 
     res.render(pageRoute, {
         req,
-        pageRoute
+        pageRoute,
     });
 };
 
@@ -158,26 +151,26 @@ Index.create = async function create(req, res, next) {
  */
 Index.store = async function store(req, res, next) {
     const data = {
-        "title": req.body.title,
-        "description": req.body.description,
-        "unit": req.body.unit,
-        "type_id": req.body.type_id,
-        "department_id": req.body.department_id,
-        "user_id": req.session.auth.userId,
-        "is_active": req.body.is_active,
+        title: req.body.title,
+        description: req.body.description,
+        unit: req.body.unit,
+        type_id: req.body.type_id,
+        department_id: req.body.department_id,
+        user_id: req.session.auth.userId,
+        is_active: req.body.is_active,
     };
 
     IndexHelper.insertNewIndex(data)
-        .then(dataRes => {
+        .then((dataRes) => {
             const result = {
                 success: true,
-                data: dataRes
+                data: dataRes,
             };
             res.status(200)
                 .send(result)
                 .end();
         })
-        .catch(err => console.error(err));
+        .catch((err) => console.error(err));
 };
 
 /**
@@ -187,14 +180,14 @@ Index.update = async function update(req, res, next) {
     let data = {};
 
     data = {
-        "_id": req.body._id,
-        "title": req.body.title,
-        "description": req.body.description,
-        "type_id": req.body.type_id,
-        "unit": req.body.unit,
-        "department_id": req.body.department_id,
-        "user_id": req.session.auth.userId,
-        "is_active": req.body.is_active,
+        _id: req.body._id,
+        title: req.body.title,
+        description: req.body.description,
+        type_id: req.body.type_id,
+        unit: req.body.unit,
+        department_id: req.body.department_id,
+        user_id: req.session.auth.userId,
+        is_active: req.body.is_active,
     };
 
     let result = await IndexHelper.updateIndexData(data);

@@ -105,11 +105,14 @@ export default {
             type: String,
             default: "",
         },
+        indicatorTypesUrl: {
+            type: String,
+            default: "",
+        }
     },
     created() {
         this.clearFormData();
-        this.loadIndicatorTypes;
-        console.log("ffffffff");
+        this.loadIndicatorTypes();
     },
 
     mounted() {
@@ -128,7 +131,6 @@ export default {
          */
         async loadIndicatorTypes() {
             const url = this.indicatorTypesUrl;
-            console.log(url);
             let res = await AxiosHelper.send("get", url, "");
             const resData = res.data;
             const datas = resData.data.data;
@@ -191,9 +193,10 @@ export default {
             this.showLoading();
 
             let indicatorData = this.indicatorData;
-
             try {
                 const url = this.registerUrl;
+                console.log(url);
+                console.log(indicatorData);
                 let res = await AxiosHelper.send("post", url, indicatorData, {
                     sendAsFormData: true,
                 });

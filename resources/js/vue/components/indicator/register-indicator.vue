@@ -85,6 +85,10 @@ export default {
         indicatorData: {
             title: null,
             type_id: null,
+            montype: {
+                _id: null,
+                title: null
+            },
             description: null,
             unit: null,
             is_active: true,
@@ -101,10 +105,7 @@ export default {
             type: String,
             default: "",
         },
-        departmentTypeId: {
-            type: String,
-            default: "",
-        },
+
         indicatorTypesUrl: {
             type: String,
             default: "",
@@ -247,6 +248,10 @@ export default {
                 description: null,
                 unit: null,
                 type_id: null,
+                montype: {
+                    _id: null,
+                    title: null,
+                },
                 is_active: true,
             };
 

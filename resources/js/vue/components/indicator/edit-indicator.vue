@@ -26,7 +26,7 @@
             )
                 b-select(
                     placeholder="انتخاب دسته بندی شاخص",
-                    v-model="indicatorData.type_id",
+                    v-model="indicatorData.montype._id",
                 )
                     option(
                         v-for="(indicatorType, indicatorTypeIndex) in indicatorTypes",
@@ -85,6 +85,10 @@ export default {
         indicatorData: {
             title: null,
             type_id: null,
+            montype: {
+                _id: null,
+                title: null
+            },
             description: null,
             unit: null,
             isActive: false,
@@ -101,14 +105,14 @@ export default {
             type: String,
             default: "",
         },
-        departmentTypeId: {
+        indicatorTypesUrl: {
             type: String,
             default: "",
-        },
+        }
     },
 
     created() {
-        this.loadIndicatorTypes;
+        this.loadIndicatorTypes();
     },
 
     mounted() {},
@@ -136,15 +140,20 @@ export default {
          * Load specific user
          */
         loadIndicatorData(data) {
+            console.log(data);
             let temp = {
                 _id: data._id,
                 title: data.title,
                 description: data.description,
                 unit: data.unit,
-                type_id: this.indicatorData.type_id,
+                montype: {
+                    _id: data.montype._id,
+                    title: data.montype.title
+                },
                 isActive: data.is_active,
             };
             Vue.set(this, "indicatorData", temp);
+            console.log(this.indicatorData);
         },
 
         /**
@@ -206,7 +215,10 @@ export default {
                 title: this.indicatorData.title,
                 description: this.indicatorData.description,
                 unit: this.indicatorData.unit,
-                type_id: this.indicatorData.type_id,
+                type_id: this.indicatorData.montype._id,
+                montype: {
+                    _id: this.indicatorData.montype._id,
+                },
                 is_active: this.indicatorData.isActive,
             };
 

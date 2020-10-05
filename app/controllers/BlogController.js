@@ -120,29 +120,33 @@ Blog.create = async function create(req, res, next) {
  * store data
  */
 Blog.store = async function store(req, res, next) {
-    const files = req.files || [];
-    let fileList = [];
+    // const files = req.files || [];
+    // let fileList = [];
 
-    for (let i = 0; i < files.length; ++i) {
-        try {
-            const el = files[i];
-            el.user_id = req.session.auth.userId;
+    // for (let i = 0; i < files.length; ++i) {
+    //     try {
+    //         const el = files[i];
+    //         el.user_id = req.session.auth.userId;
 
-            const data = await FileHelper.insertFileData(el);
+    //         const data = await FileHelper.insertFileData(el);
 
-            const tempFileData = {
-                file_id: data[0]._id,
-                deleted_at: null,
-            };
-            fileList.push(tempFileData);
-        } catch (err) {
-            Logger.error(err);
-        }
-    }
+    //         const tempFileData = {
+    //             file_id: data[0]._id,
+    //             deleted_at: null,
+    //         };
+    //         fileList.push(tempFileData);
+    //     } catch (err) {
+    //         Logger.error(err);
+    //     }
+    // }
 
     const data = {
         "title": req.body.title,
-        "files": fileList
+        "date": req.body.date,
+        "description": req.body.description,
+        "user_id": req.session.auth.userId,
+        "is_active": req.body.is_active,
+        "department_id": req.body.departmentId,
     };
 
     BlogHelper.insertNewBlog(data)
@@ -163,50 +167,54 @@ Blog.store = async function store(req, res, next) {
  */
 Blog.update = async function update(req, res, next) {
     let data = {};
-    const files = req.files || [];
-    let fileList = [];
+    // const files = req.files || [];
+    // let fileList = [];
 
-    for (let i = 0; i < files.length; ++i) {
-        try {
-            const el = files[i];
-            el.user_id = req.session.auth.userId;
+    // for (let i = 0; i < files.length; ++i) {
+    //     try {
+    //         const el = files[i];
+    //         el.user_id = req.session.auth.userId;
 
-            const data = await FileHelper.insertFileData(el);
+    //         const data = await FileHelper.insertFileData(el);
 
-            const tempFileData = {
-                file_id: data[0]._id,
-                deleted_at: null,
-            };
-            fileList.push(tempFileData);
-        } catch (err) {
-            Logger.error(err);
-        }
-    }
+    //         const tempFileData = {
+    //             file_id: data[0]._id,
+    //             deleted_at: null,
+    //         };
+    //         fileList.push(tempFileData);
+    //     } catch (err) {
+    //         Logger.error(err);
+    //     }
+    // }
 
-    const deletedOldFiles = JSON.parse(req.body.deletedOldFiles || null) || [];
+    // const deletedOldFiles = JSON.parse(req.body.deletedOldFiles || null) || [];
 
-    let blogRes = await BlogHelper.loadBlogData(req.body._id);
-    const blogLFiles = (blogRes || {}).files || [];
+    // let blogRes = await BlogHelper.loadBlogData(req.body._id);
+    // const blogLFiles = (blogRes || {}).files || [];
 
-    for (let index = 0; index < blogLFiles.length; index++) {
-        const element = blogLFiles[index];
-        fileList.push(element)
-    }
+    // for (let index = 0; index < blogLFiles.length; index++) {
+    //     const element = blogLFiles[index];
+    //     fileList.push(element)
+    // }
 
-    for (let index = 0; index < deletedOldFiles.length; index++) {
-        const element = deletedOldFiles[index];
-        for (let oil = 0; oil < fileList.length; oil++) {
-            const Fele = fileList[oil];
-            if (Fele.file_id == element) {
-                Fele.deleted_at = Date()
-            }
-        }
-    }
+    // for (let index = 0; index < deletedOldFiles.length; index++) {
+    //     const element = deletedOldFiles[index];
+    //     for (let oil = 0; oil < fileList.length; oil++) {
+    //         const Fele = fileList[oil];
+    //         if (Fele.file_id == element) {
+    //             Fele.deleted_at = Date()
+    //         }
+    //     }
+    // }
 
     data = {
         "_id": req.body._id,
         "title": req.body.title,
-        "files": fileList
+        "description": req.body.description,
+        "date": req.body.date,
+        "user_id": req.session.auth.userId,
+        "is_active": req.body.is_active,
+        "department_id": req.body.departmentId,
     };
 
     let result = await BlogHelper.updateBlogData(data);

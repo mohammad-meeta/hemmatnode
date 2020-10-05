@@ -28,17 +28,6 @@ IndexHelper.loadAllIndexData = async function loadAllIndexData(req, dataPaginate
         },
         {
             $lookup: {
-                from: "departments",
-                localField: "department_id",
-                foreignField: "_id",
-                as: "dep"
-            }
-        },
-        {
-            $unwind: "$dep"
-        },
-        {
-            $lookup: {
                 from: "monitoring_types",
                 localField: "type_id",
                 foreignField: "_id",
@@ -65,9 +54,6 @@ IndexHelper.loadAllIndexData = async function loadAllIndexData(req, dataPaginate
                 },
                 created_at: {
                     $last: "$created_at"
-                },
-                dep: {
-                    $last: "$dep"
                 },
                 montype: {
                     $last: "$montype"
@@ -104,17 +90,6 @@ IndexHelper.loadAllIndexDataAll = async function loadAllIndexDataAll(req, dataPa
     const pipeline = [
         {
             $lookup: {
-                from: "departments",
-                localField: "department_id",
-                foreignField: "_id",
-                as: "dep"
-            }
-        },
-        {
-            $unwind: "$dep"
-        },
-        {
-            $lookup: {
                 from: "monitoring_types",
                 localField: "type_id",
                 foreignField: "_id",
@@ -141,9 +116,6 @@ IndexHelper.loadAllIndexDataAll = async function loadAllIndexDataAll(req, dataPa
                 },
                 created_at: {
                     $last: "$created_at"
-                },
-                dep: {
-                    $last: "$dep"
                 },
                 montype: {
                     $last: "$montype"
@@ -240,17 +212,6 @@ IndexHelper.insertNewIndex = async function insertNewIndex(data) {
         },
         {
             $lookup: {
-                from: "departments",
-                localField: "department_id",
-                foreignField: "_id",
-                as: "dep"
-            }
-        },
-        {
-            $unwind: "$dep"
-        },
-        {
-            $lookup: {
                 from: "monitoring_types",
                 localField: "type_id",
                 foreignField: "_id",
@@ -278,9 +239,6 @@ IndexHelper.insertNewIndex = async function insertNewIndex(data) {
                 created_at: {
                     $last: "$created_at"
                 },
-                dep: {
-                    $last: "$dep"
-                },
                 montype: {
                     $last: "$montype"
                 }
@@ -293,7 +251,7 @@ IndexHelper.insertNewIndex = async function insertNewIndex(data) {
         }
     ];
     let res = await Index.aggregate(pipeline);
-
+    console.log(res)
     return res;
 };
 

@@ -134,8 +134,8 @@ export default {
                 _id: payload._id,
                 title: payload.title,
                 date: payload.date,
-                executor: payload.executor,
-                files: payload.files,
+                description: payload.description,
+                // files: payload.files,
                 is_active: payload.is_active,
                 created_at: payload.created_at,
             };
@@ -146,10 +146,10 @@ export default {
             const editedBlogData = {
                 _id: payload.data.data[0]._id,
                 title: payload.data.data[0].title,
-                executor: payload.data.data[0].executor,
+                description: payload.data.data[0].description,
                 date: payload.data.data[0].date,
                 is_active: payload.data.data[0].is_active,
-                files: payload.data.data[0].files,
+                // files: payload.data.data[0].files,
                 created_at: payload.data.data[0].created_at,
             };
 

@@ -42,6 +42,14 @@ Model.model = function model() {
             type: String,
             required: true
         },
+        'description': {
+            type: String,
+            required: false,
+        },
+        'date': {
+            type: Date,
+            required: false,
+        },
         'files': {
             type: [File]
         },

@@ -33,7 +33,7 @@
             label.label توضیح
             .control
                 ckeditor(
-                    :value="value.title",
+                    v-model="blogData.description",
                     :upload-url-image="uploadUrlImage",
                     :upload-url-token="uploadUrlToken",
                     @input="setTitle"
@@ -87,9 +87,7 @@ export default {
             department_id: null,
             title: null,
             date: null,
-            executor: null,
-            files: [],
-            deletedOldFiles: [],
+            description: null,
             is_active: true,
         },
         notificationMessage: null,
@@ -198,28 +196,28 @@ export default {
          * Register new blog
          */
         async registerBlog() {
-            const isValid = this.validate();
+            // const isValid = this.validate();
 
-            if (!isValid) {
-                return;
-            }
+            // if (!isValid) {
+            //     return;
+            // }
 
             this.showLoading();
 
-            const deletedFiles = this.$refs.fileUpload.getDeletedFiles();
-            const newFiles = this.$refs.fileUpload.getNewFiles();
+            // const deletedFiles = this.$refs.fileUpload.getDeletedFiles();
+            // const newFiles = this.$refs.fileUpload.getNewFiles();
 
-            let newUploaded = newFiles.map((x) => x.file);
-            Vue.set(this, "files", newUploaded);
+            // let newUploaded = newFiles.map((x) => x.file);
+            // Vue.set(this, "files", newUploaded);
 
-            let deleteUploaded = deletedFiles.map((x) => x._id);
-            Vue.set(this, "deletedOldFiles", deleteUploaded);
+            // let deleteUploaded = deletedFiles.map((x) => x._id);
+            // Vue.set(this, "deletedOldFiles", deleteUploaded);
 
-            Vue.set(this.blogData, "files", this.files);
-            Vue.set(this.blogData, "deletedOldFiles", this.deletedOldFiles);
+            // Vue.set(this.blogData, "files", this.files);
+            // Vue.set(this.blogData, "deletedOldFiles", this.deletedOldFiles);
 
             let blogData = this.blogData;
-
+            console.log(blogData);
             try {
                 const url = this.registerUrl;
                 let res = await AxiosHelper.send("post", url, blogData, {
@@ -272,13 +270,13 @@ export default {
         clearFormData() {
             const blogData = {
                 title: null,
-                executor: null,
+                description: "",
                 date: null,
                 files: [],
                 deletedOldFiles: [],
                 is_active: true,
             };
-
+            
             Vue.set(this, "blogData", blogData);
             Vue.set(this, "files", []);
             Vue.set(this, "deletedOldFiles", []);

@@ -31,13 +31,13 @@
                 )
 
         .field
-            label.label مجری
+            label.label توضیح
             .control
-                input.input(
-                    type="text",
-                    placeholder="مجری",
-                    v-model="blogData.executor",
-                    required
+                ckeditor(
+                    v-model="blogData.description",
+                    :upload-url-image="uploadUrlImage",
+                    :upload-url-token="uploadUrlToken",
+                    @input="setTitle"
                 )
 
         .field
@@ -63,6 +63,7 @@
 
 <script>
 "use strict";
+import CKEditor from "VUE-COMPONENTS/general/ckeditor.vue";
 
 const Buefy = require("buefy").default;
 const AxiosHelper = require("JS-HELPERS/axios-helper");
@@ -75,6 +76,7 @@ const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 export default {
     name: "EditBlog",
     components: {
+        ckeditor: CKEditor,
         FileUpload,
         DatePicker: VuePersianDatetimePicker,
         Notification,
@@ -86,14 +88,11 @@ export default {
         deletedOldFiles: [],
         oldFiles: [],
         blogData: {
-            title: null,
             department_id: null,
+            title: null,
             date: null,
-            executor: null,
-            files: {},
-            oldFiles: [],
-            isActive: false,
-            deletedOldFiles: [],
+            description: null,
+            is_active: true,
         },
 
         notificationMessage: null,
@@ -102,6 +101,12 @@ export default {
     }),
 
     props: {
+        uploadUrlImage: {
+            type: String,
+        },
+        uploadUrlToken: {
+            type: String,
+        },
         editUrl: {
             type: String,
             default: "",
@@ -126,21 +131,28 @@ export default {
 
     methods: {
         /**
+         * Set question title
+         */
+        setTitle(payload) {
+            Vue.set(this.value, "title", payload);
+        },
+
+        /**
          * Load specific user
          */
         loadBlogData(data) {
+            console.log(data);
             let temp = {
                 _id: data._id,
                 title: data.title,
                 date: data.date,
-                executor: data.executor,
+                description: data.description,
                 department_id: this.blogData.department_id,
-                files: data.files,
                 isActive: data.is_active,
             };
-            Vue.set(this, "oldFiles", data.files);
+            // Vue.set(this, "oldFiles", data.files);
             Vue.set(this, "blogData", temp);
-            this.$refs.fileUpload.updateOldFiles(data.files);
+            // this.$refs.fileUpload.updateOldFiles(data.files);
         },
 
         /**
@@ -189,33 +201,33 @@ export default {
          * Edit blog
          */
         async editBlog() {
-            const isValid = this.validate();
+            // const isValid = this.validate();
 
-            if (!isValid) {
-                return;
-            }
+            // if (!isValid) {
+            //     return;
+            // }
 
             this.showLoading();
 
-            const deletedFiles = this.$refs.fileUpload.getDeletedFiles();
-            const newFiles = this.$refs.fileUpload.getNewFiles();
+            // const deletedFiles = this.$refs.fileUpload.getDeletedFiles();
+            // const newFiles = this.$refs.fileUpload.getNewFiles();
 
-            let newUploaded = newFiles.map((x) => x.file);
-            Vue.set(this, "files", newUploaded);
+            // let newUploaded = newFiles.map((x) => x.file);
+            // Vue.set(this, "files", newUploaded);
 
-            let deleteUploaded = deletedFiles.map((x) => x._id);
-            Vue.set(this, "deletedOldFiles", deleteUploaded);
+            // let deleteUploaded = deletedFiles.map((x) => x._id);
+            // Vue.set(this, "deletedOldFiles", deleteUploaded);
 
             let blogData = {
                 _id: this.blogData._id,
                 title: this.blogData.title,
                 date: this.blogData.date,
-                executor: this.blogData.executor,
+                description: this.blogData.description,
                 department_id: this.blogData.department_id,
                 is_active: this.blogData.isActive,
-                files: this.files,
-                oldFiles: this.oldFiles,
-                deletedOldFiles: this.deletedOldFiles,
+                // files: this.files,
+                // oldFiles: this.oldFiles,
+                // deletedOldFiles: this.deletedOldFiles,
             };
 
             try {

@@ -60,7 +60,9 @@
                 @on-command="onCommand",
                 @on-update="onBlogUpdate",
                 :edit-url="editUrl",
-                :department-id="departmentId"
+                :department-id="departmentId",
+                :upload-url-image="uploadUrlImage",
+                :upload-url-token="uploadUrlToken",
             )
 
         .column(v-show="!modeLoading && modeShow")

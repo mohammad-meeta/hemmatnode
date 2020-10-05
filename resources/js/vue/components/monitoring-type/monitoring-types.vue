@@ -158,7 +158,7 @@ export default {
         onMonitoringTypeRegister(payload) {
             //***update vue list****
             this.$refs.monitoringTypeList.addToMonitoringTypeList(
-                payload.data.data.data
+                payload.data.data.data[0]
             );
             this.setNotification(
                 ".دسته بندی شاخص با موفقیت ذخیره شد",
@@ -195,7 +195,6 @@ export default {
 
                 case ENUMS.COMMAND.REGISTER:
                     /* TODO: REGISTER NEW  */
-                    console.log("REGISTER NEW MonitoringType", arg);
                     break;
 
                 case ENUMS.COMMAND.EDIT:

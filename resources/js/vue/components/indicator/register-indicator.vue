@@ -195,8 +195,6 @@ export default {
             let indicatorData = this.indicatorData;
             try {
                 const url = this.registerUrl;
-                console.log(url);
-                console.log(indicatorData);
                 let res = await AxiosHelper.send("post", url, indicatorData, {
                     sendAsFormData: true,
                 });

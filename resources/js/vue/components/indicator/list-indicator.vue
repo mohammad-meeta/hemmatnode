@@ -130,12 +130,13 @@ export default {
          * add new Indicator data to list data
          */
         addToIndicatorList(payload) {
+            console.log(payload);
             const newIndicatorData = {
                 _id: payload._id,
                 title: payload.title,
                 description: payload.description,
                 unit: payload.unit,
-                type_id: pyload.type_id,
+                type_id: payload.type_id,
                 is_active: payload.is_active,
                 created_at: payload.created_at,
             };
@@ -148,7 +149,7 @@ export default {
                 title: payload.data.data[0].title,
                 description: payload.data.data[0].description,
                 unit: payload.data.data[0].unit,
-                type_id: pyload.data.data[0].type_id,
+                type_id: payload.data.data[0].type_id,
                 is_active: payload.data.data[0].is_active,
                 created_at: payload.data.data[0].created_at,
             };

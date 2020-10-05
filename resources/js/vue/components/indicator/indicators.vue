@@ -194,7 +194,6 @@ export default {
 
                 case ENUMS.COMMAND.REGISTER:
                     /* TODO: REGISTER NEW  */
-                    console.log("REGISTER NEW Indicator", arg);
                     break;
 
                 case ENUMS.COMMAND.EDIT:

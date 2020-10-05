@@ -22,6 +22,17 @@ BlogHelper.loadAllBlogData = async function loadAllBlogData(req, dataPaginate, g
     const userId = req.session.auth.userId;
     const pipeline = [
         {
+            $lookup: {
+                from: "departments",
+                localField: "department_id",
+                foreignField: "_id",
+                as: "dep"
+            }
+        },
+        {
+            $unwind: "$dep"
+        },
+        {
             $unwind: {
                 path: "$files",
                 preserveNullAndEmptyArrays: true
@@ -55,6 +66,15 @@ BlogHelper.loadAllBlogData = async function loadAllBlogData(req, dataPaginate, g
                 _id: "$_id",
                 title: {
                     $last: "$title"
+                },
+                date: {
+                    $last: "$date"
+                },
+                description: {
+                    $last: "$description"
+                },
+                dep: {
+                    $last: "$dep"
                 },
                 oldFiles: {
                     $push: "$files"
@@ -176,6 +196,17 @@ BlogHelper.insertNewBlog = async function insertNewBlog(data) {
             }
         },
         {
+            $lookup: {
+                from: "departments",
+                localField: "department_id",
+                foreignField: "_id",
+                as: "dep"
+            }
+        },
+        {
+            $unwind: "$dep"
+        },
+        {
             $unwind: {
                 path: "$files",
                 preserveNullAndEmptyArrays: true
@@ -209,6 +240,15 @@ BlogHelper.insertNewBlog = async function insertNewBlog(data) {
                 _id: "$_id",
                 title: {
                     $last: "$title"
+                },
+                date: {
+                    $last: "$date"
+                },
+                description: {
+                    $last: "$description"
+                },
+                dep: {
+                    $last: "$dep"
                 },
                 oldFiles: {
                     $push: "$files"
@@ -284,6 +324,17 @@ BlogHelper.updateBlogData = async function updateBlogData(data) {
             }
         },
         {
+            $lookup: {
+                from: "departments",
+                localField: "department_id",
+                foreignField: "_id",
+                as: "dep"
+            }
+        },
+        {
+            $unwind: "$dep"
+        },
+        {
             $unwind: {
                 path: "$files",
                 preserveNullAndEmptyArrays: true
@@ -317,6 +368,15 @@ BlogHelper.updateBlogData = async function updateBlogData(data) {
                 _id: "$_id",
                 title: {
                     $last: "$title"
+                },
+                date: {
+                    $last: "$date"
+                },
+                description: {
+                    $last: "$description"
+                },
+                dep: {
+                    $last: "$dep"
                 },
                 oldFiles: {
                     $push: "$files"

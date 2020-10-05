@@ -214,7 +214,7 @@ Blog.update = async function update(req, res, next) {
         "date": req.body.date,
         "user_id": req.session.auth.userId,
         "is_active": req.body.is_active,
-        "department_id": req.body.departmentId,
+        "department_id": req.body.department_id,
     };
 
     let result = await BlogHelper.updateBlogData(data);

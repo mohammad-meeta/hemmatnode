@@ -217,7 +217,7 @@ export default {
             // Vue.set(this.blogData, "deletedOldFiles", this.deletedOldFiles);
 
             let blogData = this.blogData;
-            console.log(blogData);
+
             try {
                 const url = this.registerUrl;
                 let res = await AxiosHelper.send("post", url, blogData, {
@@ -276,7 +276,7 @@ export default {
                 deletedOldFiles: [],
                 is_active: true,
             };
-            
+
             Vue.set(this, "blogData", blogData);
             Vue.set(this, "files", []);
             Vue.set(this, "deletedOldFiles", []);

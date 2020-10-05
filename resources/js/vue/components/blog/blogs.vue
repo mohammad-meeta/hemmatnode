@@ -99,6 +99,7 @@ export default {
         blogs: [],
         notificationMessage: null,
         notificationType: "is-info",
+        flagEdit: false,
     }),
 
     props: {
@@ -202,6 +203,7 @@ export default {
                     break;
 
                 case ENUMS.COMMAND.EDIT:
+                    Vue.set(this, "flagEdit", true);
                     /* TODO: Edit InviteSession */
                     this.$refs.blogEdit.loadBlogData(data);
                     this.changeFormMode(ENUMS.FORM_MODE.EDIT);

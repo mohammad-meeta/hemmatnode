@@ -23,6 +23,12 @@ export default {
         editorId: () => "editor" + Math.floor(Math.random() * 1000000),
     },
 
+    watch: {
+        value(newValue) {
+            this.setCKData(newValue);
+        },
+    },
+
     /**
      * Mounted
      */
@@ -52,10 +58,12 @@ export default {
                 ],
             });
 
-            this.setCKData(this.value);
-
             CKEDITOR.instances[editorId].on("change", (event) => {
                 this.onUpdate();
+            });
+
+            CKEDITOR.instances[editorId].on("loaded", (event) => {
+                this.setCKData(this.value);
             });
         }, 250);
     },

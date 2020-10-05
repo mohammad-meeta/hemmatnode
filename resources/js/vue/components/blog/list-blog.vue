@@ -28,7 +28,7 @@
                     )
                         span.icon.is-small
                             i.material-icons.icon check_circle
-                        span ویرایش پیوست سلامت
+                        span ویرایش
 
     b-pagination(
         :total="pagination.total",

@@ -41,6 +41,8 @@ Router.post("/index", [
 Router.patch("/index/:id/edit", [
     checkSession,
     Rule.canAsync("user.permision", "index.update"),
+    upload.any(),
+
     // validator.validate,
     "Index@update",
 ]).as("index.update");

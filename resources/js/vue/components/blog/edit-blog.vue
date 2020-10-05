@@ -37,7 +37,6 @@
                     v-model="blogData.description",
                     :upload-url-image="uploadUrlImage",
                     :upload-url-token="uploadUrlToken",
-                    @input="setTitle"
                 )
 
         .field
@@ -63,7 +62,6 @@
 
 <script>
 "use strict";
-import CKEditor from "VUE-COMPONENTS/general/ckeditor.vue";
 
 const Buefy = require("buefy").default;
 const AxiosHelper = require("JS-HELPERS/axios-helper");
@@ -72,14 +70,15 @@ const ENUMS = require("JS-HELPERS/enums");
 const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
+import CKEditor from "VUE-COMPONENTS/general/ckeditor.vue";
 
 export default {
     name: "EditBlog",
     components: {
-        ckeditor: CKEditor,
         FileUpload,
         DatePicker: VuePersianDatetimePicker,
         Notification,
+        ckeditor: CKEditor,
     },
 
     data: () => ({
@@ -111,7 +110,6 @@ export default {
             type: String,
             default: "",
         },
-
         departmentId: {
             type: String,
             default: null,
@@ -141,7 +139,6 @@ export default {
          * Load specific user
          */
         loadBlogData(data) {
-            console.log(data);
             let temp = {
                 _id: data._id,
                 title: data.title,

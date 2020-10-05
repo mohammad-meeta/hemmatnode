@@ -5,7 +5,7 @@ const FileHelper = use("app/helpers/file-helper");
 /**
  * Dep cat controller
  */
-function Index() {}
+function Index() { }
 module.exports = Index;
 
 /**
@@ -189,7 +189,7 @@ Index.update = async function update(req, res, next) {
         user_id: req.session.auth.userId,
         is_active: req.body.is_active,
     };
-
+    console.log(data)
     let result = await IndexHelper.updateIndexData(data);
     const result2 = {
         success: true,

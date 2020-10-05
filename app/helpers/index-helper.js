@@ -292,6 +292,7 @@ IndexHelper.insertNewIndex = async function insertNewIndex(data) {
             }
         }
     ];
+    let res = await Index.aggregate(pipeline);
 
     return res;
 };
@@ -363,6 +364,7 @@ IndexHelper.updateIndexData = async function updateIndexData(data) {
             }
         }
     ];
+    let res = await Index.aggregate(pipeline);
 
     return res;
 };

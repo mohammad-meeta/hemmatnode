@@ -3,7 +3,7 @@
 /**
  * JSCore class
  */
-function JSCore() {}
+function JSCore() { }
 module.exports = JSCore;
 
 /**
@@ -55,8 +55,10 @@ JSCore.setupAxios = function setupAxios() {
  */
 JSCore.setupETC = function setupETC() {
     const _ = require('lodash');
+    // const jQuery = require('jquery');
 
     window._ = _;
+    // window.$ = window.jquery = jQuery;
 };
 
 /**

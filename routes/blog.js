@@ -11,14 +11,14 @@ const {
     clearAuth
 } = use('core/helpers/auth-helper');
 
-Router.get('/blog/:department', [
+Router.get('/blog', [
     checkSession,
     Rule.canAsync('user.permision', 'blog.index'),
     'Blog@index'
 ])
     .as('blog.index');
 
-Router.get("/api/blogs/:group/:page/:size?", [
+Router.get("/api/blogs/:page/:size?", [
     checkSession,
     Rule.canAsync("user.permision", "api.blog"),
     "Blog@paginateBlog"

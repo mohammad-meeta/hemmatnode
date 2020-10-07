@@ -322,7 +322,6 @@ IndexHelper.updateIndexData = async function updateIndexData(data) {
         }
     ];
     let res = await Index.aggregate(pipeline);
-    console.log(res)
     return res;
 };
 

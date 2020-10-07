@@ -1,18 +1,18 @@
 "use strict";
 const PugView = use("app/helpers/pug-view");
-const IndexHelper = use("app/helpers/index-helper");
+const BlogtypeHelper = use("app/helpers/blogtype-helper");
 const FileHelper = use("app/helpers/file-helper");
 /**
  * Dep cat controller
  */
-function Index() { }
-module.exports = Index;
+function Blogtype() { }
+module.exports = Blogtype;
 
 /**
- * Index route
+ * Blogtype route
  */
-Index.index = async function index(req, res, next) {
-    const pageRoute = "index.index";
+Blogtype.index = async function index(req, res, next) {
+    const pageRoute = "blogtype.index";
 
     res.render(PugView.getView(pageRoute), {
         req,
@@ -22,7 +22,7 @@ Index.index = async function index(req, res, next) {
 /**
  * paginate route
  */
-Index.paginateIndex = async function paginateIndex(req, res, next) {
+Blogtype.paginateBlogtype = async function paginateBlogtype(req, res, next) {
     const dataPaginate = {
         page: req.params.page,
         pageSize: req.params.size || 10,
@@ -32,10 +32,10 @@ Index.paginateIndex = async function paginateIndex(req, res, next) {
     try {
         let result = {};
 
-        let data = await IndexHelper.loadAllIndexCountData(type);
+        let data = await BlogtypeHelper.loadAllBlogtypeCountData(type);
         let count = data.data;
 
-        data = await IndexHelper.loadAllIndexData(req, dataPaginate, type);
+        data = await BlogtypeHelper.loadAllBlogtypeData(req, dataPaginate, type);
         result = {
             success: true,
             data: {
@@ -58,7 +58,7 @@ Index.paginateIndex = async function paginateIndex(req, res, next) {
 /**
  * paginate all route
  */
-Index.paginateIndexAll = async function paginateIndexAll(req, res, next) {
+Blogtype.paginateBlogtypeAll = async function paginateBlogtypeAll(req, res, next) {
     const dataPaginate = {
         page: req.params.page,
         pageSize: req.params.size || 10,
@@ -67,10 +67,10 @@ Index.paginateIndexAll = async function paginateIndexAll(req, res, next) {
     try {
         let result = {};
 
-        let data = await IndexHelper.loadAllIndexCountDataAll();
+        let data = await BlogtypeHelper.loadAllBlogtypeCountDataAll();
         let count = data.data;
 
-        data = await IndexHelper.loadAllIndexDataAll(req, dataPaginate);
+        data = await BlogtypeHelper.loadAllBlogtypeDataAll(req, dataPaginate);
         result = {
             success: true,
             data: {
@@ -94,10 +94,10 @@ Index.paginateIndexAll = async function paginateIndexAll(req, res, next) {
 /**
  * load data with id
  */
-Index.show = async function show(req, res, next) {
+Blogtype.show = async function show(req, res, next) {
     const Id = req.params.index;
 
-    IndexHelper.loadIndexData(Id)
+    BlogtypeHelper.loadBlogtypeData(Id)
 
         .then((data) => {
             const result = {
@@ -116,12 +116,12 @@ Index.show = async function show(req, res, next) {
 /**
  * delete data dep cat
  */
-Index.destroy = async function destroy(req, res, next) {
+Blogtype.destroy = async function destroy(req, res, next) {
     const data = {
         _id: req.body._id,
     };
 
-    IndexHelper.deleteIndexData(data)
+    BlogtypeHelper.deleteBlogtypeData(data)
         .then((data) => {
             const result = {
                 success: true,
@@ -137,8 +137,8 @@ Index.destroy = async function destroy(req, res, next) {
 /**
  * Create route return page
  */
-Index.create = async function create(req, res, next) {
-    const pageRoute = PugView.getView("index.create");
+Blogtype.create = async function create(req, res, next) {
+    const pageRoute = PugView.getView("blogtype.create");
 
     res.render(pageRoute, {
         req,
@@ -149,18 +149,14 @@ Index.create = async function create(req, res, next) {
 /**
  * store data
  */
-Index.store = async function store(req, res, next) {
+Blogtype.store = async function store(req, res, next) {
     const data = {
         title: req.body.title,
-        description: req.body.description,
-        unit: req.body.unit,
-        type_id: req.body.type_id,
-        department_id: req.body.department_id,
         user_id: req.session.auth.userId,
         is_active: req.body.is_active,
     };
 
-    IndexHelper.insertNewIndex(data)
+    BlogtypeHelper.insertNewBlogtype(data)
         .then((dataRes) => {
             const result = {
                 success: true,
@@ -176,20 +172,16 @@ Index.store = async function store(req, res, next) {
 /**
  * update data
  */
-Index.update = async function update(req, res, next) {
+Blogtype.update = async function update(req, res, next) {
     let data = {};
 
     data = {
         _id: req.body._id,
         title: req.body.title,
-        description: req.body.description,
-        type_id: req.body.type_id,
-        unit: req.body.unit,
-        department_id: req.body.department_id,
         user_id: req.session.auth.userId,
         is_active: req.body.is_active,
     };
-    let result = await IndexHelper.updateIndexData(data);
+    let result = await BlogtypeHelper.updateBlogtypeData(data);
     const result2 = {
         success: true,
         data: result,

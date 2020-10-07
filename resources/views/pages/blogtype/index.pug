@@ -1,0 +1,18 @@
+extends ../../layout/app.pug
+
+block title
+    | شاخص
+
+block content
+    .container
+        blogtypes(
+            list-url-parent=route('api.blogtype', { page: '$page$', size: '$pageSize$' }),
+            list-url=route('api.all.blogtype', { page: '$page$', size: '$pageSize$' }),
+            register-url=route('blogtype.store'),
+            edit-url=route('blogtype.update', { id :'$id$'}),
+        )
+
+block scripts
+    script(defer, src=mix('js/pages/blogtype/index/index.js'))
+
+

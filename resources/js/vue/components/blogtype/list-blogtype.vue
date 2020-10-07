@@ -1,7 +1,7 @@
 <template lang="pug">
 .container-child
-    h1(v-if="!hasBlog") هیچ پیوست سلامتی ایجاد نشده
-    table.table.is-striped.is-hoverable.is-fullwidth(v-if="hasBlog")
+    h1(v-if="!hasBlogtype") هیچ دسته بندی اخباری ایجاد نشده
+    table.table.is-striped.is-hoverable.is-fullwidth(v-if="hasBlogtype")
         thead
             tr
                 th عنوان
@@ -9,14 +9,14 @@
                 th تاریخ ایجاد
                 th عملیات
         tbody
-            tr(v-for="blog in blogs", :key="blog.id")
-                td {{ blog.title }}
-                td {{ blog.is_active }}
-                td {{ toPersianDate(blog.created_at) }}
+            tr(v-for="blogtype in blogtypes", :key="blogtype._id")
+                td {{ blogtype.title }}
+                td {{ blogtype.is_active }}
+                td {{ toPersianDate(blogtype.created_at) }}
                 td.function-links
                     a.button.is-warning.is-rounded.mt-2(
                         href="#",
-                        @click.prevent="commandClick(ENUMS.COMMAND.SHOW, blog)"
+                        @click.prevent="commandClick(ENUMS.COMMAND.SHOW, blogtype)"
                     )
                         span.icon.is-small
                             i.material-icons.icon swap_horizontal_circle
@@ -24,11 +24,11 @@
 
                     a.button.is-primary.is-rounded(
                         href="#",
-                        @click.prevent="commandClick(ENUMS.COMMAND.EDIT, blog)"
+                        @click.prevent="commandClick(ENUMS.COMMAND.EDIT, blogtype)"
                     )
                         span.icon.is-small
                             i.material-icons.icon check_circle
-                        span ویرایش
+                        span ویرایش دسته بندی اخبار
 
     b-pagination(
         :total="pagination.total",
@@ -46,7 +46,7 @@
         aria-previous-label="Previous page",
         aria-page-label="Page",
         aria-current-label="Current page",
-        @change="loadBlogs(pagination.current)"
+        @change="loadBlogtypes(pagination.current)"
     )
 </template>
 
@@ -78,27 +78,27 @@ export default {
             prevIcon: "chevron-left",
             nextIcon: "chevron-right",
         },
-        blogs: [],
-        blogsCount: 0,
+        blogtypes: [],
+        blogtypesCount: 0,
         pageCount: 0,
     }),
 
     computed: {
-        hasBlog: (state) => (state.blogs || []).length,
+        hasBlogtype: (state) => (state.blogtypes || []).length,
     },
 
     methods: {
         /**
-         * Load blogs
+         * Load blogtypes
          */
-        loadBlogs(pageId) {
+        loadBlogtypes(pageId) {
             let url = this.listUrl
                 .replace(/\$page\$/g, pageId)
                 .replace(/\$pageSize\$/g, 50);
             AxiosHelper.send("get", url, "").then((res) => {
                 const resData = res.data;
-                Vue.set(this, "blogs", resData.data.data);
-                Vue.set(this, "blogsCount", resData.data.count);
+                Vue.set(this, "blogtypes", resData.data.data);
+                Vue.set(this, "blogtypesCount", resData.data.count);
                 Vue.set(this.pagination, "total", resData.data.count);
             });
         },
@@ -123,43 +123,35 @@ export default {
          * paginator click link
          */
         paginatorClick(id) {
-            this.loadBlogs(id);
+            this.loadBlogtypes(id);
         },
 
         /**
-         * add new Blog data to list data
+         * add new Blogtype data to list data
          */
-        addToBlogList(payload) {
-            const newBlogData = {
+        addToBlogtypeList(payload) {
+            const newBlogtypeData = {
                 _id: payload._id,
                 title: payload.title,
-                blogtype: payload.blogtype,
-                date: payload.date,
-                description: payload.description,
-                files: payload.files,
                 is_active: payload.is_active,
                 created_at: payload.created_at,
             };
 
-            this.blogs.unshift(newBlogData);
+            this.blogtypes.unshift(newBlogtypeData);
         },
-        editBlogList(payload) {
-            const editedBlogData = {
+        editBlogtypeList(payload) {
+            const editedBlogtypeData = {
                 _id: payload.data.data[0]._id,
                 title: payload.data.data[0].title,
-                blogtype: payload.data.data[0].blogtype,
-                description: payload.data.data[0].description,
-                date: payload.data.data[0].date,
                 is_active: payload.data.data[0].is_active,
-                files: payload.data.data[0].files,
                 created_at: payload.data.data[0].created_at,
             };
 
-            let foundIndex = this.blogs.findIndex(
-                (x) => x._id == editedBlogData._id
+            let foundIndex = this.blogtypes.findIndex(
+                (x) => x._id == editedBlogtypeData._id
             );
 
-            Vue.set(this.blogs, foundIndex, editedBlogData);
+            Vue.set(this.blogtypes, foundIndex, editedBlogtypeData);
         },
     },
 };

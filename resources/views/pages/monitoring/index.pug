@@ -6,10 +6,11 @@ block title
 block content
     .container
         monitorings(
-            list-url=route('api.monitoring', { page: '$page$', size: '$pageSize$' }),
+            list-url-parent=route('api.monitoring', { page: '$page$', size: '$pageSize$' }),
+            list-url=route('api.all.monitoring', { page: '$page$', size: '$pageSize$' }),
             register-url=route('monitoring.store'),
             edit-url=route('monitoring.update', { id :'$id$'}),
-            index-url=route('api.all.index', { page: 1, size: 1000 }),
+            indexs-url=route('api.all.index', { page: 1, size: 1000 }),
         )
 
 block scripts

@@ -49,7 +49,7 @@
                 @on-register="onMonitoringRegister",
                 :register-url="registerUrl",
                 :index-id="indexId",
-                :index-url="indexsUrl",
+                :indexs-url="indexsUrl",
             )
 
         .column(v-show="!modeLoading && modeEdit")
@@ -59,7 +59,7 @@
                 @on-update="onMonitoringUpdate",
                 :edit-url="editUrl",
                 :index-id="indexId",
-                :index-url="indexsUrl",
+                :indexs-url="indexsUrl",
             )
 
         .column(v-show="!modeLoading && modeShow")

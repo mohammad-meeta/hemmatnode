@@ -9,8 +9,8 @@
             span(v-html="notificationMessage")
         .container.page-header
             .title
-                h1(v-show="modeList") دسته بندی شاخص
-                h1(v-show="modeRegister") ایجاد دسته بندی شاخص
+                h1(v-show="modeList") دیدبانی سلامت
+                h1(v-show="modeRegister") ایجاد دیدبانی سلامت
 
     .columns.exposed-form(v-show="!modeLoading")
         .column.is-one-fifth(v-show="modeList")
@@ -36,36 +36,34 @@
             loading
 
         .column(v-show="!modeLoading && modeList")
-            list-monitoring-type(
-                ref="monitoringTypeList",
+            list-monitoring(
+                ref="monitoringList",
                 @on-command="onCommand",
-                :department-id="departmentId",
                 :list-url="listUrl"
             )
 
         .column(v-show="!modeLoading && modeRegister")
-            register-monitoring-type(
-                ref="monitoringTypeRegister",
+            register-monitoring(
+                ref="monitoringRegister",
                 @on-command="onCommand",
-                @on-register="onMonitoringTypeRegister",
+                @on-register="onMonitoringRegister",
                 :register-url="registerUrl",
-                :department-id="departmentId"
+                :index-id="indexId",
+                :index-url="indexsUrl",
             )
 
         .column(v-show="!modeLoading && modeEdit")
-            edit-monitoring-type(
-                ref="monitoringTypeEdit",
+            edit-monitoring(
+                ref="monitoringEdit",
                 @on-command="onCommand",
-                @on-update="onMonitoringTypeUpdate",
+                @on-update="onMonitoringUpdate",
                 :edit-url="editUrl",
-                :department-id="departmentId"
+                :index-id="indexId",
+                :index-url="indexsUrl",
             )
 
         .column(v-show="!modeLoading && modeShow")
-            show-monitoring-type(
-                ref="monitoringTypeShow",
-                @on-command="onCommand"
-            )
+            show-monitoring(ref="monitoringShow", @on-command="onCommand")
 </template>
 
 <script>
@@ -74,38 +72,40 @@
 const Routes = require("JS-CORE/routes");
 const ENUMS = require("JS-HELPERS/enums");
 const Loading = require("VUE-COMPONENTS/general/loading.vue").default;
-const RegisterMonitoringType = require("VUE-COMPONENTS/monitoring-type/register-monitoring-type.vue")
+const RegisterMonitoring = require("VUE-COMPONENTS/monitoring/register-monitoring.vue")
     .default;
-const EditMonitoringType = require("VUE-COMPONENTS/monitoring-type/edit-monitoring-type.vue")
-    .default;
-const ListMonitoringType = require("VUE-COMPONENTS/monitoring-type/list-monitoring-type.vue")
-    .default;
-const ShowMonitoringType = require("VUE-COMPONENTS/monitoring-type/show-monitoring-type.vue")
-    .default;
+const EditMonitoring = require("VUE-COMPONENTS/monitoring/edit-monitoring.vue").default;
+const ListMonitoring = require("VUE-COMPONENTS/monitoring/list-monitoring.vue").default;
+const ShowMonitoring = require("VUE-COMPONENTS/monitoring/show-monitoring.vue").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
 export default {
-    name: "MonitoringTypes",
+    name: "Monitorings",
 
     components: {
         Loading,
-        ListMonitoringType,
-        RegisterMonitoringType,
-        EditMonitoringType,
-        ShowMonitoringType,
+        ListMonitoring,
+        RegisterMonitoring,
+        EditMonitoring,
+        ShowMonitoring,
         Notification,
     },
 
     data: () => ({
         ENUMS,
         formModeStack: [],
-        monitoringTypes: [],
+        monitorings: [],
         notificationMessage: null,
         notificationType: "is-info",
     }),
 
     props: {
-        departmentId: {
+        indexId: {
+            type: String,
+            default: null,
+        },
+
+        indexsUrl: {
             type: String,
             default: null,
         },
@@ -116,6 +116,10 @@ export default {
         },
 
         listUrl: {
+            type: String,
+            default: null,
+        },
+        showMonitoringYearUrl: {
             type: String,
             default: null,
         },
@@ -153,42 +157,36 @@ export default {
 
     methods: {
         /**
-         * On Register monitoringType
+         * On Register monitoring
          */
-        onMonitoringTypeRegister(payload) {
+        onMonitoringRegister(payload) {
             //***update vue list****
-            console.log(payload);
-            this.$refs.monitoringTypeList.addToMonitoringTypeList(
-                payload.data.data.data
-            );
+            this.$refs.monitoringList.addToMonitoringList(payload.data.data.data[0]);
             this.setNotification(
-                ".دسته بندی شاخص با موفقیت ذخیره شد",
+                ".شاخص با موفقیت ذخیره شد",
                 "is-success"
             );
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
         },
-
         /**
          * On Update
          */
-        onMonitoringTypeUpdate(payload) {
-            this.$refs.monitoringTypeList.editMonitoringTypeList(payload);
+        onMonitoringUpdate(payload) {
+            this.$refs.monitoringList.editMonitoringList(payload);
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
 
-            this.setNotification(
-                ".دسته بندی شاخص با موفقیت ویرایش شد",
-                "is-success"
-            );
+            this.setNotification(".شاخص با موفقیت ویرایش شد", "is-success");
         },
 
         /**
          * On commands clicked
          */
         onCommand(payload) {
-            const data = payload.data || {};
             let arg = payload.arg || null;
-            arg = arg || payload;
-
+            const data = payload.data || {};
+            if (null == arg) {
+                arg = payload;
+            }
             switch (arg) {
                 case ENUMS.COMMAND.NEW:
                     this.changeFormMode(ENUMS.FORM_MODE.REGISTER);
@@ -200,7 +198,7 @@ export default {
 
                 case ENUMS.COMMAND.EDIT:
                     /* TODO: Edit InviteSession */
-                    this.$refs.monitoringTypeEdit.loadMonitoringTypeData(data);
+                    this.$refs.monitoringEdit.loadMonitoringData(data);
                     this.changeFormMode(ENUMS.FORM_MODE.EDIT);
                     break;
 
@@ -209,7 +207,7 @@ export default {
                     break;
 
                 case ENUMS.COMMAND.SHOW:
-                    this.$refs.monitoringTypeShow.loadMonitoringTypeData(data);
+                    this.$refs.monitoringShow.loadMonitoringData(data);
                     this.changeFormMode(ENUMS.FORM_MODE.SHOW);
                     break;
             }
@@ -229,7 +227,7 @@ export default {
          */
         init() {
             this.changeFormMode(ENUMS.FORM_MODE.LOADING);
-            this.$refs.monitoringTypeList.loadMonitoringTypes(1);
+            this.$refs.monitoringList.loadMonitorings(1);
         },
 
         /**

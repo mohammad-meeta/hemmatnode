@@ -1,14 +1,15 @@
 extends ../../layout/app.pug
 
 block title
-    | پیوست سلامت
+    | دیدبانی سلامت
 
 block content
     .container
         monitorings(
-            list-url=route('api.index', { page: '$page$', size: '$pageSize$' }),
-            register-url=route('index.store'}),
-            edit-url=route('index.update', { id :'$id$'}),
+            list-url=route('api.monitoring', { page: '$page$', size: '$pageSize$' }),
+            register-url=route('monitoring.store'),
+            edit-url=route('monitoring.update', { id :'$id$'}),
+            index-url=route('api.all.index', { page: 1, size: 1000 }),
         )
 
 block scripts

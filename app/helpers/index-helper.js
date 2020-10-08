@@ -144,7 +144,6 @@ IndexHelper.loadAllIndexDataAll = async function loadAllIndexDataAll(req, dataPa
 IndexHelper.loadAllIndexCountData = function loadAllIndexCountData(type) {
     const Index = mongoose.model('Index');
     const ObjectId = require("mongoose").Types.ObjectId;
-    console.log(type)
     const filterQuery = {
         type_id: ObjectId(type)
     };
@@ -267,17 +266,7 @@ IndexHelper.updateIndexData = async function updateIndexData(data) {
                 _id: res2._id,
             }
         },
-        {
-            $lookup: {
-                from: "departments",
-                localField: "department_id",
-                foreignField: "_id",
-                as: "dep"
-            }
-        },
-        {
-            $unwind: "$dep"
-        },
+
         {
             $lookup: {
                 from: "monitoring_types",
@@ -307,9 +296,6 @@ IndexHelper.updateIndexData = async function updateIndexData(data) {
                 created_at: {
                     $last: "$created_at"
                 },
-                dep: {
-                    $last: "$dep"
-                },
                 montype: {
                     $last: "$montype"
                 }
@@ -322,7 +308,6 @@ IndexHelper.updateIndexData = async function updateIndexData(data) {
         }
     ];
     let res = await Index.aggregate(pipeline);
-    console.log(res)
     return res;
 };
 

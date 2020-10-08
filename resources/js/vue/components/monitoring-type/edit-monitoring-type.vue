@@ -24,7 +24,6 @@
         .field
             label.checkbox
                 input(type="checkbox", v-model="monitoringTypeData.isActive")
-                |
                 | فعال
 
             .field.is-grouped
@@ -33,7 +32,6 @@
                         href="#",
                         @click.prevent="commandClick(ENUMS.COMMAND.SAVE)"
                     )
-                        |
                         | ویرایش
 </template>
 
@@ -96,9 +94,7 @@ export default {
                 title: data.title,
                 isActive: data.is_active,
             };
-            Vue.set(this, "oldFiles", data.files);
             Vue.set(this, "monitoringTypeData", temp);
-            this.$refs.fileUpload.updateOldFiles(data.files);
         },
 
         /**
@@ -160,7 +156,6 @@ export default {
                 title: this.monitoringTypeData.title,
                 is_active: this.monitoringTypeData.isActive,
             };
-
             const url = this.editUrl.replace("$id$", monitoringTypeData._id);
 
             try {
@@ -170,7 +165,6 @@ export default {
                     monitoringTypeData,
                     {
                         sendAsFormData: true,
-                        filesArray: "files",
                     }
                 );
 
@@ -183,7 +177,7 @@ export default {
             } catch (err) {
                 console.error(err);
                 this.setNotification(
-                    ".خطا در ویرایش اقدامات خلاق",
+                    ".خطا در ویرایش دسته بندی شاخص",
                     "is-danger"
                 );
             }
@@ -208,8 +202,6 @@ export default {
             const error = Object.keys(errors)
                 .map((key) => errors[key].join("\n"))
                 .join("</br>");
-
-            console.log(error);
             this.setNotification(error, "is-danger");
 
             return false;

@@ -11,47 +11,39 @@
         h1 در حال بارگذاری
     .form-small(v-show="! isLoadingMode")
         .field
-            label.label عنوان
-            .control
-                input.input(
-                    type="text",
-                    placeholder="نام",
-                    v-model="indicatorData.title",
-                    required
-                )
-
-        .field
             b-field(
-                label="دسته بندی شاخص",
+                label="شاخص",
             )
                 b-select(
-                    placeholder="انتخاب دسته بندی شاخص",
-                    v-model="indicatorData.montype._id",
+                    placeholder="انتخاب شاخص",
+                    v-model="monitoringData.index_id",
                 )
                     option(
-                        v-for="(indicatorType, indicatorTypeIndex) in indicatorTypes",
-                        :value="indicatorType._id"
-                    ) {{ indicatorType.title }}
+                        v-for="(index, indexIndex) in indexs",
+                        :value="index._id"
+                    ) {{ index.title }}
+
         .field
-            label.label تعریف
+            label.label مقدار
             .control
-                textarea.textarea(
-                    v-model="indicatorData.description",
+                input.input(
+                    type="number",
+                    placeholder="مقدار",
+                    autofocus,
+                    v-model="monitoringData.value",
                     required
                 )
         .field
-            label.label واحد
+            label.label تاریخ
             .control
-                input.input(
-                    type="text",
-                    placeholder="واحد",
-                    autofocus,
-                    v-model="indicatorData.unit",
+                date-picker(
+                    v-model='monitoringData.date'
+                    type="year-month"
                     required
                 )
         .field
             label.checkbox
-                input(type="checkbox", v-model="indicatorData.isActive")
+                input(type="checkbox", v-model="monitoringData.isActive")
                 | فعال
             .field.is-grouped
                 .control(v-show="! isLoadingMode")
@@ -67,13 +59,13 @@
 
 const Buefy = require("buefy").default;
 const AxiosHelper = require("JS-HELPERS/axios-helper");
-const IndicatorValidator = require("JS-VALIDATORS/indicator-register-validator");
+const MonitoringValidator = require("JS-VALIDATORS/monitoring-register-validator");
 const ENUMS = require("JS-HELPERS/enums");
 const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
 export default {
-    name: "EditIndicator",
+    name: "EditMonitoring",
     components: {
         DatePicker: VuePersianDatetimePicker,
         Notification,
@@ -81,20 +73,19 @@ export default {
 
     data: () => ({
         ENUMS,
-
-        indicatorData: {
-            title: null,
-            type_id: null,
-            montype: {
+        monitoringData: {
+            date: null,
+            index_id: null,
+            value: null,
+            index: {
                 _id: null,
-                title: null
+                title: null,
+                unit: null
             },
-            description: null,
             unit: null,
-            isActive: false,
         },
 
-        indicatorTypes: [],
+        indexs: [],
         notificationMessage: null,
         notificationType: "is-info",
         showLoadingFlag: false,
@@ -105,14 +96,14 @@ export default {
             type: String,
             default: "",
         },
-        indicatorTypesUrl: {
+        indexsUrl: {
             type: String,
             default: "",
         }
     },
 
     created() {
-        this.loadIndicatorTypes();
+        this.loadindexs();
     },
 
     mounted() {},
@@ -125,33 +116,34 @@ export default {
     methods: {
 
         /**
-         * load all indicator type for select indicator type in form
+         * load all monitoring type for select monitoring type in form
          */
-        async loadIndicatorTypes() {
-            const url = this.indicatorTypesUrl;
+        async loadindexs() {
+            const url = this.indexsUrl;
 
             let res = await AxiosHelper.send("get", url, "");
             const resData = res.data;
             const datas = resData.data.data;
 
-            Vue.set(this, "indicatorTypes", datas);
+            Vue.set(this, "indexs", datas);
         },
         /**
          * Load specific user
          */
-        loadIndicatorData(data) {
+        loadMonitoringData(data) {
             let temp = {
                 _id: data._id,
-                title: data.title,
-                description: data.description,
-                unit: data.unit,
-                montype: {
-                    _id: data.montype._id,
-                    title: data.montype.title
+                index_id: data.index_id,
+                value: data.value,
+                date: data.date,
+                index: {
+                    _id: data.index._id,
+                    title: data.index.title,
+                    unit: data.index.unit
                 },
                 isActive: data.is_active,
             };
-            Vue.set(this, "indicatorData", temp);
+            Vue.set(this, "monitoringData", temp);
         },
 
         /**
@@ -162,7 +154,7 @@ export default {
         commandClick(arg) {
             switch (arg) {
                 case ENUMS.COMMAND.SAVE:
-                    this.editIndicator();
+                    this.editMonitoring();
                     break;
             }
         },
@@ -197,9 +189,9 @@ export default {
         },
 
         /**
-         * Edit indicator
+         * Edit monitoring
          */
-        async editIndicator() {
+        async editMonitoring() {
             const isValid = this.validate();
 
             if (!isValid) {
@@ -208,21 +200,22 @@ export default {
 
             this.showLoading();
 
-            let indicatorData = {
-                _id: this.indicatorData._id,
-                title: this.indicatorData.title,
-                description: this.indicatorData.description,
-                unit: this.indicatorData.unit,
-                type_id: this.indicatorData.montype._id,
-                montype: {
-                    _id: this.indicatorData.montype._id,
+            let monitoringData = {
+                _id: this.monitoringData._id,
+                index_id: this.monitoringData.index_id,
+                value: this.monitoringData.value,
+                date: this.monitoringData.date,
+                index: {
+                    _id: this.monitoringData.index._id,
+                    title: this.monitoringData.index.title,
+                    unit: this.monitoringData.index.unit,
                 },
-                is_active: this.indicatorData.isActive,
+                is_active: this.monitoringData.isActive,
             };
 
             try {
-                const url = this.editUrl.replace("$id$", indicatorData._id);
-                let res = await AxiosHelper.send("patch", url, indicatorData, {
+                const url = this.editUrl.replace("$id$", monitoringData._id);
+                let res = await AxiosHelper.send("patch", url, monitoringData, {
                     sendAsFormData: true,
                 });
 
@@ -232,7 +225,7 @@ export default {
                     data,
                 });
             } catch (err) {
-                this.setNotification(".خطا در ویرایش شاخص", "is-danger");
+                this.setNotification(".خطا در ویرایش دیدبانی سلامت", "is-danger");
             }
 
             this.hideLoading();
@@ -242,7 +235,7 @@ export default {
          * Validate
          */
         validate() {
-            const result = IndicatorValidator.validateEdit(this.indicatorData);
+            const result = MonitoringValidator.validateEdit(this.monitoringData);
 
             if (result.passes) {
                 this.closeNotification();

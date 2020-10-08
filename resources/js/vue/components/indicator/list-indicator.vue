@@ -130,7 +130,6 @@ export default {
          * add new Indicator data to list data
          */
         addToIndicatorList(payload) {
-            console.log(payload);
             const newIndicatorData = {
                 _id: payload._id,
                 title: payload.title,

@@ -1,25 +1,24 @@
 <template lang="pug">
 .container-child
-    h1(v-if="!hasMonitoringType") هیچ  دسته بندی شاخص ایجاد نشده
-    table.table.is-striped.is-hoverable.is-fullwidth(v-if="hasMonitoringType")
+    h1(v-if="!hasMonitoring") هیچ دیدبانی شاخصی ایجاد نشده
+    table.table.is-striped.is-hoverable.is-fullwidth(v-if="hasMonitoring")
         thead
             tr
-                th عنوان
+                th شاخص
+                th تاریخ
                 th وضعیت
                 th تاریخ ایجاد
                 th عملیات
         tbody
-            tr(
-                v-for="monitoringType in monitoringTypes",
-                :key="monitoringType.id"
-            )
-                td {{ monitoringType.title }}
-                td {{ monitoringType.is_active }}
-                td {{ toPersianDate(monitoringType.created_at) }}
+            tr(v-for="monitoring in monitorings", :key="monitoring.id")
+                td {{ monitoring.index.title }}
+                td {{ toPersianDate(monitoring.date) }}
+                td {{ monitoring.is_active }}
+                td {{ toPersianDate(monitoring.created_at) }}
                 td.function-links
                     a.button.is-warning.is-rounded.mt-2(
                         href="#",
-                        @click.prevent="commandClick(ENUMS.COMMAND.SHOW, monitoringType)"
+                        @click.prevent="commandClick(ENUMS.COMMAND.SHOW, monitoring)"
                     )
                         span.icon.is-small
                             i.material-icons.icon swap_horizontal_circle
@@ -27,11 +26,11 @@
 
                     a.button.is-primary.is-rounded(
                         href="#",
-                        @click.prevent="commandClick(ENUMS.COMMAND.EDIT, monitoringType)"
+                        @click.prevent="commandClick(ENUMS.COMMAND.EDIT, monitoring)"
                     )
                         span.icon.is-small
                             i.material-icons.icon check_circle
-                        span ویرایش دسته بندی شاخص
+                        span ویرایش شاخص
 
     b-pagination(
         :total="pagination.total",
@@ -49,7 +48,7 @@
         aria-previous-label="Previous page",
         aria-page-label="Page",
         aria-current-label="Current page",
-        @change="loadMonitoringTypes(pagination.current)"
+        @change="loadMonitorings(pagination.current)"
     )
 </template>
 
@@ -81,27 +80,27 @@ export default {
             prevIcon: "chevron-left",
             nextIcon: "chevron-right",
         },
-        monitoringTypes: [],
-        monitoringTypesCount: 0,
+        monitorings: [],
+        monitoringsCount: 0,
         pageCount: 0,
     }),
 
     computed: {
-        hasMonitoringType: (state) => (state.monitoringTypes || []).length,
+        hasMonitoring: (state) => (state.monitorings || []).length,
     },
 
     methods: {
         /**
-         * Load monitoringTypes
+         * Load monitorings
          */
-        loadMonitoringTypes(pageId) {
+        loadMonitorings(pageId) {
             let url = this.listUrl
                 .replace(/\$page\$/g, pageId)
                 .replace(/\$pageSize\$/g, 50);
             AxiosHelper.send("get", url, "").then((res) => {
                 const resData = res.data;
-                Vue.set(this, "monitoringTypes", resData.data.data);
-                Vue.set(this, "monitoringTypesCount", resData.data.count);
+                Vue.set(this, "monitorings", resData.data.data);
+                Vue.set(this, "monitoringsCount", resData.data.count);
                 Vue.set(this.pagination, "total", resData.data.count);
             });
         },
@@ -126,39 +125,50 @@ export default {
          * paginator click link
          */
         paginatorClick(id) {
-            this.loadMonitoringTypes(id);
+            this.loadMonitorings(id);
         },
 
         /**
-         * add new MonitoringType data to list data
+         * add new Monitoring data to list data
          */
-        addToMonitoringTypeList(payload) {
-            const newMonitoringTypeData = {
+        addToMonitoringList(payload) {
+            const newMonitoringData = {
                 _id: payload._id,
-                title: payload.title,
+                date: payload.date,
+                value: payload.value,
+                index_id: payload.index._id,
+                index: {
+                    _id: payload.index._id,
+                    title: payload.index.title,
+                    unit: payload.index.unit
+                },
                 is_active: payload.is_active,
                 created_at: payload.created_at,
             };
 
-            this.monitoringTypes.unshift(newMonitoringTypeData);
+            this.monitorings.unshift(newMonitoringData);
         },
-
-        /**
-         * EditMonitoringTypeList
-         */
-        editMonitoringTypeList(payload) {
-            const editedMonitoringTypeData = {
-                _id: payload.data.data._id,
-                title: payload.data.data.title,
-                is_active: payload.data.data.is_active,
-                created_at: payload.data.data.created_at,
+        editMonitoringList(payload) {
+            const editedMonitoringData = {
+                _id: payload.data.data[0]._id,
+                date: payload.data.data[0].date,
+                value: payload.data.data[0].value,
+                unit: payload.data.data[0].unit,
+                index_id: payload.data.data[0].index._id,
+                index: {
+                    _id: payload.data.data[0].montype._id,
+                    title: payload.data.data[0].index.title,
+                    unit: payload.data.data[0].index.unit
+                },
+                is_active: payload.data.data[0].is_active,
+                created_at: payload.data.data[0].created_at,
             };
 
-            let foundIndex = this.monitoringTypes.findIndex(
-                (x) => x._id == editedMonitoringTypeData._id
+            let foundIndex = this.monitorings.findIndex(
+                (x) => x._id == editedMonitoringData._id
             );
 
-            Vue.set(this.monitoringTypes, foundIndex, editedMonitoringTypeData);
+            Vue.set(this.monitorings, foundIndex, editedMonitoringData);
         },
     },
 };

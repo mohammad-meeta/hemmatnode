@@ -126,6 +126,10 @@ mix.js("resources/js/core/kernel.js", `${output}/js/core`)
         `${output}/js/pages/monitoring-type/index`
     )
     .js(
+        "resources/js/pages/monitoring/index/index.js",
+        `${output}/js/pages/monitoring/index`
+    )
+    .js(
         "resources/js/pages/indicator/index/index.js",
         `${output}/js/pages/indicator/index`
     )

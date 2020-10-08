@@ -141,13 +141,12 @@ Education.store = async function store(req, res, next) {
 
     const data = {
         "title": req.body.title,
-        "description": req.body.description,
-        "city_id": req.body.city_id,
-        "responsible": req.body.responsible,
+        "program_id": req.body.program_id,
+        "way_id": req.body.way_id,
         "date": req.body.date,
         "user_id": req.session.auth.userId,
         "is_active": req.body.is_active,
-        "department_id": req.body.departmentId,
+        "department_id": req.body.department_id,
         "files": fileList
     };
 
@@ -212,13 +211,12 @@ Education.update = async function update(req, res, next) {
     data = {
         "_id": req.body._id,
         "title": req.body.title,
-        "description": req.body.description,
-        "city_id": req.body.city_id,
-        "responsible": req.body.responsible,
+        "program_id": req.body.program_id,
+        "way_id": req.body.way_id,
         "date": req.body.date,
         "user_id": req.session.auth.userId,
         "is_active": req.body.is_active,
-        "department_id": req.body.departmentId,
+        "department_id": req.body.department_id,
         "files": fileList
     };
 

@@ -89,6 +89,9 @@ Education.loadAllEducationData = async function loadAllEducationData(req, dataPa
                 way_id: {
                     $last: "$way_id"
                 },
+                program_id: {
+                    $last: "$program_id"
+                },
                 oldFiles: {
                     $push: "$files"
                 },
@@ -241,6 +244,10 @@ Education.loadAllEducationYearData = async function loadAllEducationYearData(req
                 way_id: {
                     $last: "$way_id"
                 },
+                program_id: {
+                    $last: "$program_id"
+                },
+
                 oldFiles: {
                     $push: "$files"
                 },
@@ -430,6 +437,10 @@ Education.insertNewEducation = async function insertNewEducation(data) {
                 way_id: {
                     $last: "$way_id"
                 },
+                program_id: {
+                    $last: "$program_id"
+                },
+
                 oldFiles: {
                     $push: "$files"
                 },
@@ -572,6 +583,10 @@ Education.updateEducationData = async function updateEducationData(data) {
                 way_id: {
                     $last: "$way_id"
                 },
+                program_id: {
+                    $last: "$program_id"
+                },
+
                 oldFiles: {
                     $push: "$files"
                 },

@@ -1,0 +1,21 @@
+extends ../../layout/app.pug
+
+block title
+    | آموزش
+
+block content
+    .container
+        educations(
+            programs-url=route('api.program', {group: departmentId, page: 1, size: 1000 }),
+            ways-url=route('api.way', {page: 1, size: 1000 }),
+            list-url=route('api.education', { page: '$page$', size: '$pageSize$', group: departmentId }),
+            register-url=route('education.store', { department: departmentId }),
+            edit-url=route('education.update', { id :'$id$'}),
+            department-id=departmentId
+        )
+
+block scripts
+
+    script(defer, src=mix('js/pages/education/index/index.js'))
+
+

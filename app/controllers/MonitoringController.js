@@ -27,7 +27,7 @@ Monitoring.paginateMonitoring = async function paginateMonitoring(req, res, next
         page: req.params.page,
         pageSize: req.params.size || 10
     };
-    const type = req.params.type;
+    const type = req.params.index;
 
     try {
         let result = {};

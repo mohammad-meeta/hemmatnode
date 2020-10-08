@@ -21,6 +21,16 @@
                 )
 
         .field
+            label.label نوع خبر
+            .control
+                .select.is-primary
+                    select(v-model="blogData.blogtype")
+                        option(
+                            v-for="(blogtype, blogtypeIndex) in blogtypes",
+                            :value="blogtype._id"
+                        ) {{ blogtype.title }}
+
+        .field
             label.label سال اجرا
             .control
                 date-picker(
@@ -84,13 +94,17 @@ export default {
     data: () => ({
         ENUMS,
         files: [],
+        blogtypes: [],
         deletedOldFiles: [],
         oldFiles: [],
         blogData: {
-            department_id: null,
             title: null,
+            blogtype: null,
             date: null,
             description: null,
+            files: {},
+            oldFiles: [],
+            deletedOldFiles: [],
             is_active: true,
         },
 
@@ -110,13 +124,15 @@ export default {
             type: String,
             default: "",
         },
-        departmentId: {
+        blogTypeUrl: {
             type: String,
             default: null,
         },
     },
 
     created() {
+        this.loadBlogtypes();
+
         Vue.set(this.blogData, "department_id", this.departmentId);
     },
 
@@ -128,6 +144,18 @@ export default {
     },
 
     methods: {
+        /**
+         * load all programs for select programs in form
+         */
+        loadBlogtypes() {
+            const url = this.blogTypeUrl;
+            AxiosHelper.send("get", url, "").then((res) => {
+                const resData = res.data;
+                const datas = resData.data.data;
+                Vue.set(this, "blogtypes", datas);
+            });
+        },
+
         /**
          * Set question title
          */
@@ -142,14 +170,15 @@ export default {
             let temp = {
                 _id: data._id,
                 title: data.title,
+                blogtype: data.blogtype,
                 date: data.date,
                 description: data.description,
-                department_id: this.blogData.department_id,
+                files: data.files,
                 isActive: data.is_active,
             };
-            // Vue.set(this, "oldFiles", data.files);
+            Vue.set(this, "oldFiles", data.files);
             Vue.set(this, "blogData", temp);
-            // this.$refs.fileUpload.updateOldFiles(data.files);
+            this.$refs.fileUpload.updateOldFiles(data.files);
         },
 
         /**
@@ -206,25 +235,25 @@ export default {
 
             this.showLoading();
 
-            // const deletedFiles = this.$refs.fileUpload.getDeletedFiles();
-            // const newFiles = this.$refs.fileUpload.getNewFiles();
+            const deletedFiles = this.$refs.fileUpload.getDeletedFiles();
+            const newFiles = this.$refs.fileUpload.getNewFiles();
 
-            // let newUploaded = newFiles.map((x) => x.file);
-            // Vue.set(this, "files", newUploaded);
+            let newUploaded = newFiles.map((x) => x.file);
+            Vue.set(this, "files", newUploaded);
 
-            // let deleteUploaded = deletedFiles.map((x) => x._id);
-            // Vue.set(this, "deletedOldFiles", deleteUploaded);
+            let deleteUploaded = deletedFiles.map((x) => x._id);
+            Vue.set(this, "deletedOldFiles", deleteUploaded);
 
             let blogData = {
                 _id: this.blogData._id,
                 title: this.blogData.title,
+                blogtype: this.blogData.blogtype,
                 date: this.blogData.date,
                 description: this.blogData.description,
-                department_id: this.blogData.department_id,
                 is_active: this.blogData.isActive,
-                // files: this.files,
-                // oldFiles: this.oldFiles,
-                // deletedOldFiles: this.deletedOldFiles,
+                files: this.files,
+                oldFiles: this.oldFiles,
+                deletedOldFiles: this.deletedOldFiles,
             };
 
             try {

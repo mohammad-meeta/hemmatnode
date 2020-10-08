@@ -12,7 +12,7 @@ module.exports = BlogHelper;
 /**
  * find all dep cat data result 
  */
-BlogHelper.loadAllBlogData = async function loadAllBlogData(req, dataPaginate, group) {
+BlogHelper.loadAllBlogData = async function loadAllBlogData(req, dataPaginate) {
     const page = parseInt(dataPaginate.page);
     const pageSize = parseInt(dataPaginate.pageSize);
     const skip = page > 0 ? (page - 1) * pageSize : 0;
@@ -21,17 +21,6 @@ BlogHelper.loadAllBlogData = async function loadAllBlogData(req, dataPaginate, g
 
     const userId = req.session.auth.userId;
     const pipeline = [
-        {
-            $lookup: {
-                from: "departments",
-                localField: "department_id",
-                foreignField: "_id",
-                as: "dep"
-            }
-        },
-        {
-            $unwind: "$dep"
-        },
         {
             $unwind: {
                 path: "$files",
@@ -67,14 +56,14 @@ BlogHelper.loadAllBlogData = async function loadAllBlogData(req, dataPaginate, g
                 title: {
                     $last: "$title"
                 },
+                blogtype: {
+                    $last: "$blogtype"
+                },
                 date: {
                     $last: "$date"
                 },
                 description: {
                     $last: "$description"
-                },
-                dep: {
-                    $last: "$dep"
                 },
                 oldFiles: {
                     $push: "$files"
@@ -144,7 +133,7 @@ BlogHelper.loadAllBlogData = async function loadAllBlogData(req, dataPaginate, g
 /**
  * find all dep cat count data result 
  */
-BlogHelper.loadAllBlogCountData = function loadAllBlogCountData(group) {
+BlogHelper.loadAllBlogCountData = function loadAllBlogCountData() {
     const Blog = mongoose.model('Blog');
 
     const filterQuery = {
@@ -196,17 +185,6 @@ BlogHelper.insertNewBlog = async function insertNewBlog(data) {
             }
         },
         {
-            $lookup: {
-                from: "departments",
-                localField: "department_id",
-                foreignField: "_id",
-                as: "dep"
-            }
-        },
-        {
-            $unwind: "$dep"
-        },
-        {
             $unwind: {
                 path: "$files",
                 preserveNullAndEmptyArrays: true
@@ -241,14 +219,14 @@ BlogHelper.insertNewBlog = async function insertNewBlog(data) {
                 title: {
                     $last: "$title"
                 },
+                blogtype: {
+                    $last: "$blogtype"
+                },
                 date: {
                     $last: "$date"
                 },
                 description: {
                     $last: "$description"
-                },
-                dep: {
-                    $last: "$dep"
                 },
                 oldFiles: {
                     $push: "$files"
@@ -324,17 +302,6 @@ BlogHelper.updateBlogData = async function updateBlogData(data) {
             }
         },
         {
-            $lookup: {
-                from: "departments",
-                localField: "department_id",
-                foreignField: "_id",
-                as: "dep"
-            }
-        },
-        {
-            $unwind: "$dep"
-        },
-        {
             $unwind: {
                 path: "$files",
                 preserveNullAndEmptyArrays: true
@@ -369,14 +336,14 @@ BlogHelper.updateBlogData = async function updateBlogData(data) {
                 title: {
                     $last: "$title"
                 },
+                blogtype: {
+                    $last: "$blogtype"
+                },
                 date: {
                     $last: "$date"
                 },
                 description: {
                     $last: "$description"
-                },
-                dep: {
-                    $last: "$dep"
                 },
                 oldFiles: {
                     $push: "$files"

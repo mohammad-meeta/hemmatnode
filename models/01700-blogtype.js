@@ -3,7 +3,7 @@
 const mongoose = require('mongoose');
 
 /**
- * BlogType model
+ * Article model
  */
 function Model() { }
 module.exports = Model;
@@ -18,7 +18,7 @@ Model.setup = function setup() {
     Model.plugins(schema);
     Model.extraFunctions(schema);
 
-    mongoose.model('Blog', schema, 'blogs');
+    mongoose.model('Blogtype', schema, "blogtypes");
 };
 
 /**
@@ -27,44 +27,20 @@ Model.setup = function setup() {
 Model.model = function model() {
     const ObjectId = mongoose.Schema.ObjectId;
 
-    const File = new mongoose.Schema({
-        'file_id': {
-            type: ObjectId,
-        },
-        'deleted_at': {
-            type: Date,
-            default: null
-        }
-    });
-
     return {
         'title': {
             type: String,
             required: true
         },
-        'description': {
-            type: String,
-            required: false,
-        },
-        'date': {
-            type: Date,
-            required: false,
-        },
-        'files': {
-            type: [File]
-        },
         'is_active': {
             type: Boolean,
             default: true,
+            required: true
         },
         'user_id': {
             type: ObjectId,
             required: true
-        },
-        'blogtype': {
-            type: ObjectId,
-            required: true
-        },
+        }
     };
 };
 
@@ -76,8 +52,7 @@ Model.plugins = function plugins(schema) {
 
     schema.plugin(timestamps, {
         createdAt: 'created_at',
-        updatedAt: 'updated_at',
-        deletedAt: 'deleted_at'
+        updatedAt: 'updated_at'
     });
 };
 
@@ -87,35 +62,34 @@ Model.plugins = function plugins(schema) {
  * @param      {Object}  schema  The schema
  */
 Model.extraFunctions = function extraFunctions(schema) {
-    schema.statics.newBlog = Model.newBlog;
+    schema.statics.newBlogtype = Model.newBlogtype;
 
     schema.methods.enable = Model.enable;
     schema.methods.disable = Model.disable;
-
-};
+}
 
 /**
  * Insert user function
  */
-Model.newBlog = async function newBlog(newBlog) {
-    let result = new this(newBlog);
+Model.newBlogtype = function newBlogtype(newBlogtype) {
+    let result = new this(newBlogtype);
 
     return result.save();
 };
 
 /**
- * Enable an health
+ * Enable the department
  */
-Model.enable = function enable() {
+Model.enable = function enable(callback) {
     this.is_active = true;
 
     return this.save();
 };
 
 /**
- * Disable an health
+ * Disable the department
  */
-Model.disable = function disable() {
+Model.disable = function disable(callback) {
     this.is_active = false;
 
     return this.save();

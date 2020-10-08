@@ -25,8 +25,8 @@ Router.get('/get_image/:name', [
     .as('storage.get_image');
 
 Router.post('/upload_image', [
-    Rule.canAsync('user.permision', 'health.store'),
-    upload.array('files'),
+    Rule.canAsync('user.permision', 'blog.store'),
+    upload.single("file"),
     checkSession,
     'storage@uploadImage'
 ])

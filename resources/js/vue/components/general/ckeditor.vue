@@ -37,7 +37,6 @@ export default {
         let scriptEl = document.createElement("script");
         scriptEl.setAttribute("src", "/js/ckeditor/ckeditor.js");
         this.$refs.ck_container.appendChild(scriptEl);
-
         setTimeout(() => {
             const csrfToken = document.head.querySelector("[name='csrf-token']")
                 .content;
@@ -46,7 +45,7 @@ export default {
             const editorId = this.$refs.editor.id;
 
             CKEDITOR.replace(this.editorId, {
-                extraPlugins: "easyimage",
+                extraPlugins: ["easyimage"],
                 removePlugins: "image",
                 removeDialogTabs: "link:advanced",
                 cloudServices_uploadUrl: uploadUrl,

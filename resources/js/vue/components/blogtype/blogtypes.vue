@@ -1,5 +1,5 @@
 <template lang="pug">
-.container-parent()
+.container-parent
     section.hero
         notification(
             :notification-type="notificationType",
@@ -9,8 +9,8 @@
             span(v-html="notificationMessage")
         .container.page-header
             .title
-                h1(v-show="modeList") اخبار
-                h1(v-show="modeRegister") ایجاد اخبار
+                h1(v-show="modeList") دسته بندی اخبار
+                h1(v-show="modeRegister") ایجاد دسته بندی اخبار
 
     .columns.exposed-form(v-show="!modeLoading")
         .column.is-one-fifth(v-show="modeList")
@@ -36,37 +36,34 @@
             loading
 
         .column(v-show="!modeLoading && modeList")
-            list-blog(
-                ref="blogList",
+            list-blogtype(
+                ref="blogtypeList",
                 @on-command="onCommand",
                 :list-url="listUrl"
             )
 
         .column(v-show="!modeLoading && modeRegister")
-            register-blog(
-                ref="blogRegister",
+            register-blogtype(
+                ref="blogtypeRegister",
                 @on-command="onCommand",
-                @on-register="onBlogRegister",
+                @on-register="onBlogtypeRegister",
                 :register-url="registerUrl",
-                :blog-type-url="blogTypesUrl",
-                :upload-url-image="uploadUrlImage",
-                :upload-url-token="uploadUrlToken",
+                :blogtype-type-id="blogtypeTypeId",
+                :blogtype-types-url="blogtypeTypesUrl",
             )
 
         .column(v-show="!modeLoading && modeEdit")
-            edit-blog(
-                ref="blogEdit",
+            edit-blogtype(
+                ref="blogtypeEdit",
                 @on-command="onCommand",
-                @on-update="onBlogUpdate",
+                @on-update="onBlogtypeUpdate",
                 :edit-url="editUrl",
-                :blog-type-url="blogTypesUrl",
-                :department-id="departmentId",
-                :upload-url-image="uploadUrlImage",
-                :upload-url-token="uploadUrlToken",
+                :blogtype-type-id="blogtypeTypeId",
+                :blogtype-types-url="blogtypeTypesUrl",
             )
 
         .column(v-show="!modeLoading && modeShow")
-            show-blog(ref="blogShow", @on-command="onCommand")
+            show-blogtype(ref="blogtypeShow", @on-command="onCommand")
 </template>
 
 <script>
@@ -75,41 +72,43 @@
 const Routes = require("JS-CORE/routes");
 const ENUMS = require("JS-HELPERS/enums");
 const Loading = require("VUE-COMPONENTS/general/loading.vue").default;
-const RegisterBlog = require("VUE-COMPONENTS/blog/register-blog.vue").default;
-const EditBlog = require("VUE-COMPONENTS/blog/edit-blog.vue").default;
-const ListBlog = require("VUE-COMPONENTS/blog/list-blog.vue").default;
-const ShowBlog = require("VUE-COMPONENTS/blog/show-blog.vue").default;
+const RegisterBlogtype = require("VUE-COMPONENTS/blogtype/register-blogtype.vue")
+    .default;
+const EditBlogtype = require("VUE-COMPONENTS/blogtype/edit-blogtype.vue")
+    .default;
+const ListBlogtype = require("VUE-COMPONENTS/blogtype/list-blogtype.vue")
+    .default;
+const ShowBlogtype = require("VUE-COMPONENTS/blogtype/show-blogtype.vue")
+    .default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
 export default {
-    name: "Blogs",
+    name: "Blogtypes",
 
     components: {
         Loading,
-        ListBlog,
-        RegisterBlog,
-        EditBlog,
-        ShowBlog,
+        ListBlogtype,
+        RegisterBlogtype,
+        EditBlogtype,
+        ShowBlogtype,
         Notification,
     },
 
     data: () => ({
         ENUMS,
         formModeStack: [],
-        blogs: [],
+        blogtypes: [],
         notificationMessage: null,
         notificationType: "is-info",
-        flagEdit: false,
     }),
 
     props: {
-        uploadUrlImage: {
+        blogtypeTypeId: {
             type: String,
+            default: null,
         },
-        uploadUrlToken: {
-            type: String,
-        },
-        departmentId: {
+
+        blogtypeTypesUrl: {
             type: String,
             default: null,
         },
@@ -123,7 +122,7 @@ export default {
             type: String,
             default: null,
         },
-        showBlogYearUrl: {
+        showBlogtypeYearUrl: {
             type: String,
             default: null,
         },
@@ -134,10 +133,6 @@ export default {
         },
 
         editUrl: {
-            type: String,
-            default: null,
-        },
-        blogTypesUrl: {
             type: String,
             default: null,
         },
@@ -165,22 +160,30 @@ export default {
 
     methods: {
         /**
-         * On Register blog
+         * On Register blogtype
          */
-        onBlogRegister(payload) {
+        onBlogtypeRegister(payload) {
             //***update vue list****
-            this.$refs.blogList.addToBlogList(payload.data.data.data[0]);
-            this.setNotification(".اخبار با موفقیت ذخیره شد", "is-success");
+            this.$refs.blogtypeList.addToBlogtypeList(
+                payload.data.data.data[0]
+            );
+            this.setNotification(
+                ".دسته بندی اخبار با موفقیت ذخیره شد",
+                "is-success"
+            );
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
         },
         /**
          * On Update
          */
-        onBlogUpdate(payload) {
-            this.$refs.blogList.editBlogList(payload);
+        onBlogtypeUpdate(payload) {
+            this.$refs.blogtypeList.editBlogtypeList(payload);
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
 
-            this.setNotification(".جلسه با موفقیت ویرایش شد", "is-success");
+            this.setNotification(
+                ".دسته بندی اخبار با موفقیت ویرایش شد",
+                "is-success"
+            );
         },
 
         /**
@@ -199,13 +202,11 @@ export default {
 
                 case ENUMS.COMMAND.REGISTER:
                     /* TODO: REGISTER NEW  */
-                    console.log("REGISTER NEW Blog", arg);
                     break;
 
                 case ENUMS.COMMAND.EDIT:
-                    Vue.set(this, "flagEdit", true);
                     /* TODO: Edit InviteSession */
-                    this.$refs.blogEdit.loadBlogData(data);
+                    this.$refs.blogtypeEdit.loadBlogtypeData(data);
                     this.changeFormMode(ENUMS.FORM_MODE.EDIT);
                     break;
 
@@ -214,7 +215,7 @@ export default {
                     break;
 
                 case ENUMS.COMMAND.SHOW:
-                    this.$refs.blogShow.loadBlogData(data);
+                    this.$refs.blogtypeShow.loadBlogtypeData(data);
                     this.changeFormMode(ENUMS.FORM_MODE.SHOW);
                     break;
             }
@@ -234,7 +235,7 @@ export default {
          */
         init() {
             this.changeFormMode(ENUMS.FORM_MODE.LOADING);
-            this.$refs.blogList.loadBlogs(1);
+            this.$refs.blogtypeList.loadBlogtypes(1);
         },
 
         /**

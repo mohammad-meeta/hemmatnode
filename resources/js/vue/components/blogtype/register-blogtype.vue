@@ -11,50 +11,19 @@
         h1 در حال بارگذاری
     .form-small(v-show="! isLoadingMode")
         .field
-            label.label نام خبر
+            label.label عنوان
             .control
                 input.input(
                     type="text",
-                    placeholder="نام خبر",
+                    placeholder="عنوان",
                     autofocus,
-                    v-model="blogData.title",
+                    v-model="blogtypeData.title",
                     required
                 )
-        .field
-            label.label نوع خبر
-            .control
-                .select.is-primary
-                    select(v-model="blogData.blogtype")
-                        option(v-for='(blogtype, blogtypeIndex) in blogtypes',
-                            :value="blogtype._id") {{ blogtype.title }}
 
         .field
-            label.label سال
-            .control
-                date-picker(
-                    v-model="blogData.date",
-                    type="year",
-                    display-format="jYYYY",
-                    required
-                )
-        .field
-            label.label توضیح
-            .control
-                ckeditor(
-                    v-model="blogData.description",
-                    :upload-url-image="uploadUrlImage",
-                    :upload-url-token="uploadUrlToken",
-                    @input="setTitle"
-                )
-        .field
-            .panel
-                .panel-heading
-                    | فایل های ضمیمه
-                .panel-block
-                    file-upload(ref="fileUpload", :old-files="oldFiles")
-        .field
             label.checkbox
-                input(type="checkbox", v-model="blogData.is_active")
+                input(type="checkbox", v-model="blogtypeData.is_active")
                 | فعال
         .field.is-grouped
             .control(v-show="! isLoadingMode")
@@ -67,72 +36,40 @@
 
 <script>
 "use strict";
-import CKEditor from "VUE-COMPONENTS/general/ckeditor.vue";
 
 const AxiosHelper = require("JS-HELPERS/axios-helper");
 const ENUMS = require("JS-HELPERS/enums");
-// const BlogValidator = require("JS-VALIDATORS/blog-register-validator");
+// const BlogtypeValidator = require("JS-VALIDATORS/blogtype-register-validator");
 const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
-const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 
 export default {
-    name: "RegisterBlog",
+    name: "RegisterBlogtype",
 
     components: {
         Notification,
         DatePicker: VuePersianDatetimePicker,
-        FileUpload,
-        ckeditor: CKEditor,
     },
 
     data: () => ({
         ENUMS,
-        files: [],
-        blogtypes: [],
-        deletedOldFiles: [],
-        oldFiles: [],
-        blogData: {
+        blogtypeData: {
             title: null,
-            blogtype: null,
-            date: null,
-            description: null,
-            files: [],
-            deletedOldFiles: [],
             is_active: true,
         },
+
         notificationMessage: null,
         notificationType: "is-info",
         showLoadingFlag: false,
     }),
 
     props: {
-        uploadUrlImage: {
-            type: String,
-        },
-        uploadUrlToken: {
-            type: String,
-        },
-        date: {
-            type: String,
-            default: null,
-        },
         registerUrl: {
             type: String,
             default: "",
         },
-        value: {
-            type: Object,
-            default: () => ({}),
-        },
-        blogTypeUrl: {
-            type: String,
-            default: null,
-        },
     },
     created() {
-        this.loadBlogtypes();
-
         this.clearFormData();
     },
 
@@ -145,34 +82,6 @@ export default {
 
     methods: {
         /**
-         * load all programs for select programs in form
-         */
-        loadBlogtypes() {
-            const url = this.blogTypeUrl;
-            AxiosHelper.send("get", url, "").then((res) => {
-                const resData = res.data;
-                const datas = resData.data.data;
-                Vue.set(this, "blogtypes", datas);
-            });
-        },
-
-        /**
-         * Set question title
-         */
-        setTitle(payload) {
-            Vue.set(this.value, "title", payload);
-        },
-
-        /**
-         * Set attachments
-         */
-        setAttachment(sender) {
-            const files = sender.target.files;
-
-            Vue.set(this, "files", files);
-        },
-
-        /**
          * On Command
          *
          * @param      {Object}  arg     The argument
@@ -180,7 +89,7 @@ export default {
         commandClick(arg) {
             switch (arg) {
                 case ENUMS.COMMAND.SAVE:
-                    this.registerBlog();
+                    this.registerBlogtype();
                     break;
             }
         },
@@ -215,9 +124,9 @@ export default {
         },
 
         /**
-         * Register new blog
+         * Register new blogtype
          */
-        async registerBlog() {
+        async registerBlogtype() {
             // const isValid = this.validate();
 
             // if (!isValid) {
@@ -226,25 +135,11 @@ export default {
 
             this.showLoading();
 
-            const deletedFiles = this.$refs.fileUpload.getDeletedFiles();
-            const newFiles = this.$refs.fileUpload.getNewFiles();
-
-            let newUploaded = newFiles.map((x) => x.file);
-            Vue.set(this, "files", newUploaded);
-
-            let deleteUploaded = deletedFiles.map((x) => x._id);
-            Vue.set(this, "deletedOldFiles", deleteUploaded);
-
-            Vue.set(this.blogData, "files", this.files);
-            Vue.set(this.blogData, "deletedOldFiles", this.deletedOldFiles);
-
-            let blogData = this.blogData;
-
+            let blogtypeData = this.blogtypeData;
             try {
                 const url = this.registerUrl;
-                let res = await AxiosHelper.send("post", url, blogData, {
+                let res = await AxiosHelper.send("post", url, blogtypeData, {
                     sendAsFormData: true,
-                    filesArray: "files",
                 });
 
                 const data = res.data;
@@ -268,10 +163,10 @@ export default {
         },
 
         /**
-         * Validate new blog data
+         * Validate new blogtype data
          */
         validate() {
-            const result = BlogValidator.validate(this.blogData);
+            const result = BlogtypeValidator.validate(this.blogtypeData);
 
             if (result.passes) {
                 this.closeNotification();
@@ -290,22 +185,12 @@ export default {
          * clear form data
          */
         clearFormData() {
-            const blogData = {
+            const blogtypeData = {
                 title: null,
-                description: "",
-                date: null,
-                files: [],
-                deletedOldFiles: [],
                 is_active: true,
             };
 
-            Vue.set(this, "blogData", blogData);
-            Vue.set(this, "files", []);
-            Vue.set(this, "deletedOldFiles", []);
-            Vue.set(this, "oldFiles", []);
-            this.files = [];
-            this.deletedOldFiles = [];
-            this.oldFiles = [];
+            Vue.set(this, "blogtypeData", blogtypeData);
         },
     },
 };

@@ -11,17 +11,19 @@
         h1 در حال بارگذاری
     .form-small(v-show="! isLoadingMode")
         .field
-            b-field(
-                label="شاخص",
-            )
-                b-select(
-                    placeholder="انتخاب شاخص",
-                    v-model="monitoringData.index_id",
-                )
-                    option(
-                        v-for="(index, indexIndex) in indexs",
-                        :value="index._id"
-                    ) {{ index.title }}
+            b-field(label='شاخص')
+                b-autocomplete(
+                    v-model="title"
+                    placeholder="انتخاب شاخص"
+                    icon="magnify"
+                    :keep-first="keepFirst"
+                    :open-on-focus="openOnFocus"
+                    :data="filteredDataObj"
+                    field="title"
+                    @select="option => (selected = option)"
+                    :clearable="clearable"
+                    )
+                        template(slot='empty') شاخصی یافت نشد
         .field
             label.label مقدار
             .control
@@ -56,6 +58,7 @@
 <script>
 "use strict";
 
+const Buefy = require("buefy").default;
 const AxiosHelper = require("JS-HELPERS/axios-helper");
 const ENUMS = require("JS-HELPERS/enums");
 const MonitoringValidator = require("JS-VALIDATORS/monitoring-register-validator");
@@ -76,11 +79,6 @@ export default {
             date: null,
             index_id: null,
             value: null,
-            index: {
-                _id: null,
-                title: null,
-                unit: null
-            },
             unit: null,
         },
 
@@ -88,6 +86,12 @@ export default {
         notificationMessage: null,
         notificationType: "is-info",
         showLoadingFlag: false,
+
+        title: '',
+        keepFirst: false,
+        openOnFocus: true,
+        selected: null,
+        clearable: false
     }),
 
     props: {
@@ -113,6 +117,16 @@ export default {
     computed: {
         isLoadingMode: (state) => state.showLoadingFlag == true,
         showNotification: (state) => state.notificationMessage != null,
+        filteredDataObj() {
+            return this.indexs.filter(option => {
+                return (
+                    option.title
+                        .toString()
+                        .toLowerCase()
+                        .indexOf(this.title.toLowerCase()) >= 0
+                )
+            })
+        }
     },
 
     methods: {
@@ -182,8 +196,9 @@ export default {
             }
 
             this.showLoading();
-
             let monitoringData = this.monitoringData;
+            Vue.set(monitoringData, "index_id", this.selected._id);
+            return;
             try {
                 const url = this.registerUrl;
                 let res = await AxiosHelper.send("post", url, monitoringData, {
@@ -237,11 +252,6 @@ export default {
                 index_id: null,
                 date: null,
                 value: null,
-                index: {
-                    _id: null,
-                    title: null,
-                    unit: null
-                },
                 is_active: true,
             };
 

@@ -98,6 +98,7 @@ export default {
                 .replace(/\$page\$/g, pageId)
                 .replace(/\$pageSize\$/g, 50);
             AxiosHelper.send("get", url, "").then((res) => {
+                console.log(res.data);
                 const resData = res.data;
                 Vue.set(this, "monitorings", resData.data.data);
                 Vue.set(this, "monitoringsCount", resData.data.count);

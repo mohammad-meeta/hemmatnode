@@ -31,7 +31,7 @@
                     type="number",
                     placeholder="مقدار",
                     autofocus,
-                    v-model="monitoringData.value",
+                    v-model.number="monitoringData.value",
                     required
                 )
         .field
@@ -198,7 +198,6 @@ export default {
             this.showLoading();
             let monitoringData = this.monitoringData;
             Vue.set(monitoringData, "index_id", this.selected._id);
-            return;
             try {
                 const url = this.registerUrl;
                 let res = await AxiosHelper.send("post", url, monitoringData, {

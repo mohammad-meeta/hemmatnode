@@ -163,7 +163,7 @@ export default {
             //***update vue list****
             this.$refs.monitoringList.addToMonitoringList(payload.data.data.data[0]);
             this.setNotification(
-                ".شاخص با موفقیت ذخیره شد",
+                ".دیدبانی با موفقیت ذخیره شد",
                 "is-success"
             );
             this.changeFormMode(ENUMS.FORM_MODE.LIST);

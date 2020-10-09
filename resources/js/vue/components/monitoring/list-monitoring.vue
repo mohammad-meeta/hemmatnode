@@ -98,7 +98,6 @@ export default {
                 .replace(/\$page\$/g, pageId)
                 .replace(/\$pageSize\$/g, 50);
             AxiosHelper.send("get", url, "").then((res) => {
-                console.log(res.data);
                 const resData = res.data;
                 Vue.set(this, "monitorings", resData.data.data);
                 Vue.set(this, "monitoringsCount", resData.data.count);
@@ -133,6 +132,7 @@ export default {
          * add new Monitoring data to list data
          */
         addToMonitoringList(payload) {
+            console.log(payload);
             const newMonitoringData = {
                 _id: payload._id,
                 date: payload.date,
@@ -157,7 +157,7 @@ export default {
                 unit: payload.data.data[0].unit,
                 index_id: payload.data.data[0].index._id,
                 index: {
-                    _id: payload.data.data[0].montype._id,
+                    _id: payload.data.data[0].index._id,
                     title: payload.data.data[0].index.title,
                     unit: payload.data.data[0].index.unit
                 },

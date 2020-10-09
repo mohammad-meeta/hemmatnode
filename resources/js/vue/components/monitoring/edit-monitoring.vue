@@ -10,18 +10,22 @@
     .column.is-full(v-show="isLoadingMode")
         h1 در حال بارگذاری
     .form-small(v-show="! isLoadingMode")
+
         .field
-            b-field(
-                label="شاخص",
-            )
-                b-select(
-                    placeholder="انتخاب شاخص",
-                    v-model="monitoringData.index_id",
-                )
-                    option(
-                        v-for="(index, indexIndex) in indexs",
-                        :value="index._id"
-                    ) {{ index.title }}
+            b-field(label='شاخص')
+                b-autocomplete(
+                    v-model="selectedOption"
+                    placeholder="انتخاب شاخص"
+                    icon="magnify"
+                    :keep-first="keepFirst"
+                    :open-on-focus="openOnFocus"
+                    :data="filteredDataObj"
+                    field="title"
+                    :selected="monitoringData.index"
+                    @select="onIndexSelected"
+                    :clearable="clearable"
+                    )
+                        template(slot='empty') شاخصی یافت نشد
 
         .field
             label.label مقدار
@@ -80,7 +84,7 @@ export default {
             index: {
                 _id: null,
                 title: null,
-                unit: null
+                unit: null,
             },
             unit: null,
         },
@@ -89,6 +93,13 @@ export default {
         notificationMessage: null,
         notificationType: "is-info",
         showLoadingFlag: false,
+
+        selectedOption: null,
+        title: "",
+        keepFirst: false,
+        openOnFocus: true,
+        selected: null,
+        clearable: false,
     }),
 
     props: {
@@ -99,26 +110,44 @@ export default {
         indexsUrl: {
             type: String,
             default: "",
-        }
+        },
     },
 
+    /**
+     * Created
+     */
     created() {
-        this.loadindexs();
+        Promise.all([this.loadIndexs()])
+        .then(res =>  this.updateUI());
     },
-
-    mounted() {},
 
     computed: {
         isLoadingMode: (state) => state.showLoadingFlag == true,
         showNotification: (state) => state.notificationMessage != null,
+        filteredDataObj() {
+            return this.indexs.filter((option) => {
+                return (
+                    option.title
+                        .toString()
+                        .toLowerCase()
+                        .indexOf(this.title.toLowerCase()) >= 0
+                );
+            });
+        },
     },
 
     methods: {
+        /**
+         * On Option selected
+         */
+        onIndexSelected(option) {
+            Vue.set(this, "selected", option);
+        },
 
         /**
          * load all monitoring type for select monitoring type in form
          */
-        async loadindexs() {
+        async loadIndexs() {
             const url = this.indexsUrl;
 
             let res = await AxiosHelper.send("get", url, "");
@@ -131,18 +160,21 @@ export default {
          * Load specific user
          */
         loadMonitoringData(data) {
+            console.log(data);
             let temp = {
                 _id: data._id,
-                index_id: data.index_id,
+                index_id: data.index._id,
+                title: data.index,
                 value: data.value,
                 date: data.date,
                 index: {
                     _id: data.index._id,
                     title: data.index.title,
-                    unit: data.index.unit
+                    unit: data.index.unit,
                 },
                 isActive: data.is_active,
             };
+            Vue.set(this, "selectedOption", data.index.title);
             Vue.set(this, "monitoringData", temp);
         },
 
@@ -205,6 +237,7 @@ export default {
                 index_id: this.monitoringData.index_id,
                 value: this.monitoringData.value,
                 date: this.monitoringData.date,
+
                 index: {
                     _id: this.monitoringData.index._id,
                     title: this.monitoringData.index.title,
@@ -225,7 +258,10 @@ export default {
                     data,
                 });
             } catch (err) {
-                this.setNotification(".خطا در ویرایش دیدبانی سلامت", "is-danger");
+                this.setNotification(
+                    ".خطا در ویرایش دیدبانی سلامت",
+                    "is-danger"
+                );
             }
 
             this.hideLoading();
@@ -235,7 +271,9 @@ export default {
          * Validate
          */
         validate() {
-            const result = MonitoringValidator.validateEdit(this.monitoringData);
+            const result = MonitoringValidator.validateEdit(
+                this.monitoringData
+            );
 
             if (result.passes) {
                 this.closeNotification();

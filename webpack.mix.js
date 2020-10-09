@@ -118,6 +118,10 @@ mix.js("resources/js/core/kernel.js", `${output}/js/core`)
         `${output}/js/pages/blog/index`
     )
     .js(
+        "resources/js/pages/transport/index/index.js",
+        `${output}/js/pages/transport/index`
+    )
+    .js(
         "resources/js/pages/education/index/index.js",
         `${output}/js/pages/education/index`
     )

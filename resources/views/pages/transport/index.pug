@@ -1,0 +1,18 @@
+extends ../../layout/app.pug
+
+block title
+    | پیوست سلامت
+
+block content
+    .container
+        transports(
+            list-url=route('api.transport', { page: '$page$', size: '$pageSize$', group: departmentId }),
+            register-url=route('transport.store', { department: departmentId }),
+            edit-url=route('transport.update', { id :'$id$'}),
+            department-id=departmentId,
+        )
+
+block scripts
+    script(defer, src=mix('js/pages/transport/index/index.js'))
+
+

@@ -3,7 +3,7 @@
 const mongoose = require('mongoose');
 
 /**
- * HealthType model
+ * TransportType model
  */
 function Model() { }
 module.exports = Model;
@@ -18,7 +18,7 @@ Model.setup = function setup() {
     Model.plugins(schema);
     Model.extraFunctions(schema);
 
-    mongoose.model('Health', schema, 'healths');
+    mongoose.model('Transport', schema, 'transports');
 };
 
 /**
@@ -46,16 +46,21 @@ Model.model = function model() {
             type: String,
             required: true
         },
-        'executor': {
-            type: String,
+        'status': {
+            type: Number,
             required: true
         },
-        'files': {
-            type: [File]
+        'confirm': {
+            type: Boolean,
+            required: false,
+            default: false
         },
         'is_active': {
             type: Boolean,
-            default: true,
+            default: true
+        },
+        'files': {
+            type: [File]
         },
         'user_id': {
             type: ObjectId,
@@ -87,7 +92,7 @@ Model.plugins = function plugins(schema) {
  * @param      {Object}  schema  The schema
  */
 Model.extraFunctions = function extraFunctions(schema) {
-    schema.statics.newHealth = Model.newHealth;
+    schema.statics.newTransport = Model.newTransport;
 
     schema.methods.enable = Model.enable;
     schema.methods.disable = Model.disable;
@@ -97,8 +102,8 @@ Model.extraFunctions = function extraFunctions(schema) {
 /**
  * Insert user function
  */
-Model.newHealth = async function newHealth(newHealth) {
-    let result = new this(newHealth);
+Model.newTransport = async function newTransport(newTransport) {
+    let result = new this(newTransport);
 
     return result.save();
 };

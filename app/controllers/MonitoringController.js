@@ -159,7 +159,7 @@ Monitoring.store = async function store(req, res, next) {
     const data = {
         "date": req.body.date,
         "value": req.body.value,
-        "index_id": req.body.index,
+        "index_id": req.body.index_id,
         "user_id": req.session.auth.userId,
         "is_active": req.body.is_active,
     };

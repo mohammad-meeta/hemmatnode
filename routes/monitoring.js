@@ -30,6 +30,12 @@ Router.get("/api/monitorings/:index/:page/:size?", [
     "Monitoring@paginateMonitoring"
 ]).as("api.monitoring");
 
+Router.get("/api/all/monitorings/:page/:size?", [
+    checkSession,
+    Rule.canAsync("user.permision", "api.monitoring"),
+    "Monitoring@paginateMonitoringAll"
+]).as("api.all.monitoring");
+
 Router.get('/monitoring/create', [
     checkSession,
     Rule.canAsync('user.permision', 'monitoring.create'),

@@ -12,7 +12,89 @@ module.exports = MonitoringHelper;
 /**
  * find all index cat data index 
  */
-MonitoringHelper.loadAllMonitoringData = async function loadAllMonitoringData(req, dataPaginate) {
+MonitoringHelper.loadAllMonitoringData = async function loadAllMonitoringData(req, dataPaginate, index) {
+    const page = parseInt(dataPaginate.page);
+    const pageSize = parseInt(dataPaginate.pageSize);
+    const skip = page > 0 ? (page - 1) * pageSize : 0;
+    const ObjectId = require("mongoose").Types.ObjectId;
+    const Monitoring = mongoose.model("Monitoring");
+
+    const userId = req.session.auth.userId;
+    const pipeline = [
+        {
+            index_id: ObjectId(index)
+        },
+        {
+            $lookup: {
+                from: "indexes",
+                localField: "index_id",
+                foreignField: "_id",
+                as: "index"
+            }
+        },
+        {
+            $unwind: "$index"
+        },
+        {
+            $group: {
+                _id: "$_id",
+                date: {
+                    $last: "$date"
+                },
+                value: {
+                    $last: "$value"
+                },
+                is_active: {
+                    $last: "$is_active"
+                },
+                created_at: {
+                    $last: "$created_at"
+                },
+                index: {
+                    $last: "$index"
+                },
+            }
+        },
+        {
+            $sort: {
+                created_at: -1
+            }
+        },
+        {
+            $skip: skip
+        },
+        {
+            $limit: pageSize
+        }
+    ];
+    let res = await Monitoring.aggregate(pipeline);
+
+    return res;
+};
+/**
+ * find all index cat count data result 
+ */
+MonitoringHelper.loadAllMonitoringCountData = function loadAllMonitoringCountData(index) {
+    const Monitoring = mongoose.model('Monitoring');
+    const ObjectId = require("mongoose").Types.ObjectId;
+
+    const filterQuery = {
+        index_id: ObjectId(index)
+    };
+
+    return new Promise((resolve, reject) => {
+        Monitoring.countDocuments(filterQuery)
+            .then(res => {
+
+                resolve(res);
+            })
+            .catch(err => reject(err));
+    });
+};
+/**
+ * find all 
+ */
+MonitoringHelper.loadAllMonitoringDataAll = async function loadAllMonitoringDataAll(req, dataPaginate) {
     const page = parseInt(dataPaginate.page);
     const pageSize = parseInt(dataPaginate.pageSize);
     const skip = page > 0 ? (page - 1) * pageSize : 0;
@@ -71,8 +153,9 @@ MonitoringHelper.loadAllMonitoringData = async function loadAllMonitoringData(re
 /**
  * find all index cat count data result 
  */
-MonitoringHelper.loadAllMonitoringCountData = function loadAllMonitoringCountData() {
+MonitoringHelper.loadAllMonitoringCountDataAll = function loadAllMonitoringCountDataAll() {
     const Monitoring = mongoose.model('Monitoring');
+    const ObjectId = require("mongoose").Types.ObjectId;
 
     const filterQuery = {
     };

@@ -17,8 +17,8 @@ Model.setup = function setup() {
 
     Model.plugins(schema);
     Model.extraFunctions(schema);
-
-    mongoose.model('Educaion', schema, 'educations');
+    
+    mongoose.model('Education', schema, 'educations');
 };
 
 /**

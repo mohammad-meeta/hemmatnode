@@ -46,6 +46,7 @@ Router.get('/monitoring/create', [
 Router.post('/monitoring', [
     checkSession,
     Rule.canAsync('user.permision', 'monitoring.store'),
+    upload.any('files'),
     // validator.validate,
     'Monitoring@store'
 ])
@@ -54,6 +55,7 @@ Router.post('/monitoring', [
 Router.patch("/monitoring/:id/edit", [
     checkSession,
     Rule.canAsync("user.permision", "monitoring.update"),
+    upload.any('files'),
     // validator.validate,
     "Monitoring@update"
 ]).as("monitoring.update");

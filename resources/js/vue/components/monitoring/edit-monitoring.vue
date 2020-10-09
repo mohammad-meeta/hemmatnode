@@ -10,8 +10,23 @@
     .column.is-full(v-show="isLoadingMode")
         h1 در حال بارگذاری
     .form-small(v-show="! isLoadingMode")
-
         .field
+            section
+                p.content
+                    b Selected:
+                    |  {{ selected }}
+                b-field(label='Find a name')
+                    b-autocomplete(
+                        v-model='title'
+                        placeholder='Select...'
+                        :data='filteredDataObjEd' 
+                        :open-on-focus="openOnFocus"
+                        field='title' 
+                        @select='option => (selected = option)' 
+                        :clearable='clearable'
+                    )
+
+        //- .field
             b-field(label='شاخص')
                 b-autocomplete(
                     v-model="selectedOption"
@@ -19,7 +34,7 @@
                     icon="magnify"
                     :keep-first="keepFirst"
                     :open-on-focus="openOnFocus"
-                    :data="filteredDataObj"
+                    :data="filteredDataObjEd"
                     field="title"
                     :selected="monitoringData.index"
                     @select="onIndexSelected"
@@ -117,14 +132,13 @@ export default {
      * Created
      */
     created() {
-        Promise.all([this.loadIndexs()])
-        .then(res =>  this.updateUI());
+        Promise.all([this.loadIndexs()]);
     },
 
     computed: {
         isLoadingMode: (state) => state.showLoadingFlag == true,
         showNotification: (state) => state.notificationMessage != null,
-        filteredDataObj() {
+        filteredDataObjEd() {
             return this.indexs.filter((option) => {
                 return (
                     option.title
@@ -160,7 +174,6 @@ export default {
          * Load specific user
          */
         loadMonitoringData(data) {
-            console.log(data);
             let temp = {
                 _id: data._id,
                 index_id: data.index._id,
@@ -174,7 +187,7 @@ export default {
                 },
                 isActive: data.is_active,
             };
-            Vue.set(this, "selectedOption", data.index.title);
+            Vue.set(this, "title", data.index.title);
             Vue.set(this, "monitoringData", temp);
         },
 
@@ -234,15 +247,9 @@ export default {
 
             let monitoringData = {
                 _id: this.monitoringData._id,
-                index_id: this.monitoringData.index_id,
+                index_id: this.selected._id,
                 value: this.monitoringData.value,
                 date: this.monitoringData.date,
-
-                index: {
-                    _id: this.monitoringData.index._id,
-                    title: this.monitoringData.index.title,
-                    unit: this.monitoringData.index.unit,
-                },
                 is_active: this.monitoringData.isActive,
             };
 

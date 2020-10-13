@@ -417,6 +417,172 @@ ResponseHelper.loadAllResponseCountData = function loadAllResponseCountData() {
     });
 };
 
+
+//*********************************************** */
+//*********************************************** */
+//*********************************************** */
+/**
+ * find all data result 
+ */
+ResponseHelper.loadAllResponseDataUser = async function loadAllResponseDataUser(req, dataPaginate) {
+    const page = parseInt(dataPaginate.page);
+    const pageSize = parseInt(dataPaginate.pageSize);
+    const skip = page > 0 ? ((page - 1) * pageSize) : 0;
+    const ObjectId = require('mongoose').Types.ObjectId;
+    const Response = mongoose.model('Response');
+
+    const userId = req.session.auth.userId;
+
+    const user = mongoose.model('User');
+    const filterQuery = {
+        user_id: userId
+    };
+    let department = await user.findOne(filterQuery, {})
+
+    const pipeline = [
+        {
+            $match: {
+                department_id: department._id
+            }
+        },
+        {
+            "$lookup": {
+                "from": "departments",
+                "localField": "department_id",
+                "foreignField": "_id",
+                "as": "dep"
+            }
+        },
+        {
+            "$unwind": "$dep"
+        },
+        {
+            "$lookup": {
+                "from": "requests",
+                "localField": "request_id",
+                "foreignField": "_id",
+                "as": "req"
+            }
+        },
+        {
+            "$unwind": "$req"
+        },
+        {
+            "$unwind": {
+                "path": "$files",
+                "preserveNullAndEmptyArrays": true
+            }
+        },
+        {
+            "$lookup": {
+                "from": "files",
+                "localField": "files.file_id",
+                "foreignField": "_id",
+                "as": "file"
+            }
+        },
+        {
+            "$unwind": {
+                "path": "$file",
+                "preserveNullAndEmptyArrays": true
+            }
+        },
+        {
+            "$project": {
+                "file.encoding": 0,
+                "file.fieldname": 0,
+                "file.mimetype": 0,
+                "file.destination": 0,
+                "file.user_id": 0,
+                "file.path": 0,
+                "file.filename": 0,
+            }
+        },
+        {
+            "$group": {
+                "_id": "$_id",
+                "files": {
+                    "$push": "$file"
+                },
+                "is_active": {
+                    "$last": "$is_active"
+                },
+                "title": {
+                    "$last": "$title"
+                },
+                "action": {
+                    "$last": "$action"
+                },
+                "result": {
+                    "$last": "$result"
+                },
+                "deadline": {
+                    "$last": "$deadline"
+                },
+                "created_at": {
+                    "$last": "$created_at"
+                },
+                "dep": {
+                    "$last": "$dep"
+                },
+                "req": {
+                    "$last": "$req"
+                }
+            }
+        },
+        {
+            "$sort": {
+                "created_at": -1
+            }
+        },
+        {
+            "$skip": skip
+        },
+        {
+            "$limit": pageSize
+        }
+    ];
+
+    return new Promise((resolve, reject) => {
+        Response.aggregate(pipeline)
+            .then(res => {
+                resolve(res);
+            })
+            .catch(err => reject(err));
+    });
+};
+
+/**
+ * find all dep cat count data result 
+ */
+ResponseHelper.loadAllResponseCountDataUser = async function loadAllResponseCountDataUser() {
+    const Response = mongoose.model('Response');
+
+    const userId = req.session.auth.userId;
+
+    const user = mongoose.model('User');
+    let filterQuery = {
+        user_id: userId
+    };
+    let department = await user.findOne(filterQuery, {});
+
+    filterQuery = {
+        department_id: department._id
+    };
+
+    return new Promise((resolve, reject) => {
+        Response.countDocuments(filterQuery)
+            .then(res => {
+                resolve(res);
+            })
+            .catch(err => reject(err));
+    });
+};
+
+//*********************************************** */
+//*********************************************** */
+//*********************************************** */
+
 /**
  * find dep cat data result 
  */

@@ -106,6 +106,49 @@ Response.paginateResponseRequest = function paginateResponseRequest(req, res, ne
                 .end();
         });
 };
+/**
+ * paginate route
+ */
+Response.paginateResponseUser = function paginateResponseUser(req, res, next) {
+    const dataPaginate = {
+        page: req.params.page,
+        pageSize: req.params.size || 10
+    };
+
+    ResponseHelper.loadAllResponseCountDataUser()
+        .then(data => {
+            let count = data.data;
+
+            ResponseHelper.loadAllResponseDataUser(req, dataPaginate)
+                .then(data => {
+                    const result = {
+                        success: true,
+                        data: {
+                            data: data,
+                            count: count
+                        }
+                    };
+
+                    res.status(200)
+                        .send(result)
+                        .end();
+                })
+                .catch(err => {
+                    Logger.error(err);
+
+                    res.status(500)
+                        .send(err)
+                        .end();
+                });
+        })
+        .catch(err => {
+            Logger.error(err);
+
+            res.status(500)
+                .send(err)
+                .end();
+        });
+};
 
 /**
  * paginate route request

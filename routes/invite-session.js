@@ -16,11 +16,6 @@ Router.get("/api/invite-session/:group/:page/:size?/", [
     "InviteSession@paginateInviteSession"
 ]).as("api.invitesession");
 
-Router.get("/api/invite-session/dashboard/userid/:page/:size?/", [
-    checkSession,
-    "InviteSession@paginateInviteSessionUser"
-]).as("api.invitesession.dashboard");
-
 Router.get("/invite-session/create", [
     checkSession,
     Rule.canAsync("user.permision", "invitesession.create"),

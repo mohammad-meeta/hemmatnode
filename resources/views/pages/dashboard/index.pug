@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+html(lang="en")
+    head
+        title
+            block title
+                | پیشخوان
+
+        meta(charset="UTF-8")
+        meta(name="viewport" content="width=device-width, initial-scale=1.0")
+        meta(http-equiv="X-UA-Compatible" content="ie=edge")
+        meta(name="csrf-token" content=(req.csrfToken ? req.csrfToken() : ""))
+
+        link(rel="shortcut icon" type="image/png", href=asset("images/favicon.png"))
+        link(rel="stylesheet", href=mix("css/core/kernel.css"))
+        link(rel="stylesheet", href=mix("css/global/app.css"))
+
+    body
+        #app
+            block content
+                dashboard
+
+        script(defer, src=mix("js/core/kernel.js"))
+        script(defer, src=mix('js/global/app.js'))
+        script(defer, src=mix('js/pages/dashboard/index/index.js'))

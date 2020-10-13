@@ -47,6 +47,13 @@
                         h2 پروژه ها
                     .intro-card-block(v-for="item in accessContentLink")
                         a(:href="item.link") {{ item.text }}
+                .inline-card-body-item(v-if="referencesData.title == 'شبکه مردمی'")
+                    a(:href="educationLink")
+                        | ‫‬برنامه آموزش سواد سلامت
+                .inline-card-body-item(v-if="referencesData.title == 'شبکه مردمی'")
+                    a(:href="transportLink")
+                        | انتقال مطالبات‫
+
             .column.is-4
                 .big-button
                     a(:href="documentLink")
@@ -101,6 +108,8 @@ export default {
             is_active: false,
         },
 
+        referencesData: {},
+
         accessLink: [],
         accessContentLink: [],
         isCardModalActive: false,
@@ -109,6 +118,8 @@ export default {
         showLoadingFlag: false,
 
         healthLink: "",
+        educationLink: "",
+        transportLink: "",
     }),
 
     props: {
@@ -188,6 +199,26 @@ export default {
                 alert("Error");
             }
             document.title = this.departmentData.title;
+            console.log(this.departmentData);
+            this.loadReferencesDepartmentData(this.departmentData.references);
+        },
+
+        /**
+         * Load References department
+         */
+        async loadReferencesDepartmentData(id) {
+            id = id || this.departmentId;
+            let url = this.loadUrl || this.showLoadUrl;
+            url = url.replace(/\$department\$/g, id);
+
+            try {
+                let res = await AxiosHelper.send("get", url);
+
+                const data = res.data.data.data;
+                Vue.set(this, "referencesData", data || {});
+            } catch (err) {
+                alert("Error");
+            }
         },
 
         /**
@@ -273,6 +304,8 @@ export default {
             this.actionCreativeLink = "/actioncreative/" + id;
             this.cityActionLink = "/cityaction/" + id;
             this.documentLink = "/document/" + id;
+            this.educationLink = "/education/" + id;
+            this.transportLink = "/transport/" + id;
         },
 
         /**

@@ -60,6 +60,9 @@ PugView.viewPath = {
     'health.index': 'pages/health/index.pug',
     'health.create': 'pages/health/register.pug',
 
+    /* admin */
+    'admin.create.permission': 'pages/admin/createpermission.pug',
+
     /* dashboard */
     'dashboard.index': 'pages/dashboard/index.pug',
 

@@ -1,0 +1,18 @@
+extends ../../layout/app.pug
+
+block title
+    | پیوست سلامت
+
+block content
+    .container
+        createpermissions(
+            list-rule-url=route('api.rule', { page: '$page$', size: '$pageSize$'}),
+            list-role-url=route('api.role', { page: '$page$', size: '$pageSize$'}),
+            edit-url=route('role.update'),
+            register-url=route('role.store')
+        )
+
+block scripts
+    script(defer, src=mix('js/pages/admin/createpermission/index/index.js'))
+
+

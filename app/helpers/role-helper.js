@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 /**
  * Role controller
  */
-function RoleHelper() {}
+function RoleHelper() { }
 module.exports = RoleHelper;
 
 /**
@@ -22,9 +22,9 @@ RoleHelper.loadAllRoleData = function loadAllRoleData(dataPaginate) {
 
     return new Promise((resolve, reject) => {
         Role.find(filterQuery, projection, {
-                skip: skip,
-                limit: pageSize
-            })
+            skip: skip,
+            limit: pageSize
+        })
             .then(res => {
                 resolve(res);
             })
@@ -90,11 +90,12 @@ RoleHelper.insertNewRole = function insertNewRole(data) {
  * update role data  
  */
 RoleHelper.updateRoleData = function updateRoleData(data) {
+
     return new Promise((resolve, reject) => {
         const Role = mongoose.model('Role');
         Role.findByIdAndUpdate(data._id, data, {
-                useFindAndModify: false, new: true
-            })
+            useFindAndModify: false, new: true
+        })
             .then(res => {
                 resolve(res);
             })
@@ -110,10 +111,10 @@ RoleHelper.deleteRoleData = function deleteRoleData(data) {
         const Role = mongoose.model('Role');
 
         Role.findOneAndUpdate(data._id, {
-                is_active: false
-            }, {
-                useFindAndModify: false, new: true
-            })
+            is_active: false
+        }, {
+            useFindAndModify: false, new: true
+        })
             .then(res => {
                 resolve(res);
             })

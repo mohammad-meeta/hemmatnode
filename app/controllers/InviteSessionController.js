@@ -67,6 +67,51 @@ InviteSession.paginateInviteSession = async function paginateInviteSession(
             .end();
     }
 };
+/**
+ * paginate route
+ */
+InviteSession.paginateInviteSessionUser = async function paginateInviteSessionUser(
+    req,
+    res,
+    next
+) {
+    const dataPaginate = {
+        page: req.params.page,
+        pageSize: req.params.size || 10,
+    };
+    const userid = req.session.auth.userId;
+
+    try {
+        let data = await InviteSessionHelper.loadAllInviteSessionCountDataUser(
+            req,
+            userid
+        );
+        let count = data;
+
+        data = await InviteSessionHelper.loadAllInviteSessionDataUser(
+            req,
+            dataPaginate,
+            userid
+        );
+
+        const result = {
+            success: true,
+            data: {
+                data: data,
+                count: count,
+            },
+        };
+        res.status(200)
+            .send(result)
+            .end();
+    } catch (err) {
+        Logger.error(err);
+
+        res.status(500)
+            .send(err)
+            .end();
+    }
+};
 
 /**
  * show route

@@ -5,14 +5,17 @@ const mongoose = require('mongoose');
 /**
  * Algorithm controller
  */
-function RuleHelper() {}
+function RuleHelper() { }
 module.exports = RuleHelper;
 
 /**
  * find all roles data 
  */
-RuleHelper.loadAllRuleData = function loadAllRuleData() {
+RuleHelper.loadAllRuleData = function loadAllRuleData(dataPaginate) {
     const Rule = mongoose.model('Rule');
+    const page = parseInt(dataPaginate.page)
+    const pageSize = parseInt(dataPaginate.pageSize)
+    const skip = page > 0 ? ((page - 1) * pageSize) : 0
 
     const filterQuery = {};
     const projection = {
@@ -22,7 +25,7 @@ RuleHelper.loadAllRuleData = function loadAllRuleData() {
     };
 
     return new Promise((resolve, reject) => {
-        Rule.find(filterQuery, projection, {})
+        Rule.find(filterQuery, projection, { skip: skip, limit: pageSize })
             .then(res => {
                 resolve(res);
             })

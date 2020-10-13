@@ -5,9 +5,9 @@ const {
     checkSession
 } = use('app/helpers/auth-helper');
 
-Router.get('/rules', [
-        checkSession,
-        Rule.canAsync('user.permision', 'rule.index'),
-        'Rule@index'
-    ])
-    .as('rule.index');
+
+Router.get("/api/rules/:page/:size?", [
+    checkSession,
+    Rule.canAsync('user.permision', 'api.rule'),
+    "Rule@paginateRule",
+]).as("api.rule");

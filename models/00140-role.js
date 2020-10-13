@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 /**
  * ArticleType model
  */
-function Model() {}
+function Model() { }
 module.exports = Model;
 
 /**
@@ -30,7 +30,7 @@ Model.model = function model() {
     return {
         'name': {
             type: String,
-            required: true
+            required: true,
         },
         'permision': {
             type: Array,

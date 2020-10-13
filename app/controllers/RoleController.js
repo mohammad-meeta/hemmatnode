@@ -4,7 +4,7 @@ const RoleHelper = use('app/helpers/role-helper');
 /**
  * Auth controller
  */
-function RoleController() {}
+function RoleController() { }
 module.exports = RoleController;
 
 /**
@@ -120,7 +120,7 @@ RoleController.update = async function update(req, res, next) {
         "_id": req.body._id,
         "user_id": req.session.auth.userId,
         "name": req.body.name,
-        "permision": req.body.permision,
+        "permision": JSON.parse(req.body.permision),
         "is_active": req.body.is_active
     };
 
@@ -177,9 +177,9 @@ RoleController.store = async function store(req, res, next) {
 
     const data = {
         "user_id": req.session.auth.userId,
-        "is_active": req.body.is_active || false,
         "name": req.body.name,
-        "permision": req.body.permision
+        "permision": JSON.parse(req.body.permision),
+        "is_active": req.body.is_active || true
     };
 
     const RoleInsert = RoleHelper.insertNewRole(data)

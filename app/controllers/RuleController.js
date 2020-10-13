@@ -6,14 +6,19 @@ const RuleHelper = use('app/helpers/rule-helper');
 /**
  * Home controller
  */
-function RuleController() {}
+function RuleController() { }
 module.exports = RuleController;
 
 /**
  * Index route
  */
-RuleController.index = async function index(req, res, next) {
-    RuleHelper.loadAllRuleData()
+RuleController.paginateRule = async function paginateRule(req, res, next) {
+    const dataPaginate = {
+        page: req.params.page,
+        pageSize: req.params.size || 10
+    };
+
+    RuleHelper.loadAllRuleData(dataPaginate)
         .then(data => {
             const result = {
                 success: true,

@@ -31,21 +31,33 @@
                      :class="{active:FORM_MODE.USER == selected}"
                      )
                         | مدیریت کاربران
+                .dashboard-item
+                    a(href="#"
+                     @click.prevent="changeFormMode(FORM_MODE.SESSION)"
+                     :class="{active:FORM_MODE.SESSION == selected}"
+                     )
+                        | جلسات
             .column.is-9.dashboard-contents
                 .dashboard-content(v-show="modeContent")
                     dashboard-content
                 .dashboard-content(v-show="modeUser")
                     dashboard-user
+                .dashboard-content(v-show="modeSession")
+                    dashboard-session(
+                        :invite-session-list-url="inviteSessionListUrl"
+                    )
 </template>
 
 <script>
 "use strict";
 
+const Buefy = require("buefy").default;
 const Routes = require("JS-CORE/routes");
 const Loading = require("VUE-COMPONENTS/general/loading.vue").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 const DashboardContent = require("VUE-COMPONENTS/dashboard/dashboard-content.vue").default;
 const DashboardUser = require("VUE-COMPONENTS/dashboard/dashboard-user.vue").default;
+const DashboardSession = require("VUE-COMPONENTS/dashboard/dashboard-session.vue").default;
 export default {
     name: "Dashboard",
 
@@ -53,7 +65,8 @@ export default {
         Loading,
         Notification,
         DashboardContent,
-        DashboardUser
+        DashboardUser,
+        DashboardSession,
     },
 
     data: () => ({
@@ -61,6 +74,7 @@ export default {
         FORM_MODE: {
             CONTENT: 1,
             USER: 2,
+            SESSION: 3,
         },
 
         formModeStack: [],
@@ -77,6 +91,11 @@ export default {
             type: String,
             default: null,
         },
+
+        inviteSessionListUrl: {
+            type: String,
+            default: "",
+        },
     },
 
     computed: {
@@ -86,6 +105,7 @@ export default {
             state.formModeStack[state.formModeStack.length - 1],
         modeContent: (state) => state.formMode == state.FORM_MODE.CONTENT,
         modeUser: (state) => state.formMode == state.FORM_MODE.USER,
+        modeSession: (state) => state.formMode == state.FORM_MODE.SESSION,
     },
 
     /**

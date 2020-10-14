@@ -17,7 +17,9 @@ html(lang="en")
     body
         #app
             block content
-                dashboard
+                dashboard(
+                    invite-session-list-url=route('api.invitesession.dashboard', { page: '$page$', size: '$pageSize$'})
+                )
 
         script(defer, src=mix("js/core/kernel.js"))
         script(defer, src=mix('js/global/app.js'))

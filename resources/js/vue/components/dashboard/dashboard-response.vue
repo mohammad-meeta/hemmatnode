@@ -3,7 +3,7 @@
         .dashbord-content-head
             h2
                 span
-                    | جلسات
+                    | پاسخ طلب همکاری
         .dashboard-content-body
             b-table(
                 :data='data'
@@ -19,19 +19,17 @@
                 aria-previous-label='Previous page'
                 aria-page-label='Page'
                 aria-current-label='Current page')
-                b-table-column(field='subject' label='موضوع' v-slot='props')
-                    | {{ props.row.dep.title }}
-                b-table-column(field='date' label='تاریخ' v-slot='props')
+                b-table-column(field='title' label='عنوان' v-slot='props')
+                    | {{ props.row.title }}
+                b-table-column(field='created_at' label='تاریخ' v-slot='props')
                     | {{ toPersianDate(props.row.date) }}
                 b-table-column(label='عملیات' v-slot='props')
                     a.button.is-warning.is-rounded.mt-2(
                         href="#",
-                        @click.prevent="commandClick({ type: FORM_MODE.SHOW, row: props.row})"
                     )
                         span.icon.is-small
                             i.material-icons.icon swap_horizontal_circle
                         span مشاهده
-
 
 </template>
 <script>
@@ -65,14 +63,6 @@ export default {
             },
         ],
         inviteSessionsCount: 0,
-
-        FORM_MODE: {
-            CONTENT: 1,
-            USER: 2,
-            SESSION: 3,
-            LOADING: 4,
-            SHOW: 5
-        },
     }),
 
     created() {
@@ -109,14 +99,6 @@ export default {
         onPageChange(page) {
             this.page = page;
             this.loadInviteSessions(page);
-        },
-
-        /**
-         * On Command
-         *
-         */
-        commandClick(data) {
-            this.$emit("on-command", { data });
         },
     },
 

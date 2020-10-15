@@ -1,6 +1,8 @@
 <template lang="pug">
     .container-dashboard
-        .columns
+        .dashboard-content(v-show="modeShow")
+            show-invite-session(ref="inviteSessionShow")
+        .columns(v-show="!modeShow")
             .column.is-1.mt-4.sidebar-first
                 .sidebar-top
                     .dashboard-item.logo.mb-3
@@ -45,7 +47,9 @@
                 .dashboard-content(v-show="modeSession")
                     dashboard-session(
                         :invite-session-list-url="inviteSessionListUrl"
+                        @on-command="onCommand"
                     )
+
 </template>
 
 <script>
@@ -58,6 +62,8 @@ const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 const DashboardContent = require("VUE-COMPONENTS/dashboard/dashboard-content.vue").default;
 const DashboardUser = require("VUE-COMPONENTS/dashboard/dashboard-user.vue").default;
 const DashboardSession = require("VUE-COMPONENTS/dashboard/dashboard-session.vue").default;
+const ShowInviteSession = require("VUE-COMPONENTS/invite-session/show-invite-session.vue")
+    .default;
 export default {
     name: "Dashboard",
 
@@ -67,6 +73,7 @@ export default {
         DashboardContent,
         DashboardUser,
         DashboardSession,
+        ShowInviteSession
     },
 
     data: () => ({
@@ -75,6 +82,8 @@ export default {
             CONTENT: 1,
             USER: 2,
             SESSION: 3,
+            LOADING: 4,
+            SHOW: 5
         },
 
         formModeStack: [],
@@ -106,6 +115,8 @@ export default {
         modeContent: (state) => state.formMode == state.FORM_MODE.CONTENT,
         modeUser: (state) => state.formMode == state.FORM_MODE.USER,
         modeSession: (state) => state.formMode == state.FORM_MODE.SESSION,
+        modeLoading: state => state.formMode == state.FORM_MODE.LOADING,
+        modeShow: state => state.formMode == state.FORM_MODE.SHOW,
     },
 
     /**
@@ -169,6 +180,11 @@ export default {
                 Vue.set(this.formModeStack, this.formModeStack.length, mode);
             }
         },
+        onCommand(payload) {
+            const data = payload.data || {};
+            this.$refs.inviteSessionShow.loadInviteSessionData(data.row);
+            this.changeFormMode(this.FORM_MODE.SHOW);
+        }
     },
 };
 </script>

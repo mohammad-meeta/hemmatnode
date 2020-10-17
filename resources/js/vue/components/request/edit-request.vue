@@ -29,9 +29,11 @@
                     display-format="jDD/jMM/jYYYY HH:mm" type="datetime" required)
 
             .field
-                label.checkbox
-                    input(type='file', @change="setAttachment")
-                    |   ضمیمه
+                .panel
+                    .panel-heading
+                        | فایل های ضمیمه
+                    .panel-block
+                        file-upload(ref="fileUpload", :old-files="oldFiles")
             .field
                 label.checkbox
                     input(type='checkbox', v-model="request.is_active")
@@ -51,17 +53,22 @@ const ENUMS = require("JS-HELPERS/enums");
 const RequestValidator = require("JS-VALIDATORS/request-register-validator");
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
+const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 
 export default {
     name: "EditRequest",
     components: {
         Notification,
         DatePicker: VuePersianDatetimePicker,
+        FileUpload
     },
 
     data: () => ({
         ENUMS,
         users: [],
+        files: [],
+        deletedOldFiles: [],
+        oldFiles: [],
         request: {
             id: null,
             title: null,
@@ -70,7 +77,9 @@ export default {
             request_date: null,
             deadline: null,
             files: {},
-            is_active: false,
+            oldFiles: [],
+            isActive: false,
+            deletedOldFiles: [],
         },
         notificationMessage: null,
         notificationType: "is-info",
@@ -97,14 +106,6 @@ export default {
     },
 
     methods: {
-        /**
-         * Set attachments
-         */
-        setAttachment(sender) {
-            const files = sender.target.files;
-
-            Vue.set(this, "files", files);
-        },
 
         /**
          * Load specific invite session
@@ -120,8 +121,9 @@ export default {
                 files: data.files,
                 is_active: data.is_active,
             };
-
+            Vue.set(this, "oldFiles", data.files);
             Vue.set(this, "request", temp);
+            this.$refs.fileUpload.updateOldFiles(data.files);
         },
 
         /**
@@ -176,7 +178,7 @@ export default {
         /**
          * Edit invite session
          */
-        EditRequest() {
+        async EditRequest() {
             const isValid = this.validate();
 
             if (!isValid) {
@@ -184,6 +186,14 @@ export default {
             }
 
             this.showLoading();
+            const deletedFiles = this.$refs.fileUpload.getDeletedFiles();
+            const newFiles = this.$refs.fileUpload.getNewFiles();
+
+            let newUploaded = newFiles.map((x) => x.file);
+            Vue.set(this, "files", newUploaded);
+
+            let deleteUploaded = deletedFiles.map((x) => x._id);
+            Vue.set(this, "deletedOldFiles", deleteUploaded);
 
             let request = {
                 _id: this.request.id,
@@ -193,26 +203,30 @@ export default {
                 request_date: this.request.request_date,
                 deadline: this.request.deadline,
                 is_active: this.request.is_active,
+                files: this.files,
+                oldFiles: this.oldFiles,
+                deletedOldFiles: this.deletedOldFiles,
             };
-
-            request.files = this.files;
 
             this.showLoading();
 
-            const url = this.editUrl.replace("$id$", request._id);
-            AxiosHelper.send("patch", url, request)
-                .then((res) => {
-                    const data = JSON.parse(res.config.data);
-                    this.$emit("on-update", {
-                        sender: this,
-                        data,
-                    });
-                })
-                .catch((err) => {
-                    console.error(err);
-                    this.setNotification(".خطا در ذخیره جلسه", "is-danger");
-                })
-                .then(() => this.hideLoading());
+            try {
+                const url = this.editUrl.replace("$id$", request._id);
+                let res = await AxiosHelper.send("patch", url, request, {
+                    sendAsFormData: true,
+                    filesArray: "files",
+                });
+
+                const data = res.data;
+                this.$emit("on-update", {
+                    sender: this,
+                    data,
+                });
+            } catch (err) {
+                this.setNotification(".خطا در ویرایش پیوست سلامت", "is-danger");
+            }
+
+            this.hideLoading();
         },
 
         /**

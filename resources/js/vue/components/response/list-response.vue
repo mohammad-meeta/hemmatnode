@@ -1,6 +1,6 @@
 <template lang="pug">
 .container-child
-    h1(v-if="! hasResponse") هیچ پاسخ به طلب همکاری ای ایجاد نشده
+    h1(v-if="! hasResponse") هیچ پاسخ به همکاری متقابل ای ایجاد نشده
     table.table.is-striped.is-hoverable.is-fullwidth(v-if="hasResponse")
         thead
             tr

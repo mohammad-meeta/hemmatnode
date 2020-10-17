@@ -7,11 +7,11 @@
             h1 در حال بارگذاری
         .form-small(v-show="! isLoadingMode")
             .fieldset
-                legend مشخصات طلب همکاری
+                legend مشخصات همکاری متقابل
                 .field
-                    label.label عنوان طلب همکاری
+                    label.label عنوان همکاری متقابل
                     .control
-                        input.input(type='text', placeholder='عنوان طلب همکاری', autofocus, v-model='requestData.title' required)
+                        input.input(type='text', placeholder='عنوان همکاری متقابل', autofocus, v-model='requestData.title' required)
 
                 .field
                     label.label شرح
@@ -25,15 +25,17 @@
                         display-format=" jDD/jMM/jYYYY HH:mm" type="datetime" required)
 
                 .field
-                    label.label تاریخ
+                    label.label مهلت اجرا
                     .control
                         date-picker(v-model='requestData.deadline' format="YYYY-MM-DD HH:mm:ss"
                         display-format=" jDD/jMM/jYYYY HH:mm" type="datetime" required)
 
                 .field
-                    label.checkbox
-                        input(type='file', @change="setAttachment")
-                        |   ضمیمه
+                    .panel
+                        .panel-heading
+                            | فایل های ضمیمه
+                        .panel-block
+                            file-upload(ref="fileUpload", :old-files="oldFiles")
                 .field
                     label.checkbox
                         input(type='checkbox', v-model="requestData.is_active")
@@ -54,6 +56,7 @@ const ENUMS = require("JS-HELPERS/enums");
 const RequestValidator = require("JS-VALIDATORS/request-register-validator");
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
+const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 
 export default {
     name: "RegisterRequest",
@@ -61,10 +64,14 @@ export default {
     components: {
         Notification,
         DatePicker: VuePersianDatetimePicker,
+        FileUpload
     },
 
     data: () => ({
         ENUMS,
+        files: [],
+        deletedOldFiles: [],
+        oldFiles: [],
         programs: [],
         requestData: {
             title: null,
@@ -72,14 +79,14 @@ export default {
             departmentId: null,
             requestDate: null,
             deadline: null,
-            files: {},
+            files: [],
+            deletedOldFiles: [],
             is_active: false,
         },
 
         notificationMessage: null,
         notificationType: "is-info",
         showLoadingFlag: false,
-        files: [],
     }),
 
     props: {
@@ -101,14 +108,6 @@ export default {
     },
 
     methods: {
-        /**
-         * Set attachments
-         */
-        setAttachment(sender) {
-            const files = sender.target.files;
-
-            Vue.set(this, "files", files);
-        },
 
         /**
          * On Command
@@ -155,7 +154,7 @@ export default {
         /**
          * Register new request
          */
-        registerRequest() {
+        async registerRequest() {
             const isValid = this.validate();
 
             if (!isValid) {
@@ -163,30 +162,46 @@ export default {
             }
             let requestData = this.requestData;
 
-            requestData.files = this.files[0];
             requestData.departmentId = this.departmentId;
 
             this.showLoading();
+            const deletedFiles = this.$refs.fileUpload.getDeletedFiles();
+            const newFiles = this.$refs.fileUpload.getNewFiles();
 
-            const url = this.registerUrl;
-            console.log(requestData);
-            AxiosHelper.send("post", url, requestData, {
-                sendAsFormData: true,
-            })
-                .then((res) => {
-                    const data = res.data;
-                    if (data.success) {
-                        this.$emit("on-register", {
-                            sender: this,
-                            data,
-                        });
-                    }
-                })
-                .catch((err) => {
-                    const data = err.response.data;
-                    this.setNotification(data, "is-danger");
-                })
-                .then(() => this.hideLoading());
+            let newUploaded = newFiles.map((x) => x.file);
+            Vue.set(this, "files", newUploaded);
+
+            let deleteUploaded = deletedFiles.map((x) => x._id);
+            Vue.set(this, "deletedOldFiles", deleteUploaded);
+
+            Vue.set(this.requestData , "files", this.files);
+            Vue.set(this.requestData , "deletedOldFiles", this.deletedOldFiles);
+
+            try {
+                const url = this.registerUrl;
+                console.log(requestData);
+                let res = await AxiosHelper.send("post", url, requestData, {
+                    sendAsFormData: true,
+                    filesArray: "files",
+                });
+
+                const data = res.data;
+                if (data.success) {
+                    this.clearFormData();
+                    this.$emit("on-register", {
+                        sender: this,
+                        data: {
+                            data: data,
+                            dep_title: 0,
+                        },
+                    });
+                }
+            } catch (err) {
+                const data = err.response.data;
+                this.setNotification(data, "is-danger");
+            }
+            this.hideLoading();
+            this.clearFormData();
         },
 
         /**
@@ -208,6 +223,30 @@ export default {
             console.log(error);
             this.setNotification(error, "is-danger");
             return false;
+        },
+
+        /**
+         * clear form data
+         */
+        clearFormData() {
+            const requestData = {
+                title: null,
+                description: null,
+                departmentId: null,
+                requestDate: null,
+                deadline: null,
+                files: [],
+                deletedOldFiles: [],
+                is_active: true,
+            };
+
+            Vue.set(this, "requestData", requestData);
+            Vue.set(this, "files", []);
+            Vue.set(this, "deletedOldFiles", []);
+            Vue.set(this, "oldFiles", []);
+            this.files = [];
+            this.deletedOldFiles = [];
+            this.oldFiles = [];
         },
     },
 };

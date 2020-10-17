@@ -7,7 +7,7 @@
             h1 در حال بارگذاری
         .form-small(v-show="! isLoadingMode")
             .fieldset
-                legend مشخصات پاسخ به طلب همکاری
+                legend مشخصات پاسخ به همکاری متقابل
                 .field
                     label.label درخواست
                     .control
@@ -27,9 +27,9 @@
                 //-         input.input(placeholder='واحد مسئول', v-model='responseData.departmentId')
 
                 .field
-                    label.label عنوان پاسخ به طلب همکاری
+                    label.label عنوان پاسخ به همکاری متقابل
                     .control
-                        input.input(type='text', placeholder='عنوان پاسخ به طلب همکاری', autofocus, v-model='responseData.title' required)
+                        input.input(type='text', placeholder='عنوان پاسخ به همکاری متقابل', autofocus, v-model='responseData.title' required)
 
                 .field
                     label.label اقدام
@@ -48,9 +48,11 @@
                         textarea.textarea(placeholder='نتیجه', v-model='responseData.result')
 
                 .field
-                    label.checkbox
-                        input(type='file', @change="setAttachment")
-                        |   ضمیمه
+                    .panel
+                        .panel-heading
+                            | فایل های ضمیمه
+                        .panel-block
+                            file-upload(ref="fileUpload", :old-files="oldFiles")
                 .field
                     label.checkbox
                         input(type='checkbox', v-model="responseData.is_active")
@@ -71,6 +73,7 @@ const ENUMS = require("JS-HELPERS/enums");
 const ResponseValidator = require("JS-VALIDATORS/response-register-validator");
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
+const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 
 export default {
     name: "RegisterResponse",
@@ -78,11 +81,15 @@ export default {
     components: {
         Notification,
         DatePicker: VuePersianDatetimePicker,
+        FileUpload,
     },
 
     data: () => ({
         departments: [],
         ENUMS,
+        files: [],
+        deletedOldFiles: [],
+        oldFiles: [],
         responseData: {
             requestId: null,
             departmentId: null,
@@ -90,14 +97,14 @@ export default {
             action: null,
             deadline: null,
             result: null,
-            files: {},
+            files: [],
+            deletedOldFiles: [],
             is_active: false,
         },
 
         notificationMessage: null,
         notificationType: "is-info",
         showLoadingFlag: false,
-        files: [],
     }),
 
     props: {
@@ -136,15 +143,6 @@ export default {
                 const datas = resData.data.data;
                 Vue.set(this, "departments", datas);
             });
-        },
-
-        /**
-         * Set attachments
-         */
-        setAttachment(sender) {
-            const files = sender.target.files;
-
-            Vue.set(this, "files", files);
         },
 
         /**
@@ -198,32 +196,44 @@ export default {
             if (!isValid) {
                 return;
             }
+            const deletedFiles = this.$refs.fileUpload.getDeletedFiles();
+            const newFiles = this.$refs.fileUpload.getNewFiles();
+
+            let newUploaded = newFiles.map((x) => x.file);
+            Vue.set(this, "files", newUploaded);
+
+            let deleteUploaded = deletedFiles.map((x) => x._id);
+            Vue.set(this, "deletedOldFiles", deleteUploaded);
+
+            Vue.set(this.responseData, "files", this.files);
+            Vue.set(this.responseData, "deletedOldFiles", this.deletedOldFiles);
             let responseData = this.responseData;
 
-            responseData.files = this.files[0];
+            try {
+                const url = this.registerUrl;
+                let res = await AxiosHelper.send("post", url, responseData, {
+                    sendAsFormData: true,
+                    filesArray: "files",
+                });
 
-            this.showLoading();
+                const data = res.data;
+                if (data.success) {
+                    this.clearFormData();
+                    this.$emit("on-register", {
+                        sender: this,
+                        data: {
+                            data: data,
+                            dep_title: 0,
+                        },
+                    });
+                }
+            } catch (err) {
+                const data = err.response.data;
+                this.setNotification(data, "is-danger");
+            }
+            this.hideLoading();
 
-            const url = this.registerUrl;
-            Vue.set(this.responseData, "requestId", this.value._id);
-
-            AxiosHelper.send("post", url, responseData, {
-                sendAsFormData: true,
-            })
-                .then((res) => {
-                    const data = res.data;
-                    if (data.success) {
-                        this.$emit("on-register", {
-                            sender: this,
-                            data,
-                        });
-                    }
-                })
-                .catch((err) => {
-                    const data = err.response.data;
-                    this.setNotification(data, "is-danger");
-                })
-                .then(() => this.hideLoading());
+            this.clearFormData();
         },
 
         /**

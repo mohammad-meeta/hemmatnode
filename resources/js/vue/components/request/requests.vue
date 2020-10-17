@@ -5,9 +5,9 @@
                 span(v-html="notificationMessage")
             .container.page-header
                 .title
-                    h1(v-show="modeList") طلب همکاری
-                    h1(v-show="modeRegister") ایجاد طلب همکاری
-                    h1(v-show="modeEdit") ویرایش طلب همکاری
+                    h1(v-show="modeList") همکاری متقابل
+                    h1(v-show="modeRegister") ایجاد همکاری متقابل
+                    h1(v-show="modeEdit") ویرایش همکاری متقابل
 
         .columns.exposed-form(v-show="!modeLoading")
             .column.is-one-fifth(v-show="modeList")
@@ -126,10 +126,11 @@ export default {
          */
         onRequestRegister(payload) {
             //***update vue list****
+            console.log(payload);
             this.$refs.requestList.addToRequestList(payload.data.data);
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
             this.setNotification(
-                ".طلب همکاری با موفقیت ذخیره شد",
+                ".همکاری متقابل با موفقیت ذخیره شد",
                 "is-success"
             );
         },
@@ -142,7 +143,7 @@ export default {
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
 
             this.setNotification(
-                ".طلب همکاری با موفقیت ویرایش شد",
+                ".همکاری متقابل با موفقیت ویرایش شد",
                 "is-success"
             );
         },

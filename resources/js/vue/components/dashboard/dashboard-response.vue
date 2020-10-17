@@ -3,7 +3,7 @@
         .dashbord-content-head
             h2
                 span
-                    | پاسخ طلب همکاری
+                    | پاسخ همکاری متقابل
         .dashboard-content-body
             b-table(
                 :data='data'

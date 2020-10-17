@@ -17,9 +17,9 @@
                         input.input(placeholder='واحد مسئول' disabled, v-model='department')
 
                 .field
-                    label.label عنوان پاسخ به طلب همکاری
+                    label.label عنوان پاسخ به همکاری متقابل
                     .control
-                        input.input(type='text', placeholder='عنوان پاسخ به طلب همکاری', autofocus, v-model='responseData.title' required)
+                        input.input(type='text', placeholder='عنوان پاسخ به همکاری متقابل', autofocus, v-model='responseData.title' required)
 
                 .field
                     label.label اقدام

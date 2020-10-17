@@ -1,6 +1,6 @@
 <template lang="pug">
 .container-child
-    h1(v-if="! hasRequest") هیچ طلب همکاری ای ایجاد نشده
+    h1(v-if="! hasRequest") هیچ همکاری متقابل ای ایجاد نشده
     table.table.is-striped.is-hoverable.is-fullwidth(v-if="hasRequest")
         thead
             tr

@@ -5,9 +5,9 @@
                 span(v-html="notificationMessage")
             .container.page-header
                 .title
-                    h1(v-show="modeList") پاسخ به طلب همکاری
-                    h1(v-show="modeRegister") ایجاد پاسخ به طلب همکاری
-                    h1(v-show="modeEdit") ویرایش پاسخ به طلب همکاری
+                    h1(v-show="modeList") پاسخ به همکاری متقابل
+                    h1(v-show="modeRegister") ایجاد پاسخ به همکاری متقابل
+                    h1(v-show="modeEdit") ویرایش پاسخ به همکاری متقابل
 
         .columns.exposed-form(v-show="!modeLoading")
             .column.is-one-fifth(v-show="modeList")
@@ -163,7 +163,7 @@ export default {
             // this.$refs.responseList.addToResponseList(payload.data.data);
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
             this.setNotification(
-                ".پاسخ به طلب همکاری با موفقیت ذخیره شد",
+                ".پاسخ به همکاری متقابل با موفقیت ذخیره شد",
                 "is-success"
             );
         },
@@ -176,7 +176,7 @@ export default {
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
 
             this.setNotification(
-                ".پاسخ به طلب همکاری با موفقیت ویرایش شد",
+                ".پاسخ به همکاری متقابل با موفقیت ویرایش شد",
                 "is-success"
             );
         },

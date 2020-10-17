@@ -9,7 +9,7 @@
                     .info-card-title {{ requestData.title }}
                     .info-card-details
                         .info-card-item
-                            .info-card-label نام طلب همکاری:
+                            .info-card-label نام همکاری متقابل:
                             .info-card-value {{ requestData.title }}
                     .info-card-details
                         .info-card-item

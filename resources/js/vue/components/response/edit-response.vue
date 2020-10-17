@@ -38,9 +38,11 @@
                         textarea.textarea(placeholder='نتیجه', v-model='responseData.result')
 
                 .field
-                    label.checkbox
-                        input(type='file', @change="setAttachment")
-                        |   ضمیمه
+                    .panel
+                        .panel-heading
+                            | فایل های ضمیمه
+                        .panel-block
+                            file-upload(ref="fileUpload", :old-files="oldFiles")
                 .field
                     label.checkbox
                         input(type='checkbox', v-model="responseData.is_active")
@@ -60,17 +62,21 @@ const ENUMS = require("JS-HELPERS/enums");
 const ResponseValidator = require("JS-VALIDATORS/response-register-validator");
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
+const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 
 export default {
     name: "EditResponse",
     components: {
         Notification,
         DatePicker: VuePersianDatetimePicker,
+        FileUpload
     },
 
     data: () => ({
         ENUMS,
-        users: [],
+        files: [],
+        deletedOldFiles: [],
+        oldFiles: [],
         responseData: {
             _id: null,
             requestId: null,
@@ -80,7 +86,9 @@ export default {
             deadline: null,
             result: null,
             files: {},
-            is_active: false,
+            oldFiles: [],
+            isActive: false,
+            deletedOldFiles: [],
         },
         department: null,
         request: null,
@@ -104,14 +112,6 @@ export default {
     },
 
     methods: {
-        /**
-         * Set attachments
-         */
-        setAttachment(sender) {
-            const files = sender.target.files;
-
-            Vue.set(this, "files", files);
-        },
 
         /**
          * Load specific invite session
@@ -126,13 +126,14 @@ export default {
                 departmentId: data.dep._id,
                 requestId: data.request_id,
                 deadline: data.deadline,
-                files: {},
+                files: data.files,
                 is_active: data.is_active,
             };
             Vue.set(this, "department", data.dep.title);
             Vue.set(this, "request", data.req.title);
-
+            Vue.set(this, "oldFiles", data.files);
             Vue.set(this, "responseData", temp);
+            this.$refs.fileUpload.updateOldFiles(data.files);
         },
 
         /**
@@ -187,7 +188,7 @@ export default {
         /**
          * Edit invite session
          */
-        EditResponse() {
+        async EditResponse() {
             const isValid = this.validate();
 
             if (!isValid) {
@@ -195,7 +196,14 @@ export default {
             }
 
             this.showLoading();
+            const deletedFiles = this.$refs.fileUpload.getDeletedFiles();
+            const newFiles = this.$refs.fileUpload.getNewFiles();
 
+            let newUploaded = newFiles.map((x) => x.file);
+            Vue.set(this, "files", newUploaded);
+
+            let deleteUploaded = deletedFiles.map((x) => x._id);
+            Vue.set(this, "deletedOldFiles", deleteUploaded);
             let response = {
                 _id: this.responseData._id,
                 title: this.responseData.title,
@@ -205,26 +213,31 @@ export default {
                 deadline: this.responseData.deadline,
                 result: this.responseData.result,
                 is_active: this.responseData.is_active,
+                files: this.files,
+                oldFiles: this.oldFiles,
+                deletedOldFiles: this.deletedOldFiles,
             };
             response.files = this.files;
 
             this.showLoading();
 
-            const url = this.editUrl.replace("$id$", response._id);
+            try {
+                const url = this.editUrl.replace("$id$", responseData._id);
+                let res = await AxiosHelper.send("patch", url, responseData, {
+                    sendAsFormData: true,
+                    filesArray: "files",
+                });
 
-            AxiosHelper.send("patch", url, response)
-                .then((res) => {
-                    const data = JSON.parse(res.config.data);
-                    this.$emit("on-update", {
-                        sender: this,
-                        data,
-                    });
-                })
-                .catch((err) => {
-                    console.error(err);
-                    this.setNotification(".خطا در ذخیره جلسه", "is-danger");
-                })
-                .then(() => this.hideLoading());
+                const data = res.data;
+                this.$emit("on-update", {
+                    sender: this,
+                    data,
+                });
+            } catch (err) {
+                this.setNotification(".خطا در ویرایش پاسخ", "is-danger");
+            }
+
+            this.hideLoading();
         },
 
         /**

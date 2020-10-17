@@ -190,7 +190,7 @@ export default {
         /**
          * Register new response
          */
-        registerResponse() {
+        async registerResponse() {
             const isValid = this.validate();
 
             if (!isValid) {
@@ -255,6 +255,31 @@ export default {
             console.log(error);
             this.setNotification(error, "is-danger");
             return false;
+        },
+
+        /**
+         * clear form data
+         */
+        clearFormData() {
+            const responseData = {
+                requestId: null,
+                departmentId: null,
+                title: null,
+                action: null,
+                deadline: null,
+                result: null,
+                files: [],
+                deletedOldFiles: [],
+                is_active: true,
+            };
+
+            Vue.set(this, "responseData", responseData);
+            Vue.set(this, "files", []);
+            Vue.set(this, "deletedOldFiles", []);
+            Vue.set(this, "oldFiles", []);
+            this.files = [];
+            this.deletedOldFiles = [];
+            this.oldFiles = [];
         },
     },
 };

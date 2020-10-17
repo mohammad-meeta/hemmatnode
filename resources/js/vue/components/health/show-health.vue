@@ -13,17 +13,28 @@
                     .info-card-item
                         .info-card-label پیوست سلامت:
                         .info-card-value {{ healthData.health_id }}
+                .info-card-item
+                    .info-card-label
+                        | فایل های ضمیمه
+                        .info-card-value
+                            file-download(ref="fileDownload", :old-files="oldFiles")
+
 </template>
 <script>
 "use strict";
 
 const ENUMS = require("JS-HELPERS/enums");
+const FileDownload = require("VUE-COMPONENTS/general/file-download.vue")
+    .default;
 
 export default {
     name: "ShowHealth",
-
+    components: {
+        FileDownload,
+    },
     data: () => ({
         ENUMS,
+        oldFiles: [],
         healths: [],
         healthData: {
             _id: null,
@@ -59,11 +70,13 @@ export default {
                 health_id: data.health_id,
                 date: data.date,
                 executor: data.executor,
-                files: {},
+                files: data.files,
                 is_active: data.is_active,
             };
 
             Vue.set(this, "healthData", temp);
+            Vue.set(this, "oldFiles", data.files);
+            this.$refs.fileDownload.updateOldFiles(data.files);
         },
 
         /**

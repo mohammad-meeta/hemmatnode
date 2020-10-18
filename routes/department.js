@@ -31,6 +31,12 @@ Router.get('/api/departments/:page/:size?', [
 ])
     .as('api.department');
 
+Router.get('/api/all/departments/document/:page/:size?', [
+    checkSession,
+    'Department@paginateAllDepartmentDocument'
+])
+    .as('api.all.department.document');
+
 Router.get('/department/create', [
     checkSession,
     Rule.canAsync('user.permision', 'department.create'),

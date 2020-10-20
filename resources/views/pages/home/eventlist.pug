@@ -3,6 +3,8 @@ extends ../../layout/app.pug
 block title
     | رویدادها
 block content
-    event-lists
+    event-lists(
+        blog-list-url=route('api.blog', { page: '$page$', size: '$pageSize$' }),
+    )
 block scripts
     script(defer, src=mix('js/pages/home/event-list/index.js'))

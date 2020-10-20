@@ -1,12 +1,12 @@
 "use strict";
 
 const FS = require("fs");
-const PugView = use('app/helpers/pug-view');
+const PugView = use("app/helpers/pug-view");
 
 /**
  * Controller
  */
-function Controller() { }
+function Controller() {}
 module.exports = Controller;
 
 /**
@@ -60,8 +60,7 @@ Controller.uploadToken = async function uploadToken(req, res, next) {
  */
 Controller.uploadImage = async function uploadImage(req, res, next) {
     let filename = req.file.filename;
-
-    let imgUrl = route('storage.get_image', { name: filename });
+    let imgUrl = route("storage.get_image", { name: filename });
 
     res.send({
         default: imgUrl,

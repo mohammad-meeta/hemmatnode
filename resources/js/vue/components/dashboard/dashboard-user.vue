@@ -8,6 +8,9 @@
                 .column.is-4.dashboard-button
                     a(href="/user" target="_blank")
                         | کاربران
+                .column.is-4.dashboard-button
+                    a(href="/admin/role/rule/create/permission" target="_blank")
+                        | مجوزها
 
 </template>
 <script>

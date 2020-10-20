@@ -23,6 +23,9 @@
                 .column.is-4.dashboard-button
                     a(href="/monitoring" target="blank")
                         | دیدبانی
+                .column.is-4.dashboard-button
+                    a(href="/response" target="blank")
+                        | همکاری متقابل
 </template>
 <script>
 "use strict";

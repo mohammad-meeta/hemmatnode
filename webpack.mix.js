@@ -1,28 +1,28 @@
-'use strict'
+"use strict";
 
-const path = require('path');
-const mix = require('laravel-mix');
-require('laravel-mix-alias');
+const path = require("path");
+const mix = require("laravel-mix");
+require("laravel-mix-alias");
 
-require(path.resolve('core/modules/global-module.js')).setup();
-const appConfig = use('config/app.js');
+require(path.resolve("core/modules/global-module.js")).setup();
+const appConfig = use("config/app.js");
 const output = appConfig.output_path;
 
 /* Aliases */
 mix.alias({
-    'JS': 'resources/js',
-    'JS-CORE': 'resources/js/core',
-    'JS-HELPERS': 'resources/js/helpers',
-    'JS-VALIDATORS': 'resources/js/validators',
-    'VUE': 'resources/js/vue',
-    'VUE-COMPONENTS': 'resources/js/vue/components',
-    'VUE-HELPERS': 'resources/js/vue/helpers',
-    'SASS': 'resources/sass',
-    'FONTS': 'resources/fonts',
-    'IMAGES': 'resources/images',
-    'VIEWS': 'resources/views',
-    'CONFIGS': 'resources/configs',
-    'VALIDATORS': 'validators'
+    JS: "resources/js",
+    "JS-CORE": "resources/js/core",
+    "JS-HELPERS": "resources/js/helpers",
+    "JS-VALIDATORS": "resources/js/validators",
+    VUE: "resources/js/vue",
+    "VUE-COMPONENTS": "resources/js/vue/components",
+    "VUE-HELPERS": "resources/js/vue/helpers",
+    SASS: "resources/sass",
+    FONTS: "resources/fonts",
+    IMAGES: "resources/images",
+    VIEWS: "resources/views",
+    CONFIGS: "resources/configs",
+    VALIDATORS: "validators",
 });
 
 /**
@@ -30,35 +30,35 @@ mix.alias({
  */
 mix.webpackConfig({
     module: {
-        rules: [{
-            test: /\.pug$/i,
-            oneOf: [{
-                resourceQuery: /^\?vue/i,
-                use: ['pug-plain-loader']
+        rules: [
+            {
+                test: /\.pug$/i,
+                oneOf: [
+                    {
+                        resourceQuery: /^\?vue/i,
+                        use: ["pug-plain-loader"],
+                    },
+                    {
+                        use: ["raw-loader", "pug-plain-loader"],
+                    },
+                ],
             },
             {
-                use: [
-                    'raw-loader',
-                    'pug-plain-loader'
-                ]
-            }
-            ]
-        },
-        {
-            test: /\.pug$/,
-            loader: 'pug-plain-loader'
-        }
-        ]
-    }
+                test: /\.pug$/,
+                loader: "pug-plain-loader",
+            },
+        ],
+    },
 });
 
 /* Setup */
-mix.setPublicPath(output)
-    .version();
+mix.setPublicPath(output).version();
 
 /* Copy Files & Directories */
-mix.copyDirectory('resources/images', `${output}/images`)
-    .copyDirectory('resources/fonts', `${output}/fonts`);
+mix.copyDirectory("resources/images", `${output}/images`).copyDirectory(
+    "resources/fonts",
+    `${output}/fonts`
+);
 
 /* JS */
 mix.js("resources/js/core/kernel.js", `${output}/js/core`)
@@ -202,15 +202,11 @@ mix.js("resources/js/core/kernel.js", `${output}/js/core`)
         `${output}/js/pages/home/document-list`
     );
 
-
 /* SASS */
-mix.sass('resources/sass/core/kernel.scss', `${output}/css/core`)
-    .sass('resources/sass/global/app.scss', `${output}/css/global`)
-    .sass('resources/sass/pages/home/index.scss', `${output}/css/pages/home`)
-    .sass('resources/sass/pages/auth/login.scss', `${output}/css/pages/auth`);
+mix.sass("resources/sass/core/kernel.scss", `${output}/css/core`)
+    .sass("resources/sass/global/app.scss", `${output}/css/global`)
+    .sass("resources/sass/pages/home/index.scss", `${output}/css/pages/home`)
+    .sass("resources/sass/pages/auth/login.scss", `${output}/css/pages/auth`);
 
 /* Copy directory */
-mix.copyDirectory(
-    "resources/js/ckeditor4/ckeditor",
-    "public/js/ckeditor"
-);
+mix.copyDirectory("resources/js/ckeditor4/ckeditor", "public/js/ckeditor");

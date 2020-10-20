@@ -207,10 +207,12 @@ export default {
 
             Vue.set(this.responseData, "files", this.files);
             Vue.set(this.responseData, "deletedOldFiles", this.deletedOldFiles);
-            let responseData = this.responseData;
+
 
             try {
                 const url = this.registerUrl;
+                Vue.set(this.responseData, "requestId", this.value._id);
+                let responseData = this.responseData;
                 let res = await AxiosHelper.send("post", url, responseData, {
                     sendAsFormData: true,
                     filesArray: "files",

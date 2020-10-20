@@ -5,12 +5,16 @@ div
         ref="fileInput",
         multiple,
     )
-    div
-        ul
-            li(v-for="(file, index) in fileList", style="dir: ltr;")
-                button.button.is-success(@click.prevent="downloadFile(file)") دانلود
-                label {{ humanFileSize(file.file.size) }}
-                label {{ file.file.name }}
+    .columns
+        .column.is-4(v-for="(file, index) in fileList")
+            .card.file-card(@click.prevent="downloadFile(file)")
+                .card-content
+                    .media
+                        .media-right.is-size-1
+                            i.mdi.mdi-download
+                        .media-content
+                            .title.is-6 {{ file.file.name }}
+                            .sub-title.is-6 {{ humanFileSize(file.file.size) }}
 </template>
 
 <script>

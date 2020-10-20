@@ -11,11 +11,11 @@
         h1 در حال بارگذاری
     .form-small(v-show="! isLoadingMode")
         .field
-            label.label نام گزارش
+            label.label عنوان
             .control
                 input.input(
                     type="text",
-                    placeholder="نام",
+                    placeholder="عنوان",
                     v-model="blogData.title",
                     required
                 )
@@ -31,12 +31,13 @@
                         ) {{ blogtype.title }}
 
         .field
-            label.label سال اجرا
+            label.label تاریخ
             .control
                 date-picker(
                     v-model="blogData.date",
-                    display-format="jYYYY",
-                    type="year",
+                    type="datetime"
+                    display-format="jDD/jMM/jYYYY HH:mm"
+                    format="YYYY-MM-DD HH:mm:ss"
                     required
                 )
 
@@ -269,7 +270,7 @@ export default {
                     data,
                 });
             } catch (err) {
-                this.setNotification(".خطا در ویرایش پیوست سلامت", "is-danger");
+                this.setNotification(".خطا در ویرایش خبر", "is-danger");
             }
 
             this.hideLoading();

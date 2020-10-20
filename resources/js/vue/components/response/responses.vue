@@ -160,7 +160,8 @@ export default {
          */
         onResponseRegister(payload) {
             //***update vue list****
-            // this.$refs.responseList.addToResponseList(payload.data.data);
+            console.log("sssssssssss");
+            this.$refs.responseList.addToResponseList(payload.data.data[0]);
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
             this.setNotification(
                 ".پاسخ به همکاری متقابل با موفقیت ذخیره شد",

@@ -44,6 +44,22 @@ export default {
         Notification,
     },
 
+    props: {
+        title: {
+            type: String,
+            default: null,
+        },
+
+        departmentListUrl: {
+            type: String,
+            default: null,
+        },
+        documentListUrl: {
+            type: String,
+            default: null,
+        }
+    },
+
     data: () => ({
         ENUMS,
         formModeStack: [],
@@ -81,14 +97,8 @@ export default {
         ],
         notificationMessage: null,
         notificationType: "is-info",
+        departments: [],
     }),
-
-    props: {
-        title: {
-            type: String,
-            default: null,
-        },
-    },
 
     computed: {
         formMode: (state) =>
@@ -113,6 +123,38 @@ export default {
          */
         init() {
             this.changeFormMode(ENUMS.FORM_MODE.LOADING);
+            this.loadDepartments(1);
+        },
+
+        /**
+         * Load departments
+         */
+        loadDepartments(pageId) {
+            let url = this.departmentListUrl.replace("$page$", pageId);
+            url = url.replace("$pageSize$", 1000);
+            AxiosHelper.send("get", url, "").then((res) => {
+                const resData = res.data;
+                Vue.set(this, "departments", resData.data.data);
+                Vue.set(this, "departmentsCount", resData.data.count);
+
+                this.paginator();
+            });
+        },
+
+        /**
+         * load departments documents
+         */
+        loadDepartmentsDocuments(departmentId) {
+            let url = this.documentListUrl
+                .replace(/\$page\$/g, 1)
+                .replace(/\$pageSize\$/g, 1000)
+                .replace(/\$departmentId\$/g, departmentId);
+            AxiosHelper.send("get", url, "").then((res) => {
+            const resData = res.data;
+            Vue.set(this, "documents", resData.data.data);
+            Vue.set(this, "documentsCount", resData.data.count);
+            Vue.set(this.pagination, "total", resData.data.count);
+            });
         },
 
         /**

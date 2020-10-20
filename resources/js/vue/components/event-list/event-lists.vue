@@ -9,23 +9,72 @@
             span(v-html="notificationMessage")
 
         .container.page-header
-            .title
+            .title(v-show="! modeShow")
                 h1 رویدادها
-        .container.main-content
-            .info-card
-                .info-card-title {{ title }}
-                .info-card-details
-                    .info-card-item
-                        .info-card-value {{ description }}
+            .title(v-if="modeShow")
+                h1 {{ title }}
+            .hero-dashboard
+                .field.is-grouped
+                    b-button.is-flex-direction-row-reverse(
+                        v-show="! modeList"
+                        type="is-warning is-light"
+                        size="is-small"
+                        icon-right="chevron-right"
+                        @click.prevent="commandClick(ENUMS.COMMAND.CANCEL)"
+                        )
+                            span بازگشت
+
+        .container.main-content(v-show="! modeShow")
+            .columns.is-multiline
+                .column.is-4(v-for="blog in blogs", :key="blog.id")
+                    .card
+                        .card-content
+                            .content
+                                .info-card-title {{ blog.title }}
+                                time(datetime="blog.date") {{ toPersianDate(blog.date) }}
+                        footer.card-footer
+                            .card-footer-item
+                                b-button.is-flex-direction-row-reverse(
+                                    type="is-link is-light"
+                                    size="is-small"
+                                    icon-left="chevron-left"
+                                    @click.prevent="commandClick(ENUMS.COMMAND.SHOW, blog)"
+                                    )
+                                        span مشاهده
+
+            b-pagination(
+                :total="pagination.total",
+                :current.sync="pagination.current",
+                :range-before="pagination.rangeBefore",
+                :range-after="pagination.rangeAfter",
+                :order="pagination.order",
+                :size="pagination.size",
+                :simple="pagination.isSimple",
+                :rounded="pagination.isRounded",
+                :per-page="pagination.perPage",
+                :icon-prev="pagination.prevIcon",
+                :icon-next="pagination.nextIcon",
+                aria-next-label="Next page",
+                aria-previous-label="Previous page",
+                aria-page-label="Page",
+                aria-current-label="Current page",
+                @change="loadBlogs(pagination.current)"
+            )
+        .container.main-content(v-show="modeShow")
+            show-blog(ref="blogShow", @on-command="onCommand")
+
+
 </template>
 
 <script>
 "use strict";
 
+const Buefy = require("buefy").default;
 const Routes = require("JS-CORE/routes");
 const ENUMS = require("JS-HELPERS/enums");
 const Loading = require("VUE-COMPONENTS/general/loading.vue").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
+const ShowBlog = require("VUE-COMPONENTS/blog/show-blog.vue").default;
 
 export default {
     name: "EventList",
@@ -33,16 +82,37 @@ export default {
     components: {
         Loading,
         Notification,
+        ShowBlog
+    },
+
+    props: {
+        blogListUrl: {
+            type: String,
+            default: null,
+        },
     },
 
     data: () => ({
         ENUMS,
+        pagination: {
+            total: 0,
+            current: 1,
+            perPage: 50,
+            rangeBefore: 3,
+            rangeAfter: 1,
+            order: "",
+            size: "",
+            isSimple: false,
+            isRounded: false,
+            prevIcon: "chevron-left",
+            nextIcon: "chevron-right",
+        },
         formModeStack: [],
-        title: "انعقاد تفاهم نامه های سال 1398 با دستگاههای اجرایی استان",
-        description:
-            "تفاهم نامه پروژه های سلامت محور سال 1398 با دستگاههای اجرایی منعقد می گردد",
         notificationMessage: null,
         notificationType: "is-info",
+        blogs: [],
+        blogsCount: null,
+        title: null,
     }),
 
     computed: {
@@ -51,6 +121,7 @@ export default {
 
         modeLoading: (state) => state.formMode == ENUMS.FORM_MODE.LOADING,
         modeList: (state) => state.formMode == ENUMS.FORM_MODE.LIST,
+        modeShow: (state) => state.formMode == ENUMS.FORM_MODE.SHOW,
         showNotification: (state) => state.notificationMessage != null,
     },
 
@@ -63,11 +134,42 @@ export default {
     },
 
     methods: {
+
+        /**
+         * On commands clicked
+         */
+        onCommand(argument, payload) {
+            let arg = argument || null;
+            const data = payload || {};
+            if (null == arg) {
+                arg = 1;
+            }
+            switch (arg) {
+                case ENUMS.COMMAND.CANCEL:
+                    this.changeFormMode(null, { pop: true });
+                    break;
+                case ENUMS.COMMAND.SHOW:
+                    this.$refs.blogShow.loadBlogData(data)
+                    Vue.set(this, "title", payload.title);
+                    this.changeFormMode(ENUMS.FORM_MODE.SHOW);
+                    break;
+            }
+        },
+
+        /**
+         * On Command
+         *
+         * @param      {Object}  arg     The argument
+         */
+        commandClick(arg, data) {
+            this.onCommand(arg, data);
+        },
         /**
          * Init
          */
         init() {
             this.changeFormMode(ENUMS.FORM_MODE.LOADING);
+            this.loadBlogs(1);
         },
 
         /**
@@ -94,6 +196,20 @@ export default {
         },
 
         /**
+         * Load blogs
+         */
+        loadBlogs(pageId) {
+            let url = this.blogListUrl.replace("$page$", pageId);
+            url = url.replace("$pageSize$", 1000);
+            AxiosHelper.send("get", url, "").then((res) => {
+                const resData = res.data;
+                Vue.set(this, "blogs", resData.data.data);
+                Vue.set(this, "blogsCount", resData.data.count);
+                Vue.set(this.pagination, "total", resData.data.count);
+            });
+        },
+
+        /**
          * Set notification
          */
         setNotification(message, notificationType = "is-info") {
@@ -106,6 +222,20 @@ export default {
          */
         closeNotification() {
             this.setNotification(null);
+        },
+
+        /**
+         * To Persian Date
+         */
+        toPersianDate(date) {
+            return DateHelper.toPersianDateLong(date);
+        },
+
+        /**
+         * paginator click link
+         */
+        paginatorClick(id) {
+            this.loadBlogs(id);
         },
     },
 };

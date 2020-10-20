@@ -1,6 +1,6 @@
 <template lang="pug">
 .container-child
-    h1(v-if="!hasBlog") هیچ پیوست سلامتی ایجاد نشده
+    h1(v-if="!hasBlog") هیچ خبری ایجاد نشده
     table.table.is-striped.is-hoverable.is-fullwidth(v-if="hasBlog")
         thead
             tr

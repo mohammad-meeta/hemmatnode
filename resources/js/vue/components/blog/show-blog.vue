@@ -2,34 +2,46 @@
 .container
     .columns.is-vcentered
         .column.is-full(v-show="isLoadingMode")
-            h1 در حال بارگذاری
+            h3 در حال بارگذاری
         .column.is-full(v-show="! isLoadingMode")
             .info-card
                 .info-card-title {{ blogData.title }}
                 .info-card-details
                     .info-card-item
-                        .info-card-label نام پیوست سلامت:
-                        .info-card-value {{ blogData.title }}
-                    .info-card-item
-                        .info-card-label پیوست سلامت:
-                        .info-card-value {{ blogData.blog_id }}
+                        .info-card-value(v-html="blogData.description")
+                        pre {{ blogData.description }}
+                .info-card-item
+                    .info-card-label
+                        | فایل های ضمیمه
+                        .info-card-value
+                            file-download(ref="fileDownload", :old-files="oldFiles")
+                .info-card-item
+                    time(datetime="blogData.date") {{ toPersianDate(blogData.date) }}
 </template>
+
 <script>
 "use strict";
 
 const ENUMS = require("JS-HELPERS/enums");
+const FileDownload = require("VUE-COMPONENTS/general/file-download.vue")
+    .default;
 
 export default {
     name: "ShowBlog",
 
+    components: {
+        FileDownload,
+    },
+
     data: () => ({
         ENUMS,
         blogs: [],
+        oldFiles: [],
         blogData: {
             _id: null,
             title: null,
             blog_id: null,
-            executor: null,
+            description: null,
             date: null,
             files: {},
             is_active: false,
@@ -58,12 +70,14 @@ export default {
                 title: data.title,
                 blog_id: data.blog_id,
                 date: data.date,
-                executor: data.executor,
+                description: data.description,
                 files: {},
                 is_active: data.is_active,
             };
 
             Vue.set(this, "blogData", temp);
+            Vue.set(this, "oldFiles", data.files);
+            this.$refs.fileDownload.updateOldFiles(data.files);
         },
 
         /**
@@ -78,6 +92,12 @@ export default {
          */
         hideLoading() {
             Vue.set(this, "showLoadingFlag", false);
+        },
+        /**
+         * To Persian Date
+         */
+        toPersianDate(date) {
+            return DateHelper.toPersianDateLong(date);
         },
     },
 };

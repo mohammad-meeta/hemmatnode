@@ -11,11 +11,11 @@
         h1 در حال بارگذاری
     .form-small(v-show="! isLoadingMode")
         .field
-            label.label نام خبر
+            label.label عنوان
             .control
                 input.input(
                     type="text",
-                    placeholder="نام خبر",
+                    placeholder="عنوان",
                     autofocus,
                     v-model="blogData.title",
                     required
@@ -29,12 +29,13 @@
                             :value="blogtype._id") {{ blogtype.title }}
 
         .field
-            label.label سال
+            label.label تاریخ
             .control
                 date-picker(
-                    v-model="blogData.date",
-                    type="year",
-                    display-format="jYYYY",
+                    v-model="blogData.date"
+                    type="datetime"
+                    display-format="jDD/jMM/jYYYY HH:mm"
+                    format="YYYY-MM-DD HH:mm:ss"
                     required
                 )
         .field

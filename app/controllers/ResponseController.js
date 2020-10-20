@@ -361,8 +361,14 @@ Response.store = async function store(req, res, next) {
 
     ResponseHelper.insertNewResponse(data)
         .then(dataRes => {
+
+            const result = {
+                success: true,
+                data: dataRes
+            };
+
             res.status(200)
-                .send(dataRes)
+                .send(result)
                 .end();
         })
         .catch(err => console.error(err));

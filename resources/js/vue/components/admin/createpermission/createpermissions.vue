@@ -16,10 +16,12 @@
                 )
                     template(slot='empty') نقشی یافت نشد
 
-    div(v-for="rule in rules", :key="rules.id")
-        .field
-            b-checkbox(v-model="permissions" :native-value="rule.id")
-                | {{ rule.description }}
+    div(v-for="rule in groupedRule", :key="rules.id")
+        hr
+        div(v-for="drule in rule", :key="drule.id")
+            .field
+                b-checkbox(v-model="permissions" :native-value="drule.id")
+                    | {{ drule.description }}
 
     .field.is-grouped
         a.button.is-link.is-rounded(
@@ -32,6 +34,7 @@
 
 <script>
 "use strict";
+const _ = require("lodash");
 const Buefy = require("buefy").default;
 const Routes = require("JS-CORE/routes");
 const ENUMS = require("JS-HELPERS/enums");
@@ -100,6 +103,12 @@ export default {
                         .indexOf(this.title.toLowerCase()) >= 0
                 );
             });
+        },
+        groupedRule() {
+            let grouped = _.mapValues(_.groupBy(this.rules, "type"), (clist) =>
+                clist.map((rule) => _.omit(rule, "type"))
+            );
+            return grouped;
         },
     },
     watch: {

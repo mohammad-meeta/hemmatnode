@@ -50,6 +50,37 @@ Department.paginateDepartment = async function paginateDepartment(req, res, next
         })
         .catch(err => console.error(err));
 };
+/**
+ * paginate route
+ */
+Department.paginateAllDepartmentDocument = async function paginateAllDepartmentDocument(req, res, next) {
+    const dataPaginate = {
+        page: req.params.page,
+        pageSize: req.params.size || 10
+    };
+
+    let count = 0;
+    DepartmentHelper.loadAllCountDepartmentData()
+        .then(data => {
+            count = data;
+
+            DepartmentHelper.loadAllDepartmentDocumentData(dataPaginate)
+                .then(data => {
+                    const result = {
+                        success: true,
+                        data: {
+                            data: data,
+                            count: count
+                        }
+                    };
+                    res.status(200)
+                        .send(result)
+                        .end();
+                })
+                .catch(err => console.error(err));
+        })
+        .catch(err => console.error(err));
+};
 
 /**
  * show route

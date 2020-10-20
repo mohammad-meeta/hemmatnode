@@ -1,0 +1,17 @@
+extends ../../layout/app.pug
+
+block title
+    | شاخص
+
+block content
+    .container
+        karnameindexs(
+            list-url=route('api.all.karnameindex', { page: '$page$', size: '$pageSize$' }),
+            register-url=route('karnameindex.store'),
+            edit-url=route('karnameindex.update', { id :'$id$'}),
+        )
+
+block scripts
+    script(defer, src=mix('js/pages/karnameindex/index/index.js'))
+
+

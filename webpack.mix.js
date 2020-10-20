@@ -106,6 +106,10 @@ mix.js("resources/js/core/kernel.js", `${output}/js/core`)
         `${output}/js/pages/dashboard/index`
     )
     .js(
+        "resources/js/pages/karnameindex/index/index.js",
+        `${output}/js/pages/karnameindex/index`
+    )
+    .js(
         "resources/js/pages/project/index/index.js",
         `${output}/js/pages/project/index`
     )

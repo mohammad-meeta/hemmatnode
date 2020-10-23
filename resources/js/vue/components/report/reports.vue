@@ -9,8 +9,8 @@
             span(v-html="notificationMessage")
         .container.page-header
             .title
-                h1(v-show="modeList") شاخص کارنامه
-                h1(v-show="modeRegister") ایجاد شاخص کارنامه
+                h1(v-show="modeList") کارنامه
+                h1(v-show="modeRegister") ایجاد کارنامه
 
     .columns.exposed-form(v-show="!modeLoading")
         .column.is-one-fifth(v-show="modeList")
@@ -36,32 +36,37 @@
             loading
 
         .column(v-show="!modeLoading && modeList")
-            list-indicator(
-                ref="indicatorList",
+            list-report(
+                ref="reportList",
                 @on-command="onCommand",
                 :list-url="listUrl"
             )
 
         .column(v-show="!modeLoading && modeRegister")
-            register-indicator(
-                ref="indicatorRegister",
+            register-report(
+                ref="reportRegister",
                 @on-command="onCommand",
-                @on-register="onIndicatorRegister",
+                @on-register="onReportRegister",
                 :register-url="registerUrl",
-                :list-url-department="listUrlDepartment"
+                :find-report="findReport",
+                :indexs-url="indexsUrl",
+                :department-id="departmentId",
+                :year="year"
             )
 
         .column(v-show="!modeLoading && modeEdit")
-            edit-indicator(
-                ref="indicatorEdit",
+            edit-report(
+                ref="reportEdit",
                 @on-command="onCommand",
-                @on-update="onIndicatorUpdate",
+                @on-update="onReportUpdate",
                 :edit-url="editUrl",
-                :list-url-department="listUrlDepartment"
+                :find-report="findReport",
+                :indexs-url="indexsUrl",
+                :department-id="departmentId"
             )
 
         .column(v-show="!modeLoading && modeShow")
-            show-indicator(ref="indicatorShow", @on-command="onCommand")
+            show-report(ref="reportShow", @on-command="onCommand")
 </template>
 
 <script>
@@ -70,37 +75,43 @@
 const Routes = require("JS-CORE/routes");
 const ENUMS = require("JS-HELPERS/enums");
 const Loading = require("VUE-COMPONENTS/general/loading.vue").default;
-const RegisterIndicator = require("VUE-COMPONENTS/karnameindex/register-indicator.vue")
+const RegisterReport = require("VUE-COMPONENTS/report/register-report.vue")
     .default;
-const EditIndicator = require("VUE-COMPONENTS/karnameindex/edit-indicator.vue")
-    .default;
-const ListIndicator = require("VUE-COMPONENTS/karnameindex/list-indicator.vue")
-    .default;
-const ShowIndicator = require("VUE-COMPONENTS/karnameindex/show-indicator.vue")
-    .default;
+const EditReport = require("VUE-COMPONENTS/report/edit-report.vue").default;
+const ListReport = require("VUE-COMPONENTS/report/list-report.vue").default;
+const ShowReport = require("VUE-COMPONENTS/report/show-report.vue").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
 export default {
-    name: "Indicators",
+    name: "Reports",
 
     components: {
         Loading,
-        ListIndicator,
-        RegisterIndicator,
-        EditIndicator,
-        ShowIndicator,
+        ListReport,
+        RegisterReport,
+        EditReport,
+        ShowReport,
         Notification,
     },
 
     data: () => ({
         ENUMS,
         formModeStack: [],
-        indicators: [],
+        reports: [],
         notificationMessage: null,
         notificationType: "is-info",
     }),
 
     props: {
+        departmentId: {
+            type: String,
+            default: null,
+        },
+        year: {
+            type: String,
+            default: null,
+        },
+
         title: {
             type: String,
             default: null,
@@ -110,7 +121,11 @@ export default {
             type: String,
             default: null,
         },
-        listUrlDepartment: {
+        findReport: {
+            type: String,
+            default: null,
+        },
+        showReportYearUrl: {
             type: String,
             default: null,
         },
@@ -121,6 +136,10 @@ export default {
         },
 
         editUrl: {
+            type: String,
+            default: null,
+        },
+        indexsUrl: {
             type: String,
             default: null,
         },
@@ -148,30 +167,22 @@ export default {
 
     methods: {
         /**
-         * On Register indicator
+         * On Register report
          */
-        onIndicatorRegister(payload) {
+        onReportRegister(payload) {
             //***update vue list****
-            this.$refs.indicatorList.addToIndicatorList(
-                payload.data.data.data[0]
-            );
-            this.setNotification(
-                ".شاخص کارنامه با موفقیت ذخیره شد",
-                "is-success"
-            );
+            this.$refs.reportList.addToReportList(payload.data.data.data[0]);
+            this.setNotification(".کارنامه با موفقیت ذخیره شد", "is-success");
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
         },
         /**
          * On Update
          */
-        onIndicatorUpdate(payload) {
-            this.$refs.indicatorList.editIndicatorList(payload);
+        onReportUpdate(payload) {
+            this.$refs.reportList.editReportList(payload);
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
 
-            this.setNotification(
-                ".شاخص کارنامه با موفقیت ویرایش شد",
-                "is-success"
-            );
+            this.setNotification(".کارنامه با موفقیت ویرایش شد", "is-success");
         },
 
         /**
@@ -190,11 +201,12 @@ export default {
 
                 case ENUMS.COMMAND.REGISTER:
                     /* TODO: REGISTER NEW  */
+                    console.log("REGISTER NEW Report", arg);
                     break;
 
                 case ENUMS.COMMAND.EDIT:
                     /* TODO: Edit InviteSession */
-                    this.$refs.indicatorEdit.loadIndicatorData(data);
+                    this.$refs.reportEdit.loadReportData(data);
                     this.changeFormMode(ENUMS.FORM_MODE.EDIT);
                     break;
 
@@ -203,7 +215,7 @@ export default {
                     break;
 
                 case ENUMS.COMMAND.SHOW:
-                    this.$refs.indicatorShow.loadIndicatorData(data);
+                    this.$refs.reportShow.loadReportData(data);
                     this.changeFormMode(ENUMS.FORM_MODE.SHOW);
                     break;
             }
@@ -223,7 +235,7 @@ export default {
          */
         init() {
             this.changeFormMode(ENUMS.FORM_MODE.LOADING);
-            this.$refs.indicatorList.loadIndicators(1);
+            this.$refs.reportList.loadReports(1);
         },
 
         /**

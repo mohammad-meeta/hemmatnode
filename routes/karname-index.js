@@ -18,6 +18,12 @@ Router.get("/api/all/karnameindexs/:page/:size?", [
     "Karnameindex@paginateKarnameindexAll",
 ]).as("api.all.karnameindex");
 
+Router.get("/api/:group/karnameindexs/:page/:size?", [
+    checkSession,
+    Rule.canAsync("user.permision", "api.all.karnameindex"),
+    "Karnameindex@paginateKarnameindexDepartment",
+]).as("api.department.karnameindex");
+
 Router.get("/karnameindex/create", [
     checkSession,
     Rule.canAsync("user.permision", "karnameindex.create"),

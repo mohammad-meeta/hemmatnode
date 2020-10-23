@@ -122,6 +122,10 @@ mix.js("resources/js/core/kernel.js", `${output}/js/core`)
         `${output}/js/pages/health/index`
     )
     .js(
+        "resources/js/pages/report/index/index.js",
+        `${output}/js/pages/report/index`
+    )
+    .js(
         "resources/js/pages/admin/createpermission/index/index.js",
         `${output}/js/pages/admin/createpermission/index`
     )
@@ -212,5 +216,8 @@ mix.sass("resources/sass/core/kernel.scss", `${output}/css/core`)
     .sass("resources/sass/pages/home/index.scss", `${output}/css/pages/home`)
     .sass("resources/sass/pages/auth/login.scss", `${output}/css/pages/auth`);
 
-/* Copy directory */
-mix.copyDirectory("resources/js/ckeditor4/ckeditor", "public/js/ckeditor");
+// /* Copy directory */
+// mix.copyDirectory(
+//     "resources/js/ckeditor4/ckeditor",
+//     "public/js/ckeditor"
+// );

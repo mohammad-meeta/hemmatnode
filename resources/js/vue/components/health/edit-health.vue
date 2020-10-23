@@ -217,7 +217,7 @@ export default {
                 oldFiles: this.oldFiles,
                 deletedOldFiles: this.deletedOldFiles,
             };
-
+            console.log(healthData);
             try {
                 const url = this.editUrl.replace("$id$", healthData._id);
                 let res = await AxiosHelper.send("patch", url, healthData, {

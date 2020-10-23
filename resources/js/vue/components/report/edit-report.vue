@@ -11,49 +11,45 @@
         h1 در حال بارگذاری
     .form-small(v-show="! isLoadingMode")
         .field
+            label.label سال اجرا
+            .control
+                date-picker(
+                    v-model="reportData.year",
+                    display-format="jYYYY",
+                    type="year",
+                    required
+                )
+
+        .field
             section
-                b-field(label='انتخاب دسته')
+                b-field(label='شاخص')
                     b-autocomplete(
                         v-model='title'
-                        placeholder='انتخاب دسته'
+                        disabled=true
+                        placeholder='انتخاب شاخص'
                         :data='filteredDataObjEd' 
                         :open-on-focus="openOnFocus"
                         field='title' 
                         @select='option => (selected = option)' 
                         :clearable='clearable'
                     )
-                            template(slot='empty') یافت نشد
+                            template(slot='empty') شاخصی یافت نشد
 
         .field
-            label.label عنوان
+            label.label مقدار
             .control
                 input.input(
                     type="text",
-                    placeholder="نام",
-                    v-model="indicatorData.title",
-                    required
-                )
-
-        .field
-            label.label تعریف
-            .control
-                textarea.textarea(
-                    v-model="indicatorData.description",
-                    required
-                )
-        //- .field
-            label.label واحد
-            .control
-                input.input(
-                    type="text",
-                    placeholder="واحد",
+                    placeholder="مقدار",
                     autofocus,
-                    v-model="indicatorData.unit",
+                    v-model="reportData.value",
                     required
                 )
+
         .field
             label.checkbox
-                input(type="checkbox", v-model="indicatorData.isActive")
+                input(type="checkbox", v-model="reportData.isActive")
+                |
                 | فعال
             .field.is-grouped
                 .control(v-show="! isLoadingMode")
@@ -61,20 +57,23 @@
                         href="#",
                         @click.prevent="commandClick(ENUMS.COMMAND.SAVE)"
                     )
+                        |
                         | ویرایش
 </template>
 
 <script>
 "use strict";
+
 const Buefy = require("buefy").default;
 const AxiosHelper = require("JS-HELPERS/axios-helper");
-const IndicatorValidator = require("JS-VALIDATORS/indicator-register-validator");
+// const ReportValidator = require("JS-VALIDATORS/report-register-validator");
 const ENUMS = require("JS-HELPERS/enums");
 const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
+const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 
 export default {
-    name: "EditIndicator",
+    name: "EditReport",
     components: {
         DatePicker: VuePersianDatetimePicker,
         Notification,
@@ -82,15 +81,16 @@ export default {
 
     data: () => ({
         ENUMS,
-
-        indicatorData: {
-            title: null,
-            description: null,
-            unit: null,
+        reportData: {
+            year: null,
+            department_id: null,
+            index_id: null,
+            value: null,
             isActive: false,
+            deletedOldFiles: [],
         },
+        indexs: [],
 
-        departments: [],
         selectedOption: null,
         title: "",
         keepFirst: false,
@@ -98,7 +98,6 @@ export default {
         selected: null,
         clearable: false,
 
-        indicatorTypes: [],
         notificationMessage: null,
         notificationType: "is-info",
         showLoadingFlag: false,
@@ -109,14 +108,23 @@ export default {
             type: String,
             default: "",
         },
-        listUrlDepartment: {
+        indexsUrl: {
+            type: String,
+            default: "",
+        },
+        findReport: {
+            type: String,
+            default: "",
+        },
+        departmentId: {
             type: String,
             default: null,
         },
     },
 
     created() {
-        Promise.all([this.loadDepartments()]);
+        Vue.set(this.reportData, "department_id", this.departmentId);
+        Promise.all([this.loadIndexs()]);
     },
 
     mounted() {},
@@ -125,7 +133,7 @@ export default {
         isLoadingMode: (state) => state.showLoadingFlag == true,
         showNotification: (state) => state.notificationMessage != null,
         filteredDataObjEd() {
-            return this.departments.filter((option) => {
+            return this.indexs.filter((option) => {
                 return (
                     option.title
                         .toString()
@@ -143,35 +151,35 @@ export default {
         onIndexSelected(option) {
             Vue.set(this, "selected", option);
         },
+
         /**
          * load all monitoring type for select monitoring type in form
          */
-        async loadDepartments() {
-            const url = this.listUrlDepartment;
+        async loadIndexs() {
+            const url = this.indexsUrl;
 
             let res = await AxiosHelper.send("get", url, "");
             const resData = res.data;
             const datas = resData.data.data;
 
-            Vue.set(this, "departments", datas);
+            Vue.set(this, "indexs", datas);
         },
 
         /**
          * Load specific user
          */
-        loadIndicatorData(data) {
-            console.log(data);
+        loadReportData(data) {
             let temp = {
                 _id: data._id,
-                title: data.title,
-                description: data.description,
-                dep: data.dep,
-                // unit: data.unit,
+                year: data.year,
+                index_id: data.kindex._id,
+                value: data.value,
+                department_id: this.reportData.department_id,
                 isActive: data.is_active,
             };
-            Vue.set(this, "indicatorData", temp);
-            Vue.set(this, "title", data.dep.title);
-            Vue.set(this, "selected", data.dep);
+            Vue.set(this, "reportData", temp);
+            Vue.set(this, "title", data.kindex.title);
+            Vue.set(this, "selected", data.kindex);
         },
 
         /**
@@ -182,7 +190,7 @@ export default {
         commandClick(arg) {
             switch (arg) {
                 case ENUMS.COMMAND.SAVE:
-                    this.editIndicator();
+                    this.editReport();
                     break;
             }
         },
@@ -217,30 +225,31 @@ export default {
         },
 
         /**
-         * Edit indicator
+         * Edit report
          */
-        async editIndicator() {
-            const isValid = this.validate();
+        async editReport() {
+            // const isValid = this.validate();
 
-            if (!isValid) {
-                return;
-            }
+            // if (!isValid) {
+            //     return;
+            // }
 
             this.showLoading();
 
-            let indicatorData = {
-                _id: this.indicatorData._id,
-                department_id: this.selected._id,
-                title: this.indicatorData.title,
-                description: this.indicatorData.description,
-                // unit: this.indicatorData.unit,
-                is_active: this.indicatorData.isActive,
+            let reportData = {
+                _id: this.reportData._id,
+                year: this.reportData.year,
+                index_id: this.selected._id,
+                value: this.reportData.value,
+                department_id: this.reportData.department_id,
+                is_active: this.reportData.isActive,
             };
 
             try {
-                const url = this.editUrl.replace("$id$", indicatorData._id);
-                let res = await AxiosHelper.send("patch", url, indicatorData, {
+                const url = this.editUrl.replace("$id$", reportData._id);
+                let res = await AxiosHelper.send("patch", url, reportData, {
                     sendAsFormData: true,
+                    filesArray: "files",
                 });
 
                 const data = res.data;
@@ -249,7 +258,7 @@ export default {
                     data,
                 });
             } catch (err) {
-                this.setNotification(".خطا در ویرایش شاخص", "is-danger");
+                this.setNotification(".خطا در ویرایش گزارش", "is-danger");
             }
 
             this.hideLoading();
@@ -259,7 +268,7 @@ export default {
          * Validate
          */
         validate() {
-            const result = IndicatorValidator.validateEdit(this.indicatorData);
+            const result = ReportValidator.validateEdit(this.reportData);
 
             if (result.passes) {
                 this.closeNotification();

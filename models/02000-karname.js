@@ -18,7 +18,7 @@ Model.setup = function setup() {
     Model.plugins(schema);
     Model.extraFunctions(schema);
 
-    mongoose.model('Karnameindex', schema, "karnameindexes");
+    mongoose.model('Report', schema, "reports");
 };
 
 /**
@@ -28,24 +28,24 @@ Model.model = function model() {
     const ObjectId = mongoose.Schema.ObjectId;
 
     return {
-        'title': {
+        'year': {
             type: String,
             required: true
         },
-        'description': {
-            type: String,
+        'index_id': {
+            type: ObjectId,
             required: true
         },
-        'unit': {
+        'department_id': {
+            type: ObjectId,
+            required: true
+        },
+        'value': {
             type: String
         },
         'is_active': {
             type: Boolean,
             default: true,
-            required: true
-        },
-        'department_id': {
-            type: ObjectId,
             required: true
         },
         'user_id': {
@@ -73,7 +73,7 @@ Model.plugins = function plugins(schema) {
  * @param      {Object}  schema  The schema
  */
 Model.extraFunctions = function extraFunctions(schema) {
-    schema.statics.newKarnameindex = Model.newKarnameindex;
+    schema.statics.Report = Model.Report;
 
     schema.methods.enable = Model.enable;
     schema.methods.disable = Model.disable;
@@ -82,8 +82,8 @@ Model.extraFunctions = function extraFunctions(schema) {
 /**
  * Insert user function
  */
-Model.newKarnameindex = function newKarnameindex(newKarnameindex) {
-    let result = new this(newKarnameindex);
+Model.Report = function Report(Report) {
+    let result = new this(Report);
 
     return result.save();
 };

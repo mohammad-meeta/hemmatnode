@@ -55,6 +55,42 @@ Karnameindex.paginateKarnameindex = async function paginateKarnameindex(req, res
     }
 };
 /**
+ * paginate route
+ */
+Karnameindex.paginateKarnameindexDepartment = async function paginateKarnameindexDepartment(req, res, next) {
+    const dataPaginate = {
+        page: req.params.page,
+        pageSize: req.params.size || 10,
+    };
+    const group = req.params.group;
+
+    try {
+        let result = {};
+
+        let data = await KarnameindexHelper.loadDepKarnameindexCountData(group);
+        let count = data.data;
+
+        data = await KarnameindexHelper.loadDepKarnameindexData(req, dataPaginate, group);
+        result = {
+            success: true,
+            data: {
+                data: data,
+                count: count,
+            },
+        };
+
+        res.status(200)
+            .send(result)
+            .end();
+    } catch (err) {
+        Logger.error(err);
+
+        res.status(500)
+            .send(err)
+            .end();
+    }
+};
+/**
  * paginate all route
  */
 Karnameindex.paginateKarnameindexAll = async function paginateKarnameindexAll(req, res, next) {
@@ -153,6 +189,7 @@ Karnameindex.store = async function store(req, res, next) {
         title: req.body.title,
         description: req.body.description,
         unit: req.body.unit,
+        department_id: req.body.department_id,
         user_id: req.session.auth.userId,
         is_active: req.body.is_active,
     };
@@ -181,6 +218,7 @@ Karnameindex.update = async function update(req, res, next) {
         title: req.body.title,
         description: req.body.description,
         unit: req.body.unit,
+        department_id: req.body.department_id,
         user_id: req.session.auth.userId,
         is_active: req.body.is_active,
     };

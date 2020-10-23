@@ -31,6 +31,12 @@ Router.get('/api/departments/:page/:size?', [
 ])
     .as('api.department');
 
+Router.get('/api/departments/refrencess/null/:page/:size?', [
+    checkSession,
+    'Department@paginateDepartmentReferencessNull'
+])
+    .as('api.department.refrencess.null');
+
 Router.get('/api/all/departments/document/:page/:size?', [
     checkSession,
     'Department@paginateAllDepartmentDocument'

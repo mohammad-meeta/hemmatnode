@@ -12,19 +12,18 @@
     .form-small(v-show="! isLoadingMode")
         .field
             section
-                p.content
-                    b Selected:
-                    |  {{ selected }}
-                b-field(label='Find a name')
+                b-field(label='شاخص')
                     b-autocomplete(
                         v-model='title'
-                        placeholder='Select...'
+                        placeholder='انتخاب شاخص'
                         :data='filteredDataObjEd' 
                         :open-on-focus="openOnFocus"
                         field='title' 
                         @select='option => (selected = option)' 
                         :clearable='clearable'
                     )
+                            template(slot='empty') شاخصی یافت نشد
+
 
         //- .field
             b-field(label='شاخص')
@@ -188,6 +187,7 @@ export default {
                 isActive: data.is_active,
             };
             Vue.set(this, "title", data.index.title);
+            Vue.set(this, "selected", data.index);
             Vue.set(this, "monitoringData", temp);
         },
 

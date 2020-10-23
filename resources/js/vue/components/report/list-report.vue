@@ -1,7 +1,7 @@
 <template lang="pug">
 .container-child
-    h1(v-if="!hasIndicator") هیچ شاخصی ایجاد نشده
-    table.table.is-striped.is-hoverable.is-fullwidth(v-if="hasIndicator")
+    h1(v-if="!hasReport") هیچ کارنامهی ایجاد نشده
+    table.table.is-striped.is-hoverable.is-fullwidth(v-if="hasReport")
         thead
             tr
                 th عنوان
@@ -9,14 +9,14 @@
                 th تاریخ ایجاد
                 th عملیات
         tbody
-            tr(v-for="indicator in indicators", :key="indicator.id")
-                td {{ indicator.title }}
-                td {{ indicator.is_active }}
-                td {{ toPersianDate(indicator.created_at) }}
+            tr(v-for="report in reports", :key="report.id")
+                td {{ report.kindex.title }}
+                td {{ report.is_active }}
+                td {{ toPersianDate(report.created_at) }}
                 td.function-links
                     a.button.is-warning.is-rounded.mt-2(
                         href="#",
-                        @click.prevent="commandClick(ENUMS.COMMAND.SHOW, indicator)"
+                        @click.prevent="commandClick(ENUMS.COMMAND.SHOW, report)"
                     )
                         span.icon.is-small
                             i.material-icons.icon swap_horizontal_circle
@@ -24,11 +24,11 @@
 
                     a.button.is-primary.is-rounded(
                         href="#",
-                        @click.prevent="commandClick(ENUMS.COMMAND.EDIT, indicator)"
+                        @click.prevent="commandClick(ENUMS.COMMAND.EDIT, report)"
                     )
                         span.icon.is-small
                             i.material-icons.icon check_circle
-                        span ویرایش شاخص
+                        span ویرایش کارنامه
 
     b-pagination(
         :total="pagination.total",
@@ -46,7 +46,7 @@
         aria-previous-label="Previous page",
         aria-page-label="Page",
         aria-current-label="Current page",
-        @change="loadIndicators(pagination.current)"
+        @change="loadReports(pagination.current)"
     )
 </template>
 
@@ -78,27 +78,27 @@ export default {
             prevIcon: "chevron-left",
             nextIcon: "chevron-right",
         },
-        indicators: [],
-        indicatorsCount: 0,
+        reports: [],
+        reportsCount: 0,
         pageCount: 0,
     }),
 
     computed: {
-        hasIndicator: (state) => (state.indicators || []).length,
+        hasReport: (state) => (state.reports || []).length,
     },
 
     methods: {
         /**
-         * Load indicators
+         * Load reports
          */
-        loadIndicators(pageId) {
+        loadReports(pageId) {
             let url = this.listUrl
                 .replace(/\$page\$/g, pageId)
                 .replace(/\$pageSize\$/g, 50);
             AxiosHelper.send("get", url, "").then((res) => {
                 const resData = res.data;
-                Vue.set(this, "indicators", resData.data.data);
-                Vue.set(this, "indicatorsCount", resData.data.count);
+                Vue.set(this, "reports", resData.data.data);
+                Vue.set(this, "reportsCount", resData.data.count);
                 Vue.set(this.pagination, "total", resData.data.count);
             });
         },
@@ -123,41 +123,39 @@ export default {
          * paginator click link
          */
         paginatorClick(id) {
-            this.loadIndicators(id);
+            this.loadReports(id);
         },
 
         /**
-         * add new Indicator data to list data
+         * add new Report data to list data
          */
-        addToIndicatorList(payload) {
-            const newIndicatorData = {
+        addToReportList(payload) {
+            const newReportData = {
                 _id: payload._id,
-                title: payload.title,
-                dep: payload.dep,
-                description: payload.description,
-                // unit: payload.unit,
+                year: payload.year,
+                kindex: payload.kindex,
+                value: payload.value,
                 is_active: payload.is_active,
                 created_at: payload.created_at,
             };
 
-            this.indicators.unshift(newIndicatorData);
+            this.reports.unshift(newReportData);
         },
-        editIndicatorList(payload) {
-            const editedIndicatorData = {
+        editReportList(payload) {
+            const editedReportData = {
                 _id: payload.data.data[0]._id,
-                title: payload.data.data[0].title,
-                dep: payload.data.data[0].dep,
-                description: payload.data.data[0].description,
-                // unit: payload.data.data[0].unit,
+                year: payload.data.data[0].year,
+                kindex: payload.data.data[0].kindex,
+                value: payload.data.data[0].value,
                 is_active: payload.data.data[0].is_active,
                 created_at: payload.data.data[0].created_at,
             };
 
-            let foundIndex = this.indicators.findIndex(
-                (x) => x._id == editedIndicatorData._id
+            let foundIndex = this.reports.findIndex(
+                (x) => x._id == editedReportData._id
             );
 
-            Vue.set(this.indicators, foundIndex, editedIndicatorData);
+            Vue.set(this.reports, foundIndex, editedReportData);
         },
     },
 };

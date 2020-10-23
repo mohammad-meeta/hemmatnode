@@ -143,6 +143,7 @@ export default {
             this.healths.unshift(newHealthData);
         },
         editHealthList(payload) {
+            console.log(payload);
             const editedHealthData = {
                 _id: payload.data.data[0]._id,
                 title: payload.data.data[0].title,

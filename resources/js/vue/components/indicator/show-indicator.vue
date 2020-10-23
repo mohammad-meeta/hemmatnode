@@ -5,14 +5,12 @@
                 h1 در حال بارگذاری
             .column.is-full(v-show="! isLoadingMode")
                 .info-card
-                    .info-card-title {{ indicatorData.title }}
                     .info-card-details
                         .info-card-item
-                            .info-card-label عنوان:
-                            .info-card-value {{ indicatorData.title }}
+                            .info-card-value {{ indicatorData.description }}
                         .info-card-item
-                            .info-card-label شاخص:
-                            .info-card-value {{ indicatorData.indicator_id }}
+                            .info-card-label واحد:
+                            .info-card-value {{ indicatorData.unit }}
 </template>
 <script>
 "use strict";

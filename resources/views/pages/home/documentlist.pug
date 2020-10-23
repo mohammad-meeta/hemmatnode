@@ -4,8 +4,9 @@ block title
     | اسناد راهبردی
 block content
     document-lists(
-        document-list-url=route('api.document', { page: '$page$', size: '$pageSize$', group: '$departmentId$ }),
+        document-list-url=route('api.document', { page: '$page$', size: '$pageSize$', group: '$departmentId$' }),
         department-list-url=route('api.department', { page: '$page$', size: '$pageSize$' }),
+        department-document-list-url=route('api.all.department.document', { page: '$page$', size: '$pageSize$' }),
     )
 block scripts
     script(defer, src=mix('js/pages/home/document-list/index.js'))

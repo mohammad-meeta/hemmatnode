@@ -9,32 +9,51 @@
             span(v-html="notificationMessage")
 
         .container.page-header
-            .title
+            .title(v-show="! modeShow")
                 h1 اسناد راهبردی
-        .container.main-content
+            .title(v-if="modeShow")
+                h1 {{ title }}
+            .hero-dashboard
+                .field.is-grouped
+                    b-button.is-flex-direction-row-reverse(
+                        v-show="! modeList"
+                        type="is-warning is-light"
+                        size="is-small"
+                        icon-right="chevron-right"
+                        @click.prevent="commandClick(ENUMS.COMMAND.CANCEL)"
+                        )
+                            span بازگشت
+        .container.main-content(v-show="! modeShow")
             .intro-cards.columns
                 .column.is-4(
-                    v-for="documentCategory in documentCategories",
+                    v-for="documentCategory in departmentDocumnets",
                     :key="documentCategory.id"
                 )
                     .intro-card
                         .intro-card-head
                             h2 {{ documentCategory.title }}
                         .panel-block.is-active(
-                            v-for="doc in documentCategory.document",
+                            v-for="doc in documentCategory.docs",
                             :key="doc._id"
                         )
-                            a(:href="doc.file") {{ doc.title }}
+                            a(
+                                href="#"
+                                @click.prevent="commandClick(ENUMS.COMMAND.SHOW, doc)"
+                            ) {{ doc.title }}
+        .container.main-content(v-show="modeShow")
+            show-document(ref="documentShow", @on-command="onCommand")
+
 </template>
 
 <script>
 "use strict";
 
+const Buefy = require("buefy").default;
 const Routes = require("JS-CORE/routes");
 const ENUMS = require("JS-HELPERS/enums");
 const Loading = require("VUE-COMPONENTS/general/loading.vue").default;
-
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
+const ShowDocument = require("VUE-COMPONENTS/document/show-document.vue").default;
 
 export default {
     name: "DocumentList",
@@ -42,19 +61,19 @@ export default {
     components: {
         Loading,
         Notification,
+        ShowDocument
     },
 
     props: {
-        title: {
-            type: String,
-            default: null,
-        },
-
         departmentListUrl: {
             type: String,
             default: null,
         },
         documentListUrl: {
+            type: String,
+            default: null,
+        },
+        departmentDocumentListUrl: {
             type: String,
             default: null,
         }
@@ -63,41 +82,12 @@ export default {
     data: () => ({
         ENUMS,
         formModeStack: [],
-        documentCategories: [
-            {
-                id: 1,
-                title: "اسناد مربوط به کارگروه سلامت و امنیت غذایی",
-                document: [
-                    {
-                        id: 1,
-                        title:
-                            "اولین صورتجلسه کارگروه سلامت و امنیت غذایی استان",
-                        file: "/images/storage/1.pdf",
-                    },
-                    {
-                        id: 3,
-                        title:
-                            "دومین صورتجلسه کارگروه سلامت و امنیت غذایی استان",
-                        file: "/images/storage/2.pdf",
-                    },
-                ],
-            },
-            {
-                id: 2,
-                title: "شیوه نامه های کارگروه سلامت و امنیت غذایی",
-                document: [
-                    {
-                        id: 2,
-                        title:
-                            "شیوه نامه تشکیل شورای پیام گزاران دستگاههای اجرایی",
-                        file: "/images/storage/tashkil-v-ertegha-payam.pdf",
-                    },
-                ],
-            },
-        ],
         notificationMessage: null,
         notificationType: "is-info",
         departments: [],
+        departmentDocumnets: [],
+        departmentDocumnetsCount: 0,
+        title: null,
     }),
 
     computed: {
@@ -106,6 +96,7 @@ export default {
 
         modeLoading: (state) => state.formMode == ENUMS.FORM_MODE.LOADING,
         modeList: (state) => state.formMode == ENUMS.FORM_MODE.LIST,
+        modeShow: (state) => state.formMode == ENUMS.FORM_MODE.SHOW,
         showNotification: (state) => state.notificationMessage != null,
     },
 
@@ -118,42 +109,54 @@ export default {
     },
 
     methods: {
+
+        /**
+         * On commands clicked
+         */
+        onCommand(argument, payload) {
+            let arg = argument || null;
+            const data = payload || {};
+            if (null == arg) {
+                arg = 1;
+            }
+            switch (arg) {
+                case ENUMS.COMMAND.CANCEL:
+                    this.changeFormMode(null, { pop: true });
+                    break;
+                case ENUMS.COMMAND.SHOW:
+                    this.$refs.documentShow.loadDocumentData(data);
+                    Vue.set(this, "title", payload.title);
+                    this.changeFormMode(ENUMS.FORM_MODE.SHOW);
+                    break;
+            }
+        },
+
+        /**
+         * On Command
+         *
+         * @param      {Object}  arg     The argument
+         */
+        commandClick(arg, data) {
+            this.onCommand(arg, data);
+        },
         /**
          * Init
          */
         init() {
             this.changeFormMode(ENUMS.FORM_MODE.LOADING);
-            this.loadDepartments(1);
+            this.loadDepartmentsDocuments(1);
         },
 
         /**
-         * Load departments
+         * Load departments documnets
          */
-        loadDepartments(pageId) {
-            let url = this.departmentListUrl.replace("$page$", pageId);
+        loadDepartmentsDocuments(pageId) {
+            let url = this.departmentDocumentListUrl.replace("$page$", pageId);
             url = url.replace("$pageSize$", 1000);
             AxiosHelper.send("get", url, "").then((res) => {
                 const resData = res.data;
-                Vue.set(this, "departments", resData.data.data);
-                Vue.set(this, "departmentsCount", resData.data.count);
-
-                this.paginator();
-            });
-        },
-
-        /**
-         * load departments documents
-         */
-        loadDepartmentsDocuments(departmentId) {
-            let url = this.documentListUrl
-                .replace(/\$page\$/g, 1)
-                .replace(/\$pageSize\$/g, 1000)
-                .replace(/\$departmentId\$/g, departmentId);
-            AxiosHelper.send("get", url, "").then((res) => {
-            const resData = res.data;
-            Vue.set(this, "documents", resData.data.data);
-            Vue.set(this, "documentsCount", resData.data.count);
-            Vue.set(this.pagination, "total", resData.data.count);
+                Vue.set(this, "departmentDocumnets", resData.data.data);
+                Vue.set(this, "departmentDocumnetsCount", resData.data.count);
             });
         },
 

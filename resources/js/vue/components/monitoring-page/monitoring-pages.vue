@@ -4,22 +4,12 @@
             notification(:notification-type="notificationType",
                          @on-close="closeNotification", v-if="showNotification")
                 span(v-html="notificationMessage")
-
             .container.page-header
-                .title
+                .title(v-show="! modeShow")
                     h1 دیدبانی سلامت
-            .container.main-content
-                .intro-cards.columns
-                    .column.is-4(v-for='eventCategory in eventCategories',
-                                 :key='eventCategory.id')
-                        .intro-card
-                            .intro-card-head
-                                h2 {{ eventCategory.title }}
-                            .intro-card-body
-                                .intro-card-blocks(v-for='doc in eventCategory.event', :key='doc._id')
-                                    a(:href="doc.file") {{ doc.title }}
-
-
+                .title(v-if="modeShow")
+                    h1 {{ title }}
+                categorized-list(:value="montypes")
 </template>
 
 <script>
@@ -30,39 +20,79 @@ const ENUMS = require("JS-HELPERS/enums");
 const Loading = require("VUE-COMPONENTS/general/loading.vue").default;
 
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
+const CategorizedList = require("VUE-COMPONENTS/monitoring-page/categorized-list.vue").default;
 
 export default {
     name: "MonitoringPage",
 
     components: {
         Loading,
-        Notification
+        Notification,
+        CategorizedList
     },
 
     data: () => ({
         ENUMS,
         formModeStack: [],
-        eventCategories: [
+        montypes:[
             {
-                id: 1,
-                title: "داشبورد سلامت استان",
-                event: [
+                title: "کلان",
+                indexs: [
                     {
-                    id: 1,
-                    title: "داشبورد سلامت استان قزوین سال 97",
-                    file: "/images/storage/dashboard-salamat98.pdf"
-                    }
+                        title: "سرمایه اجتماعی",
+                    },
+                    {
+                        title: "شادکامی",
+                    },
+                    {
+                        title: "امید به زندگی در بدو تولد",
+                    },
                 ]
             },
             {
-                id: 2,
-                title: "دیدبانی سلامت",
-                event: [
+                title: "حمایت اجتماعی",
+                indexs: [
                     {
-                        id: 2,
-                        title: "شاخص های دیدبانی سلامت دانشگاه علوم پزشکی قزوین سال 98",
-                        file: "/images/storage/Dideban98.xlsx"
-                    }
+                        title: "خانوارهای تحت پوشش کمیته امداد",
+                    },
+                    {
+                        title: "خانوارهای تحت پوشش بهزیستی (مستمری بگیر)",
+                    },
+                    {
+                        title: "خانوارهای تحت پوشش کمیته امداد",
+                    },
+                    {
+                        title: "پوشش بیمه با احتساب مستمری بگیران",
+                    },
+                    {
+                        title: "خانوارهای تحت پوشش بهزیستی (مستمری بگیر)",
+                    },
+                    {
+                        title: "پوشش بیمه با احتساب مستمری بگیران",
+                    },
+                ]
+            },
+            {
+                title: "حمایت اجتماعی",
+                indexs: [
+                    {
+                        title: "خانوارهای تحت پوشش کمیته امداد",
+                    },
+                    {
+                        title: "خانوارهای تحت پوشش بهزیستی (مستمری بگیر)",
+                    },
+                    {
+                        title: "خانوارهای تحت پوشش کمیته امداد",
+                    },
+                    {
+                        title: "پوشش بیمه با احتساب مستمری بگیران",
+                    },
+                    {
+                        title: "خانوارهای تحت پوشش بهزیستی (مستمری بگیر)",
+                    },
+                    {
+                        title: "پوشش بیمه با احتساب مستمری بگیران",
+                    },
                 ]
             }
         ],

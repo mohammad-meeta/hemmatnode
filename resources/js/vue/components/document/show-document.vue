@@ -5,32 +5,31 @@
             h1 در حال بارگذاری
         .column.is-full(v-show="! isLoadingMode")
             .info-card
-                .info-card-title {{ documentData.title }}
-                .info-card-details
-                    .info-card-item
-                        .info-card-label نام اسناد راهبردی:
-                        .info-card-value {{ documentData.title }}
-                    .info-card-item
-                        .info-card-label اسناد راهبردی:
-                        .info-card-value {{ documentData.document_id }}
+                .info-card-item
+                    file-download(ref="fileDownload", :old-files="oldFiles")
 </template>
 <script>
 "use strict";
 
 const ENUMS = require("JS-HELPERS/enums");
-
+const FileDownload = require("VUE-COMPONENTS/general/file-download.vue")
+    .default;
 export default {
     name: "ShowDocument",
+
+    components: {
+        FileDownload,
+    },
 
     data: () => ({
         ENUMS,
         documents: [],
+        oldFiles: [],
         documentData: {
             _id: null,
             title: null,
             document_id: null,
             category: null,
-            date: null,
             files: {},
             is_active: false,
         },
@@ -53,17 +52,19 @@ export default {
          * Load specific document
          */
         loadDocumentData(data) {
+            console.log(data);
             const temp = {
                 _id: data._id,
                 title: data.title,
                 document_id: data.document_id,
-                date: data.date,
                 category: data.category,
                 files: {},
                 is_active: data.is_active,
             };
 
             Vue.set(this, "documentData", temp);
+            Vue.set(this, "oldFiles", data.resfiles);
+            this.$refs.fileDownload.updateOldFiles(data.resfiles);
         },
 
         /**

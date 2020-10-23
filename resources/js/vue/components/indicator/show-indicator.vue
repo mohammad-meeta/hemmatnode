@@ -13,10 +13,11 @@
                             .info-card-value {{ indicatorData.unit }}
 
                     SimpleLineChart(
-                        :data-count="monitorings"
-                        data-label="برآیند جریان حقیقی کل بازار"
-                        :height="150"
-                        :width="300"
+                        :Chartdata="monitoringValue"
+                        :Chartlabel="montoringLabel"
+                        Label="simple bar chart"
+                        :height="250"
+                        :width="500"
                     )
 
 </template>
@@ -46,25 +47,19 @@ export default {
         },
         showLoadingFlag: false,
 
-        monitoringValue: [
-            5,10,4
-        ],
-        montoringLabel: [
-            "sss",
-            "qqq",
-            "eeee"
-        ],
+        monitoringValue: [5, 10, 4],
+        montoringLabel: ["sss", "qqq", "eeee"],
 
         monitorings: [
             {
                 year: "1399",
-                value: "50"
+                value: "50",
             },
             {
                 year: "1400",
-                value: "100"
-            }
-        ]
+                value: "100",
+            },
+        ],
     }),
     props: {
         indicatorsUrl: {

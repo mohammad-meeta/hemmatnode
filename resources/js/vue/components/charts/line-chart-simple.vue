@@ -1,13 +1,17 @@
 <script>
-import { Line } from "vue-chartjs";
+import { HorizontalBar } from "vue-chartjs";
 export default {
-    extends: Line,
+    extends: HorizontalBar,
     props: {
-        dataLabel: {
+        Label: {
             type: String,
             default: null,
         },
-        dataCount: {
+        Chartdata: {
+            type: Array,
+            default: () => [],
+        },
+        Chartlabel: {
             type: Array,
             default: () => [],
         },
@@ -19,20 +23,13 @@ export default {
         showData() {
             this.renderChart(
                 {
-                    labels: this.Chartlabels,
+                    labels: this.Chartlabel,
                     datasets: [
                         {
-                            label: this.Chartlabel,
+                            label: this.Label,
                             data: this.Chartdata,
                             backgroundColor: "transparent",
-                            borderColor: "rgba(255, 255, 255, 0.50)",
-                            fill: false,
-                            radius: 0,
-                            borderColor: "rgba(206,167,29,1)", // Add custom color border (Line)
                             backgroundColor: "rgba(206,167,29,1)", // Add custom color background (Fill)
-                            // pointBackgroundColor: "rgba(255, 255, 255, 0.50)", // Add custom color background (Fill)
-                            lineTension: 0,
-                            borderWidth: 2.5, // Specify bar border width
                         },
                     ],
                 },
@@ -49,10 +46,8 @@ export default {
                                     labelString: "تعداد",
                                 },
                                 ticks: {
-                                    beginAtZero: false,
+                                    beginAtZero: true,
                                     min: 0,
-                                    stepSize: this.maxData,
-                                    max: this.maxData,
                                     display: true,
                                 },
                             },
@@ -63,10 +58,13 @@ export default {
                                     display: true,
                                     labelString: "سال",
                                 },
+
                                 gridLines: {
                                     display: false,
                                 },
                                 ticks: {
+                                    beginAtZero: true,
+                                    min: 0,
                                     display: true,
                                 },
                             },
@@ -76,42 +74,6 @@ export default {
                     maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height
                 }
             );
-        },
-    },
-    computed: {
-        Chartlabel() {
-            return this.dataLabel;
-        },
-        Chartlabels() {
-            let labels = [];
-            for (let index = 0; index < this.dataCount.length; index++) {
-                labels.push(index);
-            }
-            return labels;
-        },
-        Chartdata() {
-            let data = [];
-            for (let index = 0; index < this.dataCount.length; index++) {
-                data.push(this.dataCount[index].count);
-            }
-            return data;
-        },
-        maxData() {
-            let max = -1;
-            for (let index = 0; index < this.dataCount.length; index++) {
-                if (max < this.dataCount[index].count)
-                    max = this.dataCount[index].count;
-            }
-            return max + 5;
-        },
-        minData() {
-            let min = 1;
-            for (let index = 0; index < this.dataCount.length; index++) {
-                if (min > this.dataCount[index].count)
-                    min = this.dataCount[index].count;
-            }
-            if (min > 0) return 0;
-            else return min - 5;
         },
     },
     watch: {

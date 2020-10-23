@@ -58,6 +58,36 @@ Monitoringtype.paginateMonitoringtype = async function paginateMonitoringtype(re
             .end();
     }
 };
+/**
+ * paginate route
+ */
+Monitoringtype.MonitoringtypeIndexMonitoring = async function MonitoringtypeIndexMonitoring(req, res, next) {
+
+    try {
+        let result = {};
+        let data;
+        data = await MonitoringtypeHelper.loadAllMonitoringtypeIndexMonitoringData(req);
+        result = {
+            success: true,
+            data: {
+                data: data,
+            }
+        };
+
+        res.status(200)
+            .send(result)
+            .end();
+
+    }
+    catch (err) {
+
+        Logger.error(err);
+
+        res.status(500)
+            .send(err)
+            .end();
+    }
+};
 
 /**
  * show route

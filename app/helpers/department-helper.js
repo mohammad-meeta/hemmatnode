@@ -162,6 +162,20 @@ DepartmentHelper.loadAllDepartmentDocumentData = async function loadAllDepartmen
             }
         },
         {
+            $match: {
+                docs: { $exists: true, $ne: [] }
+            }
+        },
+        {
+            $project: {
+                _id: 1,
+                docs: 1,
+                title: 1,
+                is_active: 1,
+                created_at: 1
+            }
+        },
+        {
             $sort: {
                 created_at: -1
             }

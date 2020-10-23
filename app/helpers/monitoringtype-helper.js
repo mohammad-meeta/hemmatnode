@@ -51,6 +51,57 @@ MonitoringtypeHelper.loadAllMonitoringtypeData = async function loadAllMonitorin
 
     return res;
 };
+
+/**
+ * find all dep cat data result
+ */
+MonitoringtypeHelper.loadAllMonitoringtypeIndexMonitoringData = async function loadAllMonitoringtypeIndexMonitoringData(req) {
+    const ObjectId = require("mongoose").Types.ObjectId;
+    const Monitoringtype = mongoose.model("MonitoringType");
+
+    const userId = req.session.auth.userId;
+    const pipeline = [
+        [
+            {
+                $lookup: {
+                    from: "indexes",
+                    let: { "montype_id": "$_id" },
+                    pipeline: [
+                        {
+                            $match:
+                            {
+                                $expr: {
+                                    $eq: ['$$montype_id', "$type_id"]
+                                }
+                            }
+                        },
+                        {
+                            $lookup: {
+                                from: "monitorings",
+                                let: { "indx_id": "$_id" },
+                                pipeline: [
+                                    {
+                                        $match:
+                                        {
+                                            $expr: {
+                                                $eq: ['$$indx_id', "$index_id"]
+                                            }
+                                        }
+                                    },
+                                ],
+                                "as": "monitoring"
+                            }
+                        },
+                    ],
+                    "as": "indxs"
+                }
+            },
+        ]
+    ];
+    let res = await Monitoringtype.aggregate(pipeline);
+
+    return res;
+};
 /**
  * find all dep cat count data result
  */

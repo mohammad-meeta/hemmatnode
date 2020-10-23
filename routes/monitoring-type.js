@@ -24,6 +24,11 @@ Router.get("/api/monitoringtypes/:page/:size?", [
     "Monitoringtype@paginateMonitoringtype"
 ]).as("api.monitoringtype");
 
+Router.get("/api/all/monitoringtypes/index/monitoring", [
+    checkSession,
+    "Monitoringtype@MonitoringtypeIndexMonitoring"
+]).as("api.monitoringtype.index.monitoring");
+
 Router.get('/monitoringtype/create', [
     checkSession,
     Rule.canAsync('user.permision', 'monitoringtype.create'),

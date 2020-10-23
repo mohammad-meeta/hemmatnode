@@ -1,18 +1,18 @@
 'use strict';
 const PugView = use('app/helpers/pug-view');
-const HealthHelper = use('app/helpers/health-helper');
+const ReportHelper = use('app/helpers/report-helper');
 const FileHelper = use('app/helpers/file-helper');
 /**
  * Dep cat controller
  */
-function Health() { }
-module.exports = Health;
+function Report() { }
+module.exports = Report;
 
 /**
  * Index route
  */
-Health.index = async function index(req, res, next) {
-    const pageRoute = 'health.index';
+Report.index = async function index(req, res, next) {
+    const pageRoute = 'report.index';
 
     res.render(PugView.getView(pageRoute), {
         req,
@@ -24,7 +24,7 @@ Health.index = async function index(req, res, next) {
 /**
  * paginate route
  */
-Health.paginateHealth = async function paginateHealth(req, res, next) {
+Report.paginateReport = async function paginateReport(req, res, next) {
     const group = req.params.group;
 
     const dataPaginate = {
@@ -35,10 +35,10 @@ Health.paginateHealth = async function paginateHealth(req, res, next) {
     try {
         let result = {};
 
-        let data = await HealthHelper.loadAllHealthCountData(group);
+        let data = await ReportHelper.loadAllReportCountData(group);
         let count = data.data;
 
-        data = await HealthHelper.loadAllHealthData(req, dataPaginate, group);
+        data = await ReportHelper.loadAllReportData(req, dataPaginate, group);
         result = {
             success: true,
             data: {
@@ -47,6 +47,39 @@ Health.paginateHealth = async function paginateHealth(req, res, next) {
             }
         };
 
+        res.status(200)
+            .send(result)
+            .end();
+
+    }
+    catch (err) {
+
+        Logger.error(err);
+
+        res.status(500)
+            .send(err)
+            .end();
+    }
+};
+/**
+ * paginate route
+ */
+Report.findReport = async function findReport(req, res, next) {
+    const year = req.params.year;
+    const index = req.params.index;
+    const group = req.params.group;
+
+    try {
+        let result = {};
+
+        let data = await ReportHelper.findReportData(year, index, group);
+
+        result = {
+            success: true,
+            data: {
+                data: data,
+            }
+        };
         res.status(200)
             .send(result)
             .end();
@@ -64,7 +97,7 @@ Health.paginateHealth = async function paginateHealth(req, res, next) {
 /**
  * paginate by year route
  */
-Health.paginateHealthYear = async function paginateHealthYear(req, res, next) {
+Report.paginateReportYear = async function paginateReportYear(req, res, next) {
     const group = req.params.group;
     const year = req.params.year;
 
@@ -76,10 +109,10 @@ Health.paginateHealthYear = async function paginateHealthYear(req, res, next) {
     try {
         let result = {};
 
-        let data = await HealthHelper.loadAllHealthCountYearData(group, year);
+        let data = await ReportHelper.loadAllReportCountYearData(group, year);
         let count = data.data;
 
-        data = await HealthHelper.loadAllHealthYearData(req, dataPaginate, group, year);
+        data = await ReportHelper.loadAllReportYearData(req, dataPaginate, group, year);
         result = {
             success: true,
             data: {
@@ -103,12 +136,12 @@ Health.paginateHealthYear = async function paginateHealthYear(req, res, next) {
     }
 };
 /**
- * group date health
+ * group date report
  */
-Health.groupDate = async function groupDate(req, res, next) {
+Report.groupDate = async function groupDate(req, res, next) {
     const group = req.params.group;
 
-    const data = await HealthHelper.loadGroupDate(req, group);
+    const data = await ReportHelper.loadGroupDate(req, group);
     const result = {
         success: true,
         data: data
@@ -125,10 +158,10 @@ Health.groupDate = async function groupDate(req, res, next) {
 /**
  * load data with id
  */
-Health.show = async function show(req, res, next) {
-    const Id = req.params.health;
+Report.show = async function show(req, res, next) {
+    const Id = req.params.report;
 
-    HealthHelper.loadHealthData(Id)
+    ReportHelper.loadReportData(Id)
 
         .then(data => {
             const result = {
@@ -147,12 +180,12 @@ Health.show = async function show(req, res, next) {
 /**
  * delete data dep cat
  */
-Health.destroy = async function destroy(req, res, next) {
+Report.destroy = async function destroy(req, res, next) {
     const data = {
         "_id": req.body._id
     };
 
-    HealthHelper.deleteHealthData(data)
+    ReportHelper.deleteReportData(data)
         .then(data => {
             const result = {
                 success: true,
@@ -168,8 +201,8 @@ Health.destroy = async function destroy(req, res, next) {
 /**
  * Create route return page
  */
-Health.create = async function create(req, res, next) {
-    const pageRoute = PugView.getView('health.create');
+Report.create = async function create(req, res, next) {
+    const pageRoute = PugView.getView('report.create');
 
     res.render(pageRoute, {
         req,
@@ -180,38 +213,18 @@ Health.create = async function create(req, res, next) {
 /**
  * store data
  */
-Health.store = async function store(req, res, next) {
-    const files = req.files || [];
-    let fileList = [];
-
-    for (let i = 0; i < files.length; ++i) {
-        try {
-            const el = files[i];
-            el.user_id = req.session.auth.userId;
-
-            const data = await FileHelper.insertFileData(el);
-
-            const tempFileData = {
-                file_id: data[0]._id,
-                deleted_at: null,
-            };
-            fileList.push(tempFileData);
-        } catch (err) {
-            Logger.error(err);
-        }
-    }
+Report.store = async function store(req, res, next) {
 
     const data = {
-        "title": req.body.title,
-        "date": req.body.date,
-        "executor": req.body.executor,
+        "year": req.body.year,
+        "index_id": req.body.index_id,
+        "value": req.body.value,
         "user_id": req.session.auth.userId,
         "is_active": req.body.is_active,
         "department_id": req.body.departmentId,
-        "files": fileList
     };
 
-    HealthHelper.insertNewHealth(data)
+    ReportHelper.insertNewReport(data)
         .then(dataRes => {
             const result = {
                 success: true,
@@ -227,60 +240,20 @@ Health.store = async function store(req, res, next) {
 /**
  * update data
  */
-Health.update = async function update(req, res, next) {
+Report.update = async function update(req, res, next) {
     let data = {};
-    const files = req.files || [];
-    let fileList = [];
-
-    for (let i = 0; i < files.length; ++i) {
-        try {
-            const el = files[i];
-            el.user_id = req.session.auth.userId;
-
-            const data = await FileHelper.insertFileData(el);
-
-            const tempFileData = {
-                file_id: data[0]._id,
-                deleted_at: null,
-            };
-            fileList.push(tempFileData);
-        } catch (err) {
-            Logger.error(err);
-        }
-    }
-
-    const deletedOldFiles = JSON.parse(req.body.deletedOldFiles || null) || [];
-
-    let healthRes = await HealthHelper.loadHealthData(req.body._id);
-    const healthLFiles = (healthRes || {}).files || [];
-
-    for (let index = 0; index < healthLFiles.length; index++) {
-        const element = healthLFiles[index];
-        fileList.push(element)
-    }
-
-    for (let index = 0; index < deletedOldFiles.length; index++) {
-        const element = deletedOldFiles[index];
-        for (let oil = 0; oil < fileList.length; oil++) {
-            const Fele = fileList[oil];
-            if (Fele.file_id == element) {
-                Fele.deleted_at = Date()
-            }
-        }
-    }
 
     data = {
         "_id": req.body._id,
-        "title": req.body.title,
-        "date": req.body.date,
-        "executor": req.body.executor,
+        "year": req.body.year,
+        "index_id": req.body.index_id,
+        "value": req.body.value,
         "user_id": req.session.auth.userId,
         "is_active": req.body.is_active,
         "department_id": req.body.department_id,
-        "files": fileList
     };
 
-    let result = await HealthHelper.updateHealthData(data);
+    let result = await ReportHelper.updateReportData(data);
     const result2 = {
         success: true,
         data: result,

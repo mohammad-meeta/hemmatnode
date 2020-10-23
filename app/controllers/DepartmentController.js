@@ -53,6 +53,37 @@ Department.paginateDepartment = async function paginateDepartment(req, res, next
 /**
  * paginate route
  */
+Department.paginateDepartmentReferencessNull = async function paginateDepartmentReferencessNull(req, res, next) {
+    const dataPaginate = {
+        page: req.params.page,
+        pageSize: req.params.size || 10
+    };
+
+    let count = 0;
+    DepartmentHelper.loadAllCountDepartmentDataRN()
+        .then(data => {
+            count = data;
+
+            DepartmentHelper.loadAllDepartmentDataRN(dataPaginate)
+                .then(data => {
+                    const result = {
+                        success: true,
+                        data: {
+                            data: data,
+                            count: count
+                        }
+                    };
+                    res.status(200)
+                        .send(result)
+                        .end();
+                })
+                .catch(err => console.error(err));
+        })
+        .catch(err => console.error(err));
+};
+/**
+ * paginate route
+ */
 Department.paginateAllDepartmentDocument = async function paginateAllDepartmentDocument(req, res, next) {
     const dataPaginate = {
         page: req.params.page,

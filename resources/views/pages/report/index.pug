@@ -1,0 +1,20 @@
+extends ../../layout/app.pug
+
+block title
+    | کارنامه
+
+block content
+    .container
+        reports(
+            list-url=route('api.report', { page: '$page$', size: '$pageSize$', group: departmentId }),
+            find-report=route('api.find.report', { year: '$year$', index:'$index$',group: departmentId}),
+            indexs-url=route('api.department.karnameindex', { page: 1 ,size:1000, group: departmentId }),
+            register-url=route('report.store', { department: departmentId }),
+            edit-url=route('report.update', { id :'$id$'}),
+            department-id=departmentId,
+        )
+
+block scripts
+    script(defer, src=mix('js/pages/report/index/index.js'))
+
+

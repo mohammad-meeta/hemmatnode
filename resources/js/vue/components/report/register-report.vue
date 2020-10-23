@@ -11,10 +11,19 @@
         h1 در حال بارگذاری
     .form-small(v-show="! isLoadingMode")
         .field
-            b-field(label='دسته')
+            label.label سال
+            .control
+                date-picker(
+                    v-model="reportData.year",
+                    type="year",
+                    display-format="jYYYY",
+                    required
+                )
+        .field
+            b-field(label='شاخص')
                 b-autocomplete(
                     v-model="title"
-                    placeholder="انتخاب دسته"
+                    placeholder="انتخاب شاخص"
                     icon="magnify"
                     :keep-first="keepFirst"
                     :open-on-focus="openOnFocus"
@@ -23,39 +32,20 @@
                     @select="option => (selected = option)"
                     :clearable="clearable"
                     )
-                        template(slot='empty') دسته ای یافت نشد
-
+                        template(slot='empty') شاخصی یافت نشد
         .field
-            label.label عنوان
+            label.label مقدار
             .control
                 input.input(
                     type="text",
-                    placeholder="عنوان",
+                    placeholder="مقدار",
                     autofocus,
-                    v-model="indicatorData.title",
+                    v-model="reportData.value",
                     required
                 )
-        .field
-            label.label تعریف
-            .control
-                textarea.textarea(
-                    v-model="indicatorData.description",
-                    required
-                )
-        //- .field
-            label.label واحد
-            .control
-                input.input(
-                    type="text",
-                    placeholder="واحد",
-                    autofocus,
-                    v-model="indicatorData.unit",
-                    required
-                )
-
         .field
             label.checkbox
-                input(type="checkbox", v-model="indicatorData.is_active")
+                input(type="checkbox", v-model="reportData.is_active")
                 | فعال
         .field.is-grouped
             .control(v-show="! isLoadingMode")
@@ -69,15 +59,16 @@
 <script>
 "use strict";
 
+const Buefy = require("buefy").default;
 const AxiosHelper = require("JS-HELPERS/axios-helper");
 const ENUMS = require("JS-HELPERS/enums");
-const IndicatorValidator = require("JS-VALIDATORS/indicator-register-validator");
+// const ReportValidator = require("JS-VALIDATORS/report-register-validator");
 const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
-const Buefy = require("buefy").default;
+const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 
 export default {
-    name: "RegisterIndicator",
+    name: "RegisterReport",
 
     components: {
         Notification,
@@ -86,47 +77,65 @@ export default {
 
     data: () => ({
         ENUMS,
-        indicatorData: {
-            title: null,
-            description: null,
-            // unit: null,
+        files: [],
+        deletedOldFiles: [],
+        oldFiles: [],
+        reportData: {
+            department_id: null,
+            year: null,
+            index_id: null,
+            value: null,
             is_active: true,
         },
-
         notificationMessage: null,
         notificationType: "is-info",
         showLoadingFlag: false,
+        indexs: [],
 
-        departments: [],
         title: "",
         keepFirst: false,
         openOnFocus: true,
         selected: null,
-        clearable: false,
+        clearable: true,
     }),
 
     props: {
+        departmentId: {
+            type: String,
+            default: null,
+        },
+        year: {
+            type: String,
+            default: null,
+        },
         registerUrl: {
             type: String,
             default: "",
         },
-        listUrlDepartment: {
+        findReport: {
             type: String,
-            default: null,
+            default: "",
+        },
+        indexsUrl: {
+            type: String,
+            default: "",
         },
     },
     created() {
         this.clearFormData();
-        this.loadDepartments();
+        this.loadindexs();
+        this.reportData.departmentId = this.departmentId;
     },
 
-    mounted() {},
+    mounted() {
+        Vue.set(this.reportData, "department_id", this.departmentId);
+    },
 
     computed: {
         isLoadingMode: (state) => state.showLoadingFlag == true,
         showNotification: (state) => state.notificationMessage != null,
         filteredDataObj() {
-            return this.departments.filter((option) => {
+            return this.indexs.filter((option) => {
                 return (
                     option.title
                         .toString()
@@ -139,14 +148,35 @@ export default {
 
     methods: {
         /**
-         * load all monitoring type for select monitoring type in form
+         * load all index
          */
-        async loadDepartments() {
-            const url = this.listUrlDepartment;
+        async loadindexs() {
+            const url = this.indexsUrl;
+            console.log(url);
             let res = await AxiosHelper.send("get", url, "");
             const resData = res.data;
             const datas = resData.data.data;
-            Vue.set(this, "departments", datas);
+
+            Vue.set(this, "indexs", datas);
+        },
+        /**
+         * find report
+         */
+        async findReportData(payload) {
+            let url = this.findReport
+                .replace(/\$year\$/g, payload.year)
+                .replace(/\$index\$/g, payload.index);
+            let data = await AxiosHelper.send("get", url, "");
+            return data;
+        },
+
+        /**
+         * Set attachments
+         */
+        setAttachment(sender) {
+            const files = sender.target.files;
+
+            Vue.set(this, "files", files);
         },
 
         /**
@@ -157,7 +187,7 @@ export default {
         commandClick(arg) {
             switch (arg) {
                 case ENUMS.COMMAND.SAVE:
-                    this.registerIndicator();
+                    this.registerReport();
                     break;
             }
         },
@@ -192,40 +222,56 @@ export default {
         },
 
         /**
-         * Register new indicator
+         * Register new report
          */
-        async registerIndicator() {
-            const isValid = this.validate();
+        async registerReport() {
+            // const isValid = this.validate();
 
-            if (!isValid) {
-                return;
-            }
+            // if (!isValid) {
+            //     return;
+            // }
 
             this.showLoading();
 
-            Vue.set(this.indicatorData, "department_id", this.selected._id);
-            let indicatorData = this.indicatorData;
+            Vue.set(this.reportData, "index_id", this.selected._id);
+            Vue.set(this.reportData, "departmentId", this.departmentId);
+            let reportData = this.reportData;
 
-            try {
-                const url = this.registerUrl;
-                let res = await AxiosHelper.send("post", url, indicatorData, {
-                    sendAsFormData: true,
-                });
+            let payload = {
+                year: reportData.year,
+                index: reportData.index_id,
+            };
 
-                const data = res.data;
-                if (data.success) {
-                    this.clearFormData();
-                    this.$emit("on-register", {
-                        sender: this,
-                        data: {
-                            data: data,
-                            dep_title: 0,
-                        },
+            const resultFind = await this.findReportData(payload);
+
+            if (!resultFind.data.data.data) {
+                try {
+                    console.log(reportData);
+                    const url = this.registerUrl;
+                    let res = await AxiosHelper.send("post", url, reportData, {
+                        sendAsFormData: true,
+                        filesArray: "files",
                     });
+
+                    const data = res.data;
+                    if (data.success) {
+                        this.clearFormData();
+                        this.$emit("on-register", {
+                            sender: this,
+                            data: {
+                                data: data,
+                                dep_title: 0,
+                            },
+                        });
+                    }
+                } catch (err) {
+                    const data = err.response.data;
+                    this.setNotification(data, "is-danger");
                 }
-            } catch (err) {
-                const data = err.response.data;
-                this.setNotification(data, "is-danger");
+            } else {
+                alert(
+                    "این شاخص در این سال تعریف شده است لطفا در صورت نیاز آن را ویرایش کنید"
+                );
             }
             this.hideLoading();
 
@@ -233,10 +279,10 @@ export default {
         },
 
         /**
-         * Validate new indicator data
+         * Validate new report data
          */
         validate() {
-            const result = IndicatorValidator.validate(this.indicatorData);
+            const result = ReportValidator.validate(this.reportData);
 
             if (result.passes) {
                 this.closeNotification();
@@ -255,15 +301,14 @@ export default {
          * clear form data
          */
         clearFormData() {
-            const indicatorData = {
-                title: null,
-                description: null,
-                unit: null,
-                type_id: null,
+            const reportData = {
+                year: null,
+                index_id: null,
+                value: null,
                 is_active: true,
             };
 
-            Vue.set(this, "indicatorData", indicatorData);
+            Vue.set(this, "reportData", reportData);
             Vue.set(this, "selected", null);
         },
     },

@@ -37,6 +37,48 @@ DepartmentHelper.loadAllDepartmentData = function loadAllDepartmentData(dataPagi
 /**
  * find all dep cat data result 
  */
+DepartmentHelper.loadAllDepartmentDataRN = function loadAllDepartmentDataRN(dataPaginate) {
+    const page = parseInt(dataPaginate.page)
+    const pageSize = parseInt(dataPaginate.pageSize)
+    const skip = page > 0 ? ((page - 1) * pageSize) : 0
+    const Department = mongoose.model('Department');
+
+    const filterQuery = { references: null };
+    const projection = { _id: 1, title: 1, references: 1 };
+
+    return new Promise((resolve, reject) => {
+        Department.find(filterQuery, projection, {
+            sort: {
+                'created_at': -1
+            },
+        })
+            .then(res => {
+                resolve(res);
+            })
+            .catch(err => reject(err));
+    });
+};
+/**
+ * find all dep cat count data result 
+ */
+DepartmentHelper.loadAllCountDepartmentDataRN = function loadAllCountDepartmentDataRN() {
+    const Department = mongoose.model('Department');
+
+    const filterQuery = { references: null };
+
+    return new Promise((resolve, reject) => {
+        Department.countDocuments(filterQuery)
+            .then(res => {
+
+                resolve(res);
+            })
+            .catch(err => reject(err));
+    });
+};
+
+/**
+ * find all dep cat data result 
+ */
 DepartmentHelper.loadAllDepartmentDocumentData = async function loadAllDepartmentDocumentData(dataPaginate) {
     const page = parseInt(dataPaginate.page)
     const pageSize = parseInt(dataPaginate.pageSize)

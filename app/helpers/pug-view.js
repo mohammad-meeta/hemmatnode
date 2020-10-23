@@ -98,6 +98,10 @@ PugView.viewPath = {
     'karnameindex.index': 'pages/karnameindex/index.pug',
     'karnameindex.create': 'pages/karnameindex/register.pug',
 
+    /* report */
+    'report.index': 'pages/report/index.pug',
+    'report.create': 'pages/report/register.pug',
+
     /* monitoringtype */
     'monitoringtype.index': 'pages/monitoringtype/index.pug',
     'monitoringtype.create': 'pages/monitoringtype/register.pug',

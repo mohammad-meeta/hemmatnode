@@ -87,11 +87,11 @@ export default {
         notificationType: "is-info",
         showLoadingFlag: false,
 
-        title: '',
+        title: "",
         keepFirst: false,
         openOnFocus: true,
         selected: null,
-        clearable: false
+        clearable: false,
     }),
 
     props: {
@@ -103,34 +103,31 @@ export default {
         indexsUrl: {
             type: String,
             default: "",
-        }
+        },
     },
     created() {
         this.clearFormData();
         this.loadindexs();
     },
 
-    mounted() {
-
-    },
+    mounted() {},
 
     computed: {
         isLoadingMode: (state) => state.showLoadingFlag == true,
         showNotification: (state) => state.notificationMessage != null,
         filteredDataObj() {
-            return this.indexs.filter(option => {
+            return this.indexs.filter((option) => {
                 return (
                     option.title
                         .toString()
                         .toLowerCase()
                         .indexOf(this.title.toLowerCase()) >= 0
-                )
-            })
-        }
+                );
+            });
+        },
     },
 
     methods: {
-
         /**
          * load all monitoring type for select monitoring type in form
          */
@@ -255,7 +252,7 @@ export default {
             };
 
             Vue.set(this, "monitoringData", monitoringData);
-
+            Vue.set(this, "selected", null);
         },
     },
 };

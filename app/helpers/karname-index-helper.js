@@ -22,6 +22,17 @@ KarnameIndexHelper.loadAllIndexData = async function loadAllIndexData(req, dataP
     const userId = req.session.auth.userId;
     const pipeline = [
         {
+            $lookup: {
+                from: "departments",
+                localField: "department_id",
+                foreignField: "_id",
+                as: "dep"
+            }
+        },
+        {
+            $unwind: "$dep"
+        },
+        {
             $group: {
                 _id: "$_id",
                 title: {
@@ -39,6 +50,10 @@ KarnameIndexHelper.loadAllIndexData = async function loadAllIndexData(req, dataP
                 created_at: {
                     $last: "$created_at"
                 },
+                dep: {
+                    $last: "$dep"
+                },
+
             }
         },
         {
@@ -70,6 +85,17 @@ KarnameIndexHelper.loadAllKarnameindexDataAll = async function loadAllKarnameind
     const userId = req.session.auth.userId;
     const pipeline = [
         {
+            $lookup: {
+                from: "departments",
+                localField: "department_id",
+                foreignField: "_id",
+                as: "dep"
+            }
+        },
+        {
+            $unwind: "$dep"
+        },
+        {
             $group: {
                 _id: "$_id",
                 title: {
@@ -86,6 +112,76 @@ KarnameIndexHelper.loadAllKarnameindexDataAll = async function loadAllKarnameind
                 },
                 created_at: {
                     $last: "$created_at"
+                },
+                dep: {
+                    $last: "$dep"
+                },
+            }
+        },
+        {
+            $sort: {
+                created_at: -1
+            }
+        },
+        {
+            $skip: skip
+        },
+        {
+            $limit: pageSize
+        }
+    ];
+    let res = await Index.aggregate(pipeline);
+
+    return res;
+};
+/**
+ * find all dep cat data index
+ */
+KarnameIndexHelper.loadDepKarnameindexData = async function loadDepKarnameindexData(req, dataPaginate, group) {
+    const page = parseInt(dataPaginate.page);
+    const pageSize = parseInt(dataPaginate.pageSize);
+    const skip = page > 0 ? (page - 1) * pageSize : 0;
+    const ObjectId = require("mongoose").Types.ObjectId;
+    const Index = mongoose.model("Karnameindex");
+
+    const userId = req.session.auth.userId;
+    const pipeline = [
+        {
+            "$match": {
+                department_id: ObjectId(group)
+            }
+        },
+        {
+            $lookup: {
+                from: "departments",
+                localField: "department_id",
+                foreignField: "_id",
+                as: "dep"
+            }
+        },
+        {
+            $unwind: "$dep"
+        },
+        {
+            $group: {
+                _id: "$_id",
+                title: {
+                    $last: "$title"
+                },
+                description: {
+                    $last: "$description"
+                },
+                unit: {
+                    $last: "$unit"
+                },
+                is_active: {
+                    $last: "$is_active"
+                },
+                created_at: {
+                    $last: "$created_at"
+                },
+                dep: {
+                    $last: "$dep"
                 },
             }
         },
@@ -112,6 +208,25 @@ KarnameIndexHelper.loadAllKarnameindexCountDataAll = function loadAllKarnameinde
     const Index = mongoose.model('Karnameindex');
     const ObjectId = require("mongoose").Types.ObjectId;
     const filterQuery = {
+    };
+
+    return new Promise((resolve, reject) => {
+        Index.countDocuments(filterQuery)
+            .then(res => {
+
+                resolve(res);
+            })
+            .catch(err => reject(err));
+    });
+};
+/**
+ * find all dep cat count data result
+ */
+KarnameIndexHelper.loadDepKarnameindexCountData = function loadDepKarnameindexCountData(group) {
+    const Index = mongoose.model('Karnameindex');
+    const ObjectId = require("mongoose").Types.ObjectId;
+    const filterQuery = {
+        department_id: ObjectId(group)
     };
 
     return new Promise((resolve, reject) => {
@@ -171,6 +286,22 @@ KarnameIndexHelper.insertNewKarnameindex = async function insertNewKarnameindex(
     let res2 = await index.save();
     const pipeline = [
         {
+            $match: {
+                _id: res2._id
+            }
+        },
+        {
+            $lookup: {
+                from: "departments",
+                localField: "department_id",
+                foreignField: "_id",
+                as: "dep"
+            }
+        },
+        {
+            $unwind: "$dep"
+        },
+        {
             $group: {
                 _id: "$_id",
                 title: {
@@ -188,6 +319,9 @@ KarnameIndexHelper.insertNewKarnameindex = async function insertNewKarnameindex(
                 created_at: {
                     $last: "$created_at"
                 },
+                dep: {
+                    $last: "$dep"
+                }
             }
         },
         {
@@ -213,6 +347,17 @@ KarnameIndexHelper.updateKarnameindexData = async function updateKarnameindexDat
                 _id: res2._id,
             }
         },
+        {
+            $lookup: {
+                from: "departments",
+                localField: "department_id",
+                foreignField: "_id",
+                as: "dep"
+            }
+        },
+        {
+            $unwind: "$dep"
+        },
 
         {
             $group: {
@@ -231,6 +376,9 @@ KarnameIndexHelper.updateKarnameindexData = async function updateKarnameindexDat
                 },
                 created_at: {
                     $last: "$created_at"
+                },
+                dep: {
+                    $last: "$dep"
                 },
             }
         },

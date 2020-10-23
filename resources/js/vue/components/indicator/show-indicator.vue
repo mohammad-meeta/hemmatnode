@@ -32,6 +32,17 @@ export default {
             is_active: false,
         },
         showLoadingFlag: false,
+
+        monitoring: [
+            {
+                year: "1399",
+                value: "50"
+            },
+            {
+                year: "1400",
+                value: "100"
+            }
+        ]
     }),
     props: {
         indicatorsUrl: {

@@ -68,6 +68,7 @@
     "vhost": "^3.0.2",
     "vue": "^2.6.12",
     "vue-bulma-collapse": "^1.0.3",
+    "vue-chartjs": "^3.5.1",
     "vue-persian-datetime-picker": "^2.4.0",
     "vue-router": "^3.4.7",
     "vue-upload-component": "^2.8.20",

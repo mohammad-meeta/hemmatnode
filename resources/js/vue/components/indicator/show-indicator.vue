@@ -11,14 +11,27 @@
                         .info-card-item
                             .info-card-label واحد:
                             .info-card-value {{ indicatorData.unit }}
+
+                    SimpleLineChart(
+                        :data-count="monitorings"
+                        data-label="برآیند جریان حقیقی کل بازار"
+                        :height="150"
+                        :width="300"
+                    )
+
 </template>
 <script>
 "use strict";
-
+const SimpleLineChart = require("VUE-COMPONENTS/charts/line-chart-simple.vue")
+    .default;
 const ENUMS = require("JS-HELPERS/enums");
 
 export default {
     name: "ShowIndicator",
+
+    components: {
+        SimpleLineChart,
+    },
 
     data: () => ({
         ENUMS,
@@ -33,7 +46,16 @@ export default {
         },
         showLoadingFlag: false,
 
-        monitoring: [
+        monitoringValue: [
+            5,10,4
+        ],
+        montoringLabel: [
+            "sss",
+            "qqq",
+            "eeee"
+        ],
+
+        monitorings: [
             {
                 year: "1399",
                 value: "50"

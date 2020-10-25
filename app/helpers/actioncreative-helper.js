@@ -72,6 +72,9 @@ ActioncreativeHelper.loadAllActioncreativeData = async function loadAllActioncre
                 title: {
                     $last: "$title"
                 },
+                date: {
+                    $last: "$date"
+                },
                 responsible: {
                     $last: "$responsible"
                 },
@@ -212,6 +215,9 @@ ActioncreativeHelper.loadAllActioncreativeYearData = async function loadAllActio
                 _id: "$_id",
                 title: {
                     $last: "$title"
+                },
+                date: {
+                    $last: "$date"
                 },
                 responsible: {
                     $last: "$responsible"
@@ -436,6 +442,9 @@ ActioncreativeHelper.insertNewActioncreative = async function insertNewActioncre
                 title: {
                     $last: "$title"
                 },
+                date: {
+                    $last: "$date"
+                },
                 responsible: {
                     $last: "$responsible"
                 },
@@ -566,6 +575,9 @@ ActioncreativeHelper.updateActioncreativeData = async function updateActioncreat
                 _id: "$_id",
                 title: {
                     $last: "$title"
+                },
+                date: {
+                    $last: "$date"
                 },
                 responsible: {
                     $last: "$responsible"

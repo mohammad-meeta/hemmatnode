@@ -21,6 +21,17 @@
                     v-model="actionCreativeData.title",
                     required
                 )
+
+        .field
+            label.label تاریخ
+            .control
+                date-picker(
+                    v-model="actionCreativeData.date"
+                    type="datetime"
+                    display-format="jDD/jMM/jYYYY HH:mm"
+                    format="YYYY-MM-DD HH:mm:ss"
+                    required
+                )
         .field
             label.label شرح
             .control
@@ -94,6 +105,7 @@ export default {
         oldFiles: [],
         actionCreativeData: {
             title: null,
+            date: null,
             description: null,
             reason: null,
             responsible: null,
@@ -265,6 +277,7 @@ export default {
         clearFormData() {
             const actionCreativeData = {
                 title: null,
+                date: null,
                 description: null,
                 reason: null,
                 responsible: null,

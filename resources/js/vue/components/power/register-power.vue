@@ -21,6 +21,43 @@
                     required
                 )
         .field
+            label.label رضایت از دوره
+            .control
+                input.input(
+                    type="number",
+                    placeholder="رضایت از دوره",
+                    autofocus,
+                    v-model="powerData.satisfaction",
+                    required
+                )
+        .field
+            .panel
+                .panel-heading
+                    | مخاطبین
+                .panel-block
+                    multi-text-member(v-model="powerData.contacts")
+        .field
+            label.label میزان افزایش اطلاعات و انگیزه
+            .control
+                input.input(
+                    type="number",
+                    placeholder="میزان افزایش اطلاعات و انگیزه",
+                    autofocus,
+                    v-model="powerData.information",
+                    required
+                )
+        .field
+            label.label مدت زمان برگزاری
+            .control
+                input.input(
+                    type="number",
+                    placeholder="مدت زمان برگزاری",
+                    autofocus,
+                    v-model="powerData.duration",
+                    required
+                )
+
+        .field
             label.label شرح
             .control
                 textarea.textarea(
@@ -60,7 +97,7 @@
 
 <script>
 "use strict";
-
+import MultiTextMember from "VUE-COMPONENTS/invite-session/multi-text-member.vue";
 const AxiosHelper = require("JS-HELPERS/axios-helper");
 const ENUMS = require("JS-HELPERS/enums");
 const PowerValidator = require("JS-VALIDATORS/power-register-validator");
@@ -75,6 +112,7 @@ export default {
         Notification,
         DatePicker: VuePersianDatetimePicker,
         FileUpload,
+        MultiTextMember,
     },
 
     data: () => ({
@@ -86,6 +124,10 @@ export default {
             department_id: null,
             title: null,
             date: null,
+            duration: null,
+            satisfaction: null,
+            information: null,
+            contacts: [],
             description: null,
             files: [],
             deletedOldFiles: [],
@@ -97,7 +139,6 @@ export default {
     }),
 
     props: {
-
         date: {
             type: String,
             default: null,
@@ -111,8 +152,7 @@ export default {
         this.clearFormData();
     },
 
-    mounted() {
-    },
+    mounted() {},
 
     computed: {
         isLoadingMode: (state) => state.showLoadingFlag == true,
@@ -195,7 +235,19 @@ export default {
             Vue.set(this.powerData, "files", this.files);
             Vue.set(this.powerData, "deletedOldFiles", this.deletedOldFiles);
 
-            let powerData = this.powerData;
+            // let powerData = this.powerData;
+            let powerData = {
+                title: this.powerData.title,
+                date: this.powerData.date,
+                duration: this.powerData.duration,
+                satisfaction: this.powerData.satisfaction,
+                information: this.powerData.information,
+                contacts: JSON.stringify(this.powerData.contacts),
+                description: this.powerData.description,
+                files: this.powerData.files,
+                deletedOldFiles: this.powerData.deletedOldFiles,
+                is_active: this.powerData.is_active,
+            };
 
             try {
                 const url = this.registerUrl;

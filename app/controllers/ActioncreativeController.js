@@ -141,6 +141,7 @@ Actioncreative.store = async function store(req, res, next) {
 
     const data = {
         "title": req.body.title,
+        "date": req.body.date,
         "description": req.body.description,
         "reason": req.body.reason,
         "responsible": req.body.responsible,
@@ -211,6 +212,7 @@ Actioncreative.update = async function update(req, res, next) {
     data = {
         "_id": req.body._id,
         "title": req.body.title,
+        "date": req.body.date,
         "description": req.body.description,
         "reason": req.body.reason,
         "responsible": req.body.responsible,

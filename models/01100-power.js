@@ -47,7 +47,24 @@ Model.model = function model() {
             required: true
         },
         'date': {
-            type: Date
+            type: Date,
+            required: true
+        },
+        'duration': {
+            type: Number,
+            required: true
+        },
+        'satisfaction': {
+            type: Number,
+            required: true
+        },
+        'information': {
+            type: Number,
+            required: true
+        },
+        'contacts': {
+            type: Array,
+            required: true
         },
         'files': {
             type: [File]

@@ -21,6 +21,16 @@
                     v-model="actionCreativeData.title",
                     required
                 )
+        .field
+            label.label تاریخ
+            .control
+                date-picker(
+                    v-model="actionCreativeData.date"
+                    type="datetime"
+                    display-format="jDD/jMM/jYYYY HH:mm"
+                    format="YYYY-MM-DD HH:mm:ss"
+                    required
+                )
 
         .field
             label.label شرح
@@ -100,6 +110,7 @@ export default {
         oldFiles: [],
         actionCreativeData: {
             title: null,
+            date: null,
             department_id: null,
             description: null,
             reason: null,
@@ -147,10 +158,11 @@ export default {
             let temp = {
                 _id: data._id,
                 title: data.title,
+                date: data.date,
                 description: data.description,
                 reason: data.reason,
                 responsible: data.responsible,
-                department_id: this.actionCreativeData.department_id,
+                department_id: this.departmentId,
                 files: data.files,
                 isActive: data.is_active,
             };
@@ -225,9 +237,11 @@ export default {
             let actionCreativeData = {
                 _id: this.actionCreativeData._id,
                 title: this.actionCreativeData.title,
+                date: this.actionCreativeData.date,
                 description: this.actionCreativeData.description,
                 reason: this.actionCreativeData.reason,
                 responsible: this.actionCreativeData.responsible,
+                departmentId: this.actionCreativeData.department_id,
                 is_active: this.actionCreativeData.isActive,
                 files: this.files,
                 oldFiles: this.oldFiles,

@@ -56,6 +56,18 @@ PowerHelper.loadAllPowerData = async function loadAllPowerData(req, dataPaginate
                 title: {
                     $last: "$title"
                 },
+                duration: {
+                    $last: "$duration"
+                },
+                satisfaction: {
+                    $last: "$satisfaction"
+                },
+                information: {
+                    $last: "$information"
+                },
+                contacts: {
+                    $last: "$contacts"
+                },
                 description: {
                     $last: "$description"
                 },
@@ -174,6 +186,18 @@ PowerHelper.loadAllPowerDataAll = async function loadAllPowerDataAll(req, dataPa
                 title: {
                     $last: "$title"
                 },
+                duration: {
+                    $last: "$duration"
+                },
+                satisfaction: {
+                    $last: "$satisfaction"
+                },
+                information: {
+                    $last: "$information"
+                },
+                contacts: {
+                    $last: "$contacts"
+                },
                 description: {
                     $last: "$description"
                 },
@@ -291,6 +315,18 @@ PowerHelper.loadAllPowerYearData = async function loadAllPowerYearData(req, data
                 _id: "$_id",
                 title: {
                     $last: "$title"
+                },
+                duration: {
+                    $last: "$duration"
+                },
+                satisfaction: {
+                    $last: "$satisfaction"
+                },
+                information: {
+                    $last: "$information"
+                },
+                contacts: {
+                    $last: "$contacts"
                 },
                 description: {
                     $last: "$description"
@@ -515,6 +551,18 @@ PowerHelper.insertNewPower = async function insertNewPower(data) {
                 title: {
                     $last: "$title"
                 },
+                duration: {
+                    $last: "$duration"
+                },
+                satisfaction: {
+                    $last: "$satisfaction"
+                },
+                information: {
+                    $last: "$information"
+                },
+                contacts: {
+                    $last: "$contacts"
+                },
                 description: {
                     $last: "$description"
                 },
@@ -628,6 +676,18 @@ PowerHelper.updatePowerData = async function updatePowerData(data) {
                 _id: "$_id",
                 title: {
                     $last: "$title"
+                },
+                duration: {
+                    $last: "$duration"
+                },
+                satisfaction: {
+                    $last: "$satisfaction"
+                },
+                information: {
+                    $last: "$information"
+                },
+                contacts: {
+                    $last: "$contacts"
                 },
                 description: {
                     $last: "$description"

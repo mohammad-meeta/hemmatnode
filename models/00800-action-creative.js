@@ -42,6 +42,10 @@ Model.model = function model() {
             type: String,
             required: true
         },
+        'date': {
+            type: Date,
+            required: true
+        },
         'description': {
             type: String,
             required: true

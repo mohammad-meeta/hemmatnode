@@ -126,6 +126,7 @@ DepartmentHelper.loadAllDepartmentDocumentData = async function loadAllDepartmen
                         "$group":
                         {
                             "_id": "$_id",
+                            "date": { "$last": "$date" },
                             "resfiles": { "$push": "$resfile" },
                             "oldFiles": { "$last": "$files" },
                             "is_active": { "$last": "$is_active" },

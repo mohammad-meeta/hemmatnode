@@ -28,6 +28,42 @@
                     v-model="powerData.description",
                     required
                 )
+        .field
+            label.label رضایت از دوره
+            .control
+                input.input(
+                    type="number",
+                    placeholder="رضایت از دوره",
+                    autofocus,
+                    v-model="powerData.satisfaction",
+                    required
+                )
+        .field
+            .panel
+                .panel-heading
+                    | مخاطبین
+                .panel-block
+                    multi-text-member(v-model="powerData.contacts")
+        .field
+            label.label میزان افزایش اطلاعات و انگیزه
+            .control
+                input.input(
+                    type="number",
+                    placeholder="میزان افزایش اطلاعات و انگیزه",
+                    autofocus,
+                    v-model="powerData.information",
+                    required
+                )
+        .field
+            label.label مدت زمان برگزاری
+            .control
+                input.input(
+                    type="number",
+                    placeholder="مدت زمان برگزاری",
+                    autofocus,
+                    v-model="powerData.duration",
+                    required
+                )
 
         .field
             label.label تاریخ
@@ -63,7 +99,7 @@
 
 <script>
 "use strict";
-
+import MultiTextMember from "VUE-COMPONENTS/invite-session/multi-text-member.vue";
 const Buefy = require("buefy").default;
 const AxiosHelper = require("JS-HELPERS/axios-helper");
 const PowerValidator = require("JS-VALIDATORS/power-register-validator");
@@ -78,6 +114,7 @@ export default {
         FileUpload,
         DatePicker: VuePersianDatetimePicker,
         Notification,
+        MultiTextMember,
     },
 
     data: () => ({
@@ -86,16 +123,18 @@ export default {
         deletedOldFiles: [],
         oldFiles: [],
         powerData: {
-            title: null,
             department_id: null,
+            title: null,
             date: null,
+            duration: null,
+            satisfaction: null,
+            information: null,
+            contacts: [],
             description: null,
-            files: {},
-            oldFiles: [],
-            isActive: false,
+            files: [],
             deletedOldFiles: [],
+            is_active: true,
         },
-
         notificationMessage: null,
         notificationType: "is-info",
         showLoadingFlag: false,
@@ -106,12 +145,9 @@ export default {
             type: String,
             default: "",
         },
-
     },
 
-    created() {
-
-    },
+    created() {},
 
     mounted() {},
 
@@ -128,6 +164,10 @@ export default {
             let temp = {
                 _id: data._id,
                 title: data.title,
+                duration: data.duration,
+                satisfaction: data.satisfaction,
+                information: data.information,
+                contacts: data.contacts,
                 date: data.date,
                 description: data.description,
                 department_id: this.powerData.department_id,
@@ -205,6 +245,10 @@ export default {
             let powerData = {
                 _id: this.powerData._id,
                 title: this.powerData.title,
+                duration: this.powerData.duration,
+                satisfaction: this.powerData.satisfaction,
+                information: this.powerData.information,
+                contacts: JSON.stringify(this.powerData.contacts),
                 date: this.powerData.date,
                 description: this.powerData.description,
                 department_id: this.powerData.department_id,
@@ -227,7 +271,10 @@ export default {
                     data,
                 });
             } catch (err) {
-                this.setNotification(".خطا در ویرایش اقدامات توانمندسازی", "is-danger");
+                this.setNotification(
+                    ".خطا در ویرایش اقدامات توانمندسازی",
+                    "is-danger"
+                );
             }
 
             this.hideLoading();

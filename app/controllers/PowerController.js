@@ -235,6 +235,10 @@ Power.store = async function store(req, res, next) {
 
     const data = {
         "title": req.body.title,
+        'duration': req.body.duration,
+        'satisfaction': req.body.satisfaction,
+        'information': req.body.information,
+        'contacts': JSON.parse(req.body.contacts),
         "description": req.body.description,
         "date": req.body.date,
         "user_id": req.session.auth.userId,
@@ -303,6 +307,10 @@ Power.update = async function update(req, res, next) {
     data = {
         "_id": req.body._id,
         "title": req.body.title,
+        'duration': req.body.duration,
+        'satisfaction': req.body.satisfaction,
+        'information': req.body.information,
+        'contacts': JSON.parse(req.body.contacts),
         "description": req.body.description,
         "date": req.body.date,
         "user_id": req.session.auth.userId,

@@ -136,6 +136,7 @@ export default {
             const newActionCreativeData = {
                 _id: payload._id,
                 title: payload.title,
+                date: payload.date,
                 reason: payload.reason,
                 description: payload.description,
                 responsible: payload.responsible,
@@ -154,6 +155,7 @@ export default {
             const editedActionCreativeData = {
                 _id: payload.data.data[0]._id,
                 title: payload.data.data[0].title,
+                date: payload.data.data[0].date,
                 executor: payload.data.data[0].executor,
                 date: payload.data.data[0].date,
                 is_active: payload.data.data[0].is_active,

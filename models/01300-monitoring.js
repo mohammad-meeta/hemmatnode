@@ -29,7 +29,7 @@ Model.model = function model() {
 
     return {
         'date': {
-            type: Date,
+            type: String,
             required: true
         },
         'value': {

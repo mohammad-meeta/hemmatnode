@@ -133,6 +133,10 @@ export default {
             const newPowerData = {
                 _id: payload._id,
                 title: payload.title,
+                duration: payload.duration,
+                satisfaction: payload.satisfaction,
+                information: payload.information,
+                contacts: payload.contacts,
                 date: payload.date,
                 description: payload.description,
                 files: payload.files,
@@ -146,6 +150,10 @@ export default {
             const editedPowerData = {
                 _id: payload.data.data[0]._id,
                 title: payload.data.data[0].title,
+                duration: payload.data.data[0].duration,
+                satisfaction: payload.data.data[0].satisfaction,
+                information: payload.data.data[0].information,
+                contacts: payload.data.data[0].contacts,
                 description: payload.data.data[0].description,
                 date: payload.data.data[0].date,
                 is_active: payload.data.data[0].is_active,

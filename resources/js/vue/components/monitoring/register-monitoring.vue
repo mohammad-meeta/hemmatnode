@@ -39,7 +39,8 @@
             .control
                 date-picker(
                     v-model='monitoringData.date'
-                    type="year-month"
+                    type="year"
+                    format="jYYYY"
                     required
                 )
         .field

@@ -3,6 +3,8 @@ extends ../../layout/app.pug
 block title
     | دیدبانی سلامت
 block content
-    monitoring-pages
+    monitoring-pages(
+        monitoring-list-url=route('api.monitoringtype.index.monitoring')
+    )
 block scripts
     script(defer, src=mix('js/pages/home/monitoring-page/index.js'))

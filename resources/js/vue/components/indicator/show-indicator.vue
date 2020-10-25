@@ -12,13 +12,15 @@
                             .info-card-label واحد:
                             .info-card-value {{ indicatorData.unit }}
 
-                    SimpleLineChart(
-                        :Chartdata="monitoringValue"
-                        :Chartlabel="montoringLabel"
-                        Label="simple bar chart"
-                        :height="250"
-                        :width="500"
-                    )
+                    .chart.container
+                        SimpleLineChart(
+                            :Chartdata="monitoringValue"
+                            :Chartlabel="montoringLabel"
+                            :Label="indicatorData.title"
+                            YScaleLabel="سال"
+                            height=400
+                            :XScaleLabel="indicatorData.unit"
+                        )
 
 </template>
 <script>
@@ -47,19 +49,8 @@ export default {
         },
         showLoadingFlag: false,
 
-        monitoringValue: [5, 10, 4],
-        montoringLabel: ["sss", "qqq", "eeee"],
-
-        monitorings: [
-            {
-                year: "1399",
-                value: "50",
-            },
-            {
-                year: "1400",
-                value: "100",
-            },
-        ],
+        monitoringValue: [],
+        montoringLabel: [],
     }),
     props: {
         indicatorsUrl: {
@@ -86,7 +77,10 @@ export default {
                 unit: data.unit,
                 is_active: data.is_active,
             };
-
+            const monitoringValues = data.monitoring.map(x => x.value);
+            const monitoringDate = data.monitoring.map(x => x.date);
+            Vue.set(this, "monitoringValue", monitoringValues);
+            Vue.set(this, "montoringLabel", monitoringDate);
             Vue.set(this, "indicatorData", temp);
         },
 

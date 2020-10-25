@@ -15,6 +15,15 @@ export default {
             type: Array,
             default: () => [],
         },
+        YScaleLabel: {
+            type: String,
+            default: null,
+        },
+        XScaleLabel: {
+            type: String,
+            default: null,
+        },
+
     },
     mounted() {
         this.showData();
@@ -29,7 +38,7 @@ export default {
                             label: this.Label,
                             data: this.Chartdata,
                             backgroundColor: "transparent",
-                            backgroundColor: "rgba(206,167,29,1)", // Add custom color background (Fill)
+                            backgroundColor: "#08c2c0", // Add custom color background (Fill)
                         },
                     ],
                 },
@@ -43,7 +52,7 @@ export default {
                                 },
                                 scaleLabel: {
                                     display: true,
-                                    labelString: "تعداد",
+                                    labelString: this.YScaleLabel,
                                 },
                                 ticks: {
                                     beginAtZero: true,
@@ -56,7 +65,7 @@ export default {
                             {
                                 scaleLabel: {
                                     display: true,
-                                    labelString: "سال",
+                                    labelString: this.XScaleLabel,
                                 },
 
                                 gridLines: {
@@ -70,7 +79,7 @@ export default {
                             },
                         ],
                     },
-                    responsive: false, // Instruct chart js to respond nicely.
+                    responsive: true, // Instruct chart js to respond nicely.
                     maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height
                 }
             );

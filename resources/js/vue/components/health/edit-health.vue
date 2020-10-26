@@ -49,7 +49,6 @@
         .field
             label.checkbox
                 input(type="checkbox", v-model="healthData.isActive")
-                |
                 | فعال
             .field.is-grouped
                 .control(v-show="! isLoadingMode")
@@ -57,7 +56,6 @@
                         href="#",
                         @click.prevent="commandClick(ENUMS.COMMAND.SAVE)"
                     )
-                        |
                         | ویرایش
 </template>
 

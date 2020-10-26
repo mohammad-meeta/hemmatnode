@@ -35,7 +35,7 @@
                     .intro-card-block(v-for="year in yearsProject")
                         a(:href="createLinkProject(year)")
                             | برنامه های سال {{ year }}
-                .inline-card-body-item
+                .inline-card-body-item(v-if="! isPeopleNetwork")
                     a(:href="healthLink") پیوست سلامت
                 .inline-card-body-item
                     a(:href="actionCreativeLink") اقدامات خلاق
@@ -47,19 +47,24 @@
                         h2 پروژه ها
                     .intro-card-block(v-for="item in accessContentLink")
                         a(:href="item.link") {{ item.text }}
-                .inline-card-body-item(v-if="referencesData.title == 'شبکه مردمی'")
+                .inline-card-body-item(v-if="isPeopleNetwork")
                     a(:href="educationLink")
                         | ‫‬برنامه آموزش سواد سلامت
-                .inline-card-body-item(v-if="referencesData.title == 'شبکه مردمی'")
+                .inline-card-body-item(v-if="isPeopleNetwork")
                     a(:href="transportLink")
                         | انتقال مطالبات‫
 
             .column.is-4
                 .big-button
-                    a(:href="documentLink")
+                    a(
+                        href="#",
+                        @click.prevent="showDocuments"
+                    )
                         span.big-button-icon
                             i.fa.fa-book
-                        span.big-button-text
+                        span.big-button-text(v-if="isPeopleNetwork")
+                            | اسناد راهبردی شبکه
+                        span.big-button-text(v-if="! isPeopleNetwork")
                             | اسناد راهبردی مرتبط به حوزه سلامت
                 .big-button
                     a(
@@ -68,7 +73,9 @@
                     )
                         span.big-button-icon
                             i.fa.fa-info
-                        span.big-button-text
+                        span.big-button-text(v-if="isPeopleNetwork")
+                            | معرفی شبکه
+                        span.big-button-text(v-if="! isPeopleNetwork")
                             | معرفی پیام گزار سلامت
                     b-modal.departments-modal(
                         :active.sync="isCardModalActive"
@@ -82,8 +89,17 @@
                     a(href="#")
                         span.big-button-icon
                             i.fa.fa-bar-chart
-                        span.big-button-text
+                        span.big-button-text(v-if="! isPeopleNetwork")
                             | کارنامه دستگاه
+                        span.big-button-text(v-if="isPeopleNetwork")
+                            | کارنامه شبکه
+
+            department-document(
+                ref="documentList",
+                @on-command="onCommand",
+                :document-list-url="DocumentListUrl",
+                :department-id="departmentId",
+            )
 </template>
 
 <script>
@@ -91,19 +107,25 @@
 
 const Buefy = require("buefy").default;
 const ENUMS = require("JS-HELPERS/enums");
+const DepartmentDocument = require("VUE-COMPONENTS/document/department-document.vue").default;
 
 export default {
     name: "ShowDepartment",
 
+    components: {
+        DepartmentDocument,
+    },
     data: () => ({
         hasProject: false,
         yearsProject: [],
         ENUMS,
+        formModeStack: [],
         departmentData: {
             _id: null,
             loadUrl: null,
             title: null,
             department_category_id: null,
+            references: null,
             files: {},
             is_active: false,
         },
@@ -143,6 +165,11 @@ export default {
             default: null,
         },
 
+        DocumentListUrl: {
+            type: String,
+            default: null,
+        },
+
         showLoadAccessLinkUrl: {
             type: String,
             default: null,
@@ -170,6 +197,14 @@ export default {
         isLoadingMode: (state) => state.showLoadingFlag == true,
         showNotification: (state) => state.notificationMessage != null,
         hasContentProjects: (state) => state.accessContentLink.length > 0,
+        isPeopleNetwork: (state) =>
+            (state.departmentData || {}).references ==
+            "5ed3c62c4e9b0630692c3a7f",
+        modeLoading: state => state.formMode == ENUMS.FORM_MODE.LOADING,
+        modeList: state => state.formMode == ENUMS.FORM_MODE.LIST,
+        modeRegister: state => state.formMode == ENUMS.FORM_MODE.REGISTER,
+        modeEdit: state => state.formMode == ENUMS.FORM_MODE.EDIT,
+        modeShow: state => state.formMode == ENUMS.FORM_MODE.SHOW,
     },
 
     methods: {
@@ -181,6 +216,53 @@ export default {
             url = this.showPragramYearUrl.replace(/\$year\$/g, year);
             return url;
         },
+
+        /**
+         * On commands clicked
+         */
+        onCommand(payload) {
+            let arg = payload.arg || null;
+            const data = payload.data || {};
+            if (null == arg) {
+                arg = payload;
+            }
+            console.log(arg);
+            switch (arg) {
+                case ENUMS.COMMAND.NEW:
+                    this.changeFormMode(ENUMS.FORM_MODE.REGISTER);
+                    break;
+
+                case ENUMS.COMMAND.REGISTER:
+                    /* TODO: REGISTER NEW  */
+                    break;
+
+                case ENUMS.COMMAND.EDIT:
+                    /* TODO: REGISTER NEW Department */
+                    this.$refs.departmentEdit.loadDepartmentData(data);
+                    this.changeFormMode(ENUMS.FORM_MODE.EDIT);
+                    break;
+
+                case ENUMS.COMMAND.CANCEL:
+                    this.changeFormMode(null, { pop: true });
+                    break;
+
+                case ENUMS.COMMAND.SHOW:
+                    this.$refs.departmentShow.loadUrl = this.loadUrl;
+                    this.$refs.departmentShow.loadDepartmentData(data._id);
+                    this.changeFormMode(ENUMS.FORM_MODE.SHOW);
+                    break;
+            }
+        },
+
+        /**
+         * On Command
+         *
+         * @param      {Object}  arg     The argument
+         */
+        commandClick(arg) {
+            this.onCommand(arg);
+        },
+
 
         /**
          * Load specific department
@@ -199,7 +281,6 @@ export default {
                 alert("Error");
             }
             document.title = this.departmentData.title;
-            console.log(this.departmentData);
             this.loadReferencesDepartmentData(this.departmentData.references);
         },
 
@@ -337,6 +418,35 @@ export default {
 
             return data;
         },
+
+        /**
+         * Change form mode
+         */
+        changeFormMode(mode, options) {
+            const opts = Object.assign(
+                {
+                    pop: false
+                },
+                options
+            );
+
+            if (opts.pop) {
+                if (this.formModeStack.length > 0) {
+                    Vue.delete(
+                        this.formModeStack,
+                        this.formModeStack.length - 1
+                    );
+                }
+            } else {
+                Vue.set(this.formModeStack, this.formModeStack.length, mode);
+            }
+        },
+
+        showDocuments() {
+            console.log("ddddddddd");
+            this.changeFormMode(this.ENUMS.FORM_MODE.LIST);
+            this.$refs.documentList.loadDocuments(1);
+        }
     },
 };
 </script>

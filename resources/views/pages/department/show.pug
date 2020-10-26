@@ -7,6 +7,7 @@ block content
     show-department(ref="departmentShow",
         show-load-url=route("api.department.show", { department: '$department$'}),
         show-load-access-link-url=route("api.department.link.access", { departmentId: '$department$'}),
+        document-list-url=route('api.document', { page: '$page$', size: '$pageSize$', group: departmentId }),
         invite-session-url=route("invitesession.index", { department: departmentId}),
         memorandum-url=route("memorandum.index", { department: departmentId}),
         program-group-date-url=route("program.group.date", { group: departmentId}),

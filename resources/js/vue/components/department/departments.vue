@@ -60,7 +60,11 @@
             :departmentCategories-url="departmentCategoriesUrl")
 
         .column(v-show="!modeLoading && modeShow")
-            show-department(ref="departmentShow", @on-command="onCommand")
+            show-department(
+                ref="departmentShow",
+                @on-command="onCommand",
+                :document-list-url="documentListUrl"
+                 )
 </template>
 
 <script>
@@ -130,6 +134,11 @@ export default {
         },
 
         loadUrl: {
+            type: String,
+            default: null,
+        },
+
+        documentListUrl: {
             type: String,
             default: null,
         },

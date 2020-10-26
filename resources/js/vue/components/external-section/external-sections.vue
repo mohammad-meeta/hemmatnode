@@ -21,38 +21,41 @@
                         .panel-block.is-active(v-for='dep in departmentCategory.department', :key='dep._id')
                             a(:href="getUrl(dep._id)") {{ dep.title }}
 
-            .inline-cards
-                .inline-card.w-100(
-                    v-for="departmentCategory in departmentCategories",
-                    :key="departmentCategory.id"
-                )
-                    .inline-card-head
-                        h2 {{ departmentCategory.title }}
-                    .inline-card-body
-                        .inline-card-body-item(
-                            v-for="dep in departmentCategory.department",
-                            :key="dep._id"
-                        )
-                            //a(:href="getUrl(dep._id)")
-                            div(v-if="!hasChildren(dep)")
-                                a(:href="getUrl(dep._id)") {{ dep.title }}
-                            div(v-if="hasChildren(dep)")
-                                a(@click="showModal(dep)")
-                                    | {{ dep.title }}
-                                b-modal.departments-modal(
-                                    :active.sync="isModalActive"
-                                )
-                                    .childrens(
-                                        v-for="child in departmentChild"
+            .columns
+                .inline-cards.column
+                    .inline-card.w-100(
+                        v-for="departmentCategory in departmentCategories",
+                        :key="departmentCategory.id"
+                    )
+                        .inline-card-head
+                            h2 {{ departmentCategory.title }}
+                        .inline-card-body
+                            .inline-card-body-item(
+                                v-for="dep in departmentCategory.department",
+                                :key="dep._id"
+                            )
+                                //a(:href="getUrl(dep._id)")
+                                div(v-if="!hasChildren(dep)")
+                                    a(:href="getUrl(dep._id)") {{ dep.title }}
+                                div(v-if="hasChildren(dep)")
+                                    a(@click="showModal(dep)")
+                                        | {{ dep.title }}
+                                    b-modal.departments-modal(
+                                        :active.sync="isModalActive"
                                     )
-                                        a(:href="getUrl(child._id)") {{ child.title }}
+                                        .childrens(
+                                            v-for="child in departmentChild"
+                                        )
+                                            a(:href="getUrl(child._id)") {{ child.title }}
 
-                                //b-collapse(:open='false', aria-id='contentIdForA11y1')
-                                    a(slot='trigger', aria-controls='contentIdForA11y1') {{ dep.title }}
-                                    .notification
-                                        .content
-                                            .childrens(v-for='child in dep.child')
-                                                a(:href="getUrl(child._id)") {{ child.title }}
+                                    //b-collapse(:open='false', aria-id='contentIdForA11y1')
+                                        a(slot='trigger', aria-controls='contentIdForA11y1') {{ dep.title }}
+                                        .notification
+                                            .content
+                                                .childrens(v-for='child in dep.child')
+                                                    a(:href="getUrl(child._id)") {{ child.title }}
+                .section-background.column
+                    img(:src="require('IMAGES/cooperative.jpg')")
 </template>
 
 <script>

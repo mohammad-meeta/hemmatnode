@@ -1,61 +1,55 @@
 <template lang="pug">
 .container-child
+    .container.page-header
+        .title(v-show="! modeShow")
+            h1 اسناد راهبردی
+        .title(v-if="modeShow")
+            h1 {{ title }}
+        .hero-dashboard
+            .field.is-grouped
+                //- b-button.is-flex-direction-row-reverse(
+                //-     v-show="! modeDocument"
+                //-     type="is-warning is-light"
+                //-     size="is-small"
+                //-     icon-right="chevron-right"
+                //-     @click.prevent="commandClick(ENUMS.COMMAND.CANCEL)"
+                //-     )
+                //-         span بازگشت
     h1(v-if="!hasDocument") هیچ اسناد راهبردی ایجاد نشده
-    table.table.is-striped.is-hoverable.is-fullwidth(v-if="hasDocument")
-        thead
-            tr
-                th عنوان
-                th وضعیت
-                th تاریخ ایجاد
-                th عملیات
-        tbody
-            tr(v-for="document in documents", :key="document.id")
-                td {{ document.title }}
-                td {{ document.is_active }}
-                td {{ toPersianDate(document.created_at) }}
-                td.function-links
-                    a.button.is-warning.is-rounded.mt-2(
-                        href="#",
-                        @click.prevent="commandClick(ENUMS.COMMAND.SHOW, document)"
-                    )
-                        span.icon.is-small
-                            i.material-icons.icon swap_horizontal_circle
-                        span مشاهده
+    .container.main-content(v-show="! modeShow")
+        .intro-cards.columns
+            .intro-card.column.is-12
+                .panel-block.is-active.is-justified-between(
+                    v-for="doc in documents",
+                    :key="doc._id"
+                )
+                    .level-right
+                        a.level-item(
+                            href="#"
+                            @click.prevent="commandClick(ENUMS.COMMAND.SHOW, doc)"
+                        ) {{ doc.title }}
+                    .level-left
+                        .level-item
+                            | {{ toPersianDate(doc.date) }}
+    //- .container.main-content(v-show="modeShow")
+    //-     show-document(ref="documentShow", @on-command="onCommand")
 
-                    a.button.is-primary.is-rounded(
-                        href="#",
-                        @click.prevent="commandClick(ENUMS.COMMAND.EDIT, document)"
-                    )
-                        span.icon.is-small
-                            i.material-icons.icon check_circle
-                        span ویرایش اسناد راهبردی
-
-    b-pagination(
-        :total="pagination.total",
-        :current.sync="pagination.current",
-        :range-before="pagination.rangeBefore",
-        :range-after="pagination.rangeAfter",
-        :order="pagination.order",
-        :size="pagination.size",
-        :simple="pagination.isSimple",
-        :rounded="pagination.isRounded",
-        :per-page="pagination.perPage",
-        :icon-prev="pagination.prevIcon",
-        :icon-next="pagination.nextIcon",
-        aria-next-label="Next page",
-        aria-previous-label="Previous page",
-        aria-page-label="Page",
-        aria-current-label="Current page",
-        @change="loadMemorandums(pagination.current)"
-    )
 </template>
 
 <script>
 "use strict";
 
+const Buefy = require("buefy").default;
 const ENUMS = require("JS-HELPERS/enums");
+const Routes = require("JS-CORE/routes");
+const ShowDocument = require("VUE-COMPONENTS/document/show-document.vue").default;
 
 export default {
+    name: "DepartmentDocument",
+
+    components: {
+        ShowDocument
+    },
     props: {
         DocumentListUrl: {
             type: String,
@@ -65,26 +59,27 @@ export default {
 
     data: () => ({
         ENUMS,
-        pagination: {
-            total: 0,
-            current: 1,
-            perPage: 50,
-            rangeBefore: 3,
-            rangeAfter: 1,
-            order: "",
-            size: "",
-            isSimple: false,
-            isRounded: false,
-            prevIcon: "chevron-left",
-            nextIcon: "chevron-right",
-        },
+        formModeStack: [],
         documents: [],
-        documentsCount: 0,
-        pageCount: 0,
     }),
+
+    /**
+     * Created
+     */
+    created() {
+        //this.changeFormMode(this.ENUMS.FORM_MODE.DOCUMENT);
+    },
 
     computed: {
         hasDocument: (state) => (state.documents || []).length,
+        formMode: state => state.formModeStack[state.formModeStack.length - 1],
+
+        modeLoading: (state) => state.formMode == ENUMS.FORM_MODE.LOADING,
+        modeList: (state) => state.formMode == ENUMS.FORM_MODE.LIST,
+        modeShow: (state) => state.formMode == ENUMS.FORM_MODE.SHOW,
+        modeDocument: state => state.formMode == ENUMS.FORM_MODE.DOCUMENT,
+        modeDepartment: state => state.formMode == ENUMS.FORM_MODE.DEPARTMENT,
+        showNotification: (state) => state.notificationMessage != null,
     },
 
     methods: {
@@ -98,9 +93,28 @@ export default {
             AxiosHelper.send("get", url, "").then((res) => {
                 const resData = res.data;
                 Vue.set(this, "documents", resData.data.data);
-                Vue.set(this, "documentsCount", resData.data.count);
-                Vue.set(this.pagination, "total", resData.data.count);
             });
+        },
+
+        /**
+         * On commands clicked
+         */
+        onCommand(argument, payload) {
+            let arg = argument || null;
+            const data = payload || {};
+            if (null == arg) {
+                arg = 1;
+            }
+            switch (arg) {
+                case ENUMS.COMMAND.CANCEL:
+                    this.changeFormMode(null, { pop: true });
+                    break;
+                case ENUMS.COMMAND.SHOW:
+                    this.$refs.documentShow.loadDocumentData(data);
+                    Vue.set(this, "title", payload.title);
+                    this.changeFormMode(ENUMS.FORM_MODE.SHOW);
+                    break;
+            }
         },
 
         /**
@@ -109,22 +123,39 @@ export default {
          * @param      {Object}  arg     The argument
          */
         commandClick(arg, data) {
-            console.log("ffffff");
+            //this.$emit("onCommand",{arg, data});
             this.$emit("on-command", { arg, data });
+        },
+
+        /**
+         * Change form mode
+         */
+        changeFormMode(mode, options) {
+            console.log(mode);
+            const opts = Object.assign(
+                {
+                    pop: false,
+                },
+                options
+            );
+
+            if (opts.pop) {
+                if (this.formModeStack.length > 0) {
+                    Vue.delete(
+                        this.formModeStack,
+                        this.formModeStack.length - 1
+                    );
+                }
+            } else {
+                Vue.set(this.formModeStack, this.formModeStack.length, mode);
+            }
         },
 
         /**
          * To Persian Date
          */
         toPersianDate(date) {
-            return DateHelper.toPersianDateLong(date);
-        },
-
-        /**
-         * paginator click link
-         */
-        paginatorClick(id) {
-            this.loadMemorandums(id);
+            return DateHelper.toPersianDateShort(date);
         },
     },
 };

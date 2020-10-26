@@ -30,6 +30,13 @@ DateHelper.toPersianDateLong = function toPersianDateLong(value, locale) {
 };
 
 //
+// To Persian Date short
+//
+DateHelper.toPersianDateShort = function toPersianDateShort(value, locale) {
+    return DateHelper.toPersianDate(value, 'jYYYY-jMM-jDD', locale);
+};
+
+//
 // To Persian Date year
 //
 DateHelper.toPersianDateYear = function toPersianDateYear(value, locale) {

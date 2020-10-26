@@ -17,7 +17,10 @@ Enums.COMMAND = {
     CANCEL: 5,
     SHOW: 6,
     NEWSESSION: 7,
-    SEMIEDIT: 8
+    SEMIEDIT: 8,
+    DOCUMENT: 9,
+    REPORT: 10,
+    DEPARTMENT: 11,
 };
 
 /**
@@ -31,5 +34,8 @@ Enums.FORM_MODE = {
     REMOVE: 5,
     SHOW: 6,
     NEWSESSION: 7,
-    SEMIEDIT: 8
+    SEMIEDIT: 8,
+    DOCUMENT: 9,
+    REPORT: 10,
+    DEPARTMENT: 11,
 };

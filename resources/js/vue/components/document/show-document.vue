@@ -52,7 +52,7 @@ export default {
          * Load specific document
          */
         loadDocumentData(data) {
-            console.log(data);
+            const resFiles = data.resfiles || [];
             const temp = {
                 _id: data._id,
                 title: data.title,
@@ -63,8 +63,11 @@ export default {
             };
 
             Vue.set(this, "documentData", temp);
-            Vue.set(this, "oldFiles", data.resfiles);
-            this.$refs.fileDownload.updateOldFiles(data.resfiles);
+            Vue.set(this, "oldFiles", data.files);
+            if(resFiles.length) {
+                Vue.set(this, "oldFiles", data.resfiles);
+            }
+            this.$refs.fileDownload.updateOldFiles(this.oldFiles);
         },
 
         /**

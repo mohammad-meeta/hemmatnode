@@ -8,11 +8,19 @@
                 .field.is-grouped
                     .control(v-for="item in accessLink")
                         a.button.is-primary.is-rounded(:href="item.link") {{ item.text }}
-
+        b-button.is-flex-direction-row-reverse(
+            v-show="! modeDepartment"
+            type="is-warning is-light"
+            size="is-small"
+            icon-right="chevron-right"
+            @click.prevent="commandClick(ENUMS.COMMAND.CANCEL)"
+            )
+                span بازگشت
         .info-card
             .info-card-title {{ departmentData.title }}
-
-        .intro-cards.columns(v-if="hasContentProjects")
+        .intro-cards.columns(
+            v-if="hasContentProjects"
+            v-show="!isLoadingMode && modeDepartment")
             .column.is-4
                 b-collapse.card(
                     animation="slide",
@@ -94,12 +102,15 @@
                         span.big-button-text(v-if="isPeopleNetwork")
                             | کارنامه شبکه
 
-            department-document(
-                ref="documentList",
-                @on-command="onCommand",
-                :document-list-url="DocumentListUrl",
-                :department-id="departmentId",
-            )
+        department-document(
+            ref="documentList",
+            @on-command="onCommand",
+            :document-list-url="DocumentListUrl",
+            :department-id="departmentId",
+            v-show="!isLoadingMode && modeDocument"
+        )
+        .container.main-content(v-show="modeShow")
+            show-document(ref="documentShow", @on-command="onCommand")
 </template>
 
 <script>
@@ -108,12 +119,14 @@
 const Buefy = require("buefy").default;
 const ENUMS = require("JS-HELPERS/enums");
 const DepartmentDocument = require("VUE-COMPONENTS/document/department-document.vue").default;
+const ShowDocument = require("VUE-COMPONENTS/document/show-document.vue").default;
 
 export default {
     name: "ShowDepartment",
 
     components: {
         DepartmentDocument,
+        ShowDocument
     },
     data: () => ({
         hasProject: false,
@@ -193,6 +206,13 @@ export default {
         this.loadContentLinks(this.departmentId);
     },
 
+    /**
+     * Mounted
+     */
+    mounted() {
+        this.changeFormMode(ENUMS.FORM_MODE.DEPARTMENT);
+    },
+
     computed: {
         isLoadingMode: (state) => state.showLoadingFlag == true,
         showNotification: (state) => state.notificationMessage != null,
@@ -200,11 +220,14 @@ export default {
         isPeopleNetwork: (state) =>
             (state.departmentData || {}).references ==
             "5ed3c62c4e9b0630692c3a7f",
+        formMode: state => state.formModeStack[state.formModeStack.length - 1],
         modeLoading: state => state.formMode == ENUMS.FORM_MODE.LOADING,
         modeList: state => state.formMode == ENUMS.FORM_MODE.LIST,
         modeRegister: state => state.formMode == ENUMS.FORM_MODE.REGISTER,
         modeEdit: state => state.formMode == ENUMS.FORM_MODE.EDIT,
         modeShow: state => state.formMode == ENUMS.FORM_MODE.SHOW,
+        modeDocument: state => state.formMode == ENUMS.FORM_MODE.DOCUMENT,
+        modeDepartment: state => state.formMode == ENUMS.FORM_MODE.DEPARTMENT,
     },
 
     methods: {
@@ -221,12 +244,12 @@ export default {
          * On commands clicked
          */
         onCommand(payload) {
+            console.log(payload);
             let arg = payload.arg || null;
             const data = payload.data || {};
             if (null == arg) {
                 arg = payload;
             }
-            console.log(arg);
             switch (arg) {
                 case ENUMS.COMMAND.NEW:
                     this.changeFormMode(ENUMS.FORM_MODE.REGISTER);
@@ -247,8 +270,10 @@ export default {
                     break;
 
                 case ENUMS.COMMAND.SHOW:
-                    this.$refs.departmentShow.loadUrl = this.loadUrl;
-                    this.$refs.departmentShow.loadDepartmentData(data._id);
+                    //this.$refs.departmentShow.loadUrl = this.loadUrl;
+                    //this.$refs.departmentShow.loadDepartmentData(data._id);
+                    this.$refs.documentShow.loadDocumentData(data);
+                    Vue.set(this, "title", payload.title);
                     this.changeFormMode(ENUMS.FORM_MODE.SHOW);
                     break;
             }
@@ -443,8 +468,7 @@ export default {
         },
 
         showDocuments() {
-            console.log("ddddddddd");
-            this.changeFormMode(this.ENUMS.FORM_MODE.LIST);
+            this.changeFormMode(this.ENUMS.FORM_MODE.DOCUMENT);
             this.$refs.documentList.loadDocuments(1);
         }
     },

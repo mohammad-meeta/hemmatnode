@@ -97,6 +97,8 @@ export default {
         modeLoading: (state) => state.formMode == ENUMS.FORM_MODE.LOADING,
         modeList: (state) => state.formMode == ENUMS.FORM_MODE.LIST,
         modeShow: (state) => state.formMode == ENUMS.FORM_MODE.SHOW,
+        modeDocument: state => state.formMode == ENUMS.FORM_MODE.DOCUMENT,
+        modeDepartment: state => state.formMode == ENUMS.FORM_MODE.DEPARTMENT,
         showNotification: (state) => state.notificationMessage != null,
     },
 

@@ -7,7 +7,8 @@
             .hero-dashboard
                 .field.is-grouped
                     .control(v-for="item in accessLink")
-                        a.button.is-primary.is-rounded(:href="item.link") {{ item.text }}
+                        a.button.is-primary.is-rounded(:href="item.link" v-if="! (isShora && item.text == 'آئین نامه')") {{ item.text }}
+                        a.button.is-primary.is-rounded(:href="item.link" v-if="isShora && item.text == 'آئین نامه'") شیوه نامه
         b-button.is-flex-direction-row-reverse(
             v-show="! modeDepartment"
             type="is-warning is-light"
@@ -234,6 +235,8 @@ export default {
         isPeopleNetwork: (state) =>
             (state.departmentData || {}).references ==
             "5ed3c62c4e9b0630692c3a7f",
+        isShora: (state) =>
+            (state.departmentData || {})._id == "5ed466b696259b1a49c7a49b",
         formMode: (state) =>
             state.formModeStack[state.formModeStack.length - 1],
         modeLoading: (state) => state.formMode == ENUMS.FORM_MODE.LOADING,
@@ -310,8 +313,6 @@ export default {
                     break;
 
                 case ENUMS.COMMAND.SHOW:
-                    //this.$refs.departmentShow.loadUrl = this.loadUrl;
-                    //this.$refs.departmentShow.loadDepartmentData(data._id);
                     this.$refs.documentShow.loadDocumentData(data);
                     Vue.set(this, "title", payload.title);
                     this.changeFormMode(ENUMS.FORM_MODE.SHOW);

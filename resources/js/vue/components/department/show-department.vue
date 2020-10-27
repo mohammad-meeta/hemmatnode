@@ -112,6 +112,8 @@
         )
         .container.main-content(v-show="modeShow")
             show-document(ref="documentShow", @on-command="onCommand")
+    img(:src="image")
+
 </template>
 
 <script>
@@ -228,7 +230,33 @@ export default {
         this.changeFormMode(ENUMS.FORM_MODE.DEPARTMENT);
     },
 
+    watch: {
+        image(newValue) {
+            return (
+                // "data:image/jpeg;base64," +
+                btoa(
+                    new Uint8Array(newValue).reduce(
+                        (data, byte) => data + String.fromCharCode(byte),
+                        ""
+                    )
+                )
+            );
+        },
+    },
+
     computed: {
+        // dataUrl() {
+        //     return (
+        //         "data:image/jpeg;base64," +
+        //         btoa(
+        //             new Uint8Array(this.image).reduce(
+        //                 (data, byte) => data + String.fromCharCode(byte),
+        //                 ""
+        //             )
+        //         )
+        //     );
+        // },
+
         isLoadingMode: (state) => state.showLoadingFlag == true,
         showNotification: (state) => state.notificationMessage != null,
         hasContentProjects: (state) => state.accessContentLink.length > 0,
@@ -268,10 +296,11 @@ export default {
 
                 let res2 = await AxiosHelper.send("get", url2);
 
-                const data2 = res2.data;
+                const data2 = atob(res2.data);
                 Vue.set(this, "image", data2);
+                console.log(typeof this.image);
             } catch (err) {
-                alert("Error");
+                console.log(err);
             }
         },
 

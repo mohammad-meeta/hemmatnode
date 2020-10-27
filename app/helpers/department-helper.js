@@ -1,6 +1,7 @@
 'use strict';
 
 const mongoose = require('mongoose');
+const { profile } = require('winston');
 
 /**
  * dep cat controller
@@ -234,6 +235,103 @@ DepartmentHelper.loadAllDepartmentDocumentData = async function loadAllDepartmen
         /************************************************ */
     }
     // console.log(JSON.stringify(res, null, 2))
+    return res;
+};
+/**
+ * find all dep cat data result 
+ */
+DepartmentHelper.loadDepartmentUserData = async function loadDepartmentUserData(department_id) {
+    const User = mongoose.model('User');
+    const ObjectId = require('mongoose').Types.ObjectId;
+
+    const pipeline = [
+        {
+            "$match": {
+                role_group_group: new ObjectId(department_id)
+            }
+        },
+        {
+            "$lookup": {
+                "from": "files",
+                "localField": "profile.image",
+                "foreignField": "_id",
+                "as": "file"
+            }
+        }, {
+            "$unwind": {
+                "path": "$file",
+                "preserveNullAndEmptyArrays": true
+            }
+        }, {
+            "$project": {
+                "file.encoding": 0,
+                "file.mimetype": 0,
+                "file.user_id": 0,
+            }
+        }, {
+            "$group": {
+                "_id": "$_id",
+                "oldFiles": {
+                    "$last": "$files"
+                },
+                "files": {
+                    "$push": "$ffile"
+                },
+                "is_active": {
+                    "$last": "$is_active"
+                },
+                "name": {
+                    "$last": "$name"
+                },
+                "email": {
+                    "$last": "$email"
+                },
+                "profile": {
+                    "$last": "$profile"
+                },
+                "cellphone": {
+                    "$last": "$cellphone"
+                }
+            }
+        }
+    ];
+    let res = await User.aggregate(pipeline);
+
+    for (let resI = 0; resI < res.length; resI++) {
+
+        let oldFiles = res[resI].oldFiles;
+        let files = res[resI].files;
+        let deleted = [];
+        for (let index = 0; index < files.length; index++) {
+            const element = files[index];
+            for (let index2 = 0; index2 < oldFiles.length; index2++) {
+                const element2 = oldFiles[index2];
+                if (String(element["_id"]) == String(element2["file_id"]) && element2["deleted_at"] != null) {
+                    deleted.push(element["_id"])
+                }
+            }
+        }
+
+        for (let index3 = 0; index3 < deleted.length; index3++) {
+            const element = deleted[index3];
+            const indexF = files.findIndex(x => String(x._id) == String(element));
+            if (indexF >= -1) {
+                files.splice(indexF, 1)
+            }
+        }
+    }
+
+    for (let i = 0; i < res.length; i++) {
+        for (let k = 0; k < res[i].files.length; k++) {
+            res[i].files[k] = {
+                "_id": res[i].files[k]._id,
+                "fieldname": res[i].files[k].fieldname,
+                "name": res[i].files[k].originalname,
+                "filename": res[i].files[k].filename,
+                "size": res[i].files[k].size,
+            };
+        }
+    }
     return res;
 };
 /**

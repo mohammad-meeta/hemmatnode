@@ -118,17 +118,21 @@
 
 const Buefy = require("buefy").default;
 const ENUMS = require("JS-HELPERS/enums");
-const DepartmentDocument = require("VUE-COMPONENTS/document/department-document.vue").default;
-const ShowDocument = require("VUE-COMPONENTS/document/show-document.vue").default;
+const DepartmentDocument = require("VUE-COMPONENTS/document/department-document.vue")
+    .default;
+const ShowDocument = require("VUE-COMPONENTS/document/show-document.vue")
+    .default;
 
 export default {
     name: "ShowDepartment",
 
     components: {
         DepartmentDocument,
-        ShowDocument
+        ShowDocument,
     },
     data: () => ({
+        image: null,
+        userData: {},
         hasProject: false,
         yearsProject: [],
         ENUMS,
@@ -196,6 +200,15 @@ export default {
             type: String,
             default: null,
         },
+        loadUserUrl: {
+            type: String,
+            default: null,
+        },
+
+        getImageUrl: {
+            type: String,
+            default: "",
+        },
     },
 
     /**
@@ -204,6 +217,7 @@ export default {
     created() {
         this.loadLinkAccess(this.departmentId);
         this.loadContentLinks(this.departmentId);
+        this.loadUserData();
     },
 
     /**
@@ -220,17 +234,44 @@ export default {
         isPeopleNetwork: (state) =>
             (state.departmentData || {}).references ==
             "5ed3c62c4e9b0630692c3a7f",
-        formMode: state => state.formModeStack[state.formModeStack.length - 1],
-        modeLoading: state => state.formMode == ENUMS.FORM_MODE.LOADING,
-        modeList: state => state.formMode == ENUMS.FORM_MODE.LIST,
-        modeRegister: state => state.formMode == ENUMS.FORM_MODE.REGISTER,
-        modeEdit: state => state.formMode == ENUMS.FORM_MODE.EDIT,
-        modeShow: state => state.formMode == ENUMS.FORM_MODE.SHOW,
-        modeDocument: state => state.formMode == ENUMS.FORM_MODE.DOCUMENT,
-        modeDepartment: state => state.formMode == ENUMS.FORM_MODE.DEPARTMENT,
+        formMode: (state) =>
+            state.formModeStack[state.formModeStack.length - 1],
+        modeLoading: (state) => state.formMode == ENUMS.FORM_MODE.LOADING,
+        modeList: (state) => state.formMode == ENUMS.FORM_MODE.LIST,
+        modeRegister: (state) => state.formMode == ENUMS.FORM_MODE.REGISTER,
+        modeEdit: (state) => state.formMode == ENUMS.FORM_MODE.EDIT,
+        modeShow: (state) => state.formMode == ENUMS.FORM_MODE.SHOW,
+        modeDocument: (state) => state.formMode == ENUMS.FORM_MODE.DOCUMENT,
+        modeDepartment: (state) => state.formMode == ENUMS.FORM_MODE.DEPARTMENT,
     },
 
     methods: {
+        /**
+         * load user data
+         */
+        async loadUserData() {
+            let url = this.loadUserUrl;
+
+            try {
+                let res = await AxiosHelper.send("get", url);
+
+                const data = res.data.data[0];
+                Vue.set(this, "userData", data);
+
+                let url2 = this.getImageUrl.replace(
+                    /\$IMAGE\$/g,
+                    data.profile.image
+                );
+
+                let res2 = await AxiosHelper.send("get", url2);
+
+                const data2 = res2.data;
+                Vue.set(this, "image", data2);
+            } catch (err) {
+                alert("Error");
+            }
+        },
+
         /**
          * create link for project
          */
@@ -244,7 +285,6 @@ export default {
          * On commands clicked
          */
         onCommand(payload) {
-            console.log(payload);
             let arg = payload.arg || null;
             const data = payload.data || {};
             if (null == arg) {
@@ -287,7 +327,6 @@ export default {
         commandClick(arg) {
             this.onCommand(arg);
         },
-
 
         /**
          * Load specific department
@@ -450,7 +489,7 @@ export default {
         changeFormMode(mode, options) {
             const opts = Object.assign(
                 {
-                    pop: false
+                    pop: false,
                 },
                 options
             );
@@ -470,7 +509,7 @@ export default {
         showDocuments() {
             this.changeFormMode(this.ENUMS.FORM_MODE.DOCUMENT);
             this.$refs.documentList.loadDocuments(1);
-        }
+        },
     },
 };
 </script>

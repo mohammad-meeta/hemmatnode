@@ -66,6 +66,10 @@ mix.js("resources/js/core/kernel.js", `${output}/js/core`)
     .js("resources/js/pages/factory.js", `${output}/js/pages`)
 
     .js(
+        "resources/js/pages/head/index/index.js",
+        `${output}/js/pages/head/index`
+    )
+    .js(
         "resources/js/pages/department-category/index/index.js",
         `${output}/js/pages/department-category/index`
     )

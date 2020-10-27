@@ -2,11 +2,12 @@
 
 const FS = require("fs");
 const PugView = use("app/helpers/pug-view");
+const FileHelper = use('app/helpers/file-helper');
 
 /**
  * Controller
  */
-function Controller() {}
+function Controller() { }
 module.exports = Controller;
 
 /**
@@ -65,4 +66,29 @@ Controller.uploadImage = async function uploadImage(req, res, next) {
     res.send({
         default: imgUrl,
     });
+};
+/**
+ * file url
+ */
+Controller.file = async function file(req, res, next) {
+    let fileId = req.params.image;
+
+    try {
+        const data = await FileHelper.findFile(fileId);
+        const filename = rPath("storage/uploads", data.filename);
+
+        if (FS.existsSync(filename)) {
+            res.sendFile(filename);
+        } else {
+            res.status(404)
+                .send({
+                    success: false,
+                    data: "Invalid Filename",
+                })
+                .end();
+        }
+    }
+    catch (err) {
+        console.error(err);
+    }
 };

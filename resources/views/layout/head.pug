@@ -22,7 +22,12 @@ nav.navbar.navbar-expand-md
                 a(href='/document-list') مرکز اسناد راهبردی
         .nav-user-container.is-flex.dropdown.drp#dropdown-toggler
             .nav-user-container-icon.columns.is-centered
-                img(src=asset('images/user.svg'))
+                if (null == req.session.auth)
+                    #avatar
+                        img(src=asset('images/user.svg'))
+                else
+                    #avatar
+                        img(src=route("api.getimage", { image: req.session.auth.profile.image}))
             .navbarSupportedContent.collapse.navbar-collapse
                 // Left Side Of Navbar
                 ul.navbar-nav.mr-2
@@ -34,8 +39,8 @@ nav.navbar.navbar-expand-md
                             a.nav-link(href="/auth/login") ورود
                     else
                         button.button.drp(aria-haspopup='true',
-                                aria-controls='dropdown-menu',
-                                onclick='window.dropdownToggle()')
+                            aria-controls='dropdown-menu',
+                            onclick='window.dropdownToggle()')
                             span.drp= req.session.auth.profile.first_name + " " + req.session.auth.profile.last_name
                             span.drp.icon.is-small
                                 i.drp.fa.fa-chevron-down(aria-hidden='true')

@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 /**
  * Algorithm controller
  */
-function AuthHelper() {}
+function AuthHelper() { }
 module.exports = AuthHelper;
 
 /**
@@ -25,12 +25,11 @@ AuthHelper.loadUserData = function loadUserData(userData) {
 
     const projection = {
         name: 1,
-        pwd: 1,
         profile: 1
     };
 
     return new Promise((resolve, reject) => {
-        User.findOne(filterQuery, projection, {})
+        User.findOne(filterQuery, projection)
             .then(res => {
                 resolve(res);
             })

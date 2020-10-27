@@ -10,6 +10,8 @@ block content
         document-list-url=route('api.document', { page: '$page$', size: '$pageSize$', group: departmentId }),
         invite-session-url=route("invitesession.index", { department: departmentId}),
         memorandum-url=route("memorandum.index", { department: departmentId}),
+        get-image-url=route('api.getimage', { image :'$IMAGE$'}),
+        load-user-url=route('api.department.user', { group: departmentId}),
         program-group-date-url=route("program.group.date", { group: departmentId}),
         show-pragram-year-url=route("program.index", { department: departmentId, year:"$year$"}),
         department-id=departmentId

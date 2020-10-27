@@ -17,3 +17,9 @@ Router.post("/upload_image", [
     checkSession,
     "storage@uploadImage",
 ]).as("storage.upload_image");
+
+Router.get('/api/getimage/:image', [
+    checkSession,
+    'storage@file'
+])
+    .as('api.getimage');

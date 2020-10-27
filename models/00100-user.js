@@ -26,6 +26,16 @@ Model.setup = function setup() {
  */
 Model.model = function model() {
     const ObjectId = mongoose.Schema.ObjectId;
+    const File = new mongoose.Schema({
+        'file_id': {
+            type: ObjectId,
+        },
+        'deleted_at': {
+            type: Date,
+            default: null
+        }
+    });
+
     return {
         'name': {
             type: String,
@@ -59,6 +69,9 @@ Model.model = function model() {
         'role_group_role': {
             type: Array,
             required: true
+        },
+        'files': {
+            type: [File]
         },
         'profile': new mongoose.Schema({
             'first_name': {

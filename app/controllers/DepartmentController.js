@@ -142,6 +142,25 @@ Department.show = async function show(req, res, next) {
     //     .catch(err => console.error(err));
 };
 /**
+ * load user
+ */
+Department.userData = async function userData(req, res, next) {
+    const departmentId = req.params.group;
+
+    DepartmentHelper.loadDepartmentUserData(departmentId)
+        .then(data => {
+            const result = {
+                success: true,
+                data: data
+            };
+
+            res.status(200)
+                .send(result)
+                .end();
+        })
+        .catch(err => console.error(err));
+};
+/**
  * load data with id
  */
 Department.loadData = async function loadData(req, res, next) {

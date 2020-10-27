@@ -36,6 +36,16 @@
                     .control
                         input.input(type='text', placeholder='کد ملی', v-model='userData.nationCode' required)
                 .field
+                    div(v-if='!image')
+                        label.label عکس
+                        .control
+                            input.input(type='file' accept='image/png, image/jpeg' @change="onFileChange")
+                    div(v-else='')
+                        img(:src='image' )
+                        br
+                        button(@click='removeImage') حذف عکس
+
+                .field
                     label.label شماره موبایل
                     .control
                         input.input(type='text', placeholder='شماره موبایل', v-model='userData.cellphone' required)
@@ -78,13 +88,14 @@ export default {
     name: "EditUser",
     components: {
         Notification,
-        FileUpload
+        FileUpload,
     },
 
     data: () => ({
         ENUMS,
         roles: [],
         files: [],
+        image: null,
         deletedOldFiles: [],
         oldFiles: [],
         departments: [],
@@ -100,33 +111,38 @@ export default {
             deletedOldFiles: [],
             is_active: false,
             role_group_role: [],
-            role_group_group: null
+            role_group_group: null,
         },
         notificationMessage: null,
         notificationType: "is-info",
-        showLoadingFlag: false
+        showLoadingFlag: false,
     }),
 
     props: {
         editUrl: {
             type: String,
-            default: ""
+            default: "",
+        },
+
+        getImageUrl: {
+            type: String,
+            default: "",
         },
 
         rolesUrl: {
             type: String,
-            default: ""
+            default: "",
         },
 
         departmentsUrl: {
             type: String,
-            default: ""
+            default: "",
         },
 
         userDatas: {
             role_group_role: [],
-            role_group_group: null
-        }
+            role_group_group: null,
+        },
     },
 
     created() {
@@ -135,11 +151,40 @@ export default {
     },
 
     computed: {
-        isLoadingMode: state => state.showLoadingFlag == true,
-        showNotification: state => state.notificationMessage != null
+        isLoadingMode: (state) => state.showLoadingFlag == true,
+        showNotification: (state) => state.notificationMessage != null,
     },
 
     methods: {
+        /**
+         * onFileChange
+         */
+        onFileChange(e) {
+            var files = e.target.files || e.dataTransfer.files;
+            if (!files.length) return;
+            this.createImage(files[0]);
+        },
+        /**
+         * createImage
+         */
+        createImage(file) {
+            // Vue.set(this.userData,"image", file);
+            var image = new Image();
+            var reader = new FileReader();
+            var vm = this;
+
+            reader.onload = (e) => {
+                vm.image = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        },
+        /**
+         * removeImage
+         */
+        removeImage: function(e) {
+            this.image = "";
+        },
+
         /**
          * Load specific user
          */
@@ -151,12 +196,20 @@ export default {
                 firstName: data.profile.first_name,
                 lastName: data.profile.last_name,
                 nationCode: data.profile.nation_code,
+                image: data.profile.image,
                 cellphone: data.cellphone,
                 role_group_role: JSON.parse(data.role_group_role),
                 role_group_group: data.role_group_group,
                 files: _.cloneDeep(data.files),
-                is_active: data.is_active
+                is_active: data.is_active,
             };
+
+            let url = this.getImageUrl.replace("$IMAGE$", temp.image);
+            console.log(url);
+            AxiosHelper.send("get", url, "").then((res) => {
+                const resData = res.data;
+                Vue.set(this, "image", resData);
+            });
 
             Vue.set(this, "oldFiles", temp.files);
             Vue.set(this, "userData", temp);
@@ -169,7 +222,7 @@ export default {
          */
         loadRoles() {
             const url = this.rolesUrl;
-            AxiosHelper.send("get", url, "").then(res => {
+            AxiosHelper.send("get", url, "").then((res) => {
                 const resData = res.data;
                 const datas = resData.data.data;
                 Vue.set(this, "roles", datas);
@@ -181,7 +234,7 @@ export default {
          */
         loadDepartments() {
             const url = this.departmentsUrl;
-            AxiosHelper.send("get", url, "").then(res => {
+            AxiosHelper.send("get", url, "").then((res) => {
                 const resData = res.data;
                 const datas = resData.data;
                 Vue.set(this, "departments", datas.data);
@@ -247,28 +300,29 @@ export default {
                 email: this.userData.email,
                 first_name: this.userData.firstName,
                 last_name: this.userData.lastName,
+                image: this.userData.image,
                 nation_code: this.userData.nationCode,
                 cellphone: this.userData.cellphone,
                 role_group_role: this.userData.role_group_role,
                 role_group_group: this.userData.role_group_group,
                 is_active: this.userData.is_active,
                 files: this.files,
-                deletedOldFiles: this.deletedOldFiles
+                deletedOldFiles: this.deletedOldFiles,
             };
 
             const url = this.editUrl.replace("$id$", userData._id);
             AxiosHelper.send("patch", url, userData, {
                 sendAsFormData: true,
-                filesArray: "files"
+                filesArray: ["image", "files"],
             })
-                .then(res => {
+                .then((res) => {
                     const data = res.data;
                     this.$emit("on-update", {
                         sender: this,
-                        data
+                        data,
                     });
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.error(err);
                     this.setNotification(".خطا در ذخیره کاربر", "is-danger");
                 })
@@ -288,16 +342,15 @@ export default {
 
             const errors = result.validator.errors.all();
             const error = Object.keys(errors)
-                .map(key => errors[key].join("\n"))
+                .map((key) => errors[key].join("\n"))
                 .join("</br>");
 
             console.log(error);
             this.setNotification(error, "is-danger");
             return false;
-        }
-    }
+        },
+    },
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

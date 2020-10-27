@@ -35,6 +35,16 @@
                 .control
                     input.input(type='text', placeholder='کد ملی', v-model='userData.nationCode' required)
             .field
+                div(v-if='!image')
+                    label.label عکس
+                    .control
+                        input.input(type='file' accept='image/png, image/jpeg' @change="onFileChange")
+                div(v-else='')
+                    img(:src='image' )
+                    br
+                    button(@click='removeImage') حذف عکس
+
+            .field
                 label.label شماره موبایل
                 .control
                     input.input(type='text', placeholder='شماره موبایل', v-model='userData.cellphone' required)
@@ -77,13 +87,14 @@ export default {
 
     components: {
         Notification,
-        FileUpload
+        FileUpload,
     },
 
     data: () => ({
         ENUMS,
         roles: [],
         files: [],
+        image: null,
         deletedOldFiles: [],
         oldFiles: [],
         departments: [],
@@ -94,6 +105,7 @@ export default {
             firstName: null,
             lastName: null,
             nationCode: null,
+            image: [],
             cellphone: null,
             files: [],
             deletedOldFiles: [],
@@ -104,24 +116,24 @@ export default {
 
         notificationMessage: null,
         notificationType: "is-info",
-        showLoadingFlag: false
+        showLoadingFlag: false,
     }),
 
     props: {
         registerUrl: {
             type: String,
-            default: ""
+            default: "",
         },
 
         rolesUrl: {
             type: String,
-            default: ""
+            default: "",
         },
 
         departmentsUrl: {
             type: String,
-            default: ""
-        }
+            default: "",
+        },
     },
 
     created() {
@@ -130,11 +142,40 @@ export default {
     },
 
     computed: {
-        isLoadingMode: state => state.showLoadingFlag == true,
-        showNotification: state => state.notificationMessage != null
+        isLoadingMode: (state) => state.showLoadingFlag == true,
+        showNotification: (state) => state.notificationMessage != null,
     },
 
     methods: {
+        /**
+         * onFileChange
+         */
+        onFileChange(e) {
+            var files = e.target.files || e.dataTransfer.files;
+            if (!files.length) return;
+            this.createImage(files[0]);
+        },
+        /**
+         * createImage
+         */
+        createImage(file) {
+            Vue.set(this.userData.image, 0, file);
+            var image = new Image();
+            var reader = new FileReader();
+            var vm = this;
+
+            reader.onload = (e) => {
+                vm.image = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        },
+        /**
+         * removeImage
+         */
+        removeImage: function(e) {
+            this.image = "";
+        },
+
         /**
          * On Command
          *
@@ -153,7 +194,7 @@ export default {
          */
         loadDepartments() {
             const url = this.departmentsUrl;
-            AxiosHelper.send("get", url, "").then(res => {
+            AxiosHelper.send("get", url, "").then((res) => {
                 const resData = res.data;
                 const datas = resData.data.data;
                 Vue.set(this, "departments", datas);
@@ -165,7 +206,7 @@ export default {
          */
         loadRoles() {
             const url = this.rolesUrl;
-            AxiosHelper.send("get", url, "").then(res => {
+            AxiosHelper.send("get", url, "").then((res) => {
                 const resData = res.data;
                 const datas = resData.data.data;
                 Vue.set(this, "roles", datas);
@@ -212,9 +253,9 @@ export default {
             }
             const deletedFiles = this.$refs.fileUpload.getDeletedFiles();
             const newFiles = this.$refs.fileUpload.getNewFiles();
-            let newUploaded = newFiles.map(x => x.file);
+            let newUploaded = newFiles.map((x) => x.file);
             Vue.set(this, "files", newUploaded);
-            let deleteUploaded = deletedFiles.map(x => x._id);
+            let deleteUploaded = deletedFiles.map((x) => x._id);
             Vue.set(this, "deletedOldFiles", deleteUploaded);
             let userData = {
                 name: this.userData.name,
@@ -223,12 +264,13 @@ export default {
                 first_name: this.userData.firstName,
                 last_name: this.userData.lastName,
                 nation_code: this.userData.nationCode,
+                image: this.userData.image,
                 cellphone: this.userData.cellphone,
                 role_group_role: this.userData.role_group_role,
                 role_group_group: this.userData.role_group_group,
                 is_active: this.userData.is_active,
                 files: this.files,
-                deletedOldFiles: this.deletedOldFiles
+                deletedOldFiles: this.deletedOldFiles,
             };
             this.showLoading();
 
@@ -236,21 +278,21 @@ export default {
             console.log(userData);
             AxiosHelper.send("post", url, userData, {
                 sendAsFormData: true,
-                filesArray: "files"
+                filesArray: ["image", "files"],
             })
-                .then(res => {
+                .then((res) => {
                     const data = res.data;
 
                     if (data.success) {
                         this.$emit("on-register", {
                             sender: this,
                             data: {
-                                data: data
-                            }
+                                data: data,
+                            },
                         });
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     const data = err.response.data;
                     this.setNotification(data, "is-danger");
                 })
@@ -272,16 +314,22 @@ export default {
 
             const errors = result.validator.errors.all();
             const error = Object.keys(errors)
-                .map(key => errors[key].join("\n"))
+                .map((key) => errors[key].join("\n"))
                 .join("</br>");
 
             console.log(error);
             this.setNotification(error, "is-danger");
             return false;
-        }
-    }
+        },
+    },
 };
 </script>
 
 <style scoped>
+img {
+    width: 20%;
+    margin: auto;
+    display: block;
+    margin-bottom: 10px;
+}
 </style>

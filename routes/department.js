@@ -73,6 +73,13 @@ Router.get('/department/:department', [
 ])
     .as('department.show');
 
+Router.get('/api/department/user/:group', [
+    checkSession,
+    Rule.canAsync('user.permision', 'department.show'),
+    'Department@userData'
+])
+    .as('api.department.user');
+
 Router.get('/api/department/:department', [
     checkSession,
     Rule.canAsync('user.permision', 'api.department.show'),

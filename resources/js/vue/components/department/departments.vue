@@ -64,7 +64,9 @@
                 ref="departmentShow",
                 @on-command="onCommand",
                 :document-list-url="documentListUrl"
-                 )
+                :load-user-url="loadUserUrl"
+                :get-image-url="getImageUrl"
+            )
 </template>
 
 <script>
@@ -111,6 +113,16 @@ export default {
         listUrl: {
             type: String,
             default: null,
+        },
+
+        loadUserUrl: {
+            type: String,
+            default: null,
+        },
+
+        getImageUrl: {
+            type: String,
+            default: "",
         },
 
         registerUrl: {

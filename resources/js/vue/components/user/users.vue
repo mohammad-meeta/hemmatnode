@@ -42,6 +42,7 @@
                 edit-user(ref="userEdit", @on-command="onCommand",
                 @on-update="onUserUpdate"
                 :edit-url="editUrl",
+                :get-image-url="getImageUrl",
                 :departments-url="departmentsUrl",
                 :roles-url="rolesUrl")
 
@@ -71,7 +72,7 @@ export default {
         RegisterUser,
         EditUser,
         ShowUser,
-        Notification
+        Notification,
     },
 
     data: () => ({
@@ -79,50 +80,55 @@ export default {
         formModeStack: [],
         users: [],
         notificationMessage: null,
-        notificationType: "is-info"
+        notificationType: "is-info",
     }),
 
     props: {
         title: {
             type: String,
-            default: null
+            default: null,
         },
 
         listUrl: {
             type: String,
-            default: null
+            default: null,
         },
 
         rolesUrl: {
             type: String,
-            default: null
+            default: null,
         },
 
         registerUrl: {
             type: String,
-            default: null
+            default: null,
         },
 
         editUrl: {
             type: String,
-            default: null
+            default: null,
+        },
+        getImageUrl: {
+            type: String,
+            default: null,
         },
 
         departmentsUrl: {
             type: String,
-            default: null
-        }
+            default: null,
+        },
     },
 
     computed: {
-        formMode: state => state.formModeStack[state.formModeStack.length - 1],
+        formMode: (state) =>
+            state.formModeStack[state.formModeStack.length - 1],
 
-        modeLoading: state => state.formMode == ENUMS.FORM_MODE.LOADING,
-        modeList: state => state.formMode == ENUMS.FORM_MODE.LIST,
-        modeRegister: state => state.formMode == ENUMS.FORM_MODE.REGISTER,
-        modeEdit: state => state.formMode == ENUMS.FORM_MODE.EDIT,
-        modeShow: state => state.formMode == ENUMS.FORM_MODE.SHOW,
-        showNotification: state => state.notificationMessage != null
+        modeLoading: (state) => state.formMode == ENUMS.FORM_MODE.LOADING,
+        modeList: (state) => state.formMode == ENUMS.FORM_MODE.LIST,
+        modeRegister: (state) => state.formMode == ENUMS.FORM_MODE.REGISTER,
+        modeEdit: (state) => state.formMode == ENUMS.FORM_MODE.EDIT,
+        modeShow: (state) => state.formMode == ENUMS.FORM_MODE.SHOW,
+        showNotification: (state) => state.notificationMessage != null,
     },
 
     created() {
@@ -209,7 +215,7 @@ export default {
         changeFormMode(mode, options) {
             const opts = Object.assign(
                 {
-                    pop: false
+                    pop: false,
                 },
                 options
             );
@@ -239,10 +245,9 @@ export default {
          */
         closeNotification() {
             this.setNotification(null);
-        }
-    }
+        },
+    },
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

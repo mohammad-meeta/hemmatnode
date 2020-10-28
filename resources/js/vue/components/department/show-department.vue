@@ -112,7 +112,7 @@
         )
         .container.main-content(v-show="modeShow")
             show-document(ref="documentShow", @on-command="onCommand")
-    img(:src="image")
+    img(:src="imageAddress")
 
 </template>
 
@@ -134,7 +134,7 @@ export default {
         ShowDocument,
     },
     data: () => ({
-        image: null,
+        imageAddress: null,
         userData: {},
         hasProject: false,
         yearsProject: [],
@@ -231,32 +231,12 @@ export default {
     },
 
     watch: {
-        image(newValue) {
-            return (
-                // "data:image/jpeg;base64," +
-                btoa(
-                    new Uint8Array(newValue).reduce(
-                        (data, byte) => data + String.fromCharCode(byte),
-                        ""
-                    )
-                )
-            );
+        imageAddress(newValue) {
+            return newValue;
         },
     },
 
     computed: {
-        // dataUrl() {
-        //     return (
-        //         "data:image/jpeg;base64," +
-        //         btoa(
-        //             new Uint8Array(this.image).reduce(
-        //                 (data, byte) => data + String.fromCharCode(byte),
-        //                 ""
-        //             )
-        //         )
-        //     );
-        // },
-
         isLoadingMode: (state) => state.showLoadingFlag == true,
         showNotification: (state) => state.notificationMessage != null,
         hasContentProjects: (state) => state.accessContentLink.length > 0,
@@ -294,11 +274,9 @@ export default {
                     data.profile.image
                 );
 
-                let res2 = await AxiosHelper.send("get", url2);
+                // let res2 = await AxiosHelper.send("get", url2);
 
-                const data2 = atob(res2.data);
-                Vue.set(this, "image", data2);
-                console.log(typeof this.image);
+                Vue.set(this, "imageAddress", url2);
             } catch (err) {
                 console.log(err);
             }

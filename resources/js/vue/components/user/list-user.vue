@@ -72,7 +72,7 @@ export default {
         pagination: {
             total: 0,
             current: 1,
-            perPage: 2,
+            perPage: 50,
             rangeBefore: 3,
             rangeAfter: 1,
             order: "",
@@ -96,7 +96,7 @@ export default {
          */
         loadUsers(pageId) {
             let url = this.listUrl.replace("$page$", pageId);
-            url = url.replace("$pageSize$", 2);
+            url = url.replace("$pageSize$", 50);
             AxiosHelper.send("get", url, "").then(res => {
                 const resData = res.data;
                 Vue.set(this, "users", resData.data.data);

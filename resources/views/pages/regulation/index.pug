@@ -1,7 +1,10 @@
 extends ../../layout/app.pug
 
 block title
-    | آئین نامه
+    if departmentId == "5ed466b696259b1a49c7a49b"
+        | شیوه نامه
+    else
+        | آئین نامه
 
 block content
     .container

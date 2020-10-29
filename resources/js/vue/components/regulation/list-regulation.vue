@@ -28,7 +28,7 @@
                     )
                         span.icon.is-small
                             i.material-icons.icon check_circle
-                        span ویرایش آئین نامه
+                        span ویرایش
 
     b-pagination(
         :total="pagination.total",

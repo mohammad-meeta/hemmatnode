@@ -1,6 +1,6 @@
 <template lang="pug">
 .container-child
-    h1(v-if="!hasReport") هیچ کارنامهی ایجاد نشده
+    h1(v-if="!hasReport") هیچ کارنامه ای ایجاد نشده
     table.table.is-striped.is-hoverable.is-fullwidth(v-if="hasReport")
         thead
             tr

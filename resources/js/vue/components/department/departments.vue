@@ -64,6 +64,7 @@
                 ref="departmentShow",
                 @on-command="onCommand",
                 :document-list-url="documentListUrl"
+                :report-list-url="reportListUrl"
                 :load-user-url="loadUserUrl"
                 :get-image-url="getImageUrl"
             )
@@ -151,6 +152,11 @@ export default {
         },
 
         documentListUrl: {
+            type: String,
+            default: null,
+        },
+
+        reportListUrl: {
             type: String,
             default: null,
         },

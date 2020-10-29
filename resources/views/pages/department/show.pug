@@ -8,6 +8,7 @@ block content
         show-load-url=route("api.department.show", { department: '$department$'}),
         show-load-access-link-url=route("api.department.link.access", { departmentId: '$department$'}),
         document-list-url=route('api.document', { page: '$page$', size: '$pageSize$', group: departmentId }),
+        report-list-url=route('api.report', { page: '$page$', size: '$pageSize$', group: departmentId }),
         invite-session-url=route("invitesession.index", { department: departmentId}),
         memorandum-url=route("memorandum.index", { department: departmentId}),
         get-image-url=route('api.getimage', { image :'$IMAGE$'}),

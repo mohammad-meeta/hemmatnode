@@ -8,9 +8,12 @@
         )
             span(v-html="notificationMessage")
         .container.page-header
-            .title
+            .title(v-if="! isShora")
                 h1(v-show="modeList") آئین نامه
                 h1(v-show="modeRegister") ایجاد آئین نامه
+            .title(v-if="isShora")
+                h1(v-show="modeList") شیوه نامه
+                h1(v-show="modeRegister") ایجاد شیوه نامه
 
     .columns.exposed-form(v-show="!modeLoading")
         .column.is-one-fifth(v-show="modeList")
@@ -141,6 +144,8 @@ export default {
         modeEdit: (state) => state.formMode == ENUMS.FORM_MODE.EDIT,
         modeShow: (state) => state.formMode == ENUMS.FORM_MODE.SHOW,
         showNotification: (state) => state.notificationMessage != null,
+
+        isShora: (state) => state.departmentId == "5ed466b696259b1a49c7a49b",
     },
 
     /**

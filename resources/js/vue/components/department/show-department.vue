@@ -95,7 +95,10 @@
                                 .info-card-item
                                     p.info-card-value {{ departmentData.description }}
                 .big-button
-                    a(href="#")
+                    a(
+                        href="#"
+                        @click.prevent="showReports"
+                    )
                         span.big-button-icon
                             i.fa.fa-bar-chart
                         span.big-button-text(v-if="! isPeopleNetwork")
@@ -112,6 +115,14 @@
         )
         .container.main-content(v-show="modeShow")
             show-document(ref="documentShow", @on-command="onCommand")
+
+        department-report(
+            ref="reportList",
+            @on-command="onCommand",
+            :report-list-url="ReportListUrl",
+            :department-id="departmentId",
+            v-show="!isLoadingMode && modeReport"
+        )
     img(:src="imageAddress")
 
 </template>
@@ -123,6 +134,8 @@ const Buefy = require("buefy").default;
 const ENUMS = require("JS-HELPERS/enums");
 const DepartmentDocument = require("VUE-COMPONENTS/document/department-document.vue")
     .default;
+const DepartmentReport = require("VUE-COMPONENTS/report/department-report.vue")
+    .default;
 const ShowDocument = require("VUE-COMPONENTS/document/show-document.vue")
     .default;
 
@@ -131,6 +144,7 @@ export default {
 
     components: {
         DepartmentDocument,
+        DepartmentReport,
         ShowDocument,
     },
     data: () => ({
@@ -186,6 +200,11 @@ export default {
         },
 
         DocumentListUrl: {
+            type: String,
+            default: null,
+        },
+
+        ReportListUrl: {
             type: String,
             default: null,
         },
@@ -253,6 +272,7 @@ export default {
         modeEdit: (state) => state.formMode == ENUMS.FORM_MODE.EDIT,
         modeShow: (state) => state.formMode == ENUMS.FORM_MODE.SHOW,
         modeDocument: (state) => state.formMode == ENUMS.FORM_MODE.DOCUMENT,
+        modeReport: (state) => state.formMode == ENUMS.FORM_MODE.REPORT,
         modeDepartment: (state) => state.formMode == ENUMS.FORM_MODE.DEPARTMENT,
     },
 
@@ -517,6 +537,11 @@ export default {
         showDocuments() {
             this.changeFormMode(this.ENUMS.FORM_MODE.DOCUMENT);
             this.$refs.documentList.loadDocuments(1);
+        },
+
+        showReports() {
+            this.changeFormMode(this.ENUMS.FORM_MODE.REPORT);
+            this.$refs.reportList.loadReports(1);
         },
     },
 };

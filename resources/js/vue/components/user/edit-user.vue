@@ -36,12 +36,14 @@
                     .control
                         input.input(type='text', placeholder='کد ملی', v-model='userData.nationCode' required)
                 .field
-                    div(v-if='!image')
+
+                    div(v-if='!imageAddress')
                         label.label عکس
                         .control
                             input.input(type='file' accept='image/png, image/jpeg' @change="onFileChange")
                     div(v-else='')
-                        img(:src='image' )
+                        img(:src='imageAddress')
+                        //- img(:src="imageAddress")
                         br
                         button(@click='removeImage') حذف عکس
 
@@ -95,7 +97,7 @@ export default {
         ENUMS,
         roles: [],
         files: [],
-        image: null,
+        imageAddress: null,
         deletedOldFiles: [],
         oldFiles: [],
         departments: [],
@@ -107,6 +109,7 @@ export default {
             lastName: null,
             nationCode: null,
             cellphone: null,
+            image: [{}],
             files: [],
             deletedOldFiles: [],
             is_active: false,
@@ -155,12 +158,18 @@ export default {
         showNotification: (state) => state.notificationMessage != null,
     },
 
+    watch: {
+        imageAddress(newValue) {
+            return newValue;
+        },
+    },
+
     methods: {
         /**
          * onFileChange
          */
         onFileChange(e) {
-            var files = e.target.files || e.dataTransfer.files;
+            let files = e.target.files || e.dataTransfer.files;
             if (!files.length) return;
             this.createImage(files[0]);
         },
@@ -168,13 +177,17 @@ export default {
          * createImage
          */
         createImage(file) {
-            // Vue.set(this.userData,"image", file);
-            var image = new Image();
-            var reader = new FileReader();
-            var vm = this;
+            if (!this.userData.image) {
+                Vue.set(this.userData, "image", []);
+            }
+            Vue.set(this.userData.image, 0, file);
+
+            let image = new Image();
+            let reader = new FileReader();
+            let vm = this;
 
             reader.onload = (e) => {
-                vm.image = e.target.result;
+                vm.imageAddress = e.target.result;
             };
             reader.readAsDataURL(file);
         },
@@ -182,7 +195,7 @@ export default {
          * removeImage
          */
         removeImage: function(e) {
-            this.image = "";
+            this.imageAddress = "";
         },
 
         /**
@@ -196,20 +209,25 @@ export default {
                 firstName: data.profile.first_name,
                 lastName: data.profile.last_name,
                 nationCode: data.profile.nation_code,
-                image: data.profile.image,
+                // image: data.profile.image,
                 cellphone: data.cellphone,
                 role_group_role: JSON.parse(data.role_group_role),
                 role_group_group: data.role_group_group,
                 files: _.cloneDeep(data.files),
                 is_active: data.is_active,
             };
-
-            let url = this.getImageUrl.replace("$IMAGE$", temp.image);
-            console.log(url);
-            AxiosHelper.send("get", url, "").then((res) => {
-                const resData = res.data;
-                Vue.set(this, "image", resData);
-            });
+            if (data.profile.image) {
+                let url2 = this.getImageUrl.replace(
+                    /\$IMAGE\$/g,
+                    data.profile.image
+                );
+                Vue.set(this, "imageAddress", url2);
+            }
+            // console.log(url);
+            // AxiosHelper.send("get", url, "").then((res) => {
+            //     const resData = res.data;
+            //     Vue.set(this, "image", resData);
+            // });
 
             Vue.set(this, "oldFiles", temp.files);
             Vue.set(this, "userData", temp);
@@ -309,7 +327,7 @@ export default {
                 files: this.files,
                 deletedOldFiles: this.deletedOldFiles,
             };
-
+            console.log(userData);
             const url = this.editUrl.replace("$id$", userData._id);
             AxiosHelper.send("patch", url, userData, {
                 sendAsFormData: true,

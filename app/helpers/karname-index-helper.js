@@ -147,20 +147,36 @@ KarnameIndexHelper.loadDepKarnameindexData = async function loadDepKarnameindexD
     const userId = req.session.auth.userId;
     const pipeline = [
         {
+            "$lookup": {
+                "from": "departments",
+                "let": {
+                    "code": "$department_id"
+                },
+                "pipeline": [{
+                    "$match": {
+                        "$expr": {
+                            "$eq": ["$references", "$$code"]
+                        },
+                    }
+                }
+                ],
+                as: "pdep",
+            }
+        },
+        {
+            $unwind: "$pdep"
+        },
+        {
             "$match": {
-                department_id: ObjectId(group)
+                $or: [
+                    {
+                        department_id: ObjectId(group)
+                    },
+                    {
+                        "pdep._id": ObjectId(group)
+                    }
+                ]
             }
-        },
-        {
-            $lookup: {
-                from: "departments",
-                localField: "department_id",
-                foreignField: "_id",
-                as: "dep"
-            }
-        },
-        {
-            $unwind: "$dep"
         },
         {
             $group: {

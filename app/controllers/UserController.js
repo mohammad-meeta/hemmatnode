@@ -110,6 +110,40 @@ UserController.editUserData = async function editUserData(req, res, next) {
  * update data user
  */
 UserController.update = async function update(req, res, next) {
+
+    const FileHelper = use("app/helpers/file-helper");
+    const files = req.files.files || [];
+    const image = req.files.image || [];
+
+    let fileList = [];
+    let imageList = [];
+
+    for (let i = 0; i < image.length; ++i) {
+        try {
+            const el = image[i];
+            el.user_id = req.session.auth.userId;
+
+            const data = await FileHelper.insertFileData(el);
+            imageList.push(data[0]._id);
+        } catch (err) {
+            Logger.error(err);
+        }
+    }
+
+
+    for (let i = 0; i < files.length; ++i) {
+        try {
+            const el = files[i];
+            el.user_id = req.session.auth.userId;
+
+            const data = await FileHelper.insertFileData(el);
+            fileList.push(data[0]._id);
+        } catch (err) {
+            Logger.error(err);
+        }
+    }
+
+
     let data = {};
     if (req.body.password == undefined) {
         data = {
@@ -125,8 +159,9 @@ UserController.update = async function update(req, res, next) {
                 first_name: req.body.first_name,
                 last_name: req.body.last_name,
                 nation_code: req.body.nation_code,
-                image: req.body.image || null
-            }
+                image: imageList[0]
+            },
+            files: fileList
         };
     } else {
         data = {
@@ -144,7 +179,8 @@ UserController.update = async function update(req, res, next) {
                 last_name: req.body.last_name,
                 nation_code: req.body.nation_code,
                 image: req.body.image || null
-            }
+            },
+            files: fileList
         };
     }
     const UserUpdate = UserHelper.updateUserData(data)
@@ -242,7 +278,8 @@ UserController.store = async function store(req, res, next) {
             last_name: req.body.last_name,
             nation_code: req.body.nation_code,
             image: imageList[0]
-        }
+        },
+        files: fileList
     };
 
     const UserInsert = UserHelper.insertNewUser(data)

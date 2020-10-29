@@ -31,14 +31,14 @@ export default {
             nationCode: null,
             cellphone: null,
             roles: {},
-            is_active: false
+            is_active: false,
         },
-        showLoadingFlag: false
+        showLoadingFlag: false,
     }),
 
     computed: {
-        isLoadingMode: state => state.showLoadingFlag == true,
-        showNotification: state => state.notificationMessage != null
+        isLoadingMode: (state) => state.showLoadingFlag == true,
+        showNotification: (state) => state.notificationMessage != null,
     },
 
     methods: {
@@ -56,9 +56,8 @@ export default {
                 nationCode: data.profile.nation_code,
                 cellphone: data.cellphone,
                 roles: data.roles,
-                is_active: data.is_active
+                is_active: data.is_active,
             };
-            console.log(temp);
             Vue.set(this, "userData", temp);
         },
 
@@ -75,7 +74,6 @@ export default {
         hideLoading() {
             Vue.set(this, "showLoadingFlag", false);
         },
-
-    }
+    },
 };
 </script>

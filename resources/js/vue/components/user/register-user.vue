@@ -266,7 +266,7 @@ export default {
                 nation_code: this.userData.nationCode,
                 image: this.userData.image,
                 cellphone: this.userData.cellphone,
-                role_group_role: this.userData.role_group_role,
+                role_group_role: JSON.stringify(this.userData.role_group_role),
                 role_group_group: this.userData.role_group_group,
                 is_active: this.userData.is_active,
                 files: this.files,

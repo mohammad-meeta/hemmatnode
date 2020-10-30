@@ -67,7 +67,7 @@ Model.model = function model() {
             required: true
         },
         'role_group_role': {
-            type: Array,
+            type: [ObjectId],
             required: true
         },
         'files': {

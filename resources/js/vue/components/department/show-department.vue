@@ -6,9 +6,11 @@
         .container.page-header
             .hero-dashboard
                 .field.is-grouped
-                    .control(v-for="item in accessLink")
+                    .control(v-for="item in accessLink" v-if="!isSAGShahrestan")
                         a.button.is-primary.is-rounded(:href="item.link" v-if="! (isShora && item.text == 'آئین نامه')") {{ item.text }}
                         a.button.is-primary.is-rounded(:href="item.link" v-if="isShora && item.text == 'آئین نامه'") شیوه نامه
+                    .control(v-for="item in accessLink" v-if="isSAGShahrestan")
+                        a.button.is-primary.is-rounded(:href="item.link" v-if="! (item.text == 'آئین نامه')") {{ item.text }}
         b-button.is-flex-direction-row-reverse(
             v-show="! modeDepartment"
             type="is-warning is-light"
@@ -264,6 +266,8 @@ export default {
             "5ed3c62c4e9b0630692c3a7f",
         isShora: (state) =>
             (state.departmentData || {})._id == "5ed466b696259b1a49c7a49b",
+        isSAGShahrestan: (state) =>
+            (state.departmentData || {}).references == "5ed4672f96259b1a49c7a4a1",
         formMode: (state) =>
             state.formModeStack[state.formModeStack.length - 1],
         modeLoading: (state) => state.formMode == ENUMS.FORM_MODE.LOADING,

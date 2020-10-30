@@ -169,7 +169,7 @@ Result.update = async function update(req, res, next) {
         "deadline": req.body.deadline || '',
         "files": fileList
     };
-    console.log(data.files)
+
     ResultHelper.updateResultData(data)
         .then(data => {
             const result = {

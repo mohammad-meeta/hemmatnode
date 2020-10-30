@@ -153,7 +153,7 @@ UserController.update = async function update(req, res, next) {
             email: req.body.email,
             cellphone: req.body.cellphone,
             role_group_group: req.body.role_group_group,
-            role_group_role: req.body.role_group_role,
+            role_group_role: JSON.parse(req.body.role_group_role),
             is_active: req.body.is_active,
             profile: {
                 first_name: req.body.first_name,
@@ -171,7 +171,7 @@ UserController.update = async function update(req, res, next) {
             email: req.body.email,
             pwd: req.body.password,
             role_group_group: req.body.role_group_group || null,
-            role_group_role: req.body.role_group_role || null,
+            role_group_role: JSON.parse(req.body.role_group_role),
             cellphone: req.body.cellphone,
             is_active: req.body.is_active,
             profile: {
@@ -270,7 +270,7 @@ UserController.store = async function store(req, res, next) {
         pwd: req.body.password,
         email: req.body.email,
         role_group_group: req.body.role_group_group || null,
-        role_group_role: req.body.role_group_role || [],
+        role_group_role: JSON.parse(req.body.role_group_role) || [],
         cellphone: req.body.cellphone,
         is_active: req.body.is_active || false,
         profile: {

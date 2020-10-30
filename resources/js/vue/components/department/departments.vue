@@ -53,11 +53,14 @@
                 :departments-url="departmentsUrl"
             )
 
-        //.column(v-show="!modeLoading && modeEdit")
-            edit-department(ref="departmentEdit", @on-command="onCommand",
-            @on-update="onDepartmentUpdate"
-            :edit-url="editUrl",
-            :departmentCategories-url="departmentCategoriesUrl")
+        .column(v-show="!modeLoading && modeEdit")
+            edit-department(ref="departmentEdit", 
+                @on-command="onCommand",
+                @on-update="onDepartmentUpdate"
+                :edit-url="editUrl",
+                :departments-url="departmentsUrl",
+                :department-categories-url="departmentCategoriesUrl"
+            )
 
         .column(v-show="!modeLoading && modeShow")
             show-department(
@@ -81,7 +84,8 @@ const RegisterDepartment = require("VUE-COMPONENTS/department/register-departmen
     .default;
 const ListDepartment = require("VUE-COMPONENTS/department/list-department.vue")
     .default;
-//const EditDepartment = require("VUE-COMPONENTS/department/edit-department.vue").default;
+const EditDepartment = require("VUE-COMPONENTS/department/edit-department.vue")
+    .default;
 const ShowDepartment = require("VUE-COMPONENTS/department/show-department.vue")
     .default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
@@ -93,6 +97,7 @@ export default {
         Loading,
         ListDepartment,
         RegisterDepartment,
+        EditDepartment,
         ShowDepartment,
         Notification,
     },
@@ -189,8 +194,9 @@ export default {
          */
         onDepartmentRegister(payload) {
             //***update vue list****
-            this.$refs.departmentList.addToDepartmentList(payload.data.data);
+            this.$refs.departmentList.addToDepartmentList(payload.data.data[0]);
             this.setNotification(".گروه با موفقیت ذخیره شد", "is-success");
+            this.changeFormMode(ENUMS.FORM_MODE.LIST);
         },
 
         /**

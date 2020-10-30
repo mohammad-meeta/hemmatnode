@@ -376,7 +376,7 @@ InviteSession.store = async function store(req, res, next) {
  */
 InviteSession.approvesStore = async function approvesStore(req, res, next) {
     const approves = JSON.parse(req.body.approves);
-    console.log(approves)
+
     let approvesArray = [];
 
     const files = req.files || [];

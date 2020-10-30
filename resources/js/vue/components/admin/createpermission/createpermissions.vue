@@ -114,7 +114,11 @@ export default {
     watch: {
         selected(newValue) {
             if (newValue) {
-                Vue.set(this, "permissions", newValue.permision);
+                let tempArr = [];
+                newValue.permision.forEach((element) => {
+                    tempArr.push(parseInt(element));
+                });
+                Vue.set(this, "permissions", tempArr);
             } else {
                 Vue.set(this, "permissions", []);
             }
@@ -130,7 +134,12 @@ export default {
             if (temp.length > 0) {
                 Vue.set(this, "myData", temp[0]);
                 Vue.set(this, "selected", temp[0]);
-                Vue.set(this, "permissions", temp[0].permision);
+
+                let tempArr = [];
+                newValue.permision.forEach((element) => {
+                    tempArr.push(parseInt(element));
+                });
+                Vue.set(this, "permissions", tempArr);
             } else {
                 Vue.set(this, "myData", []);
                 Vue.set(this, "permissions", []);

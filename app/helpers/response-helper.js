@@ -627,7 +627,7 @@ ResponseHelper.insertNewResponse = function insertNewResponse(data) {
 ResponseHelper.updateResponseData = function updateResponseData(data) {
     return new Promise((resolve, reject) => {
         const Response = mongoose.model('Response');
-        console.log(data)
+
         Response.findByIdAndUpdate(data._id, data, {
             useFindAndModify: false, new: true
         })

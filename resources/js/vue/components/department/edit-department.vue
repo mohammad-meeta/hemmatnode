@@ -54,35 +54,31 @@
                     | فایل های ضمیمه
                 .panel-block
                     file-upload(ref="fileUpload", :old-files="oldFiles")
-
         .field
             label.checkbox
-                input(type="checkbox", v-model="departmentData.is_active")
-                |
+                input(type="checkbox", v-model="departmentData.isActive")
                 | فعال
-
-        .field.is-grouped
-            .control(v-show="! isLoadingMode")
-                a.button.is-link.is-rounded(
-                    href="#",
-                    @click.prevent="commandClick(ENUMS.COMMAND.SAVE)"
-                )
-                    |
-                    | ایجاد
+            .field.is-grouped
+                .control(v-show="! isLoadingMode")
+                    a.button.is-link.is-rounded(
+                        href="#",
+                        @click.prevent="commandClick(ENUMS.COMMAND.SAVE)"
+                    )
+                        | ویرایش
 </template>
 
 <script>
 "use strict";
 
+const Buefy = require("buefy").default;
 const AxiosHelper = require("JS-HELPERS/axios-helper");
-const ENUMS = require("JS-HELPERS/enums");
 const DepartmentValidator = require("JS-VALIDATORS/department-register-validator");
+const ENUMS = require("JS-HELPERS/enums");
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 const FileUpload = require("VUE-COMPONENTS/general/file-upload.vue").default;
 
 export default {
-    name: "RegisterDepartment",
-
+    name: "EditDepartment",
     components: {
         FileUpload,
         Notification,
@@ -91,6 +87,7 @@ export default {
     data: () => ({
         ENUMS,
         files: [],
+        oldReferences: null,
         deletedOldFiles: [],
         oldFiles: [],
         departmentCategories: [],
@@ -100,18 +97,19 @@ export default {
             description: null,
             department_category_id: null,
             references: null,
-            files: [],
+            files: {},
             is_active: false,
         },
 
         notificationMessage: null,
         notificationType: "is-info",
         showLoadingFlag: false,
+        files: [],
         hasNewRegulation: false,
     }),
 
     props: {
-        registerUrl: {
+        editUrl: {
             type: String,
             default: "",
         },
@@ -136,22 +134,45 @@ export default {
         this.loadDepartmentCategories();
     },
 
+    mounted() {},
+
     computed: {
         isLoadingMode: (state) => state.showLoadingFlag == true,
         showNotification: (state) => state.notificationMessage != null,
-        showNewRegulation: (state) => state.hasNewRegulation == true,
     },
 
     methods: {
         /**
-         * Set attachments
+         * Load
          */
-        setAttachment(sender) {
-            const files = sender.target.files;
-
-            Vue.set(this, "files", files);
+        loadDepartmentData(data) {
+            let temp = {
+                _id: data._id,
+                title: data.title,
+                description: data.description,
+                department_category_id: data.department_category_id,
+                references: data.references,
+                files: data.files,
+                isActive: data.is_active,
+            };
+            Vue.set(this, "oldReferences", temp.references);
+            Vue.set(this, "departmentData", temp);
+            this.onChange(data.department_category_id);
+            Vue.set(this, "oldFiles", data.files);
+            this.$refs.fileUpload.updateOldFiles(data.files);
         },
 
+        /**
+         * load all departmentCategories for select departmentCategories in form
+         */
+        async loadDepartmentCategories() {
+            const url = this.departmentCategoriesUrl;
+            let res = await AxiosHelper.send("get", url, "");
+            const resData = res.data;
+            const datas = resData.data.data;
+
+            Vue.set(this, "departmentCategories", datas);
+        },
         /**
          * onchange department category
          */
@@ -175,22 +196,9 @@ export default {
         commandClick(arg) {
             switch (arg) {
                 case ENUMS.COMMAND.SAVE:
-                    this.registerDepartment();
+                    this.editDepartment();
                     break;
             }
-        },
-
-        /**
-         * load all departmentCategories for select departmentCategories in form
-         */
-        async loadDepartmentCategories() {
-            const url = this.departmentCategoriesUrl;
-
-            let res = await AxiosHelper.send("get", url, "");
-            const resData = res.data;
-            const datas = resData.data.data;
-
-            Vue.set(this, "departmentCategories", datas);
         },
 
         /**
@@ -223,14 +231,14 @@ export default {
         },
 
         /**
-         * Register new department
+         * Edit department
          */
-        async registerDepartment() {
-            const isValid = this.validate();
+        async editDepartment() {
+            // const isValid = this.validate();
 
-            if (!isValid) {
-                return;
-            }
+            // if (!isValid) {
+            //     return;
+            // }
 
             this.showLoading();
 
@@ -243,53 +251,46 @@ export default {
             let deleteUploaded = deletedFiles.map((x) => x._id);
             Vue.set(this, "deletedOldFiles", deleteUploaded);
 
-            Vue.set(this.departmentData, "files", this.files);
-            Vue.set(
-                this.departmentData,
-                "deletedOldFiles",
-                this.deletedOldFiles
-            );
-
-            let departmentData = this.departmentData;
-
-            const url = this.registerUrl;
+            let departmentData = {
+                _id: this.departmentData._id,
+                title: this.departmentData.title,
+                description: this.departmentData.description,
+                department_category_id: this.departmentData
+                    .department_category_id,
+                references: this.departmentData.references,
+                is_active: this.departmentData.isActive,
+                files: this.files,
+                oldFiles: this.oldFiles,
+                deletedOldFiles: this.deletedOldFiles,
+                oldReferences: this.oldReferences,
+            };
 
             try {
-                let res = await AxiosHelper.send("post", url, departmentData, {
+                const url = this.editUrl.replace("$id$", departmentData._id);
+                let res = await AxiosHelper.send("patch", url, departmentData, {
                     sendAsFormData: true,
                     filesArray: "files",
                 });
 
                 const data = res.data;
-                if (data.success) {
-                    this.$emit("on-register", {
-                        sender: this,
-                        data,
-                    });
-                }
+                this.$emit("on-update", {
+                    sender: this,
+                    data,
+                });
             } catch (err) {
-                const data = err.response.data;
-                this.setNotification(data, "is-danger");
+                this.setNotification(".خطا در ویرایش", "is-danger");
             }
 
             this.hideLoading();
         },
 
         /**
-         * after dave department must be saved regulation
-         */
-        hasNewRegulationFunc(payload) {
-            Vue.set(this, "hasNewRegulation", true);
-            this.$refs.departmentRegulation.setDepartmentId(
-                payload.data.data._id
-            );
-        },
-
-        /**
-         * Validate new department data
+         * Validate
          */
         validate() {
-            const result = DepartmentValidator.validate(this.departmentData);
+            const result = DepartmentValidator.validateEdit(
+                this.departmentData
+            );
 
             if (result.passes) {
                 this.closeNotification();

@@ -49,7 +49,6 @@ DepartmentCategoryHelper.loadAllDepartmentData = function loadAllDepartmentData(
     return new Promise((resolve, reject) => {
         Department.find(filterQuery, projection, {})
             .then(res => {
-                console.log(res)
                 resolve(res);
             })
             .catch(err => reject(err));

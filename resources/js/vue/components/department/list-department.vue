@@ -36,12 +36,23 @@
                             i.material-icons.icon swap_horizontal_circle
                         span آئین نامه ها
 
-    paginate(
-        :page-count="pageCount",
-        :click-handler="paginatorClick",
-        :prev-text="'Prev'",
-        :next-text="'Next'",
-        :container-class="'pagination-list'"
+    b-pagination(
+        :total="pagination.total",
+        :current.sync="pagination.current",
+        :range-before="pagination.rangeBefore",
+        :range-after="pagination.rangeAfter",
+        :order="pagination.order",
+        :size="pagination.size",
+        :simple="pagination.isSimple",
+        :rounded="pagination.isRounded",
+        :per-page="pagination.perPage",
+        :icon-prev="pagination.prevIcon",
+        :icon-next="pagination.nextIcon",
+        aria-next-label="Next page",
+        aria-previous-label="Previous page",
+        aria-page-label="Page",
+        aria-current-label="Current page",
+        @change="loadDepartments(pagination.current)"
     )
 </template>
 
@@ -49,14 +60,11 @@
 "use strict";
 
 const ENUMS = require("JS-HELPERS/enums");
-const Paginate = require("vuejs-paginate");
 
 export default {
     name: "ListDepartment",
 
-    components: {
-        Paginate,
-    },
+    components: {},
 
     props: {
         listUrl: {
@@ -70,6 +78,20 @@ export default {
         departments: [],
         departmentsCount: 0,
         pageCount: 0,
+
+        pagination: {
+            total: 0,
+            current: 1,
+            perPage: 10,
+            rangeBefore: 3,
+            rangeAfter: 1,
+            order: "",
+            size: "",
+            isSimple: false,
+            isRounded: false,
+            prevIcon: "chevron-left",
+            nextIcon: "chevron-right",
+        },
     }),
 
     computed: {
@@ -128,6 +150,10 @@ export default {
             const newDepartmentData = {
                 _id: payload._id,
                 title: payload.title,
+                description: payload.description,
+                department_category_id: payload.department_category_id,
+                references: payload.references,
+                files: payload.files,
                 is_active: payload.is_active,
                 created_at: payload.created_at,
             };
@@ -137,18 +163,21 @@ export default {
 
         editInDepartmentList(payload) {
             const editedDepartmentData = {
-                _id: payload._id,
-                title: payload.title,
-                is_active: payload.is_active,
-                created_at: payload.created_at,
+                _id: payload.data[0]._id,
+                title: payload.data[0].title,
+                description: payload.data[0].description,
+                department_category_id: payload.data[0].department_category_id,
+                references: payload.data[0].references,
+                is_active: payload.data[0].is_active,
+                files: payload.data[0].files,
+                created_at: payload.data[0].created_at,
             };
 
             let foundIndex = this.departments.findIndex(
                 (x) => x._id == editedDepartmentData._id
             );
-            this.departments[foundIndex].title = editedDepartmentData.title;
-            this.departments[foundIndex].is_active =
-                editedDepartmentData.is_active;
+
+            Vue.set(this.departments, foundIndex, editedDepartmentData);
         },
     },
 };

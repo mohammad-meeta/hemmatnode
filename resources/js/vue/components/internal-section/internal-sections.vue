@@ -12,14 +12,6 @@
             .title
                 h1 هماهنگی درون بخشی
         .container.main-content
-            //.intro-cards.columns
-                .column.is-4(v-for='departmentCategory in departmentCategories',
-                             :key='departmentCategory.id')
-                    .intro-card
-                        .intro-card-head
-                            h2 {{ departmentCategory.title }}
-                        .panel-block.is-active(v-for='dep in departmentCategory.department', :key='dep._id')
-                            a(:href="getUrl(dep._id)") {{ dep.title }}
             .columns
                 .inline-cards.column
                     .inline-card.w-100(
@@ -33,9 +25,20 @@
                                 v-for="dep in departmentCategory.department",
                                 :key="dep._id"
                             )
-                                a(:href="getUrl(dep._id)") {{ dep.title }}
+                                div(v-if="!hasChildren(dep)")
+                                    a(:href="getUrl(dep._id)") {{ dep.title }}
+                                div(v-if="hasChildren(dep)")
+                                    a(@click="showModal(dep)")
+                                        | {{ dep.title }}
+                                    b-modal.departments-modal(
+                                        :active.sync="isModalActive"
+                                    )
+                                        .childrens(
+                                            v-for="child in departmentChild"
+                                        )
+                                            a(:href="getUrl(child._id)") {{ child.title }}
                 .section-background.column
-                    img(:src="require('IMAGES/cooperative.jpg')")
+                    img(:src="require('IMAGES/uni.jpg')")
 </template>
 
 <script>
@@ -44,8 +47,8 @@
 const Routes = require("JS-CORE/routes");
 const ENUMS = require("JS-HELPERS/enums");
 const Loading = require("VUE-COMPONENTS/general/loading.vue").default;
-
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
+const Buefy = require("buefy").default;
 
 export default {
     name: "InternalSection",
@@ -62,6 +65,8 @@ export default {
         department: [],
         notificationMessage: null,
         notificationType: "is-info",
+        isModalActive: false,
+        departmentChild: [],
     }),
 
     props: {
@@ -113,6 +118,20 @@ export default {
             const url = this.departmentLinkUrl.replace(/\$id\$/g, id);
 
             return url;
+        },
+
+        /**
+         * set department link behavior
+         */
+        hasChildren(dep) {
+            return dep.child.length > 0;
+        },
+
+        showModal(dep) {
+            if (dep.child.length > 0) {
+                Vue.set(this, "departmentChild", dep.child);
+                this.isModalActive = true;
+            }
         },
 
         /**

@@ -12,15 +12,6 @@
             .title
                 h1 همکاری برون بخشی
         .container.main-content
-            //.intro-cards.columns
-                .column.is-4(v-for='departmentCategory in departmentCategories',
-                             :key='departmentCategory.id')
-                    .intro-card
-                        .intro-card-head
-                            h2 {{ departmentCategory.title }}
-                        .panel-block.is-active(v-for='dep in departmentCategory.department', :key='dep._id')
-                            a(:href="getUrl(dep._id)") {{ dep.title }}
-
             .columns
                 .inline-cards.column
                     .inline-card.w-100(
@@ -34,7 +25,6 @@
                                 v-for="dep in departmentCategory.department",
                                 :key="dep._id"
                             )
-                                //a(:href="getUrl(dep._id)")
                                 div(v-if="!hasChildren(dep)")
                                     a(:href="getUrl(dep._id)") {{ dep.title }}
                                 div(v-if="hasChildren(dep)")
@@ -47,7 +37,6 @@
                                             v-for="child in departmentChild"
                                         )
                                             a(:href="getUrl(child._id)") {{ child.title }}
-
                                     //b-collapse(:open='false', aria-id='contentIdForA11y1')
                                         a(slot='trigger', aria-controls='contentIdForA11y1') {{ dep.title }}
                                         .notification
@@ -55,7 +44,7 @@
                                                 .childrens(v-for='child in dep.child')
                                                     a(:href="getUrl(child._id)") {{ child.title }}
                 .section-background.column
-                    img(:src="require('IMAGES/cooperative.jpg')")
+                    img(:src="require('IMAGES/sib.jpg')")
 </template>
 
 <script>

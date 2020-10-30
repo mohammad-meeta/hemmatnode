@@ -374,6 +374,7 @@ export default {
                 other_user: JSON.stringify(this.inviteSessionData.other_user),
                 place: this.inviteSessionData.place,
                 date: this.inviteSessionData.date,
+                intro: this.inviteSessionData.intro,
                 department_id: this.inviteSessionData.departments,
                 user_list: [],
                 present_user_list: [],

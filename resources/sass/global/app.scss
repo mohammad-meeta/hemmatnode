@@ -971,6 +971,20 @@ h2.item-category {
 /**
 * buefy hacks
 **/
+
+.button.is-primary {
+	background-color: #019d9c;
+}
+
+.button.is-primary:hover {
+	background-color: #0177ad;
+}
+
+.pagination-link.is-current {
+	background-color: #019d9c;
+	border-color: #019d9c;
+}
+
 .collapse.card {
     margin-bottom: 20px;
  }

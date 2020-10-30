@@ -1,5 +1,5 @@
 <template lang="pug">
-    .multi-text#multi-text-approves
+    .multi-text.w-100#multi-text-approves
         .form-itemsbox(v-for='(item, index) in value')
             .columns.is-multiline
                 .column.is-12
@@ -7,7 +7,7 @@
                         label.label عنوان مصوبه
                         .control
                             input.textarea(placeholder='عنوان مصوبه', v-model='item.title', @input='updateValue')
-                .column.is-2
+                .column.is-6
                     .field
                         label.label مسئول پیگیری
                         .control
@@ -16,7 +16,14 @@
                     .field
                         label.label مهلت
                         .control
-                            input.input(type='text', v-model='item.time', @input='updateValue')
+                            date-picker(
+                                v-model='item.time'
+                                format="YYYY-MM-DD"
+                                display-format=" jDD/jMM/jYYYY"
+                                type="date"
+                                required
+                                @input='updateValue'
+                            )
                 .column.is-2
                     a.button.is-danger(href='#', @click.prevent='deleteValue(index)')
                         i.fa.fa-times
@@ -27,8 +34,14 @@
 <script>
 "use strict";
 
+const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
+
 export default {
     name: "MultiTextApprov",
+
+    components: {
+        DatePicker: VuePersianDatetimePicker,
+    },
 
     data: () => ({
         values: []

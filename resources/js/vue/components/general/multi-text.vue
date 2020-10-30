@@ -27,10 +27,10 @@
                             option(value="ارائه مخالف و موافق") ارائه مخالف و موافق
             .column.is-2
                 .field
-                    label.label زمان
+                    label.label زمان (دقیقه)
                     .control
                         input.input(
-                            type="text",
+                            type="number",
                             v-model="item.duration",
                             @input="updateValue"
                         )

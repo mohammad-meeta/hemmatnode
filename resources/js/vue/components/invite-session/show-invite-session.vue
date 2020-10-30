@@ -46,6 +46,36 @@
                     .print-form-body
                         label توضیحات:
                         .is-fullwidth {{ inviteSessionData.body }}
+                    .print-form-body(v-if="inviteSessionData.intro")
+                        label خلاصه مذاکرات:
+                        .is-fullwidth {{ inviteSessionData.intro }}
+
+                    .print-form-body(v-if="inviteSessionData.approves.length")
+                        label مصوبات:
+                        table.table.is-fullwidth.is-bordered.text-center
+                            thead
+                                tr
+                                    th عنوان مصوبه
+                                    th مسئول پیگیری
+                                    th مهلت
+                            tbody
+                                tr(v-for="approve in inviteSessionData.approves")
+                                    td {{ approve.title }}
+                                    td {{ approve.responsible }}
+                                    td {{ approve.time }}
+
+                    .print-form-body(v-if="inviteSessionData.approves")
+                        label اعضای حاضر در جلسه:
+                        .columns.is-multiline
+                            .column.is-3(v-for="user in allPresentUserCheckedRows")
+                                | {{ user.profile.first_name }} {{ user.profile.last_name }}
+                    label مدعوین (به غیر از افراد حاضر و سایر اعضاء):
+                        .columns.is-multiline
+                            .column.is-3(v-for="user in inviteSessionData.other_users")
+                                | {{ user.first_name }} {{ user.last_name }}
+
+
+                file-download(ref="fileDownload", :old-files="oldFiles")
 
 
 </template>
@@ -53,12 +83,27 @@
 "use strict";
 
 const ENUMS = require("JS-HELPERS/enums");
+const FileDownload = require("VUE-COMPONENTS/general/file-download.vue")
+    .default;
 
 export default {
     name: "ShowInviteSession",
 
+    components: {
+        FileDownload,
+    },
+
+    props: {
+        usersUrl: {
+            type: String,
+            default: ""
+        }
+    },
+
     data: () => ({
         ENUMS,
+        oldFiles: [],
+        users: [],
         inviteSessionData: {
             _id: null,
             dep: null,
@@ -69,14 +114,37 @@ export default {
             department_id: null,
             files: {},
             user_list: {},
-            is_active: false
+            is_active: false,
+            intro: null,
+            approves: [],
+            present_users: [],
+        },
+        other_users: [],
+        presentUserListTable: {
+            checkedRows: [],
         },
         showLoadingFlag: false
     }),
 
+    created() {
+        this.loadUsers();
+    },
+
     computed: {
         isLoadingMode: state => state.showLoadingFlag == true,
-        showNotification: state => state.notificationMessage != null
+        showNotification: state => state.notificationMessage != null,
+        allPresentUserCheckedRows: {
+            set: function(value) {
+                Vue.set(this.presentUserListTable, "checkedRows", value);
+                ``;
+            },
+            get: function() {
+                if (null == this.presentUserListTable.checkedRows) {
+                    Vue.set(this.presentUserListTable, "checkedRows", []);
+                }
+                return this.presentUserListTable.checkedRows;
+            }
+        },
     },
 
     methods: {
@@ -95,16 +163,33 @@ export default {
                 files: data.files,
                 roles: data.roles,
                 user_list: data.user_list,
-                is_active: data.is_active
+                is_active: data.is_active,
+                intro: data.intro,
+                approves: data.approves,
+                present_users: [],
+                other_users: data.other_user,
             };
 
-            try {
-                temp.agenda = JSON.parse(data.agenda);
-            } catch (ex) {
-                temp.agenda = [];
-            }
-
             Vue.set(this, "inviteSessionData", temp);
+            Vue.set(this, "oldFiles", data.files);
+            this.$refs.fileDownload.updateOldFiles(this.oldFiles);
+            const userslist = this.inviteSessionData.user_list;
+            let checkedUsers = this.users.filter(
+                u => userslist.indexOf(u._id) > -1
+            );
+            Vue.set(this, "allPresentUserCheckedRows", checkedUsers);
+        },
+
+        /**
+         * load all users for select user in form
+         */
+        loadUsers() {
+            const url = this.usersUrl;
+            AxiosHelper.send("get", url, "").then(res => {
+                const resData = res.data;
+                const datas = resData.data.data;
+                Vue.set(this, "users", datas);
+            });
         },
 
         /**

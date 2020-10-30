@@ -58,7 +58,7 @@
                                     a(href="/power")
                                         | ثبت اقدامات توانمندسازی
                 .section-background.column
-                    img(:src="require('IMAGES/cooperative.jpg')")
+                    img(:src="require('IMAGES/mosharekat.jpg')")
 </template>
 
 <script>

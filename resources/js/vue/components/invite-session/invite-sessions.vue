@@ -5,7 +5,7 @@
                         @on-close="closeNotification",
                         v-if="showNotification")
                 span(v-html="notificationMessage")
-            .container.page-header
+            .container.page-header(v-show="!modeShow")
                 .title
                     h1(v-show="modeList") جلسات
                     h1(v-show="modeRegister") ایجاد دعوتنامه جلسه
@@ -22,11 +22,13 @@
                     span ایجاد دعوتنامه
 
             .column.is-one-fifth(v-show="!modeList")
-                a.button.is-warning.is-rounded(href="#",
-                @click.prevent="commandClick(ENUMS.COMMAND.CANCEL)")
-                    span.icon.is-small
-                        i.material-icons.icon check_circle
-                    span بازگشت
+                b-button.is-flex-direction-row-reverse(
+                    type="is-warning is-light"
+                    size="is-small"
+                    icon-right="chevron-right"
+                    @click.prevent="commandClick(ENUMS.COMMAND.CANCEL)"
+                    )
+                        span بازگشت
 
         .columns.is-vcentered
             .column(v-if="modeLoading")
@@ -71,7 +73,8 @@
                 :users-url="usersUrl")
 
             .column(v-show="!modeLoading && modeShow")
-                show-invite-session(ref="inviteSessionShow", @on-command="onCommand")
+                show-invite-session(ref="inviteSessionShow", @on-command="onCommand",
+                :users-url="usersUrl")
 </template>
 
 <script>

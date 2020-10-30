@@ -124,7 +124,7 @@ export default {
         isPaginationSimple: false,
         paginationPosition: "bottom",
         currentPage: 1,
-        perPage: 3,
+        perPage: 10,
         columns: [
             {
                 field: "name",

@@ -267,7 +267,8 @@ export default {
         isShora: (state) =>
             (state.departmentData || {})._id == "5ed466b696259b1a49c7a49b",
         isSAGShahrestan: (state) =>
-            (state.departmentData || {}).references == "5ed4672f96259b1a49c7a4a1",
+            (state.departmentData || {}).references ==
+            "5ed4672f96259b1a49c7a4a1",
         formMode: (state) =>
             state.formModeStack[state.formModeStack.length - 1],
         modeLoading: (state) => state.formMode == ENUMS.FORM_MODE.LOADING,
@@ -495,9 +496,20 @@ export default {
                 const element = data[index];
 
                 data[index].link = data[index].link.replace("#child#", id);
+
+                data[index].link = data[index].link.replace(
+                    "#year#",
+                    this.toPersianDate(new Date())
+                );
             }
 
             return data;
+        },
+        /**
+         * To Persian Date
+         */
+        toPersianDate(date) {
+            return DateHelper.toPersianDateYear(date, "en");
         },
 
         /**

@@ -25,23 +25,30 @@
                         .info-card-value {{ project.supply }}
                 .info-card-box(v-for="result in project.results")
                     a(href="#") {{ result.title }}
-
-
-
             .column.is-full
                 label شرایط
                 h2 {{ memorandumData.conditions }}
+
+            .info-card.column.is-12
+                .info-card-item
+                    file-download(ref="fileDownload", :old-files="oldFiles")
 </template>
 <script>
 "use strict";
 
 const ENUMS = require("JS-HELPERS/enums");
+const FileDownload = require("VUE-COMPONENTS/general/file-download.vue")
+    .default;
 
 export default {
     name: "ShowMemorandum",
+    components: {
+        FileDownload,
+    },
 
     data: () => ({
         ENUMS,
+        oldFiles: [],
         memorandumData: {
             _id: null,
             title: null,
@@ -77,6 +84,8 @@ export default {
                 is_active: data.is_active
             };
             Vue.set(this, "memorandumData", temp);
+            Vue.set(this, "oldFiles", data.files);
+            this.$refs.fileDownload.updateOldFiles(this.oldFiles);
         },
 
         /**

@@ -10,7 +10,7 @@
                 label.label
                 .control
                     .select.is-primary
-                        select(v-model="memorandumData.departments")
+                        select(v-model="memorandumData.departments" disabled)
                             option(v-for='(department, departmentIndex) in departments',
                                 :value="department._id") {{ department.title }}
             .field

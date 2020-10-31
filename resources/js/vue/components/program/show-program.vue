@@ -1,31 +1,34 @@
 <template lang="pug">
     .container
-        .columns.is-vcentered
-            .column.is-full(v-show="isLoadingMode")
+        .columns.is-vcentered(v-show="isLoadingMode")
                 h1 در حال بارگذاری
-            .column.is-full(v-show="! isLoadingMode")
-
+        .columns.is-vcentered.is-multiline(v-show="! isLoadingMode")
+            .column.is-full
                 .info-card
                     .info-card-title {{ programData.title }}
-                    .info-card-details
-                        .info-card-item
-                            .info-card-label نام برنامه:
-                            .info-card-value {{ programData.title }}
-                        .info-card-item
-                            .info-card-label برنامه:
-                            .info-card-value {{ programData.program_id }}
+            .column.is-full
+                .info-card
+                    .info-card-item
+                        file-download(ref="fileDownload", :old-files="oldFiles")
 </template>
 <script>
 "use strict";
 
 const ENUMS = require("JS-HELPERS/enums");
+const FileDownload = require("VUE-COMPONENTS/general/file-download.vue")
+    .default;
 
 export default {
     name: "ShowProgram",
 
+    components: {
+        FileDownload,
+    },
+
     data: () => ({
         ENUMS,
         programs: [],
+        oldFiles: [],
         programData: {
             _id: null,
             title: null,
@@ -96,8 +99,9 @@ export default {
                 files: {},
                 is_active: data.is_active,
             };
-            console.log(temp);
             Vue.set(this, "programData", temp);
+            Vue.set(this, "oldFiles", data.files);
+            this.$refs.fileDownload.updateOldFiles(this.oldFiles);
         },
 
         /**

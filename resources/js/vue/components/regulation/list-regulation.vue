@@ -98,7 +98,6 @@ export default {
             console.log(this.listUrl);
             AxiosHelper.send("get", url, "").then((res) => {
                 const resData = res.data;
-                console.log(resData);
                 Vue.set(this, "regulations", resData.data.data);
                 Vue.set(this, "regulationsCount", resData.data.count);
                 Vue.set(this.pagination, "total", resData.data.count);

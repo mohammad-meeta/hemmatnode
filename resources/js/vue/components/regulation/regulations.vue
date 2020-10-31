@@ -66,8 +66,7 @@
             )
 
         .column(v-show="!modeLoading && modeShow")
-            show-regulation(ref="regulationShow", @on-command="onCommand"
-            :title="title")
+            show-regulation(ref="regulationShow", @on-command="onCommand")
 </template>
 
 <script>
@@ -104,6 +103,7 @@ export default {
         regulations: [],
         notificationMessage: null,
         notificationType: "is-info",
+        title: null,
     }),
 
     props: {
@@ -111,12 +111,6 @@ export default {
             type: String,
             default: null,
         },
-
-        title: {
-            type: String,
-            default: null,
-        },
-
         listUrl: {
             type: String,
             default: null,
@@ -215,6 +209,7 @@ export default {
 
                 case ENUMS.COMMAND.SHOW:
                     this.$refs.regulationShow.loadRegulationData(data);
+                    Vue.set(this, "title", payload.data.title);
                     this.changeFormMode(ENUMS.FORM_MODE.SHOW);
                     break;
             }

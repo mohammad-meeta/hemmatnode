@@ -81,7 +81,7 @@
                             file-download(ref="fileDownload", :old-files="oldFiles")
                     .panel
                         .panel-heading
-                            | فایل های ضمیمه
+                            | مستندات جلسه
                         .panel-block
                             file-download(ref="signaturedFileDownload", :old-files="signaturedOldFiles")
 

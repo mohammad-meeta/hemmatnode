@@ -146,7 +146,7 @@ export default {
         MultiTextApprov,
         MultiTextMember,
         FileUpload,
-        FileUploadSignatured
+        FileUploadSignatured,
     },
 
     data: () => ({
@@ -178,7 +178,7 @@ export default {
             approv: [],
             other_user: [],
             deletedOldFiles: [],
-            signaturedDeletedOldFiles: []
+            signaturedDeletedOldFiles: [],
         },
 
         userListTable: {
@@ -193,19 +193,19 @@ export default {
                 {
                     field: "name",
                     label: "نام کاربری",
-                    searchable: true
+                    searchable: true,
                 },
                 {
                     field: "profile.first_name",
                     label: "نام",
-                    searchable: true
+                    searchable: true,
                 },
                 {
                     field: "profile.last_name",
                     label: "نام خانوادگی",
-                    searchable: true
-                }
-            ]
+                    searchable: true,
+                },
+            ],
         },
 
         presentUserListTable: {
@@ -220,46 +220,46 @@ export default {
                 {
                     field: "name",
                     label: "نام کاربری",
-                    searchable: true
+                    searchable: true,
                 },
                 {
                     field: "profile.first_name",
                     label: "نام",
-                    searchable: true
+                    searchable: true,
                 },
                 {
                     field: "profile.last_name",
                     label: "نام خانوادگی",
-                    searchable: true
-                }
-            ]
+                    searchable: true,
+                },
+            ],
         },
 
         notificationMessage: null,
         notificationType: "is-info",
-        showLoadingFlag: false
+        showLoadingFlag: false,
     }),
 
     props: {
         editUrl: {
             type: String,
-            default: ""
+            default: "",
         },
 
         departmentId: {
             type: String,
-            default: null
+            default: null,
         },
 
         departmentsUrl: {
             type: String,
-            default: ""
+            default: "",
         },
 
         usersUrl: {
             type: String,
-            default: ""
-        }
+            default: "",
+        },
 
         // inviteSessionDatas: {}
     },
@@ -280,7 +280,7 @@ export default {
                     Vue.set(this.userListTable, "checkedRows", []);
                 }
                 return this.userListTable.checkedRows;
-            }
+            },
         },
         allPresentUserCheckedRows: {
             set: function(value) {
@@ -292,10 +292,10 @@ export default {
                     Vue.set(this.presentUserListTable, "checkedRows", []);
                 }
                 return this.presentUserListTable.checkedRows;
-            }
+            },
         },
-        isLoadingMode: state => state.showLoadingFlag == true,
-        showNotification: state => state.notificationMessage != null
+        isLoadingMode: (state) => state.showLoadingFlag == true,
+        showNotification: (state) => state.notificationMessage != null,
     },
 
     methods: {
@@ -319,7 +319,7 @@ export default {
                 approv: data.approves,
                 other_user: data.other_user,
                 intro: data.intro,
-                status: 1
+                status: 1,
             };
             Vue.set(this, "oldFiles", data.files);
             this.$refs.fileUpload.updateOldFiles(data.files);
@@ -329,12 +329,12 @@ export default {
             Vue.set(this, "inviteSessionData", temp);
             const userslist = this.inviteSessionData.user_list;
             let checkedUsers = this.users.filter(
-                u => userslist.indexOf(u._id) > -1
+                (u) => userslist.indexOf(u._id) > -1
             );
             Vue.set(this, "allUserListCheckedRows", checkedUsers);
             const presentUsersList = checkedUsers;
             let checkedPresentUsers = this.allUserListCheckedRows.filter(
-                u => presentUsersList.indexOf(u._id) > -1
+                (u) => presentUsersList.indexOf(u._id) > -1
             );
             Vue.set(this, "allPresentUserCheckedRows", checkedUsers);
         },
@@ -393,7 +393,7 @@ export default {
          */
         loadDepartments() {
             const url = this.departmentsUrl;
-            AxiosHelper.send("get", url, "").then(res => {
+            AxiosHelper.send("get", url, "").then((res) => {
                 const resData = res.data;
                 const datas = resData.data.data;
                 Vue.set(this, "departments", datas);
@@ -405,7 +405,7 @@ export default {
          */
         loadUsers() {
             const url = this.usersUrl;
-            AxiosHelper.send("get", url, "").then(res => {
+            AxiosHelper.send("get", url, "").then((res) => {
                 const resData = res.data;
                 const datas = resData.data.data;
                 Vue.set(this, "users", datas);
@@ -425,17 +425,17 @@ export default {
             this.showLoading();
             const deletedFiles = this.$refs.fileUpload.getDeletedFiles();
             const newFiles = this.$refs.fileUpload.getNewFiles();
-            let newUploaded = newFiles.map(x => x.file);
+            let newUploaded = newFiles.map((x) => x.file);
             Vue.set(this, "files", newUploaded);
-            let deleteUploaded = deletedFiles.map(x => x._id);
+            let deleteUploaded = deletedFiles.map((x) => x._id);
             Vue.set(this, "deletedOldFiles", deleteUploaded);
 
             const signaturedDeletedFiles = this.$refs.fileUploadSignatured.getDeletedFiles();
             const newSignaturedFiles = this.$refs.fileUploadSignatured.getNewFiles();
-            let newSignaturedUploaded = newSignaturedFiles.map(x => x.file);
+            let newSignaturedUploaded = newSignaturedFiles.map((x) => x.file);
             Vue.set(this, "signatured", newSignaturedUploaded);
             let signaturedDeleteUploaded = signaturedDeletedFiles.map(
-                x => x._id
+                (x) => x._id
             );
             Vue.set(
                 this,
@@ -460,41 +460,42 @@ export default {
                 signatured: this.signatured,
                 signaturedDeletedOldFiles: this.signaturedDeletedOldFiles,
                 intro: this.inviteSessionData.intro,
-                status: this.inviteSessionData.status
+                status: this.inviteSessionData.status,
             };
 
             let t = Object.keys(inviteSessionData.user_list)
-                .filter(key => true == inviteSessionData.user_list[key])
-                .map(key => key);
+                .filter((key) => true == inviteSessionData.user_list[key])
+                .map((key) => key);
 
             inviteSessionData.user_list = t;
             inviteSessionData.user_list = this.userListTable.checkedRows.map(
-                x => x._id
+                (x) => x._id
             );
 
             let p = Object.keys(inviteSessionData.present_user || [])
-                .filter(key => true == inviteSessionData.present_user[key])
-                .map(key => key);
+                .filter((key) => true == inviteSessionData.present_user[key])
+                .map((key) => key);
 
             inviteSessionData.present_user = p;
             inviteSessionData.present_user = this.presentUserListTable.checkedRows.map(
-                x => x._id
+                (x) => x._id
             );
             this.showLoading();
+            console.log(inviteSessionData);
             const url = this.editUrl.replace("$id$", inviteSessionData._id);
             AxiosHelper.send("patch", url, inviteSessionData, {
                 sendAsFormData: true,
-                filesArray: ["files", "signatured"]
+                filesArray: ["files", "signatured"],
             })
-                .then(res => {
+                .then((res) => {
                     //const data = JSON.parse(res.config.data);
                     const data = res.data;
                     this.$emit("on-update", {
                         sender: this,
-                        data
+                        data,
                     });
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.error(err);
                     this.setNotification(".خطا در ذخیره جلسه", "is-danger");
                 })
@@ -516,16 +517,15 @@ export default {
 
             const errors = result.validator.errors.all();
             const error = Object.keys(errors)
-                .map(key => errors[key].join("\n"))
+                .map((key) => errors[key].join("\n"))
                 .join("</br>");
 
             console.log(error);
             this.setNotification(error, "is-danger");
             return false;
-        }
-    }
+        },
+    },
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

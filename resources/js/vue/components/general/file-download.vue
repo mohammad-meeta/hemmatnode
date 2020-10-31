@@ -1,5 +1,5 @@
 <template lang="pug">
-div
+.container
     input.is-hidden(
         type="file",
         ref="fileInput",

@@ -11,17 +11,17 @@
 
         .columns.exposed-form(v-show="!modeLoading")
             .column.is-one-fifth(v-show="modeList")
-                a.button.is-primary.is-rounded(href="#",
+                a.button.is-primary.is-rounded.is-small(href="#",
                 @click.prevent="commandClick(ENUMS.COMMAND.NEW)")
                     span.icon.is-small
-                        i.material-icons.icon check_circle
+                        i.material-icons.icon edit
                     span ایجاد
 
             .column.is-one-fifth(v-show="!modeList")
                 a.button.is-warning.is-rounded(href="#",
                 @click.prevent="commandClick(ENUMS.COMMAND.CANCEL)")
                     span.icon.is-small
-                        i.material-icons.icon check_circle
+                        i.material-icons.icon edit
                     span بازگشت
 
         .columns.is-vcentered

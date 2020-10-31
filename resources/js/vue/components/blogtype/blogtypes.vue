@@ -14,22 +14,22 @@
 
     .columns.exposed-form(v-show="!modeLoading")
         .column.is-one-fifth(v-show="modeList")
-            a.button.is-primary.is-rounded(
+            a.button.is-primary.is-rounded.is-small(
                 href="#",
                 @click.prevent="commandClick(ENUMS.COMMAND.NEW)"
             )
                 span.icon.is-small
-                    i.material-icons.icon check_circle
+                    i.material-icons.icon add
                 span ایجاد
 
         .column.is-one-fifth(v-show="!modeList")
-            a.button.is-warning.is-rounded(
-                href="#",
+            b-button.is-flex-direction-row-reverse(
+                type="is-warning is-light"
+                size="is-small"
+                icon-right="chevron-right"
                 @click.prevent="commandClick(ENUMS.COMMAND.CANCEL)"
-            )
-                span.icon.is-small
-                    i.material-icons.icon check_circle
-                span بازگشت
+                )
+                    span بازگشت
 
     .columns.is-vcentered
         .column(v-if="modeLoading")

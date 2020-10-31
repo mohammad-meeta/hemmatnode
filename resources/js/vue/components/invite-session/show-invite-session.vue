@@ -74,8 +74,16 @@
                             .column.is-3(v-for="user in inviteSessionData.other_users")
                                 | {{ user.first_name }} {{ user.last_name }}
 
-
-                file-download(ref="fileDownload", :old-files="oldFiles")
+                    .panel
+                        .panel-heading
+                            | فایل های ضمیمه
+                        .panel-block
+                            file-download(ref="fileDownload", :old-files="oldFiles")
+                    .panel
+                        .panel-heading
+                            | فایل های ضمیمه
+                        .panel-block
+                            file-download(ref="signaturedFileDownload", :old-files="signaturedOldFiles")
 
 
 </template>
@@ -103,6 +111,7 @@ export default {
     data: () => ({
         ENUMS,
         oldFiles: [],
+        signaturedOldFiles: [],
         users: [],
         inviteSessionData: {
             _id: null,
@@ -173,6 +182,8 @@ export default {
             Vue.set(this, "inviteSessionData", temp);
             Vue.set(this, "oldFiles", data.files);
             this.$refs.fileDownload.updateOldFiles(this.oldFiles);
+            Vue.set(this, "signaturedOldFiles", data.signatured);
+            this.$refs.signaturedFileDownload.updateOldFiles(this.signaturedOldFiles);
             const userslist = this.inviteSessionData.user_list;
             let checkedUsers = this.users.filter(
                 u => userslist.indexOf(u._id) > -1

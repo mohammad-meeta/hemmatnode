@@ -13,21 +13,21 @@
                 td {{ health.title }}
                 td {{ health.is_active }}
                 td {{ toPersianDate(health.created_at) }}
-                td.function-links
-                    a.button.is-warning.is-rounded.mt-2(
+                td.function-links.buttons
+                    a.button.is-primary.is-rounded.is-small(
                         href="#",
                         @click.prevent="commandClick(ENUMS.COMMAND.SHOW, health)"
                     )
                         span.icon.is-small
-                            i.material-icons.icon swap_horizontal_circle
+                            i.material-icons.icon visibility
                         span مشاهده
 
-                    a.button.is-primary.is-rounded(
+                    a.button.is-primary.is-rounded.is-small(
                         href="#",
                         @click.prevent="commandClick(ENUMS.COMMAND.EDIT, health)"
                     )
                         span.icon.is-small
-                            i.material-icons.icon check_circle
+                            i.material-icons.icon edit
                         span ویرایش پیوست سلامت
 
     b-pagination(

@@ -5,26 +5,27 @@
             h1 در حال بارگذاری
         .column.is-full(v-show="! isLoadingMode")
             .info-card
-                .info-card-title {{ regulationData.title }}
-                .info-card-details
-                    .info-card-item
-                        .info-card-label نام آئین نامه:
-                        .info-card-value {{ regulationData.title }}
-                    .info-card-item
-                        .info-card-label آئین نامه:
-                        .info-card-value {{ regulationData.regulation_id }}
+                .info-card-item
+                    file-download(ref="fileDownload", :old-files="oldFiles")
 </template>
 <script>
 "use strict";
 
 const ENUMS = require("JS-HELPERS/enums");
+const FileDownload = require("VUE-COMPONENTS/general/file-download.vue")
+    .default;
 
 export default {
     name: "ShowRegulation",
 
+    components: {
+        FileDownload,
+    },
+
     data: () => ({
         ENUMS,
         regulations: [],
+        oldFiles: [],
         regulationData: {
             _id: null,
             title: null,
@@ -60,6 +61,9 @@ export default {
             };
 
             Vue.set(this, "regulationData", temp);
+
+            Vue.set(this, "oldFiles", data.files);
+            this.$refs.fileDownload.updateOldFiles(this.oldFiles);
         },
 
         /**

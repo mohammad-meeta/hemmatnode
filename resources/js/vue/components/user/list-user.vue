@@ -24,14 +24,14 @@
                 td(v-if="!user.is_active")
                     | غیر فعال
                 td {{ toPersianDate(user.createdAt) }}
-                td.function-links
-                    a.button.is-primary.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.EDIT, user)")
+                td.function-links.buttons
+                    a.button.is-primary.is-rounded.is-small(href="#", @click.prevent="commandClick(ENUMS.COMMAND.EDIT, user)")
                         span.icon.is-small
-                            i.material-icons.icon check_circle
+                            i.material-icons.icon edit
                         span ویرایش
-                    a.button.is-warning.is-rounded.mt-2(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SHOW, user)")
+                    a.button.is-primary.is-rounded.is-small(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SHOW, user)")
                         span.icon.is-small
-                            i.material-icons.icon swap_horizontal_circle
+                            i.material-icons.icon visibility
                         span مشاهده
 
     b-pagination(

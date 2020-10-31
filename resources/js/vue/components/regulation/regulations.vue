@@ -11,28 +11,30 @@
             .title(v-if="! isShora")
                 h1(v-show="modeList") آئین نامه
                 h1(v-show="modeRegister") ایجاد آئین نامه
+                h1(v-show="modeShow") {{ title }}
             .title(v-if="isShora")
                 h1(v-show="modeList") شیوه نامه
                 h1(v-show="modeRegister") ایجاد شیوه نامه
+                h1(v-show="modeShow") {{ title }}
 
     .columns.exposed-form(v-show="!modeLoading")
         .column.is-one-fifth(v-show="modeList")
-            a.button.is-primary.is-rounded(
+            a.button.is-primary.is-rounded.is-small(
                 href="#",
                 @click.prevent="commandClick(ENUMS.COMMAND.NEW)"
             )
                 span.icon.is-small
-                    i.material-icons.icon check_circle
+                    i.material-icons.icon add
                 span ایجاد
 
         .column.is-one-fifth(v-show="!modeList")
-            a.button.is-warning.is-rounded(
-                href="#",
+            b-button.is-flex-direction-row-reverse(
+                type="is-warning is-light"
+                size="is-small"
+                icon-right="chevron-right"
                 @click.prevent="commandClick(ENUMS.COMMAND.CANCEL)"
-            )
-                span.icon.is-small
-                    i.material-icons.icon check_circle
-                span بازگشت
+                )
+                    span بازگشت
 
     .columns.is-vcentered
         .column(v-if="modeLoading")
@@ -64,7 +66,8 @@
             )
 
         .column(v-show="!modeLoading && modeShow")
-            show-regulation(ref="regulationShow", @on-command="onCommand")
+            show-regulation(ref="regulationShow", @on-command="onCommand"
+            :title="title")
 </template>
 
 <script>
@@ -230,7 +233,6 @@ export default {
          * Init method
          */
         init() {
-            console.log(this.listUrl);
             this.changeFormMode(ENUMS.FORM_MODE.LOADING);
             this.$refs.regulationList.loadRegulations(1);
         },

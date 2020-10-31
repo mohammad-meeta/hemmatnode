@@ -13,18 +13,18 @@
                 td {{ program.title }}
                 td {{ program.is_active }}
                 td {{ toPersianDate(program.created_at) }}
-                td.function-links
-                    a.button.is-warning.is-rounded.mt-2(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SHOW, program)")
+                td.function-links.buttons
+                    a.button.is-primary.is-rounded.is-small(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SHOW, program)")
                         span.icon.is-small
-                            i.material-icons.icon swap_horizontal_circle
+                            i.material-icons.icon visibility
                         span مشاهده
 
-                    a.button.is-primary.is-rounded(
+                    a.button.is-primary.is-rounded.is-small(
                         href="#",
                         @click.prevent="commandClick(ENUMS.COMMAND.EDIT, program)"
                     )
                         span.icon.is-small
-                            i.material-icons.icon check_circle
+                            i.material-icons.icon edit
                         span ویرایش برنامه
 
     b-pagination(

@@ -7,10 +7,10 @@
             .hero-dashboard
                 .field.is-grouped
                     .control(v-for="item in accessLink" v-if="!isSAGShahrestan")
-                        a.button.is-primary.is-rounded(:href="item.link" v-if="! (isShora && item.text == 'آئین نامه')") {{ item.text }}
-                        a.button.is-primary.is-rounded(:href="item.link" v-if="isShora && item.text == 'آئین نامه'") شیوه نامه
+                        a.button.is-primary.is-rounded.is-small(:href="item.link" v-if="! (isShora && item.text == 'آئین نامه')") {{ item.text }}
+                        a.button.is-primary.is-rounded.is-small(:href="item.link" v-if="isShora && item.text == 'آئین نامه'") شیوه نامه
                     .control(v-for="item in accessLink" v-if="isSAGShahrestan")
-                        a.button.is-primary.is-rounded(:href="item.link" v-if="! (item.text == 'آئین نامه')") {{ item.text }}
+                        a.button.is-primary.is-rounded.is-small(:href="item.link" v-if="! (item.text == 'آئین نامه')") {{ item.text }}
         b-button.is-flex-direction-row-reverse(
             v-show="! modeDepartment"
             type="is-warning is-light"

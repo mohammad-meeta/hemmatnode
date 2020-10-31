@@ -13,7 +13,7 @@
                 a.button.is-warning.is-rounded(href="#",
                 @click.prevent="commandClick(ENUMS.COMMAND.CANCEL)")
                     span.icon.is-small
-                        i.material-icons.icon check_circle
+                        i.material-icons.icon edit
                     span بازگشت
 
         .columns.is-vcentered

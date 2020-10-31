@@ -24,12 +24,12 @@
                 b-table-column(field='date' label='تاریخ' v-slot='props')
                     | {{ toPersianDate(props.row.date) }}
                 b-table-column(label='عملیات' v-slot='props')
-                    a.button.is-warning.is-rounded.mt-2(
+                    a.button.is-primary.is-rounded.is-small(
                         href="#",
                         @click.prevent="commandClick({ type: FORM_MODE.SHOW, row: props.row})"
                     )
                         span.icon.is-small
-                            i.material-icons.icon swap_horizontal_circle
+                            i.material-icons.icon visibility
                         span مشاهده
 
 

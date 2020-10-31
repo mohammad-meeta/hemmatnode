@@ -13,14 +13,14 @@
                 td {{ request.title }}
                 td {{ request.is_active }}
                 td {{ toPersianDate(request.created_at) }}
-                td.function-links
-                    a.button.is-primary.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.EDIT, request)")
+                td.function-links.buttons
+                    a.button.is-primary.is-rounded.is-small(href="#", @click.prevent="commandClick(ENUMS.COMMAND.EDIT, request)")
                         span.icon.is-small
-                            i.material-icons.icon check_circle
+                            i.material-icons.icon edit
                         span ویرایش
-                    a.button.is-warning.is-rounded.mt-2(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SHOW, request)")
+                    a.button.is-primary.is-rounded.is-small(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SHOW, request)")
                         span.icon.is-small
-                            i.material-icons.icon swap_horizontal_circle
+                            i.material-icons.icon visibility
                         span مشاهده
 
     paginate(:page-count='pageCount',

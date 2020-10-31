@@ -16,14 +16,14 @@
                 td(v-if="!memorandum.is_active")
                     | غیر فعال
                 td {{ toPersianDate(memorandum.created_at) }}
-                td.function-links
-                    a.button.is-primary.is-rounded(href="#", @click.prevent="commandClick(ENUMS.COMMAND.EDIT, memorandum)")
+                td.function-links.buttons
+                    a.button.is-primary.is-rounded.is-small(href="#", @click.prevent="commandClick(ENUMS.COMMAND.EDIT, memorandum)")
                         span.icon.is-small
-                            i.material-icons.icon check_circle
+                            i.material-icons.icon edit
                         span ویرایش
-                    a.button.is-warning.is-rounded.mt-2(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SHOW, memorandum)")
+                    a.button.is-primary.is-rounded.is-small(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SHOW, memorandum)")
                         span.icon.is-small
-                            i.material-icons.icon swap_horizontal_circle
+                            i.material-icons.icon visibility
                         span مشاهده
 
     b-pagination(

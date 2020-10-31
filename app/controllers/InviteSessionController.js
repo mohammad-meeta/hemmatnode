@@ -259,6 +259,7 @@ InviteSession.update = async function update(req, res, next) {
         user_list: JSON.parse(req.body.user_list),
         other_user: JSON.parse(req.body.other_user || "[]"),
         approves: JSON.parse(req.body.approv || "[]"),
+        intro: req.body.intro,
         present_user: JSON.parse(req.body.present_user || "[]"),
         status: req.body.status || 0,
         user_id: req.session.auth.userId,

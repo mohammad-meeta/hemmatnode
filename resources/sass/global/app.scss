@@ -325,6 +325,7 @@ nav {
     margin: 2px;
     height: 46px;
     box-shadow: -4px 3px 17px #7B7F8229;
+    overflow: hidden;
 }
 
 .nav-user-container ul {
@@ -332,7 +333,7 @@ nav {
 }
 
 .nav-user-container-icon img {
-    width: 24px;
+	width: 50px;
 }
 
 .container.page-header {

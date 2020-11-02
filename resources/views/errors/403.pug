@@ -3,6 +3,23 @@ html(lang="en")
     head
         meta(charset="UTF-8")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
-        title Error
+        meta(http-equiv="X-UA-Compatible" content="ie=edge")
+        title
+            block title
+                | سامانه همت
+        link(rel="shortcut icon" type="image/png", href=asset("images/favicon.png"))
+        link(rel="stylesheet", href=mix("css/core/kernel.css"))
+        link(rel="stylesheet", href=mix("css/global/app.css"))
+
     body
-        h1 Permission Denied
+        section.hero.is-warning.is-fullheight
+            .hero-body
+                .container
+                    h2.title
+                        | هشدار
+                    h3.subtitle
+                        | شما مجوز دسترسی به این صفحه را ندارید
+                    a(href="/" class="button is-primary")
+                        | بازگشت به صفحه اصلی
+
+

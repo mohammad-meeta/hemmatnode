@@ -60,7 +60,7 @@ Rule.can = function can(ruleName, data, authToken) {
  * @param      {Object}   payload  The payload
  * @return     {boolean}  User can/can't do action
  */
-Rule.canAsync = function canAsync(ruleName, data, depid, authToken) {
+Rule.canAsync = function canAsync(ruleName, data, authToken) {
 
     /* Prepare ruleName for loading from sub-folders */
     ruleName = ruleName.replace(/\./g, '\/');
@@ -78,7 +78,7 @@ Rule.canAsync = function canAsync(ruleName, data, depid, authToken) {
     return (req, res, next) => {
         const user = Rule.getAuthToken(req, authToken);
 
-        RuleModule.check(user, data, req.params.department)
+        RuleModule.check(user, data, req.params.department || req.params.group)
             .then(result => {
                 if (result) {
                     next();

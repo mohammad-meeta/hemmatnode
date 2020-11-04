@@ -375,7 +375,7 @@ export default {
                 const data = res.data.data.data;
                 Vue.set(this, "departmentData", data || {});
             } catch (err) {
-                alert("Error");
+
             }
             document.title = this.departmentData.title;
             this.loadReferencesDepartmentData(this.departmentData.references);
@@ -395,7 +395,7 @@ export default {
                 const data = res.data.data.data;
                 Vue.set(this, "referencesData", data || {});
             } catch (err) {
-                alert("Error");
+
             }
         },
 
@@ -469,7 +469,7 @@ export default {
                     Vue.set(this, "accessLink", []);
                 }
             } catch (err) {
-                alert("Error");
+
             }
         },
 

@@ -92,6 +92,9 @@
                         :active.sync="isCardModalActive"
                     )
                         .info-card
+                            .columns
+                                .column.is-2
+                                    img(:src="imageAddress")
                             .info-card-title {{ departmentData.title }}
                             .info-card-details
                                 .info-card-item
@@ -125,7 +128,6 @@
             :department-id="departmentId",
             v-show="!isLoadingMode && modeReport"
         )
-    img(:src="imageAddress")
 
 </template>
 

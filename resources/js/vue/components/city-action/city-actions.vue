@@ -66,7 +66,8 @@
         .column(v-show="!modeLoading && modeShow")
             show-city-action(
                 ref="cityActionShow",
-                @on-command="onCommand"
+                @on-command="onCommand",
+                :city-url="cityUrl"
             )
 </template>
 

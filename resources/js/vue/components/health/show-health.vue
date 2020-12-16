@@ -8,17 +8,16 @@
                 .info-card-title {{ healthData.title }}
                 .info-card-details
                     .info-card-item
-                        .info-card-label نام پیوست سلامت:
-                        .info-card-value {{ healthData.title }}
+                        .info-card-label سال:
+                        .info-card-value {{ healthData.date }}
                     .info-card-item
-                        .info-card-label پیوست سلامت:
-                        .info-card-value {{ healthData.health_id }}
+                        .info-card-label مجری:
+                        .info-card-value {{ healthData.executor }}
                 .info-card-item
                     .info-card-label
                         | فایل های ضمیمه
                         .info-card-value
                             file-download(ref="fileDownload", :old-files="oldFiles")
-
 </template>
 <script>
 "use strict";

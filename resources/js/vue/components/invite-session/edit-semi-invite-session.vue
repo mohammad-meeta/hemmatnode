@@ -20,7 +20,8 @@
             .field
                 label.label تاریخ
                 .control
-                    date-picker(v-model='inviteSessionData.date' format="YYYY-MM-DD HH:mm:ss"
+                    date-picker(v-model='inviteSessionData.date',
+                    format="YYYY-MM-DD HH:mm",
                     display-format="jDD/jMM/jYYYY HH:mm" type="datetime" required)
 
             .field

@@ -4,6 +4,79 @@
             .column.is-full(v-show="isLoadingMode")
                 h1 در حال بارگذاری
             .column.is-full(v-show="! isLoadingMode")
+                .print-form
+                    .print-form-head
+                        table.table.is-fullwidth.is-bordered
+                            tbody
+                                tr
+                                    td(rowspan="11") مشخصات پروژه
+                                tr
+                                    td
+                                        label
+                                            | نام پروژه: {{ projectData.title }}
+                                tr
+                                    td
+                                        label
+                                            | نام برنامه متناظر: {{ projectData.programTitle }}
+                                tr
+                                    td
+                                        label
+                                            | هدف برنامه: {{ projectData.target }}
+                                tr
+                                    td
+                                        label
+                                            | شاخص های اثرمتناظر: {{ projectData.same_effects_index }}
+                                tr
+                                    td
+                                        label
+                                            | مجری سازمانی: {{ projectData.organ_moderator }}
+                                tr
+                                    td
+                                        label
+                                            | مجری پروژه - پیمانکار: {{ projectData.project_moderator }}
+                                tr
+                                    td
+                                        label
+                                            | مشاورین: {{ projectData.consoultant }}
+                                tr
+                                    td
+                                        label
+                                            | ناظر پروژه: {{ projectData.supervisor }}
+                                tr
+                                    td
+                                        label
+                                            | کمیته راهبردی طرح: {{ projectData.committee_leadership }}
+                                tr
+                                    td
+                                        label
+                                            | همکاران اصلی پروژه: {{ projectData.coworker }}
+                                tr
+                                    td(rowspan="7") بیان ضرورت
+                                tr
+                                    td
+                                        label
+                                            | تعریف مسئله -نیاز اصلی: {{ projectData.description }}
+                                tr
+                                    td
+                                        label
+                                            | مروری برمداخلات و خدمات بهبوددهنده وضعیت درتجربیات جهانی و ملی: {{ projectData.intervention_review }}
+                                tr
+                                    td
+                                        label
+                                            | ارتباط پروژه با اقدامات قبلی سازمان یا سازمان های دیگر در پرداختن به این مسئله-تکمیل کننده،نقض کننده،جدید بودن: {{ projectData.pervious_action_relation }}
+                                tr
+                                    td
+                                        label
+                                            | تناظر با اهداف راهبردی و اسناد بالادستی سازمان؟: {{ projectData.target_corresponding }}
+                                tr
+                                    td
+                                        label
+                                            | به ارتقای کدام شاخص اثر کمک می کند؟: {{ projectData.help_ipmrove_index }}
+                                tr
+                                    td
+                                        label
+                                            | سایر فواید پروژه درحیطه: {{ projectData.help_ipmrove_index }}
+
 
                 .info-card
                     .info-card-title {{ projectData.title }}
@@ -30,6 +103,7 @@ export default {
             _id: null,
             title: null,
             program_id: null,
+            programTitle: null,
             target: null,
             same_effects_index: null,
             organ_moderator: null,
@@ -70,10 +144,12 @@ export default {
          * Load specific project
          */
         loadProjectData(data) {
+            console.log(data);
             const temp = {
                 _id: data._id,
             title: data.title,
             program_id: data.program_id,
+            programTitle: data.prg.title,
             target: data.target,
             same_effects_index: data.same_effects_index,
             organ_moderator: data.organ_moderator,

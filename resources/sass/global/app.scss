@@ -1033,9 +1033,6 @@ h2.item-category {
 /**
 * chart
 */
-.chart.container {
-
-}
 
 .section-background img {
     border-radius: 20px;
@@ -1141,4 +1138,17 @@ h2.item-category {
 	align-items: center;
 	font-size: 1.25rem;
 	height: 120px;
+}
+
+@media print {
+    .navbar,
+    footer.footer,
+    .column.is-one-fifth .button,
+    .no-print {
+        display: none;
+    }
+
+    .print-form {
+        display: block;
+    }
 }

@@ -26,8 +26,8 @@
                             tbody
                                 tr
                                     td {{ inviteSessionData.dep }}
-                                    td {{ toPersianDate(inviteSessionData.date, 'jYYYY', 'fa') }}
-                                    td {{ toPersianDate(inviteSessionData.date, 'HH:MM', 'fa') }}
+                                    td {{ toPersianDate(inviteSessionData.date, 'jYYYY/jMM/jDD', 'fa') }}
+                                    td {{ toPersianDate(inviteSessionData.date, 'hh:mm', 'fa') }}
                                     td {{ (inviteSessionData.place) }}
 
                     .print-form-body
@@ -64,22 +64,22 @@
                                     td {{ approve.responsible }}
                                     td {{ approve.time }}
 
-                    .print-form-body(v-if="inviteSessionData.approves")
+                    .print-form-body.mb-5(v-if="inviteSessionData.approves")
                         label اعضای حاضر در جلسه:
-                        .columns.is-multiline
+                        .columns.is-multiline.mb-5
                             .column.is-3(v-for="user in allPresentUserCheckedRows")
                                 | {{ user.profile.first_name }} {{ user.profile.last_name }}
-                    label مدعوین (به غیر از افراد حاضر و سایر اعضاء):
-                        .columns.is-multiline
+                        label مدعوین (به غیر از افراد حاضر و سایر اعضاء):
+                        .columns.is-multiline.mb-5
                             .column.is-3(v-for="user in inviteSessionData.other_users")
                                 | {{ user.first_name }} {{ user.last_name }}
 
-                    .panel
+                    .panel.no-print
                         .panel-heading
                             | فایل های ضمیمه
                         .panel-block
                             file-download(ref="fileDownload", :old-files="oldFiles")
-                    .panel
+                    .panel.no-print
                         .panel-heading
                             | مستندات جلسه
                         .panel-block

@@ -5,7 +5,9 @@ block title
 
 block content
     .container
-        memorandums(list-url=route('api.memorandum', { page: '$page$', size: '$pageSize$', group: departmentId }),
+        memorandums(
+            project-list-url=route('api.project', { group: departmentId, type: "all", page: '1', size: '50000' })
+            list-url=route('api.memorandum', { page: '$page$', size: '$pageSize$', group: departmentId }),
             departments-url=route('api.department', { page: 1, size: 1000 }),
             register-url=route('memorandum.store', { department: departmentId }),
             edit-url=route('memorandum.update', { id :'$id$'}),
@@ -15,5 +17,3 @@ block content
 
 block scripts
     script(defer, src=mix('js/pages/memorandum/index/index.js'))
-
-

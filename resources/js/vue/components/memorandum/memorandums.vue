@@ -34,7 +34,9 @@
                 list-memorandum(ref="memorandumList",
                     @on-command="onCommand",
                     :department-id="departmentId",
-                    :list-url="listUrl")
+                    :list-url="listUrl"
+                    :project-list-url="projectListUrl"
+                    )
 
             .column(v-show="!modeLoading && modeRegister")
                 register-memorandum(ref="memorandumRegister",
@@ -67,7 +69,8 @@ const RegisterMemorandum = require("VUE-COMPONENTS/memorandum/register-memorandu
     .default;
 const ListMemorandum = require("VUE-COMPONENTS/memorandum/list-memorandum.vue")
     .default;
-const EditMemorandum = require("VUE-COMPONENTS/memorandum/edit-memorandum.vue").default;
+const EditMemorandum = require("VUE-COMPONENTS/memorandum/edit-memorandum.vue")
+    .default;
 const ShowMemorandum = require("VUE-COMPONENTS/memorandum/show-memorandum.vue")
     .default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
@@ -81,7 +84,7 @@ export default {
         RegisterMemorandum,
         EditMemorandum,
         ShowMemorandum,
-        Notification
+        Notification,
     },
 
     data: () => ({
@@ -89,55 +92,60 @@ export default {
         formModeStack: [],
         memorandums: [],
         notificationMessage: null,
-        notificationType: "is-info"
+        notificationType: "is-info",
     }),
 
     props: {
         departmentId: {
             type: String,
-            default: null
+            default: null,
         },
 
         title: {
             type: String,
-            default: null
+            default: null,
         },
 
         listUrl: {
             type: String,
-            default: null
+            default: null,
+        },
+        projectListUrl: {
+            type: String,
+            default: null,
         },
 
         registerUrl: {
             type: String,
-            default: null
+            default: null,
         },
 
         departmentsUrl: {
             type: String,
-            default: null
+            default: null,
         },
 
         editUrl: {
             type: String,
-            default: null
+            default: null,
         },
 
         usersUrl: {
             type: String,
-            default: null
-        }
+            default: null,
+        },
     },
 
     computed: {
-        formMode: state => state.formModeStack[state.formModeStack.length - 1],
+        formMode: (state) =>
+            state.formModeStack[state.formModeStack.length - 1],
 
-        modeLoading: state => state.formMode == ENUMS.FORM_MODE.LOADING,
-        modeList: state => state.formMode == ENUMS.FORM_MODE.LIST,
-        modeRegister: state => state.formMode == ENUMS.FORM_MODE.REGISTER,
-        modeEdit: state => state.formMode == ENUMS.FORM_MODE.EDIT,
-        modeShow: state => state.formMode == ENUMS.FORM_MODE.SHOW,
-        showNotification: state => state.notificationMessage != null
+        modeLoading: (state) => state.formMode == ENUMS.FORM_MODE.LOADING,
+        modeList: (state) => state.formMode == ENUMS.FORM_MODE.LIST,
+        modeRegister: (state) => state.formMode == ENUMS.FORM_MODE.REGISTER,
+        modeEdit: (state) => state.formMode == ENUMS.FORM_MODE.EDIT,
+        modeShow: (state) => state.formMode == ENUMS.FORM_MODE.SHOW,
+        showNotification: (state) => state.notificationMessage != null,
     },
 
     created() {
@@ -155,14 +163,9 @@ export default {
          */
         onMemorandumRegister(payload) {
             //***update vue list****
-            this.$refs.memorandumList.addToMemorandumList(
-                payload.data.data
-            );
+            this.$refs.memorandumList.addToMemorandumList(payload.data.data);
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
-            this.setNotification(
-                ".تفاهمنامه با موفقیت ذخیره شد",
-                "is-success"
-            );
+            this.setNotification(".تفاهمنامه با موفقیت ذخیره شد", "is-success");
         },
 
         /**
@@ -239,7 +242,7 @@ export default {
         changeFormMode(mode, options) {
             const opts = Object.assign(
                 {
-                    pop: false
+                    pop: false,
                 },
                 options
             );
@@ -269,7 +272,7 @@ export default {
          */
         closeNotification() {
             this.setNotification(null);
-        }
-    }
+        },
+    },
 };
 </script>

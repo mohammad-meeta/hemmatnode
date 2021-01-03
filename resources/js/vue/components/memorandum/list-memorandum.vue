@@ -55,12 +55,16 @@ export default {
     props: {
         listUrl: {
             type: String,
-            default: ""
+            default: "",
+        },
+        projectListUrl: {
+            type: String,
+            default: "",
         },
 
         departmentId: {
             type: String,
-            default: ""
+            default: "",
         },
     },
 
@@ -89,15 +93,15 @@ export default {
                 },
             },
         ],
-        memorandumsCount: 0
+        projectResultMem: [],
+        memorandumsCount: 0,
     }),
 
     computed: {
-        hasMemorandum: state => (state.memorandums || []).length
+        hasMemorandum: (state) => (state.memorandums || []).length,
     },
 
     methods: {
-
         /**
          * Load memorandums
          */
@@ -106,12 +110,20 @@ export default {
                 .replace(/\$page\$/g, pageId)
                 .replace(/\$pageSize\$/g, 50);
 
-            AxiosHelper.send("get", url, "").then(res => {
+            AxiosHelper.send("get", url, "").then((res) => {
                 const resData = res.data;
 
                 Vue.set(this, "memorandums", resData.data.data);
                 Vue.set(this, "memorandumsCount", resData.data.count);
                 Vue.set(this.pagination, "total", resData.data.count);
+            });
+
+            const urlPrjMemRes = this.projectListUrl;
+            AxiosHelper.send("get", urlPrjMemRes, "").then((res) => {
+                const resData = res.data;
+
+                Vue.set(this, "projectResultMem", resData.data.data);
+                console.log(this.projectResultMem);
             });
         },
 
@@ -173,26 +185,21 @@ export default {
             };
 
             let foundIndex = this.memorandums.findIndex(
-                x => x._id == editedMemorandumsData._id
+                (x) => x._id == editedMemorandumsData._id
             );
-            this.memorandums[foundIndex].title =
-                editedMemorandumsData.title;
+            this.memorandums[foundIndex].title = editedMemorandumsData.title;
             this.memorandums[foundIndex].project =
                 editedMemorandumsData.project;
-            this.memorandums[foundIndex].date =
-                editedMemorandumsData.date;
-            this.memorandums[foundIndex].body =
-                editedMemorandumsData.body;
+            this.memorandums[foundIndex].date = editedMemorandumsData.date;
+            this.memorandums[foundIndex].body = editedMemorandumsData.body;
             this.memorandums[foundIndex].conditions =
                 editedMemorandumsData.conditions;
             this.memorandums[foundIndex].is_active =
                 editedMemorandumsData.is_active;
-            this.memorandums[foundIndex].files =
-                editedMemorandumsData.oldFiles;
-        }
-    }
+            this.memorandums[foundIndex].files = editedMemorandumsData.oldFiles;
+        },
+    },
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

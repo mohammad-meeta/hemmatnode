@@ -18,267 +18,515 @@ ProjecttHelper.loadAllProjectData = async function loadAllProjectData(req, dataP
     const skip = page > 0 ? (page - 1) * pageSize : 0;
     const ObjectId = require("mongoose").Types.ObjectId;
     const Project = mongoose.model("Project");
-
-    const userId = req.session.auth.userId;
-    const pipeline = [
-        {
-            $match: {
-                department_id: new ObjectId(group),
-                type: type,
-            }
-        },
-        {
-            $lookup: {
-                from: "departments",
-                localField: "department_id",
-                foreignField: "_id",
-                as: "dep"
-            }
-        },
-        {
-            "$unwind": {
-                "path": "$dep",
-                "preserveNullAndEmptyArrays": true
-            }
-        },
-        {
-            $lookup: {
-                from: "memorandum",
-                localField: "memorandum_id",
-                foreignField: "_id",
-                as: "mem"
-            }
-        },
-        {
-            "$unwind": {
-                "path": "$mem",
-                "preserveNullAndEmptyArrays": true
-            }
-        },
-        {
-            $lookup: {
-                from: "programs",
-                localField: "program_id",
-                foreignField: "_id",
-                as: "prg"
-            }
-        },
-        {
-            "$unwind": {
-                "path": "$prg",
-                "preserveNullAndEmptyArrays": true
-            }
-        },
-        {
-            $lookup: {
-                from: "results",
-                let: { "proje_id": "$_id" },
-                pipeline: [
-                    {
-                        $match:
-                        {
-                            $expr: {
-                                $eq: ['$$proje_id', "$project_id"]
-                            }
-                        }
-                    },
-
-
-
-
-
-                    {
-                        $lookup: {
-                            from: "files",
-                            localField: "files.file_id",
-                            foreignField: "_id",
-                            as: "resfile"
-                        }
-                    },
-                    {
-                        $unwind: {
-                            path: "$resfile",
-                            preserveNullAndEmptyArrays: true
-                        }
-                    },
-                    {
-                        $project: {
-                            "resfile.encoding": 0,
-                            "resfile.mimetype": 0,
-                            "resfile.destination": 0,
-                            "resfile.user_id": 0,
-                            "resfile.path": 0,
-                        }
-                    },
-                    {
-                        "$group":
-                        {
-                            "_id": "$_id",
-                            "resfiles": { "$push": "$resfile" },
-                            "oldFiles": { "$last": "$files" },
-                            "is_active": { "$last": "$is_active" },
-                            "result": { "$last": "$result" },
-                            "standard": { "$last": "$standard" },
-                            "cast": { "$last": "$cast" },
-                            "deadline": { "$last": "$deadline" },
-                            "project_id": { "$last": "$project_id" },
-                            "user_id": { "$last": "$user_id" },
-                            "updated_at": { "$last": "$updated_at" },
-                            "created_at": { "$last": "$created_at" },
-                        }
-                    },
-                    {
-                        $sort: {
-                            _id: 1
-                        }
-                    },
-                ],
-                "as": "res"
-            }
-        },
-        {
-            $unwind: {
-                path: "$files",
-                preserveNullAndEmptyArrays: true
-            }
-        },
-        {
-            $lookup: {
-                from: "files",
-                localField: "files.file_id",
-                foreignField: "_id",
-                as: "ffile"
-            }
-        },
-        {
-            $unwind: {
-                path: "$ffile",
-                preserveNullAndEmptyArrays: true
-            }
-        },
-        {
-            $project: {
-                "ffile.encoding": 0,
-                "ffile.mimetype": 0,
-                "ffile.destination": 0,
-                "ffile.user_id": 0,
-                "ffile.path": 0,
-            }
-        },
-        {
-            $group: {
-                _id: "$_id",
-                oldFiles: {
-                    $push: "$files"
-                },
-                files: {
-                    $push: "$ffile"
-                },
-                results: {
-                    $last: "$res"
-                },
-                mem: {
-                    $last: "$mem"
-                },
-                dep: {
-                    $last: "$dep"
-                },
-                prg: {
-                    $last: "$prg"
-                },
-                title: {
-                    $last: "$title"
-                },
-                budget: {
-                    $last: "$budget"
-                },
-                memorandum_id: {
-                    $last: "$memorandum_id"
-                },
-                program_id: {
-                    $last: "$program_id"
-                },
-                department_id: {
-                    $last: "$department_id"
-                },
-                target: {
-                    $last: "$target"
-                },
-                same_effects_index: {
-                    $last: "$same_effects_index"
-                },
-                organ_moderator: {
-                    $last: "$organ_moderator"
-                },
-                project_moderator: {
-                    $last: "$project_moderator"
-                },
-                consoultant: {
-                    $last: "$consoultant"
-                },
-                supervisor: {
-                    $last: "$supervisor"
-                },
-                committee_leadership: {
-                    $last: "$committee_leadership"
-                },
-                coworker: {
-                    $last: "$coworker"
-                },
-                description: {
-                    $last: "$description"
-                },
-                intervention_review: {
-                    $last: "$intervention_review"
-                },
-                pervious_action_relation: {
-                    $last: "$pervious_action_relation"
-                },
-                target_corresponding: {
-                    $last: "$target_corresponding"
-                },
-                help_ipmrove_index: {
-                    $last: "$help_ipmrove_index"
-                },
-                other_benefit: {
-                    $last: "$other_benefit"
-                },
-                final_product: {
-                    $last: "$final_product"
-                },
-                standards: {
-                    $last: "$standards"
-                },
-                result_apply: {
-                    $last: "$result_apply"
-                },
-                refree: {
-                    $last: "$refree"
-                },
-                monitoring_comment: {
-                    $last: "$monitoring_comment"
-                },
-                is_active: {
-                    $last: "$is_active"
-                },
-                created_at: {
-                    $last: "$created_at"
+    let pipeline = [];
+    if (type != "all") {
+        pipeline = [
+            {
+                $match: {
+                    department_id: new ObjectId(group),
+                    type: type,
                 }
+            },
+            {
+                $lookup: {
+                    from: "departments",
+                    localField: "department_id",
+                    foreignField: "_id",
+                    as: "dep"
+                }
+            },
+            {
+                "$unwind": {
+                    "path": "$dep",
+                    "preserveNullAndEmptyArrays": true
+                }
+            },
+            {
+                $lookup: {
+                    from: "memorandum",
+                    localField: "memorandum_id",
+                    foreignField: "_id",
+                    as: "mem"
+                }
+            },
+            {
+                "$unwind": {
+                    "path": "$mem",
+                    "preserveNullAndEmptyArrays": true
+                }
+            },
+            {
+                $lookup: {
+                    from: "programs",
+                    localField: "program_id",
+                    foreignField: "_id",
+                    as: "prg"
+                }
+            },
+            {
+                "$unwind": {
+                    "path": "$prg",
+                    "preserveNullAndEmptyArrays": true
+                }
+            },
+            {
+                $lookup: {
+                    from: "results",
+                    let: { "proje_id": "$_id" },
+                    pipeline: [
+                        {
+                            $match:
+                            {
+                                $expr: {
+                                    $eq: ['$$proje_id', "$project_id"]
+                                }
+                            }
+                        },
+                        {
+                            $lookup: {
+                                from: "files",
+                                localField: "files.file_id",
+                                foreignField: "_id",
+                                as: "resfile"
+                            }
+                        },
+                        {
+                            $unwind: {
+                                path: "$resfile",
+                                preserveNullAndEmptyArrays: true
+                            }
+                        },
+                        {
+                            $project: {
+                                "resfile.encoding": 0,
+                                "resfile.mimetype": 0,
+                                "resfile.destination": 0,
+                                "resfile.user_id": 0,
+                                "resfile.path": 0,
+                            }
+                        },
+                        {
+                            "$group":
+                            {
+                                "_id": "$_id",
+                                "resfiles": { "$push": "$resfile" },
+                                "oldFiles": { "$last": "$files" },
+                                "is_active": { "$last": "$is_active" },
+                                "result": { "$last": "$result" },
+                                "standard": { "$last": "$standard" },
+                                "cast": { "$last": "$cast" },
+                                "deadline": { "$last": "$deadline" },
+                                "project_id": { "$last": "$project_id" },
+                                "user_id": { "$last": "$user_id" },
+                                "updated_at": { "$last": "$updated_at" },
+                                "created_at": { "$last": "$created_at" },
+                            }
+                        },
+                        {
+                            $sort: {
+                                _id: 1
+                            }
+                        },
+                    ],
+                    "as": "res"
+                }
+            },
+            {
+                $unwind: {
+                    path: "$files",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $lookup: {
+                    from: "files",
+                    localField: "files.file_id",
+                    foreignField: "_id",
+                    as: "ffile"
+                }
+            },
+            {
+                $unwind: {
+                    path: "$ffile",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $project: {
+                    "ffile.encoding": 0,
+                    "ffile.mimetype": 0,
+                    "ffile.destination": 0,
+                    "ffile.user_id": 0,
+                    "ffile.path": 0,
+                }
+            },
+            {
+                $group: {
+                    _id: "$_id",
+                    oldFiles: {
+                        $push: "$files"
+                    },
+                    files: {
+                        $push: "$ffile"
+                    },
+                    results: {
+                        $last: "$res"
+                    },
+                    mem: {
+                        $last: "$mem"
+                    },
+                    dep: {
+                        $last: "$dep"
+                    },
+                    prg: {
+                        $last: "$prg"
+                    },
+                    title: {
+                        $last: "$title"
+                    },
+                    budget: {
+                        $last: "$budget"
+                    },
+                    memorandum_id: {
+                        $last: "$memorandum_id"
+                    },
+                    program_id: {
+                        $last: "$program_id"
+                    },
+                    department_id: {
+                        $last: "$department_id"
+                    },
+                    target: {
+                        $last: "$target"
+                    },
+                    same_effects_index: {
+                        $last: "$same_effects_index"
+                    },
+                    organ_moderator: {
+                        $last: "$organ_moderator"
+                    },
+                    project_moderator: {
+                        $last: "$project_moderator"
+                    },
+                    consoultant: {
+                        $last: "$consoultant"
+                    },
+                    supervisor: {
+                        $last: "$supervisor"
+                    },
+                    committee_leadership: {
+                        $last: "$committee_leadership"
+                    },
+                    coworker: {
+                        $last: "$coworker"
+                    },
+                    description: {
+                        $last: "$description"
+                    },
+                    intervention_review: {
+                        $last: "$intervention_review"
+                    },
+                    pervious_action_relation: {
+                        $last: "$pervious_action_relation"
+                    },
+                    target_corresponding: {
+                        $last: "$target_corresponding"
+                    },
+                    help_ipmrove_index: {
+                        $last: "$help_ipmrove_index"
+                    },
+                    other_benefit: {
+                        $last: "$other_benefit"
+                    },
+                    final_product: {
+                        $last: "$final_product"
+                    },
+                    standards: {
+                        $last: "$standards"
+                    },
+                    result_apply: {
+                        $last: "$result_apply"
+                    },
+                    refree: {
+                        $last: "$refree"
+                    },
+                    monitoring_comment: {
+                        $last: "$monitoring_comment"
+                    },
+                    is_active: {
+                        $last: "$is_active"
+                    },
+                    created_at: {
+                        $last: "$created_at"
+                    }
+                }
+            },
+            {
+                $sort: {
+                    created_at: -1
+                }
+            },
+            {
+                $skip: skip
+            },
+            {
+                $limit: pageSize
             }
-        },
-        {
-            $sort: {
-                created_at: -1
+        ];
+    } else {
+        pipeline = [
+            {
+                $match: {
+                    department_id: new ObjectId(group),
+                }
+            },
+            {
+                $lookup: {
+                    from: "departments",
+                    localField: "department_id",
+                    foreignField: "_id",
+                    as: "dep"
+                }
+            },
+            {
+                "$unwind": {
+                    "path": "$dep",
+                    "preserveNullAndEmptyArrays": true
+                }
+            },
+            {
+                $lookup: {
+                    from: "memorandum",
+                    localField: "memorandum_id",
+                    foreignField: "_id",
+                    as: "mem"
+                }
+            },
+            {
+                "$unwind": {
+                    "path": "$mem",
+                    "preserveNullAndEmptyArrays": true
+                }
+            },
+            {
+                $lookup: {
+                    from: "programs",
+                    localField: "program_id",
+                    foreignField: "_id",
+                    as: "prg"
+                }
+            },
+            {
+                "$unwind": {
+                    "path": "$prg",
+                    "preserveNullAndEmptyArrays": true
+                }
+            },
+            {
+                $lookup: {
+                    from: "results",
+                    let: { "proje_id": "$_id" },
+                    pipeline: [
+                        {
+                            $match:
+                            {
+                                $expr: {
+                                    $eq: ['$$proje_id', "$project_id"]
+                                }
+                            }
+                        },
+                        {
+                            $lookup: {
+                                from: "files",
+                                localField: "files.file_id",
+                                foreignField: "_id",
+                                as: "resfile"
+                            }
+                        },
+                        {
+                            $unwind: {
+                                path: "$resfile",
+                                preserveNullAndEmptyArrays: true
+                            }
+                        },
+                        {
+                            $project: {
+                                "resfile.encoding": 0,
+                                "resfile.mimetype": 0,
+                                "resfile.destination": 0,
+                                "resfile.user_id": 0,
+                                "resfile.path": 0,
+                            }
+                        },
+                        {
+                            "$group":
+                            {
+                                "_id": "$_id",
+                                "resfiles": { "$push": "$resfile" },
+                                "oldFiles": { "$last": "$files" },
+                                "is_active": { "$last": "$is_active" },
+                                "result": { "$last": "$result" },
+                                "standard": { "$last": "$standard" },
+                                "cast": { "$last": "$cast" },
+                                "deadline": { "$last": "$deadline" },
+                                "project_id": { "$last": "$project_id" },
+                                "user_id": { "$last": "$user_id" },
+                                "updated_at": { "$last": "$updated_at" },
+                                "created_at": { "$last": "$created_at" },
+                            }
+                        },
+                        {
+                            $sort: {
+                                _id: 1
+                            }
+                        },
+                    ],
+                    "as": "res"
+                }
+            },
+            {
+                $unwind: {
+                    path: "$files",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $lookup: {
+                    from: "files",
+                    localField: "files.file_id",
+                    foreignField: "_id",
+                    as: "ffile"
+                }
+            },
+            {
+                $unwind: {
+                    path: "$ffile",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $project: {
+                    "ffile.encoding": 0,
+                    "ffile.mimetype": 0,
+                    "ffile.destination": 0,
+                    "ffile.user_id": 0,
+                    "ffile.path": 0,
+                }
+            },
+            {
+                $group: {
+                    _id: "$_id",
+                    oldFiles: {
+                        $push: "$files"
+                    },
+                    files: {
+                        $push: "$ffile"
+                    },
+                    results: {
+                        $last: "$res"
+                    },
+                    mem: {
+                        $last: "$mem"
+                    },
+                    dep: {
+                        $last: "$dep"
+                    },
+                    prg: {
+                        $last: "$prg"
+                    },
+                    title: {
+                        $last: "$title"
+                    },
+                    budget: {
+                        $last: "$budget"
+                    },
+                    memorandum_id: {
+                        $last: "$memorandum_id"
+                    },
+                    program_id: {
+                        $last: "$program_id"
+                    },
+                    department_id: {
+                        $last: "$department_id"
+                    },
+                    target: {
+                        $last: "$target"
+                    },
+                    same_effects_index: {
+                        $last: "$same_effects_index"
+                    },
+                    organ_moderator: {
+                        $last: "$organ_moderator"
+                    },
+                    project_moderator: {
+                        $last: "$project_moderator"
+                    },
+                    consoultant: {
+                        $last: "$consoultant"
+                    },
+                    supervisor: {
+                        $last: "$supervisor"
+                    },
+                    committee_leadership: {
+                        $last: "$committee_leadership"
+                    },
+                    coworker: {
+                        $last: "$coworker"
+                    },
+                    description: {
+                        $last: "$description"
+                    },
+                    intervention_review: {
+                        $last: "$intervention_review"
+                    },
+                    pervious_action_relation: {
+                        $last: "$pervious_action_relation"
+                    },
+                    target_corresponding: {
+                        $last: "$target_corresponding"
+                    },
+                    help_ipmrove_index: {
+                        $last: "$help_ipmrove_index"
+                    },
+                    other_benefit: {
+                        $last: "$other_benefit"
+                    },
+                    final_product: {
+                        $last: "$final_product"
+                    },
+                    standards: {
+                        $last: "$standards"
+                    },
+                    result_apply: {
+                        $last: "$result_apply"
+                    },
+                    refree: {
+                        $last: "$refree"
+                    },
+                    monitoring_comment: {
+                        $last: "$monitoring_comment"
+                    },
+                    is_active: {
+                        $last: "$is_active"
+                    },
+                    created_at: {
+                        $last: "$created_at"
+                    }
+                }
+            },
+            {
+                $sort: {
+                    created_at: -1
+                }
+            },
+            {
+                $skip: skip
+            },
+            {
+                $limit: pageSize
             }
-        },
-        {
-            $skip: skip
-        },
-        {
-            $limit: pageSize
-        }
-    ];
-
+        ];
+    }
     let res = await Project.aggregate(pipeline);
     for (let resI = 0; resI < res.length; resI++) {
 

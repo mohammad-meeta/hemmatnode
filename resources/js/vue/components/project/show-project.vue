@@ -9,7 +9,7 @@
                         table.table.is-fullwidth.is-bordered
                             tbody
                                 tr
-                                    td(rowspan="11") مشخصات پروژه
+                                    td.is-vcentered(rowspan="11") مشخصات پروژه
                                 tr
                                     td
                                         label
@@ -51,7 +51,7 @@
                                         label
                                             | همکاران اصلی پروژه: {{ projectData.coworker }}
                                 tr
-                                    td(rowspan="7") بیان ضرورت
+                                    td.is-vcentered(rowspan="7") بیان ضرورت
                                 tr
                                     td
                                         label
@@ -75,18 +75,40 @@
                                 tr
                                     td
                                         label
-                                            | سایر فواید پروژه درحیطه: {{ projectData.help_ipmrove_index }}
+                                            | سایر فواید پروژه درحیطه: {{ projectData.other_benefit }}
+                                tr
+                                    td.is-vcentered(rowspan="2") برآمدهای پروژه
 
+                                tr
+                                    td
+                                        table.table.is-fullwidth.is-bordered
+                                            thead
+                                                tr
+                                                    th عنوان
+                                                    th استاندارد
+                                                    th هزینه (میلیون ریال)
+                                                    th مهلت
+                                            tbody
+                                                tr(v-for="result in projectData.results")
+                                                    td
+                                                        | {{ result.result }}
+                                                    td
+                                                        | {{ result.standard }}
+                                                    td
+                                                        | {{ result.cast }}
+                                                    td
+                                                        | {{ toPersianDate(result.deadline) }}
+                                tr
+                                    td
+                                        | هدف کلی (محصول پروژه)
+                                    td
+                                        | {{ projectData.final_product }}
+                                tr
+                                    td
+                                        |  نحوه کاربست محصول پروژه
+                                        td
+                                            | {{ projectData.result_apply }}
 
-                .info-card
-                    .info-card-title {{ projectData.title }}
-                    .info-card-details
-                        .info-card-item
-                            .info-card-label نام پروژه:
-                            .info-card-value {{ projectData.title }}
-                        .info-card-item
-                            .info-card-label برنامه:
-                            .info-card-value {{ projectData.program_id }}
 </template>
 <script>
 "use strict";
@@ -117,6 +139,7 @@ export default {
             pervious_action_relation: null,
             target_corresponding: null,
             help_ipmrove_index: null,
+            results: {},
             final_product: null,
             standards: null,
             other_benefit: null,
@@ -163,6 +186,7 @@ export default {
             pervious_action_relation: data.pervious_action_relation,
             target_corresponding: data.target_corresponding,
             help_ipmrove_index: data.help_ipmrove_index,
+            results: data.results,
             final_product: data.final_product,
             standards: data.standards,
             other_benefit: data.other_benefit,
@@ -173,6 +197,13 @@ export default {
                 is_active: data.is_active
             };
             Vue.set(this, "projectData", temp);
+        },
+
+        /**
+         * To Persian Date
+         */
+        toPersianDate(date) {
+            return DateHelper.toPersianDateShort(date);
         },
 
         /**

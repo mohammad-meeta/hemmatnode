@@ -224,45 +224,6 @@
                                                 :result="selectedResult"
                                             )
 
-                        //- b-collapse.card(animation='slide', v-for='(result, index) of projectData.results', :key='index', :open='isOpen == index', @open='isOpen = index')
-                        //-     .card-header(slot='trigger', slot-scope='props', role='button')
-                        //-         p.card-header-title
-                        //-             | {{ result.result }}
-                        //-         a.card-header-icon
-                        //-             b-icon(:icon="props.open ? 'menu-down' : 'menu-up'")
-                        //-     .card-content
-                        //-         .content
-                        //-             .field
-                        //-                 label.label
-                        //-                     | عنوان
-                        //-                 .control
-                        //-                     input.input(placeholder='عنوان', v-model='result.result')
-
-                        //-             .field
-                        //-                 label.label
-                        //-                     | استاندارد
-                        //-                 .control
-                        //-                     input.input(placeholder='استاندارد', v-model='result.standard')
-
-                        //-             .field
-                        //-                 label.label
-                        //-                     | هزینه
-                        //-                 .control
-                        //-                     input.input(type='text' ,placeholder='هزینه', v-model='result.cast')
-
-                        //-             .field
-                        //-                 label.label
-                        //-                     | تاریخ
-                        //-                 .control
-                        //-                     date-picker(v-model='result.deadline' format="YYYY-MM-DD HH:mm:ss"
-                        //-                         display-format="jDD/jMM/jYYYY HH:mm" type="datetime" required)
-
-                        //-             .field
-                        //-                 label.label
-                        //-                     | فایل
-                        //-                 .control
-                        //-                     result-file-upload(ref="resultFileUpload", :old-files="resultOldFiles")
-
         .field
             label.label هدف کلی (محصول پروژه)
                 .control

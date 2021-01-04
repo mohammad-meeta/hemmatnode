@@ -28,9 +28,9 @@
         .control
             date-picker(
                 v-model="result.deadline",
-                format="YYYY-MM-DD HH:mm:ss",
-                display-format="jDD/jMM/jYYYY HH:mm",
-                type="datetime",
+                format="YYYY-MM-DD",
+                display-format="jDD/jMM/jYYYY",
+                type="date",
                 required
             )
 

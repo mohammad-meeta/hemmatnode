@@ -76,7 +76,7 @@
                         input.input(type='text', placeholder='به ارتقای کدام شاخص اثر کمک می کند؟', autofocus, v-model='projectData.help_ipmrove_index' required)
             .field
                 label.label
-                    |   سایرفواید پروژه درحیطه
+                    |   سایر فواید پروژه درحیطه
                 .control
                     textarea.textarea(placeholder='سایرفواید پروژه درحیطه', v-model='projectData.other_benefit')
             .field

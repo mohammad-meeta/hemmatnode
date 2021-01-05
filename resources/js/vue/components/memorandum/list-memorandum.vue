@@ -1,6 +1,6 @@
 <template lang="pug">
 .container-child
-    h1(v-if="! hasMemorandum") هیچ تفاهمنامه ای ایجاد نشده
+    h1(v-if="!hasMemorandum") هیچ تفاهمنامه ای ایجاد نشده
     table.table.is-striped.is-hoverable.is-fullwidth(v-if="hasMemorandum")
         thead
             tr
@@ -9,7 +9,7 @@
                 th تاریخ ایجاد
                 th عملیات
         tbody
-            tr(v-for='memorandum in memorandums', :key='memorandum.id')
+            tr(v-for="memorandum in memorandums", :key="memorandum.id")
                 td {{ memorandum.title }}
                 td(v-if="memorandum.is_active")
                     | فعال
@@ -17,11 +17,17 @@
                     | غیر فعال
                 td {{ toPersianDate(memorandum.created_at) }}
                 td.function-links.buttons
-                    a.button.is-primary.is-rounded.is-small(href="#", @click.prevent="commandClick(ENUMS.COMMAND.EDIT, memorandum)")
+                    a.button.is-primary.is-rounded.is-small(
+                        href="#",
+                        @click.prevent="commandClick(ENUMS.COMMAND.EDIT, memorandum)"
+                    )
                         span.icon.is-small
                             i.material-icons.icon edit
                         span ویرایش
-                    a.button.is-primary.is-rounded.is-small(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SHOW, memorandum)")
+                    a.button.is-primary.is-rounded.is-small(
+                        href="#",
+                        @click.prevent="commandClick(ENUMS.COMMAND.SHOW, memorandum)"
+                    )
                         span.icon.is-small
                             i.material-icons.icon visibility
                         span مشاهده
@@ -41,13 +47,15 @@
         aria-next-label="Next page",
         aria-previous-label="Previous page",
         aria-page-label="Page",
-        aria-current-label="Current page"
+        aria-current-label="Current page",
         @change="loadMemorandums(pagination.current)"
     )
 </template>
 
 <script>
 "use strict";
+
+import * as _ from "lodash";
 
 const ENUMS = require("JS-HELPERS/enums");
 
@@ -99,32 +107,43 @@ export default {
 
     computed: {
         hasMemorandum: (state) => (state.memorandums || []).length,
+
+        memorandumsGroups() {
+            return _.groupBy(this.projectResultMem, (x) => x.memorandum_id);
+        },
+
+        memorandumsGroupsData() {
+            return Object.keys(this.memorandumsGroups).map(
+                (key) => this.memorandumsGroups[key][0].mem
+            );
+        },
     },
 
     methods: {
         /**
          * Load memorandums
          */
-        loadMemorandums(pageId) {
+        async loadMemorandums(pageId) {
             let url = this.listUrl
                 .replace(/\$page\$/g, pageId)
                 .replace(/\$pageSize\$/g, 50);
 
-            AxiosHelper.send("get", url, "").then((res) => {
+            {
+                let res = await AxiosHelper.send("get", url, "");
                 const resData = res.data;
 
                 Vue.set(this, "memorandums", resData.data.data);
                 Vue.set(this, "memorandumsCount", resData.data.count);
                 Vue.set(this.pagination, "total", resData.data.count);
-            });
+            }
 
-            const urlPrjMemRes = this.projectListUrl;
-            AxiosHelper.send("get", urlPrjMemRes, "").then((res) => {
+            {
+                const urlPrjMemRes = this.projectListUrl;
+                let res = await AxiosHelper.send("get", urlPrjMemRes, "");
                 const resData = res.data;
 
                 Vue.set(this, "projectResultMem", resData.data.data);
-                console.log(this.projectResultMem);
-            });
+            }
         },
 
         /**
@@ -133,6 +152,7 @@ export default {
          * @param      {Object}  arg     The argument
          */
         commandClick(arg, data) {
+            data.memoData = this.memorandumsGroups[data._id];
             this.$emit("on-command", { arg, data });
         },
 

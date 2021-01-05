@@ -214,6 +214,7 @@ export default {
                     break;
 
                 case ENUMS.COMMAND.SHOW:
+                    console.log('----------', data)
                     this.$refs.memorandumShow.loadMemorandumData(data);
                     this.changeFormMode(ENUMS.FORM_MODE.SHOW);
                     break;

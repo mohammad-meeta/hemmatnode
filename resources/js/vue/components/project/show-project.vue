@@ -13,69 +13,85 @@
                                 tr
                                     td
                                         label
-                                            | نام پروژه: {{ projectData.title }}
+                                            | نام پروژه:
+                                        | {{ projectData.title }}
                                 tr
                                     td
                                         label
-                                            | نام برنامه متناظر: {{ projectData.programTitle }}
+                                            | نام برنامه متناظر:
+                                        | {{ projectData.programTitle }}
                                 tr
                                     td
                                         label
-                                            | هدف برنامه: {{ projectData.target }}
+                                            | هدف برنامه:
+                                        | {{ projectData.target }}
                                 tr
                                     td
                                         label
-                                            | شاخص های اثرمتناظر: {{ projectData.same_effects_index }}
+                                            | شاخص های اثرمتناظر:
+                                        | {{ projectData.same_effects_index }}
                                 tr
                                     td
                                         label
-                                            | مجری سازمانی: {{ projectData.organ_moderator }}
+                                            | مجری سازمانی:
+                                        | {{ projectData.organ_moderator }}
                                 tr
                                     td
                                         label
-                                            | مجری پروژه - پیمانکار: {{ projectData.project_moderator }}
+                                            | مجری پروژه - پیمانکار:
+                                        | {{ projectData.project_moderator }}
                                 tr
                                     td
                                         label
-                                            | مشاورین: {{ projectData.consoultant }}
+                                            | مشاورین:
+                                        | {{ projectData.consoultant }}
                                 tr
                                     td
                                         label
-                                            | ناظر پروژه: {{ projectData.supervisor }}
+                                            | ناظر پروژه:
+                                        | {{ projectData.supervisor }}
                                 tr
                                     td
                                         label
-                                            | کمیته راهبردی طرح: {{ projectData.committee_leadership }}
+                                            | کمیته راهبردی طرح:
+                                        | {{ projectData.committee_leadership }}
                                 tr
                                     td
                                         label
-                                            | همکاران اصلی پروژه: {{ projectData.coworker }}
+                                            | همکاران اصلی پروژه:
+                                        | {{ projectData.coworker }}
                                 tr
                                     td.is-vcentered(rowspan="7") بیان ضرورت
                                 tr
                                     td
                                         label
-                                            | تعریف مسئله -نیاز اصلی: {{ projectData.description }}
+                                            | تعریف مسئله -نیاز اصلی:
+                                        | {{ projectData.description }}
                                 tr
                                     td
                                         label
-                                            | مروری برمداخلات و خدمات بهبوددهنده وضعیت درتجربیات جهانی و ملی: {{ projectData.intervention_review }}
+                                            | مروری برمداخلات و خدمات بهبوددهنده وضعیت درتجربیات جهانی و ملی:
+                                        | {{ projectData.intervention_review }}
                                 tr
                                     td
                                         label
-                                            | ارتباط پروژه با اقدامات قبلی سازمان یا سازمان های دیگر در پرداختن به این مسئله-تکمیل کننده،نقض کننده،جدید بودن: {{ projectData.pervious_action_relation }}
+                                            | ارتباط پروژه با اقدامات قبلی سازمان یا سازمان های دیگر در پرداختن به این مسئله-تکمیل کننده،نقض کننده،جدید بودن:
+                                        | {{ projectData.pervious_action_relation }}
                                 tr
                                     td
                                         label
-                                            | تناظر با اهداف راهبردی و اسناد بالادستی سازمان؟: {{ projectData.target_corresponding }}
+                                            | تناظر با اهداف راهبردی و اسناد بالادستی سازمان؟
+                                        | {{ projectData.target_corresponding }}
                                 tr
                                     td
                                         label
-                                            | به ارتقای کدام شاخص اثر کمک می کند؟: {{ projectData.help_ipmrove_index }}
+                                            | به ارتقای کدام شاخص اثر کمک می کند؟:
+                                        | {{ projectData.help_ipmrove_index }}
                                 tr
                                     td
                                         label
-                                            | سایر فواید پروژه درحیطه: {{ projectData.other_benefit }}
+                                            | سایر فواید پروژه درحیطه:
+                                        | {{ projectData.other_benefit }}
                                 tr
                                     td.is-vcentered(rowspan="2") برآمدهای پروژه
 

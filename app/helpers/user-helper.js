@@ -1,7 +1,6 @@
 'use strict';
 
 const mongoose = require('mongoose');
-const { json } = require('body-parser');
 
 /**
  * Algorithm controller
@@ -12,7 +11,7 @@ module.exports = UserHelper;
 /**
  * find all users data result
  */
-UserHelper.loadAllUserData = function loadAllUserData(dataPaginate) {
+UserHelper.loadAllUserData = async function loadAllUserData(dataPaginate) {
     const page = parseInt(dataPaginate.page)
     const pageSize = parseInt(dataPaginate.pageSize)
     const skip = page > 0 ? ((page - 1) * pageSize) : 0
@@ -41,9 +40,44 @@ UserHelper.loadAllUserData = function loadAllUserData(dataPaginate) {
             }
         },
         {
+            $unwind: {
+                path: "$files",
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $lookup: {
+                from: "files",
+                localField: "files.file_id",
+                foreignField: "_id",
+                as: "ffile"
+            }
+        },
+        {
+            $unwind: {
+                path: "$ffile",
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $project: {
+                "ffile.encoding": 0,
+                "ffile.mimetype": 0,
+                "ffile.destination": 0,
+                "ffile.user_id": 0,
+                "ffile.path": 0,
+            }
+        },
+        {
             $group: {
                 _id: "$_id",
+                oldFiles: {
+                    $push: "$files"
+                },
                 files: {
+                    $push: "$ffile"
+                },
+                imageFile: {
                     $push: "$file"
                 },
                 is_active: {
@@ -85,32 +119,44 @@ UserHelper.loadAllUserData = function loadAllUserData(dataPaginate) {
         }
     ];
 
-    return new Promise((resolve, reject) => {
-        User.aggregate(pipeline)
-            .then(res => {
-                resolve(res);
-            })
-            .catch(err => reject(err));
-    });
+    let res = await User.aggregate(pipeline);
 
-    // const filterQuery = {};
-    // const projection = {
-    //     pwd: 0
-    // };
+    for (let resI = 0; resI < res.length; resI++) {
 
-    // return new Promise((resolve, reject) => {
-    //     User.find(filterQuery, projection, {
-    //             sort: {
-    //                 'created_at': -1
-    //             },
-    //             skip: skip,
-    //             limit: pageSize
-    //         })
-    //         .then(res => {
-    //             resolve(res);
-    //         })
-    //         .catch(err => reject(err));
-    // });
+        let oldFiles = res[resI].oldFiles;
+        let files = res[resI].files;
+        let deleted = [];
+        for (let index = 0; index < files.length; index++) {
+            const element = files[index];
+            for (let index2 = 0; index2 < oldFiles.length; index2++) {
+                const element2 = oldFiles[index2];
+                if (String(element["_id"]) == String(element2["file_id"]) && element2["deleted_at"] != null) {
+                    deleted.push(element["_id"])
+                }
+            }
+        }
+
+        for (let index3 = 0; index3 < deleted.length; index3++) {
+            const element = deleted[index3];
+            const indexF = files.findIndex(x => String(x._id) == String(element));
+            if (indexF >= -1) {
+                files.splice(indexF, 1)
+            }
+        }
+    }
+
+    for (let i = 0; i < res.length; i++) {
+        for (let k = 0; k < res[i].files.length; k++) {
+            res[i].files[k] = {
+                "_id": res[i].files[k]._id,
+                "fieldname": res[i].files[k].fieldname,
+                "name": res[i].files[k].originalname,
+                "filename": res[i].files[k].filename,
+                "size": res[i].files[k].size,
+            };
+        }
+    }
+    return res;
 };
 
 /**
@@ -132,195 +178,597 @@ UserHelper.loadAllCountUserData = function loadAllCountUserData() {
 /**
  * find user data result
  */
-UserHelper.loadUserData = function loadUserData(userName) {
+UserHelper.loadUserData = async function loadUserData(userName) {
     const User = mongoose.model('User');
-    const pipeline = [{
-        "$match": {
-            name: userName
+    const pipeline = [
+        {
+            "$match": {
+                name: userName
+            }
+        },
+        {
+            $lookup: {
+                from: "files",
+                localField: "profile.image",
+                foreignField: "_id",
+                as: "file"
+            }
+        },
+        {
+            $unwind: {
+                path: "$file",
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $project: {
+                "file.encoding": 0,
+                "file.mimetype": 0,
+                "file.user_id": 0
+            }
+        },
+        {
+            $unwind: {
+                path: "$files",
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $lookup: {
+                from: "files",
+                localField: "files.file_id",
+                foreignField: "_id",
+                as: "ffile"
+            }
+        },
+        {
+            $unwind: {
+                path: "$ffile",
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $project: {
+                "ffile.encoding": 0,
+                "ffile.mimetype": 0,
+                "ffile.destination": 0,
+                "ffile.user_id": 0,
+                "ffile.path": 0,
+            }
+        },
+        {
+            $group: {
+                _id: "$_id",
+                oldFiles: {
+                    $push: "$files"
+                },
+                files: {
+                    $push: "$ffile"
+                },
+                imageFile: {
+                    $push: "$file"
+                },
+                is_active: {
+                    $last: "$is_active"
+                },
+                name: {
+                    $last: "$name"
+                },
+                createdAt: {
+                    $last: "$created_at"
+                },
+                email: {
+                    $last: "$email"
+                },
+                profile: {
+                    $last: "$profile"
+                },
+                cellphone: {
+                    $last: "$cellphone"
+                },
+                role_group_group: {
+                    $last: "$role_group_group"
+                },
+                role_group_role: {
+                    $last: "$role_group_role"
+                }
+            }
+        },
+        {
+            $sort: {
+                createdAt: -1
+            }
         }
-    },
-    {
-        "$lookup": {
-            "from": "files",
-            "localField": "profile.image",
-            "foreignField": "_id",
-            "as": "file"
+    ];
+
+    let res = await User.aggregate(pipeline);
+
+    for (let resI = 0; resI < res.length; resI++) {
+
+        let oldFiles = res[resI].oldFiles;
+        let files = res[resI].files;
+        let deleted = [];
+        for (let index = 0; index < files.length; index++) {
+            const element = files[index];
+            for (let index2 = 0; index2 < oldFiles.length; index2++) {
+                const element2 = oldFiles[index2];
+                if (String(element["_id"]) == String(element2["file_id"]) && element2["deleted_at"] != null) {
+                    deleted.push(element["_id"])
+                }
+            }
         }
-    }, {
-        "$unwind": {
-            "path": "$file",
-            "preserveNullAndEmptyArrays": true
-        }
-    }, {
-        "$project": {
-            "file.encoding": 0,
-            "file.mimetype": 0,
-            "file.user_id": 0,
-        }
-    }, {
-        "$group": {
-            "_id": "$_id",
-            "files": {
-                "$push": "$file"
-            },
-            "is_active": {
-                "$last": "$is_active"
-            },
-            "name": {
-                "$last": "$name"
-            },
-            "email": {
-                "$last": "$email"
-            },
-            "profile": {
-                "$last": "$profile"
-            },
-            "cellphone": {
-                "$last": "$cellphone"
-            },
-            "role_group": {
-                "$last": "$role_group"
+
+        for (let index3 = 0; index3 < deleted.length; index3++) {
+            const element = deleted[index3];
+            const indexF = files.findIndex(x => String(x._id) == String(element));
+            if (indexF >= -1) {
+                files.splice(indexF, 1)
             }
         }
     }
-    ];
 
-    return new Promise((resolve, reject) => {
-        User.aggregate(pipeline)
-            .then(res => {
-                resolve(res);
-            })
-            .catch(err => reject(err));
-    });
-    // const filterQuery = {
-    //     name: userName
-    // };
-
-    // const projection = {
-    //     pwd: 0
-    // };
-
-    // return new Promise((resolve, reject) => {
-    //     User.findOne(filterQuery, projection)
-    //         .then(res => {
-    //             resolve(res);
-    //         })
-    //         .catch(err => reject(err));
-    // });
+    for (let i = 0; i < res.length; i++) {
+        for (let k = 0; k < res[i].files.length; k++) {
+            res[i].files[k] = {
+                "_id": res[i].files[k]._id,
+                "fieldname": res[i].files[k].fieldname,
+                "name": res[i].files[k].originalname,
+                "filename": res[i].files[k].filename,
+                "size": res[i].files[k].size,
+            };
+        }
+    }
+    return res;
 };
 /**
  * find user data result with _id
  */
-UserHelper.loadUserDataID = function loadUserDataID(id) {
+UserHelper.loadUserDataID = async function loadUserDataID(id) {
     const User = mongoose.model('User');
     const ObjectId = require('mongoose').Types.ObjectId;
 
-    const pipeline = [{
-        "$match": {
-            _id: new ObjectId(id)
+    const pipeline = [
+        {
+            "$match": {
+                _id: new ObjectId(id)
+            }
+        },
+        {
+            $lookup: {
+                from: "files",
+                localField: "profile.image",
+                foreignField: "_id",
+                as: "file"
+            }
+        },
+        {
+            $unwind: {
+                path: "$file",
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $project: {
+                "file.encoding": 0,
+                "file.mimetype": 0,
+                "file.user_id": 0
+            }
+        },
+        {
+            $unwind: {
+                path: "$files",
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $lookup: {
+                from: "files",
+                localField: "files.file_id",
+                foreignField: "_id",
+                as: "ffile"
+            }
+        },
+        {
+            $unwind: {
+                path: "$ffile",
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $project: {
+                "ffile.encoding": 0,
+                "ffile.mimetype": 0,
+                "ffile.destination": 0,
+                "ffile.user_id": 0,
+                "ffile.path": 0,
+            }
+        },
+        {
+            $group: {
+                _id: "$_id",
+                oldFiles: {
+                    $push: "$files"
+                },
+                files: {
+                    $push: "$ffile"
+                },
+                imageFile: {
+                    $push: "$file"
+                },
+                is_active: {
+                    $last: "$is_active"
+                },
+                name: {
+                    $last: "$name"
+                },
+                createdAt: {
+                    $last: "$created_at"
+                },
+                email: {
+                    $last: "$email"
+                },
+                profile: {
+                    $last: "$profile"
+                },
+                cellphone: {
+                    $last: "$cellphone"
+                },
+                role_group_group: {
+                    $last: "$role_group_group"
+                },
+                role_group_role: {
+                    $last: "$role_group_role"
+                }
+            }
+        },
+        {
+            $sort: {
+                createdAt: -1
+            }
         }
-    },
-    {
-        "$lookup": {
-            "from": "files",
-            "localField": "profile.image",
-            "foreignField": "_id",
-            "as": "file"
+    ];
+
+    let res = await User.aggregate(pipeline);
+
+    for (let resI = 0; resI < res.length; resI++) {
+
+        let oldFiles = res[resI].oldFiles;
+        let files = res[resI].files;
+        let deleted = [];
+        for (let index = 0; index < files.length; index++) {
+            const element = files[index];
+            for (let index2 = 0; index2 < oldFiles.length; index2++) {
+                const element2 = oldFiles[index2];
+                if (String(element["_id"]) == String(element2["file_id"]) && element2["deleted_at"] != null) {
+                    deleted.push(element["_id"])
+                }
+            }
         }
-    }, {
-        "$unwind": {
-            "path": "$file",
-            "preserveNullAndEmptyArrays": true
-        }
-    }, {
-        "$project": {
-            "file.encoding": 0,
-            "file.mimetype": 0,
-            "file.user_id": 0,
-        }
-    }, {
-        "$group": {
-            "_id": "$_id",
-            "files": {
-                "$push": "$file"
-            },
-            "is_active": {
-                "$last": "$is_active"
-            },
-            "name": {
-                "$last": "$name"
-            },
-            "email": {
-                "$last": "$email"
-            },
-            "profile": {
-                "$last": "$profile"
-            },
-            "cellphone": {
-                "$last": "$cellphone"
-            },
-            "role_group": {
-                "$last": "$role_group"
+
+        for (let index3 = 0; index3 < deleted.length; index3++) {
+            const element = deleted[index3];
+            const indexF = files.findIndex(x => String(x._id) == String(element));
+            if (indexF >= -1) {
+                files.splice(indexF, 1)
             }
         }
     }
-    ];
 
-    return new Promise((resolve, reject) => {
-        User.aggregate(pipeline)
-            .then(res => {
-                resolve(res);
-            })
-            .catch(err => reject(err));
-    });
-    // const filterQuery = {
-    //     _id: id
-    // };
-
-    // const projection = {
-    //     pwd: 0
-    // };
-
-    // return new Promise((resolve, reject) => {
-    //     User.findOne(filterQuery, projection)
-    //         .then(res => {
-    //             resolve(res);
-    //         })
-    //         .catch(err => reject(err));
-    // });
+    for (let i = 0; i < res.length; i++) {
+        for (let k = 0; k < res[i].files.length; k++) {
+            res[i].files[k] = {
+                "_id": res[i].files[k]._id,
+                "fieldname": res[i].files[k].fieldname,
+                "name": res[i].files[k].originalname,
+                "filename": res[i].files[k].filename,
+                "size": res[i].files[k].size,
+            };
+        }
+    }
+    return res;
 };
 
 /**
  * insert user data
  */
-UserHelper.insertNewUser = function insertNewUser(data) {
+UserHelper.insertNewUser = async function insertNewUser(data) {
 
-    return new Promise((resolve, reject) => {
-        const User = mongoose.model('User');
-        const user = new User(data)
+    const User = mongoose.model('User');
+    const user = new User(data)
 
-        user.save()
-            .then(res => {
-                resolve(res);
-            })
-            .catch(err => reject(err));
-    });
+    let res2 = await user.save();
+    const pipeline = [
+        {
+            "$match": {
+                _id: res2._id
+            }
+        },
+        {
+            $lookup: {
+                from: "files",
+                localField: "profile.image",
+                foreignField: "_id",
+                as: "file"
+            }
+        },
+        {
+            $unwind: {
+                path: "$file",
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $project: {
+                "file.encoding": 0,
+                "file.mimetype": 0,
+                "file.user_id": 0
+            }
+        },
+        {
+            $unwind: {
+                path: "$files",
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $lookup: {
+                from: "files",
+                localField: "files.file_id",
+                foreignField: "_id",
+                as: "ffile"
+            }
+        },
+        {
+            $unwind: {
+                path: "$ffile",
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $project: {
+                "ffile.encoding": 0,
+                "ffile.mimetype": 0,
+                "ffile.destination": 0,
+                "ffile.user_id": 0,
+                "ffile.path": 0,
+            }
+        },
+        {
+            $group: {
+                _id: "$_id",
+                oldFiles: {
+                    $push: "$files"
+                },
+                files: {
+                    $push: "$ffile"
+                },
+                imageFile: {
+                    $push: "$file"
+                },
+                is_active: {
+                    $last: "$is_active"
+                },
+                name: {
+                    $last: "$name"
+                },
+                createdAt: {
+                    $last: "$created_at"
+                },
+                email: {
+                    $last: "$email"
+                },
+                profile: {
+                    $last: "$profile"
+                },
+                cellphone: {
+                    $last: "$cellphone"
+                },
+                role_group_group: {
+                    $last: "$role_group_group"
+                },
+                role_group_role: {
+                    $last: "$role_group_role"
+                }
+            }
+        },
+        {
+            $sort: {
+                createdAt: -1
+            }
+        }
+    ];
+
+    let res = await User.aggregate(pipeline);
+
+    for (let resI = 0; resI < res.length; resI++) {
+
+        let oldFiles = res[resI].oldFiles;
+        let files = res[resI].files;
+        let deleted = [];
+        for (let index = 0; index < files.length; index++) {
+            const element = files[index];
+            for (let index2 = 0; index2 < oldFiles.length; index2++) {
+                const element2 = oldFiles[index2];
+                if (String(element["_id"]) == String(element2["file_id"]) && element2["deleted_at"] != null) {
+                    deleted.push(element["_id"])
+                }
+            }
+        }
+
+        for (let index3 = 0; index3 < deleted.length; index3++) {
+            const element = deleted[index3];
+            const indexF = files.findIndex(x => String(x._id) == String(element));
+            if (indexF >= -1) {
+                files.splice(indexF, 1)
+            }
+        }
+    }
+
+    for (let i = 0; i < res.length; i++) {
+        for (let k = 0; k < res[i].files.length; k++) {
+            res[i].files[k] = {
+                "_id": res[i].files[k]._id,
+                "fieldname": res[i].files[k].fieldname,
+                "name": res[i].files[k].originalname,
+                "filename": res[i].files[k].filename,
+                "size": res[i].files[k].size,
+            };
+        }
+    }
+    return res;
+
 };
 
 /**
  * update user data
  */
-UserHelper.updateUserData = function updateUserData(data) {
-    return new Promise((resolve, reject) => {
-        const User = mongoose.model('User');
-        User.findByIdAndUpdate(data._id, data, {
-            useFindAndModify: false, new: true
-        })
-            .then(res => {
-                resolve(res);
-            })
-            .catch(err => reject(err));
+UserHelper.updateUserData = async function updateUserData(data) {
+
+    const User = mongoose.model('User');
+    let res2 = await User.findByIdAndUpdate(data._id, data, {
+        useFindAndModify: false, new: true
     });
+
+    const pipeline = [
+        {
+            "$match": {
+                _id: res2._id
+            }
+        },
+        {
+            $lookup: {
+                from: "files",
+                localField: "profile.image",
+                foreignField: "_id",
+                as: "file"
+            }
+        },
+        {
+            $unwind: {
+                path: "$file",
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $project: {
+                "file.encoding": 0,
+                "file.mimetype": 0,
+                "file.user_id": 0
+            }
+        },
+        {
+            $unwind: {
+                path: "$files",
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $lookup: {
+                from: "files",
+                localField: "files.file_id",
+                foreignField: "_id",
+                as: "ffile"
+            }
+        },
+        {
+            $unwind: {
+                path: "$ffile",
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $project: {
+                "ffile.encoding": 0,
+                "ffile.mimetype": 0,
+                "ffile.destination": 0,
+                "ffile.user_id": 0,
+                "ffile.path": 0,
+            }
+        },
+        {
+            $group: {
+                _id: "$_id",
+                oldFiles: {
+                    $push: "$files"
+                },
+                files: {
+                    $push: "$ffile"
+                },
+                imageFile: {
+                    $push: "$file"
+                },
+                is_active: {
+                    $last: "$is_active"
+                },
+                name: {
+                    $last: "$name"
+                },
+                createdAt: {
+                    $last: "$created_at"
+                },
+                email: {
+                    $last: "$email"
+                },
+                profile: {
+                    $last: "$profile"
+                },
+                cellphone: {
+                    $last: "$cellphone"
+                },
+                role_group_group: {
+                    $last: "$role_group_group"
+                },
+                role_group_role: {
+                    $last: "$role_group_role"
+                }
+            }
+        },
+        {
+            $sort: {
+                createdAt: -1
+            }
+        }
+    ];
+
+    let res = await User.aggregate(pipeline);
+
+    for (let resI = 0; resI < res.length; resI++) {
+
+        let oldFiles = res[resI].oldFiles;
+        let files = res[resI].files;
+        let deleted = [];
+        for (let index = 0; index < files.length; index++) {
+            const element = files[index];
+            for (let index2 = 0; index2 < oldFiles.length; index2++) {
+                const element2 = oldFiles[index2];
+                if (String(element["_id"]) == String(element2["file_id"]) && element2["deleted_at"] != null) {
+                    deleted.push(element["_id"])
+                }
+            }
+        }
+
+        for (let index3 = 0; index3 < deleted.length; index3++) {
+            const element = deleted[index3];
+            const indexF = files.findIndex(x => String(x._id) == String(element));
+            if (indexF >= -1) {
+                files.splice(indexF, 1)
+            }
+        }
+    }
+
+    for (let i = 0; i < res.length; i++) {
+        for (let k = 0; k < res[i].files.length; k++) {
+            res[i].files[k] = {
+                "_id": res[i].files[k]._id,
+                "fieldname": res[i].files[k].fieldname,
+                "name": res[i].files[k].originalname,
+                "filename": res[i].files[k].filename,
+                "size": res[i].files[k].size,
+            };
+        }
+    }
+    return res;
+
 };
 
 /**

@@ -21,111 +21,111 @@ RequestHelper.loadAllRequestData = async function loadAllRequestData(req, dataPa
     const userId = req.session.auth.userId;
 
     const pipeline = [
-      {
-        $match: {
-          department_id: new ObjectId(group),
+        {
+            $match: {
+                department_id: new ObjectId(group),
 
-          $or: [
-            {
-              user_id: ObjectId(userId),
+                $or: [
+                    {
+                        user_id: ObjectId(userId),
+                    },
+                    {
+                        user_list: userId,
+                    },
+                ],
             },
-            {
-              user_list: userId,
+        },
+        {
+            $lookup: {
+                from: "departments",
+                localField: "department_id",
+                foreignField: "_id",
+                as: "dep",
             },
-          ],
         },
-      },
-      {
-        $lookup: {
-          from: "departments",
-          localField: "department_id",
-          foreignField: "_id",
-          as: "dep",
+        {
+            $unwind: "$dep",
         },
-      },
-      {
-        $unwind: "$dep",
-      },
-      {
-        $unwind: {
-          path: "$files",
-          preserveNullAndEmptyArrays: true,
+        {
+            $unwind: {
+                path: "$files",
+                preserveNullAndEmptyArrays: true,
+            },
         },
-      },
-      {
-        $lookup: {
-          from: "files",
-          localField: "files.file_id",
-          foreignField: "_id",
-          as: "file",
+        {
+            $lookup: {
+                from: "files",
+                localField: "files.file_id",
+                foreignField: "_id",
+                as: "file",
+            },
         },
-      },
-      {
-        $unwind: {
-          path: "$file",
-          preserveNullAndEmptyArrays: true,
+        {
+            $unwind: {
+                path: "$file",
+                preserveNullAndEmptyArrays: true,
+            },
         },
-      },
-      {
-        $project: {
-          "file.encoding": 0,
-          "file.fieldname": 0,
-          "file.mimetype": 0,
-          "file.destination": 0,
-          "file.user_id": 0,
-          "file.path": 0,
-          "file.filename": 0,
+        {
+            $project: {
+                "file.encoding": 0,
+                "file.fieldname": 0,
+                "file.mimetype": 0,
+                "file.destination": 0,
+                "file.user_id": 0,
+                "file.path": 0,
+                "file.filename": 0,
+            },
         },
-      },
-      {
-        $group: {
-          _id: "$_id",
-          files: {
-            $push: "$file",
-          },
-          oldFiles: {
-            $push: "$files",
-          },
-          files: {
-            $push: "$ffile",
-          },
-          is_active: {
-            $last: "$is_active",
-          },
-          title: {
-            $last: "$title",
-          },
-          description: {
-            $last: "$description",
-          },
-          request_date: {
-            $last: "$request_date",
-          },
-          deadline: {
-            $last: "$deadline",
-          },
-          request_date: {
-            $last: "$request_date",
-          },
-          created_at: {
-            $last: "$created_at",
-          },
-          dep: {
-            $last: "$dep",
-          },
+        {
+            $group: {
+                _id: "$_id",
+                files: {
+                    $push: "$file",
+                },
+                oldFiles: {
+                    $push: "$files",
+                },
+                files: {
+                    $push: "$ffile",
+                },
+                is_active: {
+                    $last: "$is_active",
+                },
+                title: {
+                    $last: "$title",
+                },
+                description: {
+                    $last: "$description",
+                },
+                request_date: {
+                    $last: "$request_date",
+                },
+                deadline: {
+                    $last: "$deadline",
+                },
+                request_date: {
+                    $last: "$request_date",
+                },
+                created_at: {
+                    $last: "$created_at",
+                },
+                dep: {
+                    $last: "$dep",
+                },
+            },
         },
-      },
-      {
-        $sort: {
-          created_at: -1,
+        {
+            $sort: {
+                created_at: -1,
+            },
         },
-      },
-      {
-        $skip: skip,
-      },
-      {
-        $limit: pageSize,
-      },
+        {
+            $skip: skip,
+        },
+        {
+            $limit: pageSize,
+        },
     ];
     let res = await Request.aggregate(pipeline);
 
@@ -211,7 +211,6 @@ RequestHelper.loadRequestData = function loadRequestData(id) {
  * insert dep cat data
  */
 RequestHelper.insertNewRequest = async function insertNewRequest(data) {
-
     const Request = mongoose.model('Request');
     const request = new Request(data)
 
@@ -337,6 +336,7 @@ RequestHelper.insertNewRequest = async function insertNewRequest(data) {
             };
         }
     }
+
     return res;
 };
 

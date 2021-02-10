@@ -64,7 +64,7 @@ export default {
     components: {
         Notification,
         DatePicker: VuePersianDatetimePicker,
-        FileUpload
+        FileUpload,
     },
 
     data: () => ({
@@ -108,7 +108,6 @@ export default {
     },
 
     methods: {
-
         /**
          * On Command
          *
@@ -174,19 +173,19 @@ export default {
             let deleteUploaded = deletedFiles.map((x) => x._id);
             Vue.set(this, "deletedOldFiles", deleteUploaded);
 
-            Vue.set(this.requestData , "files", this.files);
-            Vue.set(this.requestData , "deletedOldFiles", this.deletedOldFiles);
+            Vue.set(this.requestData, "files", this.files);
+            Vue.set(this.requestData, "deletedOldFiles", this.deletedOldFiles);
 
             try {
                 const url = this.registerUrl;
-                console.log(requestData);
+
                 let res = await AxiosHelper.send("post", url, requestData, {
                     sendAsFormData: true,
                     filesArray: "files",
                 });
 
-                const data = res.data;
-                if (data.success) {
+                const data = res.data[0];
+                if (data) {
                     this.clearFormData();
                     this.$emit("on-register", {
                         sender: this,

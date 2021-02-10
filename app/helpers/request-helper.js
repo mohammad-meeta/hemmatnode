@@ -9,7 +9,7 @@ function RequestHelper() { }
 module.exports = RequestHelper;
 
 /**
- * find all dep cat data result 
+ * find all dep cat data result
  */
 RequestHelper.loadAllRequestData = async function loadAllRequestData(req, dataPaginate, group) {
     const page = parseInt(dataPaginate.page);
@@ -20,104 +20,112 @@ RequestHelper.loadAllRequestData = async function loadAllRequestData(req, dataPa
 
     const userId = req.session.auth.userId;
 
-    const pipeline = [{
-        "$match": {
-            "department_id": new ObjectId(group),
+    const pipeline = [
+      {
+        $match: {
+          department_id: new ObjectId(group),
 
-            $or: [{
-                user_id: ObjectId(userId)
+          $or: [
+            {
+              user_id: ObjectId(userId),
             },
             {
-                user_list: userId
-            }
-            ]
-        }
-    },
-    {
-        "$lookup": {
-            "from": "departments",
-            "localField": "department_id",
-            "foreignField": "_id",
-            "as": "dep"
-        }
-    },
-    {
-        "$unwind": "$dep"
-    },
-    {
-        "$unwind": {
-            "path": "$files",
-            "preserveNullAndEmptyArrays": true
-        }
-    },
-    {
-        "$lookup": {
-            "from": "files",
-            "localField": "files.file_id",
-            "foreignField": "_id",
-            "as": "file"
-        }
-    },
-    {
-        "$unwind": {
-            "path": "$file",
-            "preserveNullAndEmptyArrays": true
-        }
-    },
-    {
-        "$project": {
-            "file.encoding": 0,
-            "file.fieldname": 0,
-            "file.mimetype": 0,
-            "file.destination": 0,
-            "file.user_id": 0,
-            "file.path": 0,
-            "file.filename": 0,
-        }
-    },
-    {
-        "$group": {
-            "_id": "$_id",
-            "files": {
-                "$push": "$file"
+              user_list: userId,
             },
-            "is_active": {
-                "$last": "$is_active"
-            },
-            "title": {
-                "$last": "$title"
-            },
-            "description": {
-                "$last": "$description"
-            },
-            "request_date": {
-                "$last": "$request_date"
-            },
-            "deadline": {
-                "$last": "$deadline"
-            },
-            "request_date": {
-                "$last": "$request_date"
-            },
-            "created_at": {
-                "$last": "$created_at"
-            },
-            "dep": {
-                "$last": "$dep"
-            }
-        }
-    },
-    {
-        "$sort": {
-            "created_at": -1
-        }
-    },
-    {
-        "$skip": skip
-    },
-    {
-        "$limit": pageSize
-    }
+          ],
+        },
+      },
+      {
+        $lookup: {
+          from: "departments",
+          localField: "department_id",
+          foreignField: "_id",
+          as: "dep",
+        },
+      },
+      {
+        $unwind: "$dep",
+      },
+      {
+        $unwind: {
+          path: "$files",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: "files",
+          localField: "files.file_id",
+          foreignField: "_id",
+          as: "file",
+        },
+      },
+      {
+        $unwind: {
+          path: "$file",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $project: {
+          "file.encoding": 0,
+          "file.fieldname": 0,
+          "file.mimetype": 0,
+          "file.destination": 0,
+          "file.user_id": 0,
+          "file.path": 0,
+          "file.filename": 0,
+        },
+      },
+      {
+        $group: {
+          _id: "$_id",
+          files: {
+            $push: "$file",
+          },
+          oldFiles: {
+            $push: "$files",
+          },
+          files: {
+            $push: "$ffile",
+          },
+          is_active: {
+            $last: "$is_active",
+          },
+          title: {
+            $last: "$title",
+          },
+          description: {
+            $last: "$description",
+          },
+          request_date: {
+            $last: "$request_date",
+          },
+          deadline: {
+            $last: "$deadline",
+          },
+          request_date: {
+            $last: "$request_date",
+          },
+          created_at: {
+            $last: "$created_at",
+          },
+          dep: {
+            $last: "$dep",
+          },
+        },
+      },
+      {
+        $sort: {
+          created_at: -1,
+        },
+      },
+      {
+        $skip: skip,
+      },
+      {
+        $limit: pageSize,
+      },
     ];
     let res = await Request.aggregate(pipeline);
 
@@ -160,7 +168,7 @@ RequestHelper.loadAllRequestData = async function loadAllRequestData(req, dataPa
 
 };
 /**
- * find all dep cat count data result 
+ * find all dep cat count data result
  */
 RequestHelper.loadAllRequestCountData = function loadAllRequestCountData(group) {
     const Request = mongoose.model('Request');
@@ -179,7 +187,7 @@ RequestHelper.loadAllRequestCountData = function loadAllRequestCountData(group) 
 };
 
 /**
- * find dep cat data result 
+ * find dep cat data result
  */
 RequestHelper.loadRequestData = function loadRequestData(id) {
     const Request = mongoose.model('Request');
@@ -200,7 +208,7 @@ RequestHelper.loadRequestData = function loadRequestData(id) {
 };
 
 /**
- * insert dep cat data  
+ * insert dep cat data
  */
 RequestHelper.insertNewRequest = async function insertNewRequest(data) {
 
@@ -333,7 +341,7 @@ RequestHelper.insertNewRequest = async function insertNewRequest(data) {
 };
 
 /**
- * update dep cat data  
+ * update dep cat data
  */
 RequestHelper.updateRequestData = async function updateRequestData(data) {
     const Request = mongoose.model('Request');
@@ -464,7 +472,7 @@ RequestHelper.updateRequestData = async function updateRequestData(data) {
 };
 
 /**
- * delete dep cat data  
+ * delete dep cat data
  */
 RequestHelper.deleteRequestData = function deleteRequestData(data) {
     return new Promise((resolve, reject) => {

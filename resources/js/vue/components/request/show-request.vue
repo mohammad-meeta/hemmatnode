@@ -1,5 +1,6 @@
 <template lang="pug">
     .container
+        pre {{ requestData }}
         .columns.is-vcentered
             .column.is-full(v-show="isLoadingMode")
                 h1 در حال بارگذاری

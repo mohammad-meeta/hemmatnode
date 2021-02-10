@@ -138,6 +138,10 @@ mix.js("resources/js/core/kernel.js", `${output}/js/core`)
         `${output}/js/pages/blog/index`
     )
     .js(
+        "resources/js/pages/projecttafahom/index/index.js",
+        `${output}/js/pages/projecttafahom/index`
+    )
+    .js(
         "resources/js/pages/transport/index/index.js",
         `${output}/js/pages/transport/index`
     )

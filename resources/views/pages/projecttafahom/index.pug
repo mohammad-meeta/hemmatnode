@@ -1,0 +1,22 @@
+extends ../../layout/app.pug
+
+block title
+    | پروژه های تفاهم شده
+
+block content
+    .container
+        project-tafahoms(
+            list-url=route('api.projecttafahom', { page: '$page$', size: '$pageSize$', group: departmentId }),
+            register-url=route('projecttafahom.store', { department: departmentId }),
+            edit-url=route('projecttafahom.update', { id :'$id$'}),
+            get-url-image=route('storage.get_image', {name: '__name'}),
+            upload-url-image=route('storage.upload_image'),
+            upload-url-token=route('storage.upload_token'),
+            department-id=departmentId
+        )
+
+block scripts
+
+    script(defer, src=mix('js/pages/projecttafahom/index/index.js'))
+
+

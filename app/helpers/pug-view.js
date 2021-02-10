@@ -74,6 +74,10 @@ PugView.viewPath = {
     'blogtype.index': 'pages/blogtype/index.pug',
     'blogtype.create': 'pages/blogtype/register.pug',
 
+    /* projecttafahom */
+    'projecttafahom.index': 'pages/projecttafahom/index.pug',
+    'projecttafahom.create': 'pages/projecttafahom/register.pug',
+
     /* blog */
     'blog.index': 'pages/blog/index.pug',
     'blog.create': 'pages/blog/register.pug',

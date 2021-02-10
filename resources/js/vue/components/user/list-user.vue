@@ -63,8 +63,8 @@ export default {
     props: {
         listUrl: {
             type: String,
-            default: ""
-        }
+            default: "",
+        },
     },
 
     data: () => ({
@@ -83,11 +83,11 @@ export default {
             nextIcon: "chevron-right",
         },
         users: [],
-        usersCount: 0
+        usersCount: 0,
     }),
 
     computed: {
-        hasUsers: state => (state.users || []).length
+        hasUsers: (state) => (state.users || []).length,
     },
 
     methods: {
@@ -97,7 +97,7 @@ export default {
         loadUsers(pageId) {
             let url = this.listUrl.replace("$page$", pageId);
             url = url.replace("$pageSize$", 50);
-            AxiosHelper.send("get", url, "").then(res => {
+            AxiosHelper.send("get", url, "").then((res) => {
                 const resData = res.data;
                 Vue.set(this, "users", resData.data.data);
                 Vue.set(this, "usersCount", resData.data.count);
@@ -132,17 +132,18 @@ export default {
                 profile: {
                     first_name: payload.data.profile.first_name,
                     last_name: payload.data.profile.last_name,
-                    nation_code: payload.data.profile.nation_code
+                    nation_code: payload.data.profile.nation_code,
                 },
                 cellphone: payload.data.cellphone,
                 is_active: payload.data.is_active,
-                createdAt: payload.data.createdAt
+                createdAt: payload.data.createdAt,
             };
             this.users.unshift(newUserData);
         },
 
         editInUserList(payload) {
-            const data = payload.data;
+            const data = payload.data[0];
+
             const editedUserData = {
                 _id: data._id,
                 name: data.name,
@@ -152,13 +153,13 @@ export default {
                 createdAt: data.createdAt,
                 first_name: data.profile.first_name,
                 last_name: data.profile.last_name,
-                nation_code: data.profile.nation_code
+                nation_code: data.profile.nation_code,
             };
-            console.log(editedUserData);
 
             let foundIndex = this.users.findIndex(
-                x => x._id == editedUserData._id
+                (x) => x._id == editedUserData._id
             );
+
             this.users[foundIndex].name = editedUserData.name;
             this.users[foundIndex].email = editedUserData.email;
             this.users[foundIndex].profile.first_name =
@@ -168,10 +169,9 @@ export default {
                 editedUserData.nation_code;
             this.users[foundIndex].cellphone = editedUserData.cellphone;
             this.users[foundIndex].is_active = editedUserData.is_active;
-        }
-    }
+        },
+    },
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

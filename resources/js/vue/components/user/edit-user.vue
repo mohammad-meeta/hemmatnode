@@ -1,6 +1,5 @@
 <template lang="pug">
     .container
-        pre {{ userData }}
         notification(:notification-type="notificationType", @on-close="closeNotification", v-if="showNotification")
             span(v-html="notificationMessage")
         .columns.is-vcentered
@@ -211,7 +210,7 @@ export default {
                 nationCode: data.profile.nation_code,
                 // image: data.profile.image,
                 cellphone: data.cellphone,
-                role_group_role: JSON.parse(data.profile.role_group_role),
+                role_group_role: data.role_group_role,
                 role_group_group: data.role_group_group,
                 files: _.cloneDeep(data.files),
                 is_active: data.is_active,
@@ -327,7 +326,7 @@ export default {
                 files: this.files,
                 deletedOldFiles: this.deletedOldFiles,
             };
-            console.log(userData);
+
             const url = this.editUrl.replace("$id$", userData._id);
             AxiosHelper.send("patch", url, userData, {
                 sendAsFormData: true,

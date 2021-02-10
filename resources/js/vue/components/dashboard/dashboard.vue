@@ -39,6 +39,12 @@
                      :class="{active:FORM_MODE.SESSION == selected}"
                      )
                         | جلسات
+                .dashboard-item
+                    a(href="#"
+                     @click.prevent="changeFormMode(FORM_MODE.ALLSESSION)"
+                     :class="{active:FORM_MODE.ALLSESSION == selected}"
+                     )
+                        | همه جلسات
             .column.is-9.dashboard-contents
                 .dashboard-content(v-show="modeContent")
                     dashboard-content
@@ -47,6 +53,11 @@
                 .dashboard-content(v-show="modeSession")
                     dashboard-session(
                         :invite-session-list-url="inviteSessionListUrl"
+                        @on-command="onCommand"
+                    )
+                .dashboard-content(v-show="modeAllSession")
+                    dashboard-all-session(
+                        :invite-session-all-list-url="inviteSessionAllListUrl"
                         @on-command="onCommand"
                     )
 
@@ -59,9 +70,14 @@ const Buefy = require("buefy").default;
 const Routes = require("JS-CORE/routes");
 const Loading = require("VUE-COMPONENTS/general/loading.vue").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
-const DashboardContent = require("VUE-COMPONENTS/dashboard/dashboard-content.vue").default;
-const DashboardUser = require("VUE-COMPONENTS/dashboard/dashboard-user.vue").default;
-const DashboardSession = require("VUE-COMPONENTS/dashboard/dashboard-session.vue").default;
+const DashboardContent = require("VUE-COMPONENTS/dashboard/dashboard-content.vue")
+    .default;
+const DashboardUser = require("VUE-COMPONENTS/dashboard/dashboard-user.vue")
+    .default;
+const DashboardSession = require("VUE-COMPONENTS/dashboard/dashboard-session.vue")
+    .default;
+const DashboardAllSession = require("VUE-COMPONENTS/dashboard/dashboard-all-session.vue")
+    .default;
 const ShowInviteSession = require("VUE-COMPONENTS/invite-session/show-invite-session.vue")
     .default;
 export default {
@@ -73,17 +89,18 @@ export default {
         DashboardContent,
         DashboardUser,
         DashboardSession,
-        ShowInviteSession
+        DashboardAllSession,
+        ShowInviteSession,
     },
 
     data: () => ({
-
         FORM_MODE: {
             CONTENT: 1,
             USER: 2,
             SESSION: 3,
             LOADING: 4,
-            SHOW: 5
+            SHOW: 5,
+            ALLSESSION: 6,
         },
 
         formModeStack: [],
@@ -92,7 +109,7 @@ export default {
         notificationType: "is-info",
 
         logoSrc: null,
-        selected: null
+        selected: null,
     }),
 
     props: {
@@ -102,6 +119,10 @@ export default {
         },
 
         inviteSessionListUrl: {
+            type: String,
+            default: "",
+        },
+        inviteSessionAllListUrl: {
             type: String,
             default: "",
         },
@@ -115,8 +136,9 @@ export default {
         modeContent: (state) => state.formMode == state.FORM_MODE.CONTENT,
         modeUser: (state) => state.formMode == state.FORM_MODE.USER,
         modeSession: (state) => state.formMode == state.FORM_MODE.SESSION,
-        modeLoading: state => state.formMode == state.FORM_MODE.LOADING,
-        modeShow: state => state.formMode == state.FORM_MODE.SHOW,
+        modeAllSession: (state) => state.formMode == state.FORM_MODE.ALLSESSION,
+        modeLoading: (state) => state.formMode == state.FORM_MODE.LOADING,
+        modeShow: (state) => state.formMode == state.FORM_MODE.SHOW,
     },
 
     /**
@@ -153,7 +175,7 @@ export default {
          * get logo src and set for logo image
          */
         getLogoSrc() {
-            const src=require('IMAGES/logo.png');
+            const src = require("IMAGES/logo.png");
             Vue.set(this, "logoSrc", src);
         },
 
@@ -184,7 +206,7 @@ export default {
             const data = payload.data || {};
             this.$refs.inviteSessionShow.loadInviteSessionData(data.row);
             this.changeFormMode(this.FORM_MODE.SHOW);
-        }
+        },
     },
 };
 </script>

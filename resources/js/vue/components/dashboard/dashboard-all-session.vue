@@ -3,7 +3,7 @@
         .dashbord-content-head
             h2
                 span
-                    | جلسات
+                    | همه جلسات
         .dashboard-content-body
             b-table(
                 :data='data'
@@ -37,10 +37,10 @@
 <script>
 "use strict";
 export default {
-    name: "DashboardSession",
+    name: "DashboardAllSession",
 
     props: {
-        inviteSessionListUrl: {
+        inviteSessionAllListUrl: {
             type: String,
             default: "",
         },
@@ -85,7 +85,7 @@ export default {
          * Load inviteSessions
          */
         loadInviteSessions(pageId) {
-            let url = this.inviteSessionListUrl
+            let url = this.inviteSessionAllListUrl
                 .replace(/\$page\$/g, pageId)
                 .replace(/\$pageSize\$/g, 5);
             AxiosHelper.send("get", url, "").then((res) => {

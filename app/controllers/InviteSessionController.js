@@ -22,6 +22,7 @@ InviteSession.index = async function index(req, res, next) {
         departmentId: req.params.department,
     });
 };
+
 /**
  * paginate route
  */
@@ -67,6 +68,7 @@ InviteSession.paginateInviteSession = async function paginateInviteSession(
             .end();
     }
 };
+
 /**
  * paginate route
  */
@@ -101,6 +103,46 @@ InviteSession.paginateInviteSessionUser = async function paginateInviteSessionUs
                 count: count,
             },
         };
+        res.status(200)
+            .send(result)
+            .end();
+    } catch (err) {
+        Logger.error(err);
+
+        res.status(500)
+            .send(err)
+            .end();
+    }
+};
+/**
+ * paginate route
+ */
+InviteSession.paginateAllInviteSessionUser = async function paginateAllInviteSessionUser(
+    req,
+    res,
+    next
+) {
+    const dataPaginate = {
+        page: req.params.page,
+        pageSize: req.params.size || 10,
+    };
+
+    try {
+        let data = await InviteSessionHelper.loadAllInviteSessionCountDataUserAll(req, dataPaginate);
+        let count = data;
+
+        data = await InviteSessionHelper.loadAllInviteSessionDataUserAll(
+            req,
+            dataPaginate);
+
+        const result = {
+            success: true,
+            data: {
+                data: data,
+                count: count,
+            },
+        };
+
         res.status(200)
             .send(result)
             .end();

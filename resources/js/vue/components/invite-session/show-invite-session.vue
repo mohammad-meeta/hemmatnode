@@ -104,8 +104,8 @@ export default {
     props: {
         usersUrl: {
             type: String,
-            default: ""
-        }
+            default: "",
+        },
     },
 
     data: () => ({
@@ -132,7 +132,7 @@ export default {
         presentUserListTable: {
             checkedRows: [],
         },
-        showLoadingFlag: false
+        showLoadingFlag: false,
     }),
 
     created() {
@@ -140,8 +140,8 @@ export default {
     },
 
     computed: {
-        isLoadingMode: state => state.showLoadingFlag == true,
-        showNotification: state => state.notificationMessage != null,
+        isLoadingMode: (state) => state.showLoadingFlag == true,
+        showNotification: (state) => state.notificationMessage != null,
         allPresentUserCheckedRows: {
             set: function(value) {
                 Vue.set(this.presentUserListTable, "checkedRows", value);
@@ -152,7 +152,7 @@ export default {
                     Vue.set(this.presentUserListTable, "checkedRows", []);
                 }
                 return this.presentUserListTable.checkedRows;
-            }
+            },
         },
     },
 
@@ -183,10 +183,12 @@ export default {
             Vue.set(this, "oldFiles", data.files);
             this.$refs.fileDownload.updateOldFiles(this.oldFiles);
             Vue.set(this, "signaturedOldFiles", data.signatured);
-            this.$refs.signaturedFileDownload.updateOldFiles(this.signaturedOldFiles);
+            this.$refs.signaturedFileDownload.updateOldFiles(
+                this.signaturedOldFiles
+            );
             const userslist = this.inviteSessionData.user_list;
             let checkedUsers = this.users.filter(
-                u => userslist.indexOf(u._id) > -1
+                (u) => userslist.indexOf(u._id) > -1
             );
             Vue.set(this, "allPresentUserCheckedRows", checkedUsers);
         },
@@ -196,11 +198,13 @@ export default {
          */
         loadUsers() {
             const url = this.usersUrl;
-            AxiosHelper.send("get", url, "").then(res => {
-                const resData = res.data;
-                const datas = resData.data.data;
-                Vue.set(this, "users", datas);
-            });
+            if (url) {
+                AxiosHelper.send("get", url, "").then((res) => {
+                    const resData = res.data;
+                    const datas = resData.data.data;
+                    Vue.set(this, "users", datas);
+                });
+            }
         },
 
         /**
@@ -223,7 +227,6 @@ export default {
         hideLoading() {
             Vue.set(this, "showLoadingFlag", false);
         },
-
-    }
+    },
 };
 </script>

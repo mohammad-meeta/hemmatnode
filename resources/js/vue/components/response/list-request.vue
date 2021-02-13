@@ -22,7 +22,7 @@
                         span.icon.is-small
                             i.material-icons.icon edit
                         span مشاهده پاسخ ها
-                    a.button.is-primary.is-rounded.is-small(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SHOW, request)")
+                    a.button.is-primary.is-rounded.is-small(href="#", @click.prevent="commandClick('SHOW-REQUEST', request)")
                         span.icon.is-small
                             i.material-icons.icon visibility
                         span مشاهده

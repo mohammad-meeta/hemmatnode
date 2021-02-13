@@ -21,6 +21,8 @@ Enums.COMMAND = {
     DOCUMENT: 9,
     REPORT: 10,
     DEPARTMENT: 11,
+    SHOWRESPONSE: 12,
+    SHOWREQUEST:13,
 };
 
 /**

@@ -1,6 +1,5 @@
 <template lang="pug">
     .container
-        pre {{ requestData }}
         .columns.is-vcentered
             .column.is-full(v-show="isLoadingMode")
                 h1 در حال بارگذاری
@@ -8,10 +7,7 @@
 
                 .info-card
                     .info-card-title {{ requestData.title }}
-                    .info-card-details
-                        .info-card-item
-                            .info-card-label نام همکاری متقابل:
-                            .info-card-value {{ requestData.title }}
+
                     .info-card-details
                         .info-card-item
                             .info-card-label شرح:
@@ -19,22 +15,33 @@
                     .info-card-details
                         .info-card-item
                             .info-card-label تاریخ ثبت:
-                            .info-card-value {{ requestData.requestDate }}
+                            .info-card-value {{ toPersianDate(requestData.requestDate) }}
                     .info-card-details
                         .info-card-item
                             .info-card-label مهلت اجرا:
-                            .info-card-value {{ requestData.deadline }}
+                            .info-card-value {{ toPersianDate(requestData.deadline) }}
+                    .info-card-item(v-show="oldFiles.length")
+                        .info-card-label
+                            | فایل های ضمیمه
+                            .info-card-value
+                                file-download(ref="fileDownload", :old-files="oldFiles")
 </template>
 <script>
 "use strict";
 
 const ENUMS = require("JS-HELPERS/enums");
+const FileDownload = require("VUE-COMPONENTS/general/file-download.vue").default
 
 export default {
     name: "ShowRequest",
 
+    components: {
+        FileDownload,
+    },
+
     data: () => ({
         ENUMS,
+        oldFiles: [],
         requestData: {
             _id: null,
             title: null,
@@ -66,10 +73,12 @@ export default {
                 departmentId: data.department_id,
                 requestDate: data.request_date,
                 deadline: data.deadline,
-                files: {},
+                files: data.files,
                 is_active: data.is_active,
             };
             Vue.set(this, "requestData", temp);
+            Vue.set(this, "oldFiles", data.files);
+            this.$refs.fileDownload.updateOldFiles(data.files);
         },
 
         /**
@@ -84,6 +93,13 @@ export default {
          */
         hideLoading() {
             Vue.set(this, "showLoadingFlag", false);
+        },
+
+        /**
+         * To Persian Date
+         */
+        toPersianDate(date) {
+            return DateHelper.toPersianDateShort(date);
         },
     },
 };

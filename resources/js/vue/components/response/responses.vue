@@ -39,15 +39,15 @@
                   v-model="requestData"
                 )
 
-            .column(v-show="!modeLoading && modeShow")
+            .column(v-show="!modeLoading && modeShow && !showResponseMode && !showRequestMode")
                 show-response(ref="responseShow", @on-command="onCommand")
 
-            .column(v-show="!modeLoading && modeShow")
+            .column(v-show="!modeLoading && modeShow && !showResponseMode && showRequestMode")
                 show-request(ref="requestShow", @on-command="onCommand")
 
-            .column(v-show="!modeLoading && modeShow")
+            .column(v-show="!modeLoading && modeShow && showResponseMode && !showRequestMode")
                 list-response(
-                    ref="listResponse"
+                    ref="responseList"
                     :response-list-url="responseListUrl"
                     @on-command="onCommand"
                     )
@@ -97,6 +97,8 @@ export default {
         notificationMessage: null,
         notificationType: "is-info",
         requestData: {},
+        showResponseMode: false,
+        showRequestMode: false,
     }),
 
     props: {
@@ -160,8 +162,7 @@ export default {
          */
         onResponseRegister(payload) {
             //***update vue list****
-            console.log("sssssssssss");
-            this.$refs.responseList.addToResponseList(payload.data.data[0]);
+            this.$refs.responseList.addToResponseList(payload.data.data.data);
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
             this.setNotification(
                 ".پاسخ به همکاری متقابل با موفقیت ذخیره شد",
@@ -186,6 +187,8 @@ export default {
          * On commands clicked
          */
         onCommand(payload) {
+            this.hideResponseShowMode();
+            this.hideRequestShowMode();
             let arg = payload.arg || null;
             const data = payload.data || {};
             if (null == arg) {
@@ -213,9 +216,17 @@ export default {
                     this.changeFormMode(null, { pop: true });
                     break;
 
+                case "SHOW-REQUEST":
+                    this.changeFormMode(ENUMS.FORM_MODE.SHOW);
+                    this.requestShowMode();
+                    console.log(data);
+                    this.$refs.requestShow.loadRequestData(data);
+                    break;
+
                 case "SHOW-RESPONSE":
                     this.changeFormMode(ENUMS.FORM_MODE.SHOW);
-                    this.$refs.listResponse.loadResponseData(data);
+                    this.responseShowMode();
+                    this.$refs.responseList.loadResponseData(data);
                     break;
 
                 // case ENUMS.COMMAND.SHOW:
@@ -267,6 +278,22 @@ export default {
             } else {
                 Vue.set(this.formModeStack, this.formModeStack.length, mode);
             }
+        },
+
+        responseShowMode() {
+            Vue.set(this, "showResponseMode", true);
+        },
+
+        hideResponseShowMode() {
+            Vue.set(this, "showResponseMode", false);
+        },
+
+        requestShowMode() {
+            Vue.set(this, "showRequestMode", true);
+        },
+
+        hideRequestShowMode() {
+            Vue.set(this, "showRequestMode", false);
         },
 
         /**

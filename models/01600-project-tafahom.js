@@ -53,6 +53,10 @@ Model.model = function model() {
             type: Boolean,
             default: true,
         },
+        'department_id': {
+            type: ObjectId,
+            required: true
+        },
         'user_id': {
             type: ObjectId,
             required: true

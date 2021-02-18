@@ -17,12 +17,14 @@ ProjectTafahom.index = async function index(req, res, next) {
     res.render(PugView.getView(pageRoute), {
         req,
         pageRoute,
+        departmentId: req.params.department,
     });
 };
 /**
  * paginate route
  */
 ProjectTafahom.paginateProjectTafahom = async function paginateProjectTafahom(req, res, next) {
+    const group = req.params.group;
 
     const dataPaginate = {
         page: req.params.page,
@@ -32,10 +34,10 @@ ProjectTafahom.paginateProjectTafahom = async function paginateProjectTafahom(re
     try {
         let result = {};
 
-        let data = await ProjectTafahomHelper.loadAllProjectTafahomCountData();
+        let data = await ProjectTafahomHelper.loadAllProjectTafahomCountData(group);
         let count = data.data;
 
-        data = await ProjectTafahomHelper.loadAllProjectTafahomData(req, dataPaginate);
+        data = await ProjectTafahomHelper.loadAllProjectTafahomData(req, dataPaginate, group);
         result = {
             success: true,
             data: {
@@ -141,6 +143,7 @@ ProjectTafahom.store = async function store(req, res, next) {
         "title": req.body.title,
         "date": req.body.date,
         "user_id": req.session.auth.userId,
+        "department_id": req.body.departmentId,
         "is_active": req.body.is_active,
         "files": fileList,
     };
@@ -207,6 +210,7 @@ ProjectTafahom.update = async function update(req, res, next) {
         "_id": req.body._id,
         "title": req.body.title,
         "date": req.body.date,
+        "department_id": req.body.department_id,
         "user_id": req.session.auth.userId,
         "is_active": req.body.is_active,
         "files": fileList,

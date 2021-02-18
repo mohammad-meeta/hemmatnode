@@ -11,18 +11,24 @@ const {
     clearAuth
 } = use('core/helpers/auth-helper');
 
-Router.get('/projecttafahom', [
+Router.get('/projecttafahom/:department', [
     checkSession,
     Rule.canAsync('user.permision', 'projecttafahom.index'),
     'ProjectTafahom@index'
 ])
     .as('projecttafahom.index');
 
-Router.get("/api/projecttafahoms/:page/:size?", [
+Router.get("/api/projecttafahoms/:group/:page/:size?", [
     checkSession,
     Rule.canAsync("user.permision", "api.projecttafahom"),
     "ProjectTafahom@paginateProjectTafahom"
 ]).as("api.projecttafahom");
+
+// Router.get("/api/projecttafahoms/:group/:year/:page/:size?", [
+//     checkSession,
+//     Rule.canAsync("user.permision", "api.projecttafahom.year"),
+//     "ProjectTafahom@paginateProjectTafahomYear"
+// ]).as("api.projecttafahom.year");
 
 Router.get('/projecttafahom/create', [
     checkSession,
@@ -54,6 +60,13 @@ Router.get('/projecttafahom/:projecttafahom', [
     'ProjectTafahom@show'
 ])
     .as('projecttafahom.show');
+
+// Router.get('/projecttafahom/group/date/:group', [
+//     // checkSession,
+//     Rule.canAsync('user.permision', 'projecttafahom.group.date'),
+//     'ProjectTafahom@groupDate'
+// ])
+//     .as('projecttafahom.group.date');
 
 Router.delete('/projecttafahom/:projecttafahom', [
     checkSession,

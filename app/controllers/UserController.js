@@ -130,7 +130,6 @@ UserController.update = async function update(req, res, next) {
         }
     }
 
-
     for (let i = 0; i < files.length; ++i) {
         try {
             const el = files[i];
@@ -142,7 +141,6 @@ UserController.update = async function update(req, res, next) {
             Logger.error(err);
         }
     }
-
 
     let data = {};
     if (req.body.password == undefined) {

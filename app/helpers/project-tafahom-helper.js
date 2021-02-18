@@ -12,7 +12,7 @@ module.exports = ProjectTafahomHelper;
 /**
  * find all dep cat data result 
  */
-ProjectTafahomHelper.loadAllProjectTafahomData = async function loadAllProjectTafahomData(req, dataPaginate) {
+ProjectTafahomHelper.loadAllProjectTafahomData = async function loadAllProjectTafahomData(req, dataPaginate, group) {
     const page = parseInt(dataPaginate.page);
     const pageSize = parseInt(dataPaginate.pageSize);
     const skip = page > 0 ? (page - 1) * pageSize : 0;
@@ -21,6 +21,22 @@ ProjectTafahomHelper.loadAllProjectTafahomData = async function loadAllProjectTa
 
     const userId = req.session.auth.userId;
     const pipeline = [
+        {
+            $match: {
+                department_id: new ObjectId(group),
+            }
+        },
+        {
+            $lookup: {
+                from: "departments",
+                localField: "department_id",
+                foreignField: "_id",
+                as: "dep"
+            }
+        },
+        {
+            $unwind: "$dep"
+        },
         {
             $unwind: {
                 path: "$files",
@@ -67,6 +83,9 @@ ProjectTafahomHelper.loadAllProjectTafahomData = async function loadAllProjectTa
                 },
                 is_active: {
                     $last: "$is_active"
+                },
+                dep: {
+                    $last: "$dep"
                 },
                 created_at: {
                     $last: "$created_at"
@@ -127,10 +146,11 @@ ProjectTafahomHelper.loadAllProjectTafahomData = async function loadAllProjectTa
 /**
  * find all dep cat count data result 
  */
-ProjectTafahomHelper.loadAllProjectTafahomCountData = function loadAllProjectTafahomCountData() {
+ProjectTafahomHelper.loadAllProjectTafahomCountData = function loadAllProjectTafahomCountData(group) {
     const ProjectTafahom = mongoose.model('ProjectTafahom');
 
     const filterQuery = {
+        department_id: group
     };
 
     return new Promise((resolve, reject) => {
@@ -177,6 +197,17 @@ ProjectTafahomHelper.insertNewProjectTafahom = async function insertNewProjectTa
             $match: {
                 _id: res2._id,
             }
+        },
+        {
+            $lookup: {
+                from: "departments",
+                localField: "department_id",
+                foreignField: "_id",
+                as: "dep"
+            }
+        },
+        {
+            $unwind: "$dep"
         },
         {
             $unwind: {
@@ -228,6 +259,9 @@ ProjectTafahomHelper.insertNewProjectTafahom = async function insertNewProjectTa
                 created_at: {
                     $last: "$created_at"
                 },
+                dep: {
+                    $last: "$dep"
+                }
             }
         },
         {
@@ -290,6 +324,17 @@ ProjectTafahomHelper.updateProjectTafahomData = async function updateProjectTafa
             }
         },
         {
+            $lookup: {
+                from: "departments",
+                localField: "department_id",
+                foreignField: "_id",
+                as: "dep"
+            }
+        },
+        {
+            $unwind: "$dep"
+        },
+        {
             $unwind: {
                 path: "$files",
                 preserveNullAndEmptyArrays: true
@@ -339,6 +384,9 @@ ProjectTafahomHelper.updateProjectTafahomData = async function updateProjectTafa
                 created_at: {
                     $last: "$created_at"
                 },
+                dep: {
+                    $last: "$dep"
+                }
             }
         },
         {

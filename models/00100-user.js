@@ -63,7 +63,7 @@ Model.model = function model() {
             default: false
         },
         'role_group_group': {
-            type: ObjectId,
+            type: [ObjectId],
             required: true
         },
         'role_group_role': {

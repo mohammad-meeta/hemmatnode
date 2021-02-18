@@ -49,45 +49,40 @@ RequestHelper.loadAllRequestData = async function loadAllRequestData(req, dataPa
         {
             $unwind: {
                 path: "$files",
-                preserveNullAndEmptyArrays: true,
-            },
+                preserveNullAndEmptyArrays: true
+            }
         },
         {
             $lookup: {
                 from: "files",
                 localField: "files.file_id",
                 foreignField: "_id",
-                as: "file",
-            },
+                as: "ffile"
+            }
         },
         {
             $unwind: {
-                path: "$file",
-                preserveNullAndEmptyArrays: true,
-            },
+                path: "$ffile",
+                preserveNullAndEmptyArrays: true
+            }
         },
         {
             $project: {
-                "file.encoding": 0,
-                "file.fieldname": 0,
-                "file.mimetype": 0,
-                "file.destination": 0,
-                "file.user_id": 0,
-                "file.path": 0,
-                "file.filename": 0,
-            },
+                "ffile.encoding": 0,
+                "ffile.mimetype": 0,
+                "ffile.destination": 0,
+                "ffile.user_id": 0,
+                "ffile.path": 0,
+            }
         },
         {
             $group: {
                 _id: "$_id",
-                files: {
-                    $push: "$file",
-                },
                 oldFiles: {
                     $push: "$files",
                 },
                 files: {
-                    $push: "$ffile",
+                    $push: "$ffile"
                 },
                 is_active: {
                     $last: "$is_active",
@@ -164,6 +159,7 @@ RequestHelper.loadAllRequestData = async function loadAllRequestData(req, dataPa
             };
         }
     }
+
     return res;
 
 };
@@ -226,11 +222,11 @@ RequestHelper.insertNewRequest = async function insertNewRequest(data) {
                 from: "departments",
                 localField: "department_id",
                 foreignField: "_id",
-                as: "dep"
-            }
+                as: "dep",
+            },
         },
         {
-            $unwind: "$dep"
+            $unwind: "$dep",
         },
         {
             $unwind: {
@@ -263,41 +259,44 @@ RequestHelper.insertNewRequest = async function insertNewRequest(data) {
         },
         {
             $group: {
-                "_id": "$_id",
-                "files": {
-                    "$push": "$file"
+                _id: "$_id",
+                oldFiles: {
+                    $push: "$files",
                 },
-                "is_active": {
-                    "$last": "$is_active"
+                files: {
+                    $push: "$ffile"
                 },
-                "title": {
-                    "$last": "$title"
+                is_active: {
+                    $last: "$is_active",
                 },
-                "description": {
-                    "$last": "$description"
+                title: {
+                    $last: "$title",
                 },
-                "request_date": {
-                    "$last": "$request_date"
+                description: {
+                    $last: "$description",
                 },
-                "deadline": {
-                    "$last": "$deadline"
+                request_date: {
+                    $last: "$request_date",
                 },
-                "request_date": {
-                    "$last": "$request_date"
+                deadline: {
+                    $last: "$deadline",
                 },
-                "created_at": {
-                    "$last": "$created_at"
+                request_date: {
+                    $last: "$request_date",
                 },
-                "dep": {
-                    "$last": "$dep"
-                }
-            }
+                created_at: {
+                    $last: "$created_at",
+                },
+                dep: {
+                    $last: "$dep",
+                },
+            },
         },
         {
             $sort: {
-                created_at: -1
-            }
-        }
+                created_at: -1,
+            },
+        },
     ];
 
     let res = await Request.aggregate(pipeline);
@@ -358,11 +357,11 @@ RequestHelper.updateRequestData = async function updateRequestData(data) {
                 from: "departments",
                 localField: "department_id",
                 foreignField: "_id",
-                as: "dep"
-            }
+                as: "dep",
+            },
         },
         {
-            $unwind: "$dep"
+            $unwind: "$dep",
         },
         {
             $unwind: {
@@ -395,41 +394,44 @@ RequestHelper.updateRequestData = async function updateRequestData(data) {
         },
         {
             $group: {
-                "_id": "$_id",
-                "files": {
-                    "$push": "$file"
+                _id: "$_id",
+                oldFiles: {
+                    $push: "$files",
                 },
-                "is_active": {
-                    "$last": "$is_active"
+                files: {
+                    $push: "$ffile"
                 },
-                "title": {
-                    "$last": "$title"
+                is_active: {
+                    $last: "$is_active",
                 },
-                "description": {
-                    "$last": "$description"
+                title: {
+                    $last: "$title",
                 },
-                "request_date": {
-                    "$last": "$request_date"
+                description: {
+                    $last: "$description",
                 },
-                "deadline": {
-                    "$last": "$deadline"
+                request_date: {
+                    $last: "$request_date",
                 },
-                "request_date": {
-                    "$last": "$request_date"
+                deadline: {
+                    $last: "$deadline",
                 },
-                "created_at": {
-                    "$last": "$created_at"
+                request_date: {
+                    $last: "$request_date",
                 },
-                "dep": {
-                    "$last": "$dep"
-                }
-            }
+                created_at: {
+                    $last: "$created_at",
+                },
+                dep: {
+                    $last: "$dep",
+                },
+            },
         },
         {
             $sort: {
-                created_at: -1
-            }
-        }
+                created_at: -1,
+            },
+        },
     ];
 
     let res = await Request.aggregate(pipeline);

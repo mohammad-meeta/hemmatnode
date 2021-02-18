@@ -92,13 +92,22 @@
                         :active.sync="isCardModalActive"
                     )
                         .info-card
-                            .columns
-                                .column.is-2
-                                    img(:src="imageAddress")
                             .info-card-title {{ departmentData.title }}
                             .info-card-details
                                 .info-card-item
                                     p.info-card-value {{ departmentData.description }}
+                            .columns
+                                .column.is-2
+                                    img(:src="imageAddress")
+                            .info-card-details
+                                .info-card-item
+                                    p.info-card-value {{ userData.profile.first_name }} {{ userData.profile.last_name }}
+                            .info-card-details
+                                .info-card-item
+                                    .info-card-label
+                                        | شماره همراه
+                                        .info-card-value
+                                            | {{ userData.cellphone }}
                 .big-button
                     a(
                         href="#"

@@ -52,13 +52,13 @@
                 legend فایل های ضمیمه
                 .field
                     file-upload(ref="fileUpload", :old-files="oldFiles")
-            .field
-                label.label
-                .control
-                    .select.is-primary
-                        select(v-model="userData.role_group_group")
-                            option(v-for='(department, departmentIndex) in departments',
-                                :value="department._id") {{ department.title }}
+            b-field
+                b-select(
+                    multiple,
+                    v-model="userData.role_group_group"
+                    )
+                    option(v-for='(department, departmentIndex) in departments',
+                        :value="department._id") {{ department.title }}
             .field
                 label.checkbox(v-for='(role, roleIndex) in roles')
                     input(type='checkbox',:name="role._id" v-model="userData.role_group_role", :value="role._id")
@@ -111,7 +111,7 @@ export default {
             deletedOldFiles: [],
             is_active: false,
             role_group_role: [],
-            role_group_group: null,
+            role_group_group: [],
         },
 
         notificationMessage: null,
@@ -267,7 +267,7 @@ export default {
                 image: this.userData.image,
                 cellphone: this.userData.cellphone,
                 role_group_role: JSON.stringify(this.userData.role_group_role),
-                role_group_group: this.userData.role_group_group,
+                role_group_group: JSON.stringify(this.userData.role_group_group),
                 is_active: this.userData.is_active,
                 files: this.files,
                 deletedOldFiles: this.deletedOldFiles,

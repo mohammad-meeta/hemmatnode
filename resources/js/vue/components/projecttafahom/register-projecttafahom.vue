@@ -76,6 +76,7 @@ export default {
         deletedOldFiles: [],
         oldFiles: [],
         projecttafahomData: {
+            department_id: null,
             title: null,
             date: null,
             files: [],
@@ -88,6 +89,10 @@ export default {
     }),
 
     props: {
+        departmentId: {
+            type: String,
+            default: null,
+        },
         uploadUrlImage: {
             type: String,
         },
@@ -109,9 +114,13 @@ export default {
     },
     created() {
         this.clearFormData();
+        console.log(this.departmentId);
+        this.projecttafahomData.departmentId = this.departmentId;
     },
 
-    mounted() {},
+    mounted() {
+        Vue.set(this.projecttafahomData, "department_id", this.departmentId);
+    },
 
     computed: {
         isLoadingMode: (state) => state.showLoadingFlag == true,
@@ -221,6 +230,7 @@ export default {
 
             try {
                 const url = this.registerUrl;
+                console.log(projecttafahomData);
                 let res = await AxiosHelper.send(
                     "post",
                     url,

@@ -162,7 +162,9 @@ export default {
     },
     data: () => ({
         imageAddress: null,
-        userData: {},
+        userData: {
+            profile: {}
+        },
         hasProject: false,
         yearsProject: [],
         ENUMS,

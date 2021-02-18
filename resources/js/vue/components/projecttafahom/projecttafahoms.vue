@@ -108,9 +108,11 @@ export default {
         uploadUrlImage: {
             type: String,
         },
+
         uploadUrlToken: {
             type: String,
         },
+
         departmentId: {
             type: String,
             default: null,
@@ -155,6 +157,7 @@ export default {
     mounted() {
         this.init();
         this.changeFormMode(ENUMS.FORM_MODE.LIST);
+        console.log(this.departmentId);
     },
 
     methods: {

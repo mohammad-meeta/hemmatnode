@@ -79,6 +79,7 @@ export default {
         deletedOldFiles: [],
         oldFiles: [],
         projecttafahomData: {
+            department_id: null,
             title: null,
             date: null,
             files: {},
@@ -102,6 +103,10 @@ export default {
         editUrl: {
             type: String,
             default: "",
+        },
+        departmentId: {
+            type: String,
+            default: null,
         },
     },
 
@@ -133,6 +138,7 @@ export default {
                 title: data.title,
                 date: data.date,
                 files: data.files,
+                department_id: this.projecttafahomData.department_id,
                 isActive: data.is_active,
             };
             Vue.set(this, "oldFiles", data.files);
@@ -207,6 +213,7 @@ export default {
                 _id: this.projecttafahomData._id,
                 title: this.projecttafahomData.title,
                 date: this.projecttafahomData.date,
+                department_id: this.projecttafahomData.department_id,
                 is_active: this.projecttafahomData.isActive,
                 files: this.files,
                 oldFiles: this.oldFiles,

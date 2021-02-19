@@ -8,11 +8,14 @@
                 .info-card-title {{ projecttafahomData.title }}
                 .info-card-item
                     .info-card-label
+                        | تاریخ
+                        .info-card-value
+                            | {{ toPersianDate(projecttafahomData.date) }}
+                .info-card-item
+                    .info-card-label
                         | فایل های ضمیمه
                         .info-card-value
                             file-download(ref="fileDownload", :old-files="oldFiles")
-                .info-card-item
-                    time(datetime="projecttafahomData.date") {{ toPersianDate(projecttafahomData.date) }}
 </template>
 
 <script>
@@ -89,7 +92,7 @@ export default {
          * To Persian Date
          */
         toPersianDate(date) {
-            return DateHelper.toPersianDateLong(date);
+            return DateHelper.toPersianDateShort(date);
         },
     },
 };

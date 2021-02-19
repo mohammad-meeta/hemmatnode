@@ -48,6 +48,7 @@
                 @on-command="onCommand",
                 @on-register="onProjectTafahomRegister",
                 :register-url="registerUrl",
+                :department-id="departmentId",
                 :upload-url-image="uploadUrlImage",
                 :upload-url-token="uploadUrlToken",
             )

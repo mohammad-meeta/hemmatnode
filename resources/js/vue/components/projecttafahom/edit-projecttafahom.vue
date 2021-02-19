@@ -26,8 +26,8 @@
                 date-picker(
                     v-model="projecttafahomData.date",
                     type="datetime"
-                    display-format="jDD/jMM/jYYYY HH:mm"
-                    format="YYYY-MM-DD HH:mm:ss"
+                    display-format="jDD/jMM/jYYYY"
+                    format="YYYY-MM-DD"
                     required
                 )
 

@@ -11,7 +11,7 @@ nav.navbar.navbar-expand-md
                 if (null == req.session.auth)
                     a(href="/auth/login") ورود
                 else
-                    a(href='/') داشبورد
+                    a(href='/dashboard') پیشخوان
                     a(href='/auth/logout') خروج
             .menu-links
                 a(href='/internal-section') همکاری درون بخشی
@@ -20,6 +20,7 @@ nav.navbar.navbar-expand-md
                 a(href='/monitoring-page') دیدبانی سلامت استان
                 a(href='/event-list') رویدادها
                 a(href='/document-list') مرکز اسناد راهبردی
+                a(href='http://www.qums.ac.ir/portal/home/?134929/%D8%B3%D8%A7%D9%85%D8%A7%D9%86%D9%87-%D8%A7%D9%86%D8%AF%DB%8C%D8%B4%DA%AF%D8%A7%D9%87-%D8%B3%D9%84%D8%A7%D9%85%D8%AA') اندیشگاه سلامت
         .nav-user-container.is-flex.dropdown.drp#dropdown-toggler
             .nav-user-container-icon.columns.is-centered
                 if (null == req.session.auth)

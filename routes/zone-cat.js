@@ -80,7 +80,7 @@ Router.get('/api/zonecat/user/:group', [
 
 Router.get('/api/zonecat/:zonecat', [
     checkSession,
-    // Rule.canAsync('user.permision', 'api.zonecat.show'),
+    Rule.canAsync('user.permision', 'api.zonecat.show'),
     'Zonecat@loadData'
 ])
     .as('api.zonecat.show');

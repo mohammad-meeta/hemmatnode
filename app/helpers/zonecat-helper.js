@@ -335,26 +335,29 @@ ZonecatHelper.loadAllCountZonecatDataRN = function loadAllCountZonecatDataRN() {
 //     return res;
 // };
 
-// /**
-//  * find all references data result 
-//  */
-// ZonecatHelper.loadReferencesData = function loadReferencesData(references) {
+/**
+ * find all references data result 
+ */
+ZonecatHelper.loadReferencesData = function loadReferencesData(references) {
 
-//     const Zonecat = mongoose.model('Zonecat');
+    const Zonecat = mongoose.model('Zonecat');
+    const ObjectId = require('mongoose').Types.ObjectId;
 
-//     const filterQuery = {
-//         references: references
-//     };
-//     const projection = {};
+    const filterQuery = {
+        references: ObjectId(references)
+    };
+    console.log(filterQuery)
 
-//     return new Promise((resolve, reject) => {
-//         Zonecat.find(filterQuery, projection, {})
-//             .then(res => {
-//                 resolve(res);
-//             })
-//             .catch(err => reject(err));
-//     });
-// };
+    const projection = {};
+
+    return new Promise((resolve, reject) => {
+        Zonecat.find(filterQuery, projection, {})
+            .then(res => {
+                resolve(res);
+            })
+            .catch(err => reject(err));
+    });
+};
 
 /**
  * find all dep cat count data result 

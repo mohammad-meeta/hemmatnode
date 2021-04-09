@@ -1,0 +1,20 @@
+extends ../../layout/app.pug
+
+block title
+    | حوزه فعالیت
+
+block content
+    .container
+        zone-cats(
+            list-url=route('api.zonecat', { page: '$page$', size: '$pageSize$' }),
+            department-categories-url=route('api.departmentcategory', { page: 1, size: 1000 }),
+            register-url=route('zonecat.store'),
+            edit-url=route('zonecat.update', { id :'$id$'}),
+            load-url=route("api.zonecat.show", { department: '$department$'}),
+            departments-url=route('departmentcategories.department', { department_category: '$department_category$'})
+        )
+
+block scripts
+    script(defer, src=mix('js/pages/zone-cat/index/index.js'))
+
+

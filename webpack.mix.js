@@ -126,6 +126,10 @@ mix.js("resources/js/core/kernel.js", `${output}/js/core`)
         `${output}/js/pages/health/index`
     )
     .js(
+        "resources/js/pages/zone-cat/index/index.js",
+        `${output}/js/pages/zone-cat/index`
+    )
+    .js(
         "resources/js/pages/report/index/index.js",
         `${output}/js/pages/report/index`
     )

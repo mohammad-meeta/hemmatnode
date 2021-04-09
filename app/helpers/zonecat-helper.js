@@ -19,17 +19,6 @@ ZonecatHelper.loadAllZonecatData = async function loadAllZonecatData(dataPaginat
 
     let pipeline = [
         {
-            $lookup: {
-                from: "department-categories",
-                localField: "references",
-                foreignField: "_id",
-                as: "depcat"
-            }
-        },
-        {
-            $unwind: "$depcat"
-        },
-        {
             $group: {
                 _id: "$_id",
                 title: {
@@ -41,11 +30,11 @@ ZonecatHelper.loadAllZonecatData = async function loadAllZonecatData(dataPaginat
                 weight: {
                     $last: "$weight"
                 },
-                zonecat_category_id: {
-                    $last: "$zonecat_category_id"
-                },
                 references: {
                     $last: "$references"
+                },
+                department_category_id: {
+                    $last: "$department_category_id"
                 },
                 is_active: {
                     $last: "$is_active"
@@ -429,17 +418,6 @@ ZonecatHelper.insertNewZonecat = async function insertNewZonecat(data) {
             }
         },
         {
-            $lookup: {
-                from: "department-categories",
-                localField: "references",
-                foreignField: "_id",
-                as: "depcat"
-            }
-        },
-        {
-            $unwind: "$depcat"
-        },
-        {
             $group: {
                 _id: "$_id",
                 title: {
@@ -453,6 +431,9 @@ ZonecatHelper.insertNewZonecat = async function insertNewZonecat(data) {
                 },
                 references: {
                     $last: "$references"
+                },
+                department_category_id: {
+                    $last: "$department_category_id"
                 },
                 is_active: {
                     $last: "$is_active"
@@ -484,17 +465,6 @@ ZonecatHelper.updateZonecatData = async function updateZonecatData(data) {
             }
         },
         {
-            $lookup: {
-                from: "department-categories",
-                localField: "references",
-                foreignField: "_id",
-                as: "depcat"
-            }
-        },
-        {
-            $unwind: "$depcat"
-        },
-        {
             $group: {
                 _id: "$_id",
                 title: {
@@ -508,6 +478,9 @@ ZonecatHelper.updateZonecatData = async function updateZonecatData(data) {
                 },
                 references: {
                     $last: "$references"
+                },
+                department_category_id: {
+                    $last: "$department_category_id"
                 },
                 is_active: {
                     $last: "$is_active"

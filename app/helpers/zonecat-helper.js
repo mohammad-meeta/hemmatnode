@@ -19,10 +19,24 @@ ZonecatHelper.loadAllZonecatData = async function loadAllZonecatData(dataPaginat
 
     let pipeline = [
         {
+            $lookup: {
+                from: "department-categories",
+                localField: "references",
+                foreignField: "_id",
+                as: "depcat"
+            }
+        },
+        {
+            $unwind: "$depcat"
+        },
+        {
             $group: {
                 _id: "$_id",
                 title: {
                     $last: "$title"
+                },
+                depcat: {
+                    $last: "$depcat"
                 },
                 weight: {
                     $last: "$weight"
@@ -415,10 +429,24 @@ ZonecatHelper.insertNewZonecat = async function insertNewZonecat(data) {
             }
         },
         {
+            $lookup: {
+                from: "department-categories",
+                localField: "references",
+                foreignField: "_id",
+                as: "depcat"
+            }
+        },
+        {
+            $unwind: "$depcat"
+        },
+        {
             $group: {
                 _id: "$_id",
                 title: {
                     $last: "$title"
+                },
+                depcat: {
+                    $last: "$depcat"
                 },
                 weight: {
                     $last: "$weight"
@@ -456,10 +484,24 @@ ZonecatHelper.updateZonecatData = async function updateZonecatData(data) {
             }
         },
         {
+            $lookup: {
+                from: "department-categories",
+                localField: "references",
+                foreignField: "_id",
+                as: "depcat"
+            }
+        },
+        {
+            $unwind: "$depcat"
+        },
+        {
             $group: {
                 _id: "$_id",
                 title: {
                     $last: "$title"
+                },
+                depcat: {
+                    $last: "$depcat"
                 },
                 weight: {
                     $last: "$weight"

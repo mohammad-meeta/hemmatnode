@@ -46,6 +46,12 @@ PugView.viewPath = {
     'department.show': 'pages/department/show.pug',
     'department.edit': 'pages/department/edit.pug',
 
+    /* Zonecat */
+    'zonecat.index': 'pages/zonecat/index.pug',
+    'zonecat.create': 'pages/zonecat/register.pug',
+    'zonecat.show': 'pages/zonecat/show.pug',
+    'zonecat.edit': 'pages/zonecat/edit.pug',
+
     /* project */
     'project.index': 'pages/project/index.pug',
     'project.create': 'pages/project/register.pug',

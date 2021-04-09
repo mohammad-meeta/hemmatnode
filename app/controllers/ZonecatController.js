@@ -248,6 +248,7 @@ Zonecat.update = async function update(req, res, next) {
         "user_id": req.session.auth.userId,
         "is_active": req.body.is_active,
         "references": req.body.references,
+        "department_category_id": req.body.department_category_id,
         "weight": req.body.weight,
     };
 
@@ -307,6 +308,7 @@ Zonecat.store = async function store(req, res, next) {
         "user_id": req.session.auth.userId,
         "is_active": req.body.is_active,
         "references": req.body.references,
+        "department_category_id": req.body.department_category_id,
         "weight": req.body.weight,
     };
 

@@ -25,7 +25,7 @@ Router.get('/zonecat/references/:references', [
     .as('zonecat.references');
 
 Router.get('/api/zonecats/:page/:size?', [
-    checkSession,
+    // checkSession,
     'Zonecat@paginateZonecat'
 ])
     .as('api.zonecat');

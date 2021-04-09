@@ -19,9 +19,7 @@ const ENUMS = require("JS-HELPERS/enums");
 
 export default {
     name: "ShowHealth",
-    components: {
-        FileDownload,
-    },
+
     data: () => ({
         ENUMS,
         zoneCats: [],

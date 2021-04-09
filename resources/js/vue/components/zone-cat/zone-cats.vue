@@ -49,7 +49,9 @@
                 @on-command="onCommand",
                 @on-register="onZoneCatRegister",
                 :register-url="registerUrl",
-                :zone-cats-url="zoneCatsUrl"
+                :zone-cats-url="zoneCatsUrl",
+                :department-categories-url="departmentCategoriesUrl",
+                :departments-url="departmentsUrl",
             )
 
         .column(v-show="!modeLoading && modeEdit")
@@ -58,13 +60,15 @@
                 @on-update="onZoneCatUpdate"
                 :edit-url="editUrl",
                 :zone-cat-url="zoneCatsUrl",
+                :department-categories-url="departmentCategoriesUrl",
+                :departments-url="departmentsUrl",
             )
 
         .column(v-show="!modeLoading && modeShow")
             show-zone-cat(
                 ref="zoneCatShow",
                 @on-command="onCommand",
-                :zone-list-url="zoneListUrl"
+                :zone-list-url="listUrl"
                 :load-user-url="loadUserUrl"
             )
 </template>
@@ -133,6 +137,16 @@ export default {
         },
 
         editUrl: {
+            type: String,
+            default: null,
+        },
+
+        departmentCategoriesUrl: {
+            type: String,
+            default: null,
+        },
+
+        departmentsUrl: {
             type: String,
             default: null,
         },
@@ -206,7 +220,7 @@ export default {
 
                 case ENUMS.COMMAND.EDIT:
                     /* TODO: REGISTER NEW Zone Cat */
-                    this.$refs.zonCatEdit.loadZoneCatData(data);
+                    this.$refs.zoneCatEdit.loadZoneCatData(data);
                     this.changeFormMode(ENUMS.FORM_MODE.EDIT);
                     break;
 

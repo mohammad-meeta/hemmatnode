@@ -52,13 +52,6 @@
                         ) {{ department.title }}
 
         .field
-            .panel
-                .panel-heading
-                    | فایل های ضمیمه
-                .panel-block
-                    file-upload(ref="fileUpload", :old-files="oldFiles")
-
-        .field
             label.checkbox
                 input(type="checkbox", v-model="zoneCatData.is_active")
                 |
@@ -166,9 +159,10 @@ export default {
          */
         async loadDepartmentCategories() {
             const url = this.departmentCategoriesUrl;
-
+            console.log(url);
             let res = await AxiosHelper.send("get", url, "");
             const resData = res.data;
+            console.log(resData);
             const datas = resData.data.data;
 
             Vue.set(this, "departmentCategories", datas);
@@ -204,9 +198,9 @@ export default {
         },
 
         /**
-         * Register new department
+         * Register new zone cat
          */
-        async registerDepartment() {
+        async registerZoneCat() {
             const isValid = this.validate();
 
             if (!isValid) {
@@ -214,9 +208,6 @@ export default {
             }
 
             this.showLoading();
-
-            let newUploaded = newFiles.map((x) => x.file);
-            Vue.set(this, "files", newUploaded);
 
             let zoneCatData = this.zoneCatData;
 
@@ -246,6 +237,7 @@ export default {
          * Validate new department data
          */
         validate() {
+            return true;
             const result = DepartmentValidator.validate(this.zoneCatData);
 
             if (result.passes) {

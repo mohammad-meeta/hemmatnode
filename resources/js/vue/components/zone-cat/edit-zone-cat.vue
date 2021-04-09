@@ -128,15 +128,16 @@ export default {
         /**
          * Load
          */
-        loadDepartmentData(data) {
+        loadZoneCatData(data) {
             let temp = {
                 _id: data._id,
                 title: data.title,
-                description: data.description,
+                weight: data.weight,
                 department_category_id: data.department_category_id,
                 references: data.references,
                 isActive: data.is_active,
             };
+            console.log(temp);
             Vue.set(this, "oldReferences", temp.references);
             Vue.set(this, "zoneCatData", temp);
             this.onChange(data.department_category_id);
@@ -176,7 +177,7 @@ export default {
         commandClick(arg) {
             switch (arg) {
                 case ENUMS.COMMAND.SAVE:
-                    this.editDepartment();
+                    this.editZoneCat();
                     break;
             }
         },
@@ -211,9 +212,9 @@ export default {
         },
 
         /**
-         * Edit department
+         * Edit Zone cat
          */
-        async editDepartment() {
+        async editZoneCat() {
             this.showLoading();
 
             let zoneCatData = {
@@ -231,7 +232,6 @@ export default {
                 const url = this.editUrl.replace("$id$", zoneCatData._id);
                 let res = await AxiosHelper.send("patch", url, zoneCatData, {
                     sendAsFormData: true,
-                    filesArray: "files",
                 });
 
                 const data = res.data;

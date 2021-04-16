@@ -18,7 +18,7 @@ Model.setup = function setup() {
     Model.plugins(schema);
     Model.extraFunctions(schema);
 
-    mongoose.model('Zoneindex', schema, "zoneindexs");
+    mongoose.model('Zonescore', schema, "zonescores");
 };
 
 /**
@@ -28,31 +28,20 @@ Model.model = function model() {
     const ObjectId = mongoose.Schema.ObjectId;
 
     return {
-        'title': {
+        'score': {
             type: String,
             required: true
-        },
-        'point': {
-            type: String,
-            required: true
-        },
-        'source': {
-            type: String
         },
         'is_active': {
             type: Boolean,
             default: true,
             required: true
         },
-        'references': {
-            type: ObjectId,
-            required: false
-        },
-        'department_category_id': {
-            type: ObjectId,
-            required: false
-        },
         'zone_cat': {
+            type: ObjectId,
+            required: true
+        },
+        'zone_index': {
             type: ObjectId,
             required: true
         },
@@ -81,7 +70,7 @@ Model.plugins = function plugins(schema) {
  * @param      {Object}  schema  The schema
  */
 Model.extraFunctions = function extraFunctions(schema) {
-    schema.statics.newZoneindex = Model.newZoneindex;
+    schema.statics.newZonescore = Model.newZonescore;
 
     schema.methods.enable = Model.enable;
     schema.methods.disable = Model.disable;
@@ -90,8 +79,8 @@ Model.extraFunctions = function extraFunctions(schema) {
 /**
  * Insert user function
  */
-Model.newZoneindex = function newZoneindex(newZoneindex) {
-    let result = new this(newZoneindex);
+Model.newZonescore = function newZonescore(newZonescore) {
+    let result = new this(newZonescore);
 
     return result.save();
 };

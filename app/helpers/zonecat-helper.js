@@ -423,9 +423,6 @@ ZonecatHelper.insertNewZonecat = async function insertNewZonecat(data) {
                 title: {
                     $last: "$title"
                 },
-                depcat: {
-                    $last: "$depcat"
-                },
                 weight: {
                     $last: "$weight"
                 },

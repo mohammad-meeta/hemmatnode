@@ -1,16 +1,16 @@
 "use strict";
 const PugView = use("app/helpers/pug-view");
-const ZoneindexHelper = use("app/helpers/zoneindex-helper");
+const ZonescoreHelper = use("app/helpers/zonescore-helper");
 /**
  * Dep cat controller
  */
-function Zoneindex() { }
-module.exports = Zoneindex;
+function Zonescore() { }
+module.exports = Zonescore;
 
 /**
- * Zoneindex route
+ * Zonescore route
  */
-Zoneindex.index = async function index(req, res, next) {
+Zonescore.index = async function index(req, res, next) {
     const pageRoute = "index.index";
 
     res.render(PugView.getView(pageRoute), {
@@ -21,7 +21,7 @@ Zoneindex.index = async function index(req, res, next) {
 /**
  * paginate route
  */
-Zoneindex.paginateZoneindex = async function paginateZoneindex(req, res, next) {
+Zonescore.paginateZonescore = async function paginateZonescore(req, res, next) {
     const dataPaginate = {
         page: req.params.page,
         pageSize: req.params.size || 10,
@@ -31,10 +31,10 @@ Zoneindex.paginateZoneindex = async function paginateZoneindex(req, res, next) {
     try {
         let result = {};
 
-        let data = await ZoneindexHelper.loadAllZoneindexCountData(type);
+        let data = await ZonescoreHelper.loadAllZonescoreCountData(type);
         let count = data.data;
 
-        data = await ZoneindexHelper.loadAllZoneindexData(req, dataPaginate, type);
+        data = await ZonescoreHelper.loadAllZonescoreData(req, dataPaginate, type);
         result = {
             success: true,
             data: {
@@ -57,7 +57,7 @@ Zoneindex.paginateZoneindex = async function paginateZoneindex(req, res, next) {
 /**
  * paginate all route
  */
-Zoneindex.paginateZoneindexAll = async function paginateZoneindexAll(req, res, next) {
+Zonescore.paginateZonescoreAll = async function paginateZonescoreAll(req, res, next) {
     const dataPaginate = {
         page: req.params.page,
         pageSize: req.params.size || 10,
@@ -66,10 +66,10 @@ Zoneindex.paginateZoneindexAll = async function paginateZoneindexAll(req, res, n
     try {
         let result = {};
 
-        let data = await ZoneindexHelper.loadAllZoneindexCountDataAll();
+        let data = await ZonescoreHelper.loadAllZonescoreCountDataAll();
         let count = data.data;
 
-        data = await ZoneindexHelper.loadAllZoneindexDataAll(req, dataPaginate);
+        data = await ZonescoreHelper.loadAllZonescoreDataAll(req, dataPaginate);
         result = {
             success: true,
             data: {
@@ -93,10 +93,10 @@ Zoneindex.paginateZoneindexAll = async function paginateZoneindexAll(req, res, n
 /**
  * load data with id
  */
-Zoneindex.show = async function show(req, res, next) {
+Zonescore.show = async function show(req, res, next) {
     const Id = req.params.index;
 
-    ZoneindexHelper.loadZoneindexData(Id)
+    ZonescoreHelper.loadZonescoreData(Id)
 
         .then((data) => {
             const result = {
@@ -115,12 +115,12 @@ Zoneindex.show = async function show(req, res, next) {
 /**
  * delete data dep cat
  */
-Zoneindex.destroy = async function destroy(req, res, next) {
+Zonescore.destroy = async function destroy(req, res, next) {
     const data = {
         _id: req.body._id,
     };
 
-    ZoneindexHelper.deleteZoneindexData(data)
+    ZonescoreHelper.deleteZonescoreData(data)
         .then((data) => {
             const result = {
                 success: true,
@@ -136,7 +136,7 @@ Zoneindex.destroy = async function destroy(req, res, next) {
 /**
  * Create route return page
  */
-Zoneindex.create = async function create(req, res, next) {
+Zonescore.create = async function create(req, res, next) {
     const pageRoute = PugView.getView("index.create");
 
     res.render(pageRoute, {
@@ -148,19 +148,16 @@ Zoneindex.create = async function create(req, res, next) {
 /**
  * store data
  */
-Zoneindex.store = async function store(req, res, next) {
+Zonescore.store = async function store(req, res, next) {
     const data = {
-        title: req.body.title,
-        point: req.body.point,
-        source: req.body.source,
-        "references": req.body.references,
-        "department_category_id": req.body.department_category_id,
+        score: req.body.score,
+        zone_index: req.body.zone_index,
         zone_cat: req.body.zone_cat,
-        user_id: req.session.auth.userId,
+        user_id: "5e91e959db925c5aff835a11",//req.session.auth.userId,
         is_active: req.body.is_active,
     };
 
-    ZoneindexHelper.insertNewZoneindex(data)
+    ZonescoreHelper.insertNewZonescore(data)
         .then((dataRes) => {
             const result = {
                 success: true,
@@ -176,21 +173,18 @@ Zoneindex.store = async function store(req, res, next) {
 /**
  * update data
  */
-Zoneindex.update = async function update(req, res, next) {
+Zonescore.update = async function update(req, res, next) {
     let data = {};
 
     data = {
         _id: req.body._id,
-        title: req.body.title,
-        point: req.body.point,
-        source: req.body.source,
-        "references": req.body.references,
-        "department_category_id": req.body.department_category_id,
+        score: req.body.score,
+        zone_index: req.body.zone_index,
         zone_cat: req.body.zone_cat,
         user_id: req.session.auth.userId,
         is_active: req.body.is_active,
     };
-    let result = await ZoneindexHelper.updateZoneindexData(data);
+    let result = await ZonescoreHelper.updateZonescoreData(data);
     const result2 = {
         success: true,
         data: result,

@@ -31,8 +31,8 @@ Router.get("/zonescore/create", [
 ]).as("zonescore.create");
 
 Router.post("/zonescore", [
-    // checkSession,
-    // Rule.canAsync("user.permision", "zonescore.store"),
+    checkSession,
+    Rule.canAsync("user.permision", "zonescore.store"),
     // validator.validate,
     upload.any(),
     "Zonescore@store",

@@ -41,6 +41,10 @@ Model.model = function model() {
             type: ObjectId,
             required: true
         },
+        'department': {
+            type: ObjectId,
+            required: true
+        },
         'zone_index': {
             type: ObjectId,
             required: true

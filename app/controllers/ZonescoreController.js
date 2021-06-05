@@ -153,7 +153,8 @@ Zonescore.store = async function store(req, res, next) {
         score: req.body.score,
         zone_index: req.body.zone_index,
         zone_cat: req.body.zone_cat,
-        user_id: "5e91e959db925c5aff835a11",//req.session.auth.userId,
+        department: req.body.department,
+        user_id: req.session.auth.userId,
         is_active: req.body.is_active,
     };
 
@@ -181,6 +182,7 @@ Zonescore.update = async function update(req, res, next) {
         score: req.body.score,
         zone_index: req.body.zone_index,
         zone_cat: req.body.zone_cat,
+        department: req.body.department,
         user_id: req.session.auth.userId,
         is_active: req.body.is_active,
     };

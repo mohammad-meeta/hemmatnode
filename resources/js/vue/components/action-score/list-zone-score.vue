@@ -146,6 +146,7 @@ export default {
          * add new ZoneScore data to list data
          */
         addToZoneScoreList(payload) {
+            console.log(payload);
             const newZoneScoreData = {
                 _id: payload._id,
                 year: payload.year,
@@ -161,14 +162,14 @@ export default {
 
         editInZoneScoreList(payload) {
             const editedZoneScoreData = {
-                _id: payload.data[0]._id,
-                year: payload.data[0].year,
-                score: payload.data[0].score,
-                department: payload.data[0].department,
-                zoneindex: payload.data[0].zoneindex,
-                zonecat: payload.data[0].zonecat,
-                is_active: payload.data[0].is_active,
-                created_at: payload.data[0].created_at,
+                _id: payload[0]._id,
+                year: payload[0].year,
+                score: payload[0].score,
+                department: payload[0].department,
+                zoneindex: payload[0].zoneindex,
+                zonecat: payload[0].zonecat,
+                is_active: payload[0].is_active,
+                created_at: payload[0].created_at,
             };
 
             let foundScore = this.zoneScores.findIndex(

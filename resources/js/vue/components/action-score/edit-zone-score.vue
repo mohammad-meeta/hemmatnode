@@ -113,7 +113,7 @@ export default {
         zoneScoreData: {
             zone_cat: {},
             zone_index: {},
-            year: "",
+            year: null,
             score: null,
             department: null,
             is_active: true,
@@ -292,12 +292,12 @@ export default {
 
             let zoneScoreData = {
                 _id: this.zoneScoreData._id,
-                year: this.zoneScoreData.year,
-                score: this.zoneScoreData.score,
+                year: zoneScoreData.year,
+                score: zoneScoreData.score,
                 department: this.selected._id,
-                zone_index: this.zoneScoreData.zone_index._id,
-                zone_cat: this.zoneScoreData.zone_cat._id,
-                is_active: this.zoneScoreData.is_active,
+                zone_index: zoneScoreData.zone_index._id,
+                zone_cat: zoneScoreData.zone_cat._id,
+                is_active: zoneScoreData.is_active,
             };
 
             try {

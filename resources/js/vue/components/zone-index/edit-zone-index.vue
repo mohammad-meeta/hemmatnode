@@ -15,7 +15,7 @@
             .control
                 .select.is-primary
                     select(
-                        v-model="zoneIndexData.department_category_id",
+                        v-model="zoneIndexData.zone_cat.department_category_id",
                         @change="onChange($event.target.value)"
                     )
                         option(
@@ -24,7 +24,7 @@
                         ) {{ departmentCategory.title }}
             .control
                 .select.is-primary
-                    select(v-model="zoneIndexData.references")
+                    select(v-model="zoneIndexData.zone_cat.references")
                         option(
                             v-for="(department, departmentIndex) in departments",
                             :value="department._id"
@@ -34,7 +34,7 @@
             .control
                 .select.is-primary
                     select(
-                        v-model="zoneIndexData.zone_cat",
+                        v-model="zoneIndexData.zone_cat._id",
                     )
                         option(
                             v-for="(zoneCat, zoneCatIndex) in zoneCats",
@@ -111,7 +111,7 @@ export default {
         departments: [],
         zoneCats: [],
         zoneIndexData: {
-            zone_cat: null,
+            zone_cat: {},
             title: null,
             point: null,
             source: null,
@@ -174,20 +174,27 @@ export default {
         /**
          * Load
          */
-        loadZoneIndexData(data) {
+        async loadZoneIndexData(data) {
+            console.log("*********");
+            console.log(data);
             let temp = {
                 _id: data._id,
                 title: data.title,
                 point: data.point,
                 source: data.source,
-                department_category_id: data.zonecat.department_category_id,
-                references: data.zonecat.references,
-                zone_cat: data.zonecat._id,
+                department_category_id: data.zone_cat.department_category_id,
+                references: data.zone_cat.references,
+                zone_cat: {
+                    title: data.zone_cat.title,
+                    _id: data.zone_cat._id,
+                    department_category_id: data.zone_cat.department_category_id,
+                    references: data.zone_cat.references,
+                },
                 isActive: data.is_active,
             };
             Vue.set(this, "oldReferences", temp.references);
             Vue.set(this, "zoneIndexData", temp);
-            this.onChange(temp.department_category_id);
+            console.log(this.zoneIndexData);
         },
 
         /**
@@ -276,14 +283,14 @@ export default {
          */
         async editZoneIndex() {
             this.showLoading();
-
+            console.log(this.zoneIndexData);
             let zoneIndexData = {
                 _id: this.zoneIndexData._id,
                 title: this.zoneIndexData.title,
                 department_category_id: this.zoneIndexData
                     .department_category_id,
                 references: this.zoneIndexData.references,
-                zone_cat: this.zoneIndexData.zone_cat,
+                zone_cat: this.zoneIndexData.zone_cat._id,
                 source: this.zoneIndexData.source,
                 point: this.zoneIndexData.point,
                 is_active: this.zoneIndexData.isActive,

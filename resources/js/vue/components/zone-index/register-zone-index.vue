@@ -114,7 +114,7 @@ export default {
         departmentCategories: [],
         departments: [],
         zoneIndexData: {
-            zone_cat: null,
+            zone_cat: {},
             title: null,
             point: null,
             source: null,
@@ -228,7 +228,6 @@ export default {
             let res = await AxiosHelper.send("get", url, "");
             const resData = res.data;
             const datas = resData.data.data;
-
             Vue.set(this, "zoneCats", datas);
         },
 

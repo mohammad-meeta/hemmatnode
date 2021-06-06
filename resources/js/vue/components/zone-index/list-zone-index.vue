@@ -146,9 +146,16 @@ export default {
             const newZoneIndexData = {
                 _id: payload._id,
                 title: payload.title,
-                weight: payload.weight,
-                department_category_id: payload.department_category_id,
-                references: payload.references,
+                point: payload.point,
+                source: payload.source,
+                department_category_id: payload.zone_cat.department_category_id,
+                references: payload.zone_cat.references,
+                zone_cat: {
+                    title: payload.zone_cat.title,
+                    _id: payload.zone_cat._id,
+                    department_category_id: payload.zone_cat.department_category_id,
+                    references: payload.zone_cat.references,
+                },
                 is_active: payload.is_active,
                 created_at: payload.created_at,
             };
@@ -160,8 +167,14 @@ export default {
             const editedZoneIndexData = {
                 _id: payload.data[0]._id,
                 title: payload.data[0].title,
-                weight: payload.data[0].weight,
-                references: payload.data[0].references,
+                point: payload.data[0].point,
+                source: payload.data[0].source,
+                zone_cat: {
+                    department_category_id: payload.data[0].zone_cat.department_category_id,
+                    references: payload.data[0].zone_cat.references,
+                    _id: payload.data[0].zone_cat._id,
+                    title: payload.data[0].zone_cat.title,
+                },
                 is_active: payload.data[0].is_active,
                 created_at: payload.data[0].created_at,
             };

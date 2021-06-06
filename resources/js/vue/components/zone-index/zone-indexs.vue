@@ -227,6 +227,7 @@ export default {
 
                 case ENUMS.COMMAND.EDIT:
                     /* TODO: REGISTER NEW zone index */
+                    this.$refs.zoneIndexEdit.onChange(data.zone_cat.department_category_id);
                     this.$refs.zoneIndexEdit.loadZoneIndexData(data);
                     this.changeFormMode(ENUMS.FORM_MODE.EDIT);
                     break;

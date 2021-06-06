@@ -137,7 +137,6 @@ export default {
                 references: data.references,
                 isActive: data.is_active,
             };
-            console.log(temp);
             Vue.set(this, "oldReferences", temp.references);
             Vue.set(this, "zoneCatData", temp);
             this.onChange(data.department_category_id);

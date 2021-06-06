@@ -43,6 +43,9 @@ ZoneindexHelper.loadAllZoneindexData = async function loadAllZoneindexData(req, 
                 title: {
                     $last: "$title"
                 },
+                references: {
+                    $last: "$references"
+                },
                 point: {
                     $last: "$point"
                 },
@@ -110,6 +113,9 @@ ZoneindexHelper.loadAllZoneindexDataAll = async function loadAllZoneindexDataAll
                 },
                 source: {
                     $last: "$source"
+                },
+                references: {
+                    $last: "$references"
                 },
                 is_active: {
                     $last: "$is_active"
@@ -232,6 +238,9 @@ ZoneindexHelper.insertNewZoneindex = async function insertNewZoneindex(data) {
                 source: {
                     $last: "$source"
                 },
+                references: {
+                    $last: "$references"
+                },
                 is_active: {
                     $last: "$is_active"
                 },
@@ -289,6 +298,9 @@ ZoneindexHelper.updateZoneindexData = async function updateZoneindexData(data) {
                 },
                 source: {
                     $last: "$source"
+                },
+                references: {
+                    $last: "$references"
                 },
                 is_active: {
                     $last: "$is_active"

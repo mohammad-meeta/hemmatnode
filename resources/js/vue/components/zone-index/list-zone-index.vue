@@ -153,7 +153,8 @@ export default {
                 zone_cat: {
                     title: payload.zone_cat.title,
                     _id: payload.zone_cat._id,
-                    department_category_id: payload.zone_cat.department_category_id,
+                    department_category_id:
+                        payload.zone_cat.department_category_id,
                     references: payload.zone_cat.references,
                 },
                 is_active: payload.is_active,
@@ -169,8 +170,10 @@ export default {
                 title: payload.data[0].title,
                 point: payload.data[0].point,
                 source: payload.data[0].source,
+                references: payload.data[0].references,
                 zone_cat: {
-                    department_category_id: payload.data[0].zone_cat.department_category_id,
+                    department_category_id:
+                        payload.data[0].zone_cat.department_category_id,
                     references: payload.data[0].zone_cat.references,
                     _id: payload.data[0].zone_cat._id,
                     title: payload.data[0].zone_cat.title,

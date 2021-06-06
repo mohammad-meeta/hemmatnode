@@ -151,10 +151,16 @@ export default {
             type: String,
             default: "",
         },
+
+        zoneCatsUrl: {
+            type: String,
+            default: "",
+        },
     },
 
     created() {
         this.loadDepartmentCategories();
+        this.loadZoneCats();
     },
 
     mounted() {},
@@ -169,8 +175,6 @@ export default {
          * Load
          */
         loadZoneIndexData(data) {
-            console.log(data);
-            this.onChange(data.department_category_id);
             let temp = {
                 _id: data._id,
                 title: data.title,
@@ -178,12 +182,12 @@ export default {
                 source: data.source,
                 department_category_id: data.zonecat.department_category_id,
                 references: data.zonecat.references,
+                zone_cat: data.zonecat._id,
                 isActive: data.is_active,
             };
-            console.log(temp);
             Vue.set(this, "oldReferences", temp.references);
             Vue.set(this, "zoneIndexData", temp);
-
+            this.onChange(temp.department_category_id);
         },
 
         /**
@@ -197,6 +201,19 @@ export default {
 
             Vue.set(this, "departmentCategories", datas);
         },
+
+        /**
+         * load all zone cats for select zoneCats in form
+         */
+        async loadZoneCats() {
+            const url = this.zoneCatsUrl;
+            let res = await AxiosHelper.send("get", url, "");
+            const resData = res.data;
+            const datas = resData.data.data;
+
+            Vue.set(this, "zoneCats", datas);
+        },
+
         /**
          * onchange department category
          */
@@ -287,7 +304,6 @@ export default {
 
             this.hideLoading();
         },
-
     },
 };
 </script>

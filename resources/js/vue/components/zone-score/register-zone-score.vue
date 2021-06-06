@@ -208,7 +208,8 @@ export default {
          * load all zone indexs for select zoneIndexs in form
          */
         async loadZoneIndexs() {
-            const url = this.zoneIndexsUrl;
+            const url = this.zoneIndexsUrl.replace("$zoneCat$", this.selected._id);
+            console.log(url);
             let res = await AxiosHelper.send("get", url, "");
             const resData = res.data;
             const datas = resData.data.data;

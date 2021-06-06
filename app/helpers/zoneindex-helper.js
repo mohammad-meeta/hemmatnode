@@ -55,7 +55,7 @@ ZoneindexHelper.loadAllZoneindexData = async function loadAllZoneindexData(req, 
                 created_at: {
                     $last: "$created_at"
                 },
-                zonecat: {
+                zone_cat: {
                     $last: "$zonecat"
                 },
             }
@@ -117,7 +117,7 @@ ZoneindexHelper.loadAllZoneindexDataAll = async function loadAllZoneindexDataAll
                 created_at: {
                     $last: "$created_at"
                 },
-                zonecat: {
+                zone_cat: {
                     $last: "$zonecat"
                 },
             }
@@ -238,7 +238,7 @@ ZoneindexHelper.insertNewZoneindex = async function insertNewZoneindex(data) {
                 created_at: {
                     $last: "$created_at"
                 },
-                zonecat: {
+                zone_cat: {
                     $last: "$zonecat"
                 }
             }
@@ -296,7 +296,7 @@ ZoneindexHelper.updateZoneindexData = async function updateZoneindexData(data) {
                 created_at: {
                     $last: "$created_at"
                 },
-                zonecat: {
+                zone_cat: {
                     $last: "$zonecat"
                 }
             }

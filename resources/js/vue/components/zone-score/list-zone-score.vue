@@ -106,6 +106,7 @@ export default {
             let url = this.listUrl.replace("$page$", pageId);
             url = url.replace("$pageSize$", 50);
             AxiosHelper.send("get", url, "").then((res) => {
+                console.log(res.data);
                 const resData = res.data;
                 Vue.set(this, "zoneScores", resData.data.data);
                 Vue.set(this, "zoneScoresCount", resData.data.count);

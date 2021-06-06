@@ -24,7 +24,7 @@
                         ) {{ departmentCategory.title }}
             .control
                 .select.is-primary
-                    select(v-model="zoneIndexData.zone_cat.references")
+                    select(v-model="zoneIndexData.references")
                         option(
                             v-for="(department, departmentIndex) in departments",
                             :value="department._id"
@@ -106,7 +106,6 @@ export default {
 
     data: () => ({
         ENUMS,
-        oldReferences: null,
         departmentCategories: [],
         departments: [],
         zoneCats: [],
@@ -183,16 +182,16 @@ export default {
                 point: data.point,
                 source: data.source,
                 department_category_id: data.zone_cat.department_category_id,
-                references: data.zone_cat.references,
+                references: data.references,
                 zone_cat: {
                     title: data.zone_cat.title,
                     _id: data.zone_cat._id,
-                    department_category_id: data.zone_cat.department_category_id,
+                    department_category_id:
+                        data.zone_cat.department_category_id,
                     references: data.zone_cat.references,
                 },
                 isActive: data.is_active,
             };
-            Vue.set(this, "oldReferences", temp.references);
             Vue.set(this, "zoneIndexData", temp);
             console.log(this.zoneIndexData);
         },
@@ -294,7 +293,6 @@ export default {
                 source: this.zoneIndexData.source,
                 point: this.zoneIndexData.point,
                 is_active: this.zoneIndexData.isActive,
-                oldReferences: this.oldReferences,
             };
 
             try {

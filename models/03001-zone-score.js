@@ -32,6 +32,10 @@ Model.model = function model() {
             type: String,
             required: true
         },
+        'year': {
+            type: Date,
+            required: true
+        },
         'is_active': {
             type: Boolean,
             default: true,

@@ -151,6 +151,7 @@ Zonescore.create = async function create(req, res, next) {
 Zonescore.store = async function store(req, res, next) {
     const data = {
         score: req.body.score,
+        year: req.body.year,
         zone_index: req.body.zone_index,
         zone_cat: req.body.zone_cat,
         department: req.body.department,
@@ -180,6 +181,7 @@ Zonescore.update = async function update(req, res, next) {
     data = {
         _id: req.body._id,
         score: req.body.score,
+        year: req.body.year,
         zone_index: req.body.zone_index,
         zone_cat: req.body.zone_cat,
         department: req.body.department,

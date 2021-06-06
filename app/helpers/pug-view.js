@@ -64,6 +64,18 @@ PugView.viewPath = {
     'zonescore.show': 'pages/zonescore/show.pug',
     'zonescore.edit': 'pages/zonescore/edit.pug',
 
+    /* Actionzone */
+    'actionzone.index': 'pages/actionzone/index.pug',
+    'actionzone.create': 'pages/actionzone/register.pug',
+    'actionzone.show': 'pages/actionzone/show.pug',
+    'actionzone.edit': 'pages/actionzone/edit.pug',
+
+    /* Actionscore */
+    'actionscore.index': 'pages/actionscore/index.pug',
+    'actionscore.create': 'pages/actionscore/register.pug',
+    'actionscore.show': 'pages/actionscore/show.pug',
+    'actionscore.edit': 'pages/actionscore/edit.pug',
+
     /* project */
     'project.index': 'pages/project/index.pug',
     'project.create': 'pages/project/register.pug',

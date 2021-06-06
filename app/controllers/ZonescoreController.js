@@ -11,7 +11,7 @@ module.exports = Zonescore;
  * Zonescore route
  */
 Zonescore.index = async function index(req, res, next) {
-    const pageRoute = "index.index";
+    const pageRoute = "zonescore.index";
 
     res.render(PugView.getView(pageRoute), {
         req,

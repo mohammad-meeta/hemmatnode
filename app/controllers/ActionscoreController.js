@@ -11,7 +11,7 @@ module.exports = Actionscore;
  * Actionscore route
  */
 Actionscore.index = async function index(req, res, next) {
-    const pageRoute = "index.index";
+    const pageRoute = "actionscore.index";
 
     res.render(PugView.getView(pageRoute), {
         req,

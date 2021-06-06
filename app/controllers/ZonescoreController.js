@@ -18,6 +18,18 @@ Zonescore.index = async function index(req, res, next) {
         pageRoute,
     });
 };
+
+/**
+ * Zonescore route
+ */
+Zonescore.report = async function report(req, res, next) {
+    const pageRoute = "zonescore.report";
+
+    res.render(PugView.getView(pageRoute), {
+        req,
+        pageRoute,
+    });
+};
 /**
  * paginate route
  */

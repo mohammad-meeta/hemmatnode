@@ -12,6 +12,12 @@ Router.get("/zonescore", [
     "Zonescore@index",
 ]).as("zonescore.index");
 
+Router.get("/zonescore/report", [
+    checkSession,
+    // Rule.canAsync("user.permision", "zonescore.report"),
+    "Zonescore@report",
+]).as("zonescore.report");
+
 Router.get("/api/zonescores/:type/:page/:size?", [
     checkSession,
     Rule.canAsync("user.permision", "api.zonescore"),

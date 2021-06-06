@@ -72,6 +72,7 @@ PugView.viewPath = {
 
     /* Actionscore */
     'actionscore.index': 'pages/actionscore/index.pug',
+    'actionscore.report': 'pages/actionscore/report.pug',
     'actionscore.create': 'pages/actionscore/register.pug',
     'actionscore.show': 'pages/actionscore/show.pug',
     'actionscore.edit': 'pages/actionscore/edit.pug',

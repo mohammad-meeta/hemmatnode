@@ -32,11 +32,24 @@
                 .select.is-primary
                     select(
                         v-model="zoneScoreData.zone_cat",
+                        @change="onChange($event.target.value)"
                     )
                         option(
                             v-for="(zoneCat, zoneCatScore) in zoneCats",
                             :value="zoneCat._id"
                         ) {{ zoneCat.title }}
+
+        .field
+            label.label مستندات
+            .control
+                .select.is-primary
+                    select(
+                        v-model="zoneScoreData.zone_index",
+                    )
+                        option(
+                            v-for="(zoneIndex, zoneIndexScore) in zoneIndexs",
+                            :value="zoneIndex._id"
+                        ) {{ zoneIndex.title }}
         .field
             label.label سال
             .control
@@ -84,9 +97,6 @@ const ENUMS = require("JS-HELPERS/enums");
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
 
-
-
-
 export default {
     name: "RegisterZoneScore",
 
@@ -108,8 +118,6 @@ export default {
             department: null,
             is_active: true,
         },
-
-
 
         selectedOption: null,
         title: "",
@@ -142,14 +150,12 @@ export default {
             type: String,
             default: "",
         },
-
-
     },
 
     created() {
         this.loadDepartments();
         this.loadZoneCats();
-        this.loadZoneIndexs();
+        // this.loadZoneIndexs();
     },
 
     computed: {
@@ -205,11 +211,22 @@ export default {
         },
 
         /**
+         * onchange department category
+         */
+        async onChange(id) {
+            const url = this.zoneIndexsUrl.replace("$zoneCat$", id);
+            let res = await AxiosHelper.send("get", url, "");
+            const resData = res.data;
+            const datas = resData.data.data;
+
+            Vue.set(this, "zoneIndexs", datas);
+        },
+
+        /**
          * load all zone indexs for select zoneIndexs in form
          */
-        async loadZoneIndexs() {
-            const url = this.zoneIndexsUrl.replace("$zoneCat$", this.selected._id);
-            console.log(url);
+        async loadZoneIndexs(id) {
+            const url = this.zoneIndexsUrl.replace("$zoneCat$", id);
             let res = await AxiosHelper.send("get", url, "");
             const resData = res.data;
             const datas = resData.data.data;
@@ -261,8 +278,7 @@ export default {
             let zoneScoreData = this.zoneScoreData;
 
             const url = this.registerUrl;
-            zoneScoreData.department = this.selected._id
-            console.log(url);
+            zoneScoreData.department = this.selected._id;
 
             try {
                 let res = await AxiosHelper.send("post", url, zoneScoreData, {

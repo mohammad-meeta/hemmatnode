@@ -49,6 +49,17 @@ ZonescoreHelper.loadAllZonescoreData = async function loadAllZonescoreData(req, 
             $unwind: "$zonecat"
         },
         {
+            $lookup: {
+                from: "departments",
+                localField: "department",
+                foreignField: "_id",
+                as: "department"
+            }
+        },
+        {
+            $unwind: "$department"
+        },
+        {
             $group: {
                 _id: "$_id",
                 score: {
@@ -56,6 +67,9 @@ ZonescoreHelper.loadAllZonescoreData = async function loadAllZonescoreData(req, 
                 },
                 year: {
                     $last: "$year"
+                },
+                department: {
+                    $last: "$department"
                 },
                 is_active: {
                     $last: "$is_active"
@@ -122,6 +136,17 @@ ZonescoreHelper.loadAllZonescoreDataAll = async function loadAllZonescoreDataAll
             $unwind: "$zonecat"
         },
         {
+            $lookup: {
+                from: "departments",
+                localField: "department",
+                foreignField: "_id",
+                as: "department"
+            }
+        },
+        {
+            $unwind: "$department"
+        },
+        {
             $group: {
                 _id: "$_id",
                 score: {
@@ -129,6 +154,9 @@ ZonescoreHelper.loadAllZonescoreDataAll = async function loadAllZonescoreDataAll
                 },
                 year: {
                     $last: "$year"
+                },
+                department: {
+                    $last: "$department"
                 },
                 is_active: {
                     $last: "$is_active"
@@ -191,7 +219,6 @@ ZonescoreHelper.loadAllZonescoreCountDataAll = function loadAllZonescoreCountDat
     return new Promise((resolve, reject) => {
         Zonescore.countDocuments(filterQuery)
             .then(res => {
-
                 resolve(res);
             })
             .catch(err => reject(err));
@@ -255,6 +282,17 @@ ZonescoreHelper.insertNewZonescore = async function insertNewZonescore(data) {
             $unwind: "$zonecat"
         },
         {
+            $lookup: {
+                from: "departments",
+                localField: "department",
+                foreignField: "_id",
+                as: "department"
+            }
+        },
+        {
+            $unwind: "$department"
+        },
+        {
             $group: {
                 _id: "$_id",
                 score: {
@@ -262,6 +300,9 @@ ZonescoreHelper.insertNewZonescore = async function insertNewZonescore(data) {
                 },
                 year: {
                     $last: "$year"
+                },
+                department: {
+                    $last: "$department"
                 },
                 is_active: {
                     $last: "$is_active"
@@ -324,6 +365,17 @@ ZonescoreHelper.updateZonescoreData = async function updateZonescoreData(data) {
             $unwind: "$zonecat"
         },
         {
+            $lookup: {
+                from: "departments",
+                localField: "department",
+                foreignField: "_id",
+                as: "department"
+            }
+        },
+        {
+            $unwind: "$department"
+        },
+        {
             $group: {
                 _id: "$_id",
                 score: {
@@ -331,6 +383,9 @@ ZonescoreHelper.updateZonescoreData = async function updateZonescoreData(data) {
                 },
                 year: {
                     $last: "$year"
+                },
+                department: {
+                    $last: "$department"
                 },
                 is_active: {
                     $last: "$is_active"

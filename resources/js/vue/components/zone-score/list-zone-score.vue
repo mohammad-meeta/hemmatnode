@@ -106,11 +106,9 @@ export default {
             let url = this.listUrl.replace("$page$", pageId);
             url = url.replace("$pageSize$", 50);
             AxiosHelper.send("get", url, "").then((res) => {
-                console.log(res.data);
                 const resData = res.data;
                 Vue.set(this, "zoneScores", resData.data.data);
                 Vue.set(this, "zoneScoresCount", resData.data.count);
-                console.log(this.zoneScores);
                 this.paginator();
             });
         },
@@ -151,25 +149,27 @@ export default {
             console.log(payload);
             const newZoneScoreData = {
                 _id: payload._id,
-                year: payload.title,
-                weight: payload.weight,
-                department_category_id: payload.department_category_id,
-                references: payload.references,
+                year: payload.year,
+                score: payload.score,
+                department: payload.department,
+                zoneindex: payload.zoneindex,
+                zonecat: payload.zonecat,
                 is_active: payload.is_active,
                 created_at: payload.created_at,
             };
-
             this.zoneScores.unshift(newZoneScoreData);
         },
 
         editInZoneScoreList(payload) {
             const editedZoneScoreData = {
-                _id: payload.data[0]._id,
-                title: payload.data[0].title,
-                weight: payload.data[0].weight,
-                references: payload.data[0].references,
-                is_active: payload.data[0].is_active,
-                created_at: payload.data[0].created_at,
+                _id: payload[0]._id,
+                year: payload[0].year,
+                score: payload[0].score,
+                department: payload[0].department,
+                zoneindex: payload[0].zoneindex,
+                zonecat: payload[0].zonecat,
+                is_active: payload[0].is_active,
+                created_at: payload[0].created_at,
             };
 
             let foundScore = this.zoneScores.findIndex(

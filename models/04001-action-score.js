@@ -18,7 +18,7 @@ Model.setup = function setup() {
     Model.plugins(schema);
     Model.extraFunctions(schema);
 
-    mongoose.model('Zonescore', schema, "zonescores");
+    mongoose.model('Actionscore', schema, "actionscores");
 };
 
 /**
@@ -32,20 +32,16 @@ Model.model = function model() {
             type: String,
             required: true
         },
+        'title': {
+            type: String,
+            required: true
+        },
         'is_active': {
             type: Boolean,
             default: true,
             required: true
         },
         'zone_cat': {
-            type: ObjectId,
-            required: true
-        },
-        'department': {
-            type: ObjectId,
-            required: true
-        },
-        'zone_index': {
             type: ObjectId,
             required: true
         },
@@ -74,7 +70,7 @@ Model.plugins = function plugins(schema) {
  * @param      {Object}  schema  The schema
  */
 Model.extraFunctions = function extraFunctions(schema) {
-    schema.statics.newZonescore = Model.newZonescore;
+    schema.statics.newActionscore = Model.newActionscore;
 
     schema.methods.enable = Model.enable;
     schema.methods.disable = Model.disable;
@@ -83,8 +79,8 @@ Model.extraFunctions = function extraFunctions(schema) {
 /**
  * Insert user function
  */
-Model.newZonescore = function newZonescore(newZonescore) {
-    let result = new this(newZonescore);
+Model.newActionscore = function newActionscore(newActionscore) {
+    let result = new this(newActionscore);
 
     return result.save();
 };

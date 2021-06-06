@@ -60,6 +60,7 @@ PugView.viewPath = {
 
     /* Zonescore */
     'zonescore.index': 'pages/zonescore/index.pug',
+    'zonescore.report': 'pages/zonescore/report.pug',
     'zonescore.create': 'pages/zonescore/register.pug',
     'zonescore.show': 'pages/zonescore/show.pug',
     'zonescore.edit': 'pages/zonescore/edit.pug',
@@ -72,7 +73,6 @@ PugView.viewPath = {
 
     /* Actionscore */
     'actionscore.index': 'pages/actionscore/index.pug',
-    'actionscore.report': 'pages/actionscore/report.pug',
     'actionscore.create': 'pages/actionscore/register.pug',
     'actionscore.show': 'pages/actionscore/show.pug',
     'actionscore.edit': 'pages/actionscore/edit.pug',

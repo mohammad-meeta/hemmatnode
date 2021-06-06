@@ -52,6 +52,7 @@
                 :zone-scores-url="zoneScoresUrl",
                 :department-categories-url="departmentCategoriesUrl",
                 :zone-cats-url="zoneCatsUrl",
+                :zone-indexs-url="zoneIndexsUrl",
                 :departments-url="departmentsUrl",
             )
 
@@ -63,6 +64,7 @@
                 :zone-scores-url="zoneScoresUrl",
                 :department-categories-url="departmentCategoriesUrl",
                 :zone-cats-url="zoneCatsUrl",
+                :zone-indexs-url="zoneIndexsUrl",
                 :departments-url="departmentsUrl",
             )
 
@@ -149,6 +151,11 @@ export default {
         },
 
         zoneCatsUrl: {
+            type: String,
+            default: null,
+        },
+
+        zoneIndexsUrl: {
             type: String,
             default: null,
         },

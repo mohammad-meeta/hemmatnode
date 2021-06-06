@@ -98,9 +98,11 @@ export default {
     data: () => ({
         ENUMS,
         zoneCats: [],
+        zoneIndexs: [],
         departments: [],
         zoneScoreData: {
             zone_cat: null,
+            zone_index: null,
             year: null,
             score: null,
             department: null,
@@ -136,12 +138,18 @@ export default {
             default: "",
         },
 
+        zoneIndexsUrl: {
+            type: String,
+            default: "",
+        },
+
 
     },
 
     created() {
         this.loadDepartments();
         this.loadZoneCats();
+        this.loadZoneIndexs();
     },
 
     computed: {
@@ -194,6 +202,18 @@ export default {
             const datas = resData.data.data;
 
             Vue.set(this, "zoneCats", datas);
+        },
+
+        /**
+         * load all zone indexs for select zoneIndexs in form
+         */
+        async loadZoneIndexs() {
+            const url = this.zoneIndexsUrl;
+            let res = await AxiosHelper.send("get", url, "");
+            const resData = res.data;
+            const datas = resData.data.data;
+
+            Vue.set(this, "zoneIndexs", datas);
         },
 
         /**

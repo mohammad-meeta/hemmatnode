@@ -54,6 +54,9 @@ ZonescoreHelper.loadAllZonescoreData = async function loadAllZonescoreData(req, 
                 score: {
                     $last: "$score"
                 },
+                year: {
+                    $last: "$year"
+                },
                 is_active: {
                     $last: "$is_active"
                 },
@@ -123,6 +126,9 @@ ZonescoreHelper.loadAllZonescoreDataAll = async function loadAllZonescoreDataAll
                 _id: "$_id",
                 score: {
                     $last: "$score"
+                },
+                year: {
+                    $last: "$year"
                 },
                 is_active: {
                     $last: "$is_active"
@@ -254,6 +260,9 @@ ZonescoreHelper.insertNewZonescore = async function insertNewZonescore(data) {
                 score: {
                     $last: "$score"
                 },
+                year: {
+                    $last: "$year"
+                },
                 is_active: {
                     $last: "$is_active"
                 },
@@ -319,6 +328,9 @@ ZonescoreHelper.updateZonescoreData = async function updateZonescoreData(data) {
                 _id: "$_id",
                 score: {
                     $last: "$score"
+                },
+                year: {
+                    $last: "$year"
                 },
                 is_active: {
                     $last: "$is_active"

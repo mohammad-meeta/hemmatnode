@@ -138,6 +138,10 @@ mix.js("resources/js/core/kernel.js", `${output}/js/core`)
         `${output}/js/pages/zone-score/index`
     )
     .js(
+        "resources/js/pages/action-score/index/index.js",
+        `${output}/js/pages/action-score/index`
+    )
+    .js(
         "resources/js/pages/report/index/index.js",
         `${output}/js/pages/report/index`
     )

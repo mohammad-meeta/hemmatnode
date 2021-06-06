@@ -1,19 +1,19 @@
 extends ../../layout/app.pug
 
 block title
-    | کارنامه
+    | کارنامه عملکرد
 
 block content
     .container
-        zone-scores(
-            list-url=route('api.all.zonescore', { page: '$page$', size: '$pageSize$' }),
+        action-scores(
+            list-url=route('api.all.actionscore', { page: '$page$', size: '$pageSize$' }),
             departments-url=route('api.department', { page: 1, size: 1000 }),
-            register-url=route('zonescore.store'),
-            edit-url=route('zonescore.update', { id :'$id$'}),
-            load-url=route("api.zonescore.show", { department: '$department$'}),
+            register-url=route('actionscore.store'),
+            edit-url=route('actionscore.update', { id :'$id$'}),
+            load-url=route("api.actionscore.show", { department: '$department$'}),
         )
 
 block scripts
-    script(defer, src=mix('js/pages/zone-score/index/index.js'))
+    script(defer, src=mix('js/pages/action-score/index/index.js'))
 
 

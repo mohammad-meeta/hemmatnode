@@ -120,7 +120,7 @@ export default {
             source: null,
             department_category_id: null,
             references: null,
-            is_active: false,
+            is_active: true,
         },
 
         sources: [

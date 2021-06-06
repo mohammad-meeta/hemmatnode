@@ -283,6 +283,9 @@ export default {
                 department_category_id: this.zoneIndexData
                     .department_category_id,
                 references: this.zoneIndexData.references,
+                zone_cat: this.zoneIndexData.zone_cat,
+                source: this.zoneIndexData.source,
+                point: this.zoneIndexData.point,
                 is_active: this.zoneIndexData.isActive,
                 oldReferences: this.oldReferences,
             };

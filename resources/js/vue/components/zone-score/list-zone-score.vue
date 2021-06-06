@@ -1,6 +1,6 @@
 <template lang="pug">
 .container-child
-    h1(v-if="!hasZoneScore") هیچ حوزه فعالیتی ایجاد نشده
+    h1(v-if="!hasZoneScore") هیچ کارنامه ای ایجاد نشده
     table.table.is-striped.is-hoverable.is-fullwidth(v-if="hasZoneScore")
         thead
             tr
@@ -13,7 +13,8 @@
         tbody
             tr(v-for="zoneScore in zoneScores", :key="zoneScore.id")
                 td {{ zoneScore.year }}
-                td {{ zoneScore.zoneCat }}
+                td {{ zoneScore.zoneCat.title }}
+                td {{ zoneScore.score }}
                 td(v-if="zoneScore.is_active")
                     | فعال
                 td(v-if="!zoneScore.is_active")
@@ -108,7 +109,7 @@ export default {
                 const resData = res.data;
                 Vue.set(this, "zoneScores", resData.data.data);
                 Vue.set(this, "zoneScoresCount", resData.data.count);
-
+                console.log(this.zoneScores);
                 this.paginator();
             });
         },
@@ -146,6 +147,7 @@ export default {
          * add new ZoneScore data to list data
          */
         addToZoneScoreList(payload) {
+            console.log(payload);
             const newZoneScoreData = {
                 _id: payload._id,
                 year: payload.title,

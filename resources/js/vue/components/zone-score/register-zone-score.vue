@@ -178,7 +178,6 @@ export default {
             const url = this.zoneCatsUrl;
             let res = await AxiosHelper.send("get", url, "");
             const resData = res.data;
-            console.log(resData);
             const datas = resData.data.data;
 
             Vue.set(this, "zoneCats", datas);

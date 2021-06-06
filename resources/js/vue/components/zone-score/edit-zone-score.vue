@@ -111,8 +111,8 @@ export default {
         zoneCats: [],
         zoneIndexs: [],
         zoneScoreData: {
-            zone_cat: null,
-            zone_index: null,
+            zone_cat: {},
+            zone_index: {},
             year: null,
             score: null,
             department: null,
@@ -190,7 +190,7 @@ export default {
          */
         async loadZoneScoreData(data) {
             await this.onChange(data.zonecat._id);
-
+            console.log(data);
             let temp = {
                 _id: data._id,
                 year: data.year,

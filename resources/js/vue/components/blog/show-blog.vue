@@ -93,6 +93,7 @@ export default {
         hideLoading() {
             Vue.set(this, "showLoadingFlag", false);
         },
+
         /**
          * To Persian Date
          */

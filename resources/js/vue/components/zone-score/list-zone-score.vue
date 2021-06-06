@@ -12,7 +12,7 @@
                 th عملیات
         tbody
             tr(v-for="zoneScore in zoneScores", :key="zoneScore.id")
-                td {{ zoneScore.year }}
+                td {{ toPersianDate(zoneScore.year) }}
                 td {{ zoneScore.zonecat.title }}
                 td {{ zoneScore.score }}
                 td(v-if="zoneScore.is_active")
@@ -177,6 +177,13 @@ export default {
             );
 
             Vue.set(this.zoneScores, foundScore, editedZoneScoreData);
+        },
+
+        /**
+         * To Persian Date
+         */
+        toPersianDate(date) {
+            return DateHelper.toPersianDateYear(date);
         },
     },
 };

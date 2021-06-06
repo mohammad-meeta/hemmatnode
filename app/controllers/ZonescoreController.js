@@ -67,7 +67,7 @@ Zonescore.paginateZonescoreAll = async function paginateZonescoreAll(req, res, n
         let result = {};
 
         let data = await ZonescoreHelper.loadAllZonescoreCountDataAll();
-        let count = data.data;
+        let count = data;
 
         data = await ZonescoreHelper.loadAllZonescoreDataAll(req, dataPaginate);
         result = {
@@ -77,7 +77,7 @@ Zonescore.paginateZonescoreAll = async function paginateZonescoreAll(req, res, n
                 count: count,
             },
         };
-
+        console.log(result)
         res.status(200)
             .send(result)
             .end();

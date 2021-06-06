@@ -31,19 +31,20 @@
             .control
                 .select.is-primary
                     select(
-                        v-model="zoneScoreData.zone_cat._id",
+                        v-model="zoneScoreData.zone_cat",
                         @change="onChange($event.target.value)"
                     )
                         option(
                             v-for="(zoneCat, zoneCatScore) in zoneCats",
                             :value="zoneCat._id"
                         ) {{ zoneCat.title }}
+
         .field
             label.label مستندات
             .control
                 .select.is-primary
                     select(
-                        v-model="zoneScoreData.zone_index._id",
+                        v-model="zoneScoreData.zone_index",
                     )
                         option(
                             v-for="(zoneIndex, zoneIndexScore) in zoneIndexs",
@@ -55,6 +56,7 @@
                 date-picker(
                     v-model="zoneScoreData.year",
                     display-format="jYYYY",
+                    format="YYYY",
                     type="year",
                     required
                 )
@@ -78,26 +80,27 @@
                 |
                 | فعال
 
-            .field.is-grouped
-                .control(v-show="! isLoadingMode")
-                    a.button.is-link.is-rounded(
-                        href="#",
-                        @click.prevent="commandClick(ENUMS.COMMAND.SAVE)"
-                    )
-                        | ویرایش
+        .field.is-grouped
+            .control(v-show="! isLoadingMode")
+                a.button.is-link.is-rounded(
+                    href="#",
+                    @click.prevent="commandClick(ENUMS.COMMAND.SAVE)"
+                )
+                    |
+                    | ایجاد
 </template>
 
 <script>
 "use strict";
 
-const Buefy = require("buefy").default;
 const AxiosHelper = require("JS-HELPERS/axios-helper");
 const ENUMS = require("JS-HELPERS/enums");
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
 
 export default {
-    name: "EditZoneIndex",
+    name: "RegisterZoneScore",
+
     components: {
         Notification,
         DatePicker: VuePersianDatetimePicker,
@@ -105,23 +108,17 @@ export default {
 
     data: () => ({
         ENUMS,
-        oldReferences: null,
-        departmentCategories: [],
-        departments: [],
         zoneCats: [],
         zoneIndexs: [],
+        departments: [],
         zoneScoreData: {
-            zone_cat: {},
-            zone_index: {},
-            year: "",
+            zone_cat: null,
+            zone_index: null,
+            year: null,
             score: null,
             department: null,
             is_active: true,
         },
-
-        notificationMessage: null,
-        notificationType: "is-info",
-        showLoadingFlag: false,
 
         selectedOption: null,
         title: "",
@@ -135,12 +132,12 @@ export default {
     }),
 
     props: {
-        editUrl: {
+        registerUrl: {
             type: String,
             default: "",
         },
 
-        departmentCategoriesUrl: {
+        departmentsUrl: {
             type: String,
             default: "",
         },
@@ -154,24 +151,17 @@ export default {
             type: String,
             default: "",
         },
-
-        departmentsUrl: {
-            type: String,
-            default: "",
-        },
     },
 
     created() {
         this.loadDepartments();
         this.loadZoneCats();
+        // this.loadZoneIndexs();
     },
-
-    mounted() {},
 
     computed: {
         isLoadingMode: (state) => state.showLoadingFlag == true,
         showNotification: (state) => state.notificationMessage != null,
-
         filteredDataObj() {
             return this.departments.filter((option) => {
                 return (
@@ -186,28 +176,6 @@ export default {
 
     methods: {
         /**
-         * Load
-         */
-        async loadZoneScoreData(data) {
-            await this.onChange(data.zonecat._id);
-            console.log(data);
-            let temp = {
-                _id: data._id,
-                year: data.year,
-                score: data.score,
-                department: data.department,
-                zone_index: data.zoneindex,
-                zone_cat: data.zonecat,
-                is_active: data.is_active,
-                created_at: data.created_at,
-            };
-
-            Vue.set(this, "zoneScoreData", temp);
-            Vue.set(this, "selected", temp.department);
-            Vue.set(this, "title", temp.department.title);
-        },
-
-        /**
          * load all departments for select departments in form
          */
         async loadDepartments() {
@@ -216,6 +184,19 @@ export default {
             const resData = res.data;
             const datas = resData.data.data;
             Vue.set(this, "departments", datas);
+        },
+
+        /**
+         * On Command
+         *
+         * @param      {Object}  arg     The argument
+         */
+        commandClick(arg) {
+            switch (arg) {
+                case ENUMS.COMMAND.SAVE:
+                    this.registerZoneScore();
+                    break;
+            }
         },
 
         /**
@@ -233,26 +214,25 @@ export default {
         /**
          * onchange department category
          */
-        async onChange($event) {
-            let url = this.zoneIndexsUrl.replace("$zoneCat$", $event);
-
+        async onChange(id) {
+            const url = this.zoneIndexsUrl.replace("$zoneCat$", id);
             let res = await AxiosHelper.send("get", url, "");
             const resData = res.data;
             const datas = resData.data.data;
+
             Vue.set(this, "zoneIndexs", datas);
         },
 
         /**
-         * On Command
-         *
-         * @param      {Object}  arg     The argument
+         * load all zone indexs for select zoneIndexs in form
          */
-        commandClick(arg) {
-            switch (arg) {
-                case ENUMS.COMMAND.SAVE:
-                    this.editZoneIndex();
-                    break;
-            }
+        async loadZoneIndexs(id) {
+            const url = this.zoneIndexsUrl.replace("$zoneCat$", id);
+            let res = await AxiosHelper.send("get", url, "");
+            const resData = res.data;
+            const datas = resData.data.data;
+
+            Vue.set(this, "zoneIndexs", datas);
         },
 
         /**
@@ -285,37 +265,61 @@ export default {
         },
 
         /**
-         * Edit Zone Index
+         * Register new zone score
          */
-        async editZoneIndex() {
+        async registerZoneScore() {
+            const isValid = this.validate();
+
+            if (!isValid) {
+                return;
+            }
+
             this.showLoading();
 
-            let zoneScoreData = {
-                _id: this.zoneScoreData._id,
-                year: this.zoneScoreData.year,
-                score: this.zoneScoreData.score,
-                department: this.selected._id,
-                zone_index: this.zoneScoreData.zone_index._id,
-                zone_cat: this.zoneScoreData.zone_cat._id,
-                is_active: this.zoneScoreData.is_active,
-            };
+            let zoneScoreData = this.zoneScoreData;
+
+            const url = this.registerUrl;
+            zoneScoreData.department = this.selected._id;
 
             try {
-                const url = this.editUrl.replace("$id$", zoneScoreData._id);
-                let res = await AxiosHelper.send("patch", url, zoneScoreData, {
+                let res = await AxiosHelper.send("post", url, zoneScoreData, {
                     sendAsFormData: true,
                 });
 
                 const data = res.data;
-                this.$emit("on-update", {
-                    sender: this,
-                    data,
-                });
+                if (data.success) {
+                    this.$emit("on-register", {
+                        sender: this,
+                        data,
+                    });
+                }
             } catch (err) {
-                this.setNotification(".خطا در ویرایش", "is-danger");
+                const data = err.response.data;
+                this.setNotification(data, "is-danger");
             }
 
             this.hideLoading();
+        },
+
+        /**
+         * Validate new department data
+         */
+        validate() {
+            return true;
+            const result = DepartmentValidator.validate(this.zoneScoreData);
+
+            if (result.passes) {
+                this.closeNotification();
+                return true;
+            }
+
+            const errors = result.validator.errors.all();
+            const error = Object.keys(errors)
+                .map((key) => errors[key].join("\n"))
+                .join("</br>");
+
+            this.setNotification(error, "is-danger");
+            return false;
         },
     },
 };

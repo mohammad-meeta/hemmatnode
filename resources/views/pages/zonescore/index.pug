@@ -1,0 +1,20 @@
+extends ../../layout/app.pug
+
+block title
+    | آیتم های حوزه فعالیت
+
+block content
+    .container
+        zone-scores(
+            list-url=route('api.all.zonescore', { page: '$page$', size: '$pageSize$' }),
+            departments-url=route('api.department', { page: 1, size: 1000 }),
+            zone-cats-url=route('api.zonecat', { page: 1, size: 1000 }),
+            register-url=route('zonescore.store'),
+            edit-url=route('zonescore.update', { id :'$id$'}),
+            load-url=route("api.zonescore.show", { department: '$department$'}),
+        )
+
+block scripts
+    script(defer, src=mix('js/pages/zone-score/index/index.js'))
+
+

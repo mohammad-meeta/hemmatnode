@@ -1,12 +1,12 @@
 extends ../../layout/app.pug
 
 block title
-    | حوزه فعالیت
+    | آیتم های حوزه فعالیت
 
 block content
     .container
         zone-indexs(
-            list-url=route('api.zoneindex', { page: '$page$', size: '$pageSize$' }),
+            list-url=route('api.all.zoneindex', { page: '$page$', size: '$pageSize$' }),
             department-categories-url=route('api.departmentcategory', { page: 1, size: 1000 }),
             zone-cats-url=route('api.zonecat', { page: 1, size: 1000 }),
             register-url=route('zoneindex.store'),

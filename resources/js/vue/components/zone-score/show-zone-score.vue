@@ -5,11 +5,14 @@
             h1 در حال بارگذاری
         .column.is-full(v-show="! isLoadingMode")
             .info-card
-                .info-card-title {{ zoneCatData.title }}
+                .info-card-title {{ zoneScoreData.title }}
                 .info-card-details
                     .info-card-item
-                        .info-card-label وزن:
-                        .info-card-value {{ zoneCatData.weight }}
+                        .info-card-label حداکثر امتیاز:
+                        .info-card-value {{ zoneScoreData.point }}
+                    .info-card-item
+                        .info-card-label منبع قضاوت:
+                        .info-card-value {{ zoneScoreData.source }}
 
 </template>
 <script>
@@ -22,12 +25,13 @@ export default {
 
     data: () => ({
         ENUMS,
-        zoneCats: [],
-        zoneCatData: {
+        zoneScores: [],
+        zoneScoreData: {
             _id: null,
+            zone_score_id: null,
             title: null,
-            zone_cat_id: null,
-            weight: null,
+            point: null,
+            source: null,
             is_active: false,
         },
         showLoadingFlag: false,
@@ -46,18 +50,19 @@ export default {
 
     methods: {
         /**
-         * Load specific zone cats
+         * Load specific zone scores
          */
-        loadZoneCatData(data) {
+        loadZoneScoreData(data) {
             const temp = {
                 _id: data._id,
+                zone_score_id: data.zone_score_id,
                 title: data.title,
-                zone_cat_id: data.zone_cat_id,
-                weight: data.weight,
+                point: data.point,
+                source: data.source,
                 is_active: data.is_active,
             };
 
-            Vue.set(this, "zoneCatData", temp);
+            Vue.set(this, "zoneScoreData", temp);
         },
 
         /**

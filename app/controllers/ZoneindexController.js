@@ -11,7 +11,7 @@ module.exports = Zoneindex;
  * Zoneindex route
  */
 Zoneindex.index = async function index(req, res, next) {
-    const pageRoute = "index.index";
+    const pageRoute = "zoneindex.index";
 
     res.render(PugView.getView(pageRoute), {
         req,
@@ -137,7 +137,7 @@ Zoneindex.destroy = async function destroy(req, res, next) {
  * Create route return page
  */
 Zoneindex.create = async function create(req, res, next) {
-    const pageRoute = PugView.getView("index.create");
+    const pageRoute = PugView.getView("zoneindex.create");
 
     res.render(pageRoute, {
         req,

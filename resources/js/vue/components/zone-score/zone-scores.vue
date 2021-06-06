@@ -9,9 +9,9 @@
             span(v-html="notificationMessage")
         .container.page-header
             .title
-                h1(v-show="modeList") حوزه فعالیت
-                h1(v-show="modeRegister") ایجاد حوزه فعالیت
-                h1(v-show="modeEdit") ویرایش حوزه فعالیت
+                h1(v-show="modeList") کارنامه
+                h1(v-show="modeRegister") ایجاد کارنامه
+                h1(v-show="modeEdit") ویرایش کارنامه
 
     .columns.exposed-form(v-show="!modeLoading")
         .column.is-one-fifth(v-show="modeList")
@@ -37,36 +37,38 @@
             loading
 
         .column(v-show="!modeLoading && modeList")
-            list-zone-cat(
-                ref="zoneCatList",
+            list-zone-score(
+                ref="zoneScoreList",
                 @on-command="onCommand",
                 :list-url="listUrl"
             )
 
         .column(v-show="!modeLoading && modeRegister")
-            register-zone-cat(
-                ref="zoneCatRegister",
+            register-zone-score(
+                ref="zoneScoreRegister",
                 @on-command="onCommand",
-                @on-register="onZoneCatRegister",
+                @on-register="onZoneScoreRegister",
                 :register-url="registerUrl",
-                :zone-cats-url="zoneCatsUrl",
+                :zone-scores-url="zoneScoresUrl",
                 :department-categories-url="departmentCategoriesUrl",
+                :zone-cats-url="zoneCatsUrl",
                 :departments-url="departmentsUrl",
             )
 
         .column(v-show="!modeLoading && modeEdit")
-            edit-zone-cat(ref="zoneCatEdit",
+            edit-zone-score(ref="zoneScoreEdit",
                 @on-command="onCommand",
-                @on-update="onZoneCatUpdate"
+                @on-update="onZoneScoreUpdate"
                 :edit-url="editUrl",
-                :zone-cat-url="zoneCatsUrl",
+                :zone-scores-url="zoneScoresUrl",
                 :department-categories-url="departmentCategoriesUrl",
+                :zone-cats-url="zoneCatsUrl",
                 :departments-url="departmentsUrl",
             )
 
         .column(v-show="!modeLoading && modeShow")
-            show-zone-cat(
-                ref="zoneCatShow",
+            show-zone-score(
+                ref="zoneScoreShow",
                 @on-command="onCommand",
                 :zone-list-url="listUrl"
                 :load-user-url="loadUserUrl"
@@ -80,32 +82,32 @@ const Buefy = require("buefy").default;
 const Routes = require("JS-CORE/routes");
 const ENUMS = require("JS-HELPERS/enums");
 const Loading = require("VUE-COMPONENTS/general/loading.vue").default;
-const RegisterZoneCat = require("VUE-COMPONENTS/zone-cat/register-zone-cat.vue")
+const RegisterZoneScore = require("VUE-COMPONENTS/zone-score/register-zone-score.vue")
     .default;
-const ListZoneCat = require("VUE-COMPONENTS/zone-cat/list-zone-cat.vue")
+const ListZoneScore = require("VUE-COMPONENTS/zone-score/list-zone-score.vue")
     .default;
-const EditZoneCat = require("VUE-COMPONENTS/zone-cat/edit-zone-cat.vue")
+const EditZoneScore = require("VUE-COMPONENTS/zone-score/edit-zone-score.vue")
     .default;
-const ShowZoneCat = require("VUE-COMPONENTS/zone-cat/show-zone-cat.vue")
+const ShowZoneScore = require("VUE-COMPONENTS/zone-score/show-zone-score.vue")
     .default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
 export default {
-    name: "ZoneCats",
+    name: "ZoneScores",
 
     components: {
         Loading,
-        ListZoneCat,
-        RegisterZoneCat,
-        EditZoneCat,
-        ShowZoneCat,
+        ListZoneScore,
+        RegisterZoneScore,
+        EditZoneScore,
+        ShowZoneScore,
         Notification,
     },
 
     data: () => ({
         ENUMS,
         formModeStack: [],
-        zoneCats: [],
+        zoneScores: [],
         notificationMessage: null,
         notificationType: "is-info",
     }),
@@ -131,7 +133,7 @@ export default {
             default: null,
         },
 
-        zoneCatsUrl: {
+        zoneScoresUrl: {
             type: String,
             default: null,
         },
@@ -142,6 +144,11 @@ export default {
         },
 
         departmentCategoriesUrl: {
+            type: String,
+            default: null,
+        },
+
+        zoneCatsUrl: {
             type: String,
             default: null,
         },
@@ -175,28 +182,28 @@ export default {
 
     mounted() {
         this.changeFormMode(ENUMS.FORM_MODE.LIST);
-        this.$refs.zoneCatList.loadZoneCats(1);
+        this.$refs.zoneScoreList.loadZoneScores(1);
     },
 
     methods: {
         /**
-         * On Register zone cat
+         * On Register zone score
          */
-        onZoneCatRegister(payload) {
+        onZoneScoreRegister(payload) {
             //***update vue list****
-            this.$refs.zoneCatList.addToZoneCatList(payload.data.data[0]);
+            this.$refs.zoneScoreList.addToZoneScoreList(payload.data.data[0]);
             this.setNotification(".حوزه فعالیت با موفقیت ذخیره شد", "is-success");
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
         },
 
         /**
-         * On Update zone cat
+         * On Update zone score
          */
-        onZoneCatUpdate(payload) {
-            this.$refs.zoneCatList.editInZoneCatList(payload.data);
+        onZoneScoreUpdate(payload) {
+            this.$refs.zoneScoreList.editInZoneScoreList(payload.data);
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
 
-            this.setNotification(".حوزه فعالیت با موفقیت ویرایش شد", "is-success");
+            this.setNotification(".کارنامه با موفقیت ویرایش شد", "is-success");
         },
 
         /**
@@ -219,8 +226,8 @@ export default {
                     break;
 
                 case ENUMS.COMMAND.EDIT:
-                    /* TODO: REGISTER NEW Zone Cat */
-                    this.$refs.zoneCatEdit.loadZoneCatData(data);
+                    /* TODO: REGISTER NEW zone score */
+                    this.$refs.zoneScoreEdit.loadZoneScoreData(data);
                     this.changeFormMode(ENUMS.FORM_MODE.EDIT);
                     break;
 
@@ -229,8 +236,8 @@ export default {
                     break;
 
                 case ENUMS.COMMAND.SHOW:
-                    this.$refs.zoneCatShow.loadUrl = this.loadUrl;
-                    this.$refs.zoneCatShow.loadZoneCatData(data);
+                    this.$refs.zoneScoreShow.loadUrl = this.loadUrl;
+                    this.$refs.zoneScoreShow.loadZoneScoreData(data);
                     this.changeFormMode(ENUMS.FORM_MODE.SHOW);
                     break;
             }

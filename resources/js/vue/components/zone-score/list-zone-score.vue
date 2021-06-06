@@ -1,32 +1,35 @@
 <template lang="pug">
 .container-child
-    h1(v-if="!hasZoneIndex") هیچ حوزه فعالیتی ایجاد نشده
-    table.table.is-striped.is-hoverable.is-fullwidth(v-if="hasZoneIndex")
+    h1(v-if="!hasZoneScore") هیچ حوزه فعالیتی ایجاد نشده
+    table.table.is-striped.is-hoverable.is-fullwidth(v-if="hasZoneScore")
         thead
             tr
-                th عنوان
+                th سال
+                th حوزه فعالیت
+                th امتیاز
                 th وضعیت
                 th تاریخ ایجاد
                 th عملیات
         tbody
-            tr(v-for="zoneIndex in zoneIndexs", :key="zoneIndex.id")
-                td {{ zoneIndex.title }}
-                td(v-if="zoneIndex.is_active")
+            tr(v-for="zoneScore in zoneScores", :key="zoneScore.id")
+                td {{ zoneScore.year }}
+                td {{ zoneScore.zoneCat }}
+                td(v-if="zoneScore.is_active")
                     | فعال
-                td(v-if="!zoneIndex.is_active")
+                td(v-if="!zoneScore.is_active")
                     | غیر فعال
-                td {{ toPersianDate(zoneIndex.created_at) }}
+                td {{ toPersianDate(zoneScore.created_at) }}
                 td.function-links.buttons
                     a.button.is-primary.is-rounded.is-small(
                         href="#",
-                        @click.prevent="commandClick(ENUMS.COMMAND.EDIT, zoneIndex)"
+                        @click.prevent="commandClick(ENUMS.COMMAND.EDIT, zoneScore)"
                     )
                         span.icon.is-small
                             i.material-icons.icon edit
                         span ویرایش
                     a.button.is-primary.is-rounded.is-small(
                         href="#",
-                        @click.prevent="commandClick(ENUMS.COMMAND.SHOW, zoneIndex)"
+                        @click.prevent="commandClick(ENUMS.COMMAND.SHOW, zoneScore)"
                     )
                         span.icon.is-small
                             i.material-icons.icon visibility
@@ -48,7 +51,7 @@
         aria-previous-label="Previous page",
         aria-page-label="Page",
         aria-current-label="Current page",
-        @change="loadZoneIndexs(pagination.current)"
+        @change="loadZoneScores(pagination.current)"
     )
 </template>
 
@@ -58,7 +61,7 @@
 const ENUMS = require("JS-HELPERS/enums");
 
 export default {
-    name: "ListZoneIndex",
+    name: "ListZoneScore",
 
     components: {},
 
@@ -71,8 +74,8 @@ export default {
 
     data: () => ({
         ENUMS,
-        zoneIndexs: [],
-        zoneIndexsCount: 0,
+        zoneScores: [],
+        zoneScoresCount: 0,
         pageCount: 0,
 
         pagination: {
@@ -91,20 +94,20 @@ export default {
     }),
 
     computed: {
-        hasZoneIndex: (state) => (state.zoneIndexs || []).length,
+        hasZoneScore: (state) => (state.zoneScores || []).length,
     },
 
     methods: {
         /**
-         * Load zoneIndexs
+         * Load zoneScores
          */
-        loadZoneIndexs(pageId) {
+        loadZoneScores(pageId) {
             let url = this.listUrl.replace("$page$", pageId);
             url = url.replace("$pageSize$", 50);
             AxiosHelper.send("get", url, "").then((res) => {
                 const resData = res.data;
-                Vue.set(this, "zoneIndexs", resData.data.data);
-                Vue.set(this, "zoneIndexsCount", resData.data.count);
+                Vue.set(this, "zoneScores", resData.data.data);
+                Vue.set(this, "zoneScoresCount", resData.data.count);
 
                 this.paginator();
             });
@@ -130,22 +133,22 @@ export default {
          * Paginator
          */
         paginator() {
-            let pageCount = Math.ceil(this.zoneIndexsCount / 50);
+            let pageCount = Math.ceil(this.zoneScoresCount / 50);
             Vue.set(this, "pageCount", pageCount);
         },
         /**
          * paginator click link
          */
         paginatorClick(id) {
-            this.loadZoneIndex(id);
+            this.loadZoneScore(id);
         },
         /**
-         * add new ZoneIndex data to list data
+         * add new ZoneScore data to list data
          */
-        addToZoneIndexList(payload) {
-            const newZoneIndexData = {
+        addToZoneScoreList(payload) {
+            const newZoneScoreData = {
                 _id: payload._id,
-                title: payload.title,
+                year: payload.title,
                 weight: payload.weight,
                 department_category_id: payload.department_category_id,
                 references: payload.references,
@@ -153,11 +156,11 @@ export default {
                 created_at: payload.created_at,
             };
 
-            this.zoneIndexs.unshift(newZoneIndexData);
+            this.zoneScores.unshift(newZoneScoreData);
         },
 
-        editInZoneIndexList(payload) {
-            const editedZoneIndexData = {
+        editInZoneScoreList(payload) {
+            const editedZoneScoreData = {
                 _id: payload.data[0]._id,
                 title: payload.data[0].title,
                 weight: payload.data[0].weight,
@@ -166,11 +169,11 @@ export default {
                 created_at: payload.data[0].created_at,
             };
 
-            let foundIndex = this.zoneIndexs.findIndex(
-                (x) => x._id == editedZoneIndexData._id
+            let foundScore = this.zoneScores.findIndex(
+                (x) => x._id == editedZoneScoreData._id
             );
 
-            Vue.set(this.zoneIndexs, foundIndex, editedZoneIndexData);
+            Vue.set(this.zoneScores, foundScore, editedZoneScoreData);
         },
     },
 };

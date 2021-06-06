@@ -8,8 +8,11 @@
                 .info-card-title {{ zoneIndexData.title }}
                 .info-card-details
                     .info-card-item
-                        .info-card-label وزن:
-                        .info-card-value {{ zoneIndexData.weight }}
+                        .info-card-label حداکثر امتیاز:
+                        .info-card-value {{ zoneIndexData.point }}
+                    .info-card-item
+                        .info-card-label منبع قضاوت:
+                        .info-card-value {{ zoneIndexData.source }}
 
 </template>
 <script>
@@ -25,9 +28,10 @@ export default {
         zoneIndexs: [],
         zoneIndexData: {
             _id: null,
-            title: null,
             zone_index_id: null,
-            weight: null,
+            title: null,
+            point: null,
+            source: null,
             is_active: false,
         },
         showLoadingFlag: false,
@@ -48,16 +52,17 @@ export default {
         /**
          * Load specific zone indexs
          */
-        loadHealthData(data) {
+        loadZoneIndexData(data) {
             const temp = {
                 _id: data._id,
-                title: data.title,
                 zone_index_id: data.zone_index_id,
-                weight: data.weight,
+                title: data.title,
+                point: data.point,
+                source: data.source,
                 is_active: data.is_active,
             };
 
-            Vue.set(this, "healthData", temp);
+            Vue.set(this, "zoneIndexData", temp);
         },
 
         /**

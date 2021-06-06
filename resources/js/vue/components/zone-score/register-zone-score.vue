@@ -11,24 +11,19 @@
         h1 در حال بارگذاری
     .form-small(v-show="! isLoadingMode")
         .field
-            label.label گروه
-            .control
-                .select.is-primary
-                    select(
-                        v-model="zoneIndexData.department_category_id",
-                        @change="onChange($event.target.value)"
+            b-field(label='گروه')
+                b-autocomplete(
+                    v-model="department_id"
+                    placeholder="انتخاب گروه"
+                    icon="magnify"
+                    :keep-first="keepFirst"
+                    :open-on-focus="openOnFocus"
+                    :data="filteredDataObj"
+                    field="department_id"
+                    @select="option => (selected = option)"
+                    :clearable="clearable"
                     )
-                        option(
-                            v-for="(departmentCategory, departmentCategoryIndex) in departmentCategories",
-                            :value="departmentCategory._id"
-                        ) {{ departmentCategory.title }}
-            .control
-                .select.is-primary
-                    select(v-model="zoneIndexData.references")
-                        option(
-                            v-for="(department, departmentIndex) in departments",
-                            :value="department._id"
-                        ) {{ department.title }}
+                        template(slot='empty') گروه یافت نشد
 
 
         .field
@@ -36,50 +31,38 @@
             .control
                 .select.is-primary
                     select(
-                        v-model="zoneIndexData.zone_cat_id",
+                        v-model="zoneScoreData.zone_cat_id",
                     )
                         option(
-                            v-for="(zoneCat, zoneCatIndex) in zoneCats",
+                            v-for="(zoneCat, zoneCatScore) in zoneCats",
                             :value="zoneCat._id"
                         ) {{ zoneCat.title }}
         .field
-            label.label مستندات قابل قبول که باید در سامانه همت در طول سال بارگذاری شود
+            label.label سال
             .control
-                input.input(
-                    type="text",
-                    placeholder="مستندات قابل قبول که باید در سامانه همت در طول سال بارگذاری شود",
-                    autofocus,
-                    v-model="zoneIndexData.title",
+                date-picker(
+                    v-model="zoneScoreData.year",
+                    display-format="jYYYY",
+                    type="year",
                     required
                 )
         .field
-            label.label حداکثر امتیاز
+            label.label امتیاز
             .control
                 input.input(
                     type="text",
-                    placeholder="حداکثر امتیاز",
-                    v-model="zoneIndexData.point",
+                    placeholder="امتیاز",
+                    v-model="zoneScoreData.point",
                     required,
                     minlength="1",
                     maxlength="3",
                     pattern="[0-9\u06F0-\u06F9]*",
-                    validation-message="حداکثر امتیاز را بین 0 تا 100 وارد کنید"
+                    validation-message="امتیاز را بین 0 تا 100 وارد کنید"
                 )
-        .field
-            label.label منبع قضاوت
-            b-select(
-                placeholder="انتخاب منبع قضاوت"
-            )
-                option(
-                    v-for="option in sources"
-                    :value="option.name"
-                    :key="option.name"
-                )
-                    | {{ option.name }}
 
         .field
             label.checkbox
-                input(type="checkbox", v-model="zoneIndexData.is_active")
+                input(type="checkbox", v-model="zoneScoreData.is_active")
                 |
                 | فعال
 
@@ -101,7 +84,7 @@ const ENUMS = require("JS-HELPERS/enums");
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
 export default {
-    name: "RegisterZoneIndex",
+    name: "RegisterZoneScore",
 
     components: {
         Notification,
@@ -110,22 +93,14 @@ export default {
     data: () => ({
         ENUMS,
         zoneCats: [],
-        departmentCategories: [],
         departments: [],
-        zoneIndexData: {
+        zoneScoreData: {
             zone_cat_id: null,
-            title: null,
+            year: null,
             point: null,
-            source: null,
-            department_category_id: null,
-            references: null,
+            department_id: null,
             is_active: false,
         },
-
-        sources: [
-            { name: "سامانه"},
-            { name: "کمیته"},
-        ],
 
         notificationMessage: null,
         notificationType: "is-info",
@@ -134,11 +109,6 @@ export default {
 
     props: {
         registerUrl: {
-            type: String,
-            default: "",
-        },
-
-        departmentCategoriesUrl: {
             type: String,
             default: "",
         },
@@ -157,25 +127,31 @@ export default {
     },
 
     created() {
-        this.loadDepartmentCategories();
+        this.loadDepartments();
         this.loadZoneCats();
     },
 
     computed: {
         isLoadingMode: (state) => state.showLoadingFlag == true,
         showNotification: (state) => state.notificationMessage != null,
+        filteredDataObj() {
+            return this.departments.filter((option) => {
+                return (
+                    option.title
+                        .toString()
+                        .toLowerCase()
+                        .indexOf(this.title.toLowerCase()) >= 0
+                );
+            });
+        },
     },
 
     methods: {
         /**
-         * onchange department category
+         * load all departments for select departments in form
          */
-        async onChange($event) {
-            let url = this.departmentsUrl.replace(
-                "$department_category$",
-                $event
-            );
-
+        async loadDepartments() {
+            const url = this.listUrlDepartment;
             let res = await AxiosHelper.send("get", url, "");
             const resData = res.data;
             const datas = resData.data.data;
@@ -190,22 +166,9 @@ export default {
         commandClick(arg) {
             switch (arg) {
                 case ENUMS.COMMAND.SAVE:
-                    this.registerZoneIndex();
+                    this.registerZoneScore();
                     break;
             }
-        },
-
-        /**
-         * load all departmentCategories for select departmentCategories in form
-         */
-        async loadDepartmentCategories() {
-            const url = this.departmentCategoriesUrl;
-            let res = await AxiosHelper.send("get", url, "");
-            const resData = res.data;
-            console.log(resData);
-            const datas = resData.data.data;
-
-            Vue.set(this, "departmentCategories", datas);
         },
 
         /**
@@ -251,9 +214,9 @@ export default {
         },
 
         /**
-         * Register new zone index
+         * Register new zone score
          */
-        async registerZoneIndex() {
+        async registerZoneScore() {
             const isValid = this.validate();
 
             if (!isValid) {
@@ -262,12 +225,12 @@ export default {
 
             this.showLoading();
 
-            let zoneIndexData = this.zoneIndexData;
+            let zoneScoreData = this.zoneScoreData;
 
             const url = this.registerUrl;
 
             try {
-                let res = await AxiosHelper.send("post", url, zoneIndexData, {
+                let res = await AxiosHelper.send("post", url, zoneScoreData, {
                     sendAsFormData: true,
                 });
 
@@ -291,7 +254,7 @@ export default {
          */
         validate() {
             return true;
-            const result = DepartmentValidator.validate(this.zoneIndexData);
+            const result = DepartmentValidator.validate(this.zoneScoreData);
 
             if (result.passes) {
                 this.closeNotification();

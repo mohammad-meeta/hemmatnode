@@ -28,13 +28,6 @@
                         span.icon.is-small
                             i.material-icons.icon visibility
                         span مشاهده
-                    a.button.is-primary.is-rounded.is-small(
-                        href="#",
-                        @click.prevent="commandClick(ENUMS.COMMAND.REGULATION, zoneCat)"
-                    )
-                        span.icon.is-small
-                            i.material-icons.icon visibility
-                        span آئین نامه ها
 
     b-pagination(
         :total="pagination.total",
@@ -141,7 +134,7 @@ export default {
          * paginator click link
          */
         paginatorClick(id) {
-            this.loadZoneCat(id);
+            this.loadZoneCats(id);
         },
         /**
          * add new ZoneCat data to list data

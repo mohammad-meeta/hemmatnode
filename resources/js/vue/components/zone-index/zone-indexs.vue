@@ -9,9 +9,9 @@
             span(v-html="notificationMessage")
         .container.page-header
             .title
-                h1(v-show="modeList") حوزه فعالیت
-                h1(v-show="modeRegister") ایجاد حوزه فعالیت
-                h1(v-show="modeEdit") ویرایش حوزه فعالیت
+                h1(v-show="modeList") آیتم های حوزه فعالیت
+                h1(v-show="modeRegister") ایجاد آیتم حوزه فعالیت
+                h1(v-show="modeEdit") ویرایش آیتم حوزه فعالیت
 
     .columns.exposed-form(v-show="!modeLoading")
         .column.is-one-fifth(v-show="modeList")
@@ -237,7 +237,7 @@ export default {
 
                 case ENUMS.COMMAND.SHOW:
                     this.$refs.zoneIndexShow.loadUrl = this.loadUrl;
-                    this.$refs.zoneIndexShow.loadZoneIndexData(data._id);
+                    this.$refs.zoneIndexShow.loadZoneIndexData(data);
                     this.changeFormMode(ENUMS.FORM_MODE.SHOW);
                     break;
             }

@@ -36,7 +36,7 @@
             .control
                 .select.is-primary
                     select(
-                        v-model="zoneIndexData.zone_cat_id",
+                        v-model="zoneIndexData.zone_cat",
                     )
                         option(
                             v-for="(zoneCat, zoneCatIndex) in zoneCats",
@@ -68,7 +68,8 @@
         .field
             label.label منبع قضاوت
             b-select(
-                placeholder="انتخاب منبع قضاوت"
+                placeholder="انتخاب منبع قضاوت",
+                v-model="zoneIndexData.source",
             )
                 option(
                     v-for="option in sources"
@@ -113,7 +114,7 @@ export default {
         departmentCategories: [],
         departments: [],
         zoneIndexData: {
-            zone_cat_id: null,
+            zone_cat: null,
             title: null,
             point: null,
             source: null,
@@ -205,6 +206,18 @@ export default {
             const datas = resData.data.data;
 
             Vue.set(this, "departmentCategories", datas);
+        },
+
+        /**
+         * load all departments for select departments in form
+         */
+        async loadDepartment() {
+            const url = this.departmentUrl;
+            let res = await AxiosHelper.send("get", url, "");
+            const resData = res.data;
+            const datas = resData.data.data;
+
+            Vue.set(this, "departments", datas);
         },
 
         /**

@@ -13,13 +13,13 @@
         .field
             b-field(label='گروه')
                 b-autocomplete(
-                    v-model="department_id"
+                    v-model="title"
                     placeholder="انتخاب گروه"
                     icon="magnify"
                     :keep-first="keepFirst"
                     :open-on-focus="openOnFocus"
                     :data="filteredDataObj"
-                    field="department_id"
+                    field="title"
                     @select="option => (selected = option)"
                     :clearable="clearable"
                     )
@@ -31,7 +31,7 @@
             .control
                 .select.is-primary
                     select(
-                        v-model="zoneScoreData.zone_cat_id",
+                        v-model="zoneScoreData.zone_cat",
                     )
                         option(
                             v-for="(zoneCat, zoneCatScore) in zoneCats",
@@ -52,7 +52,7 @@
                 input.input(
                     type="text",
                     placeholder="امتیاز",
-                    v-model="zoneScoreData.point",
+                    v-model="zoneScoreData.score",
                     required,
                     minlength="1",
                     maxlength="3",
@@ -82,12 +82,17 @@
 const AxiosHelper = require("JS-HELPERS/axios-helper");
 const ENUMS = require("JS-HELPERS/enums");
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
+const VuePersianDatetimePicker = require("vue-persian-datetime-picker").default;
+
+
+
 
 export default {
     name: "RegisterZoneScore",
 
     components: {
         Notification,
+        DatePicker: VuePersianDatetimePicker,
     },
 
     data: () => ({
@@ -95,13 +100,21 @@ export default {
         zoneCats: [],
         departments: [],
         zoneScoreData: {
-            zone_cat_id: null,
+            zone_cat: null,
             year: null,
-            point: null,
-            department_id: null,
-            is_active: false,
+            score: null,
+            department: null,
+            is_active: true,
         },
 
+
+
+        selectedOption: null,
+        title: "",
+        keepFirst: false,
+        openOnFocus: true,
+        selected: null,
+        clearable: false,
         notificationMessage: null,
         notificationType: "is-info",
         showLoadingFlag: false,
@@ -151,7 +164,7 @@ export default {
          * load all departments for select departments in form
          */
         async loadDepartments() {
-            const url = this.listUrlDepartment;
+            const url = this.departmentsUrl;
             let res = await AxiosHelper.send("get", url, "");
             const resData = res.data;
             const datas = resData.data.data;
@@ -227,6 +240,8 @@ export default {
             let zoneScoreData = this.zoneScoreData;
 
             const url = this.registerUrl;
+            zoneScoreData.department = this.selected._id
+            console.log(url);
 
             try {
                 let res = await AxiosHelper.send("post", url, zoneScoreData, {

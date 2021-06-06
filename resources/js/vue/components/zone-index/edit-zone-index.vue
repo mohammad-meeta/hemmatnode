@@ -11,27 +11,6 @@
         h1 در حال بارگذاری
     .form-small(v-show="! isLoadingMode")
         .field
-            label.label عنوان
-            .control
-                input.input(
-                    type="text",
-                    placeholder="عنوان",
-                    autofocus,
-                    v-model="zoneIndexData.title",
-                    required
-                )
-        .field
-            label.label وزن
-            .control
-                input.input(
-                    type="text",
-                    placeholder="وزن",
-                    autofocus,
-                    v-model="zoneIndexData.weight",
-                    required
-                )
-
-        .field
             label.label گروه
             .control
                 .select.is-primary
@@ -50,6 +29,53 @@
                             v-for="(department, departmentIndex) in departments",
                             :value="department._id"
                         ) {{ department.title }}
+        .field
+            label.label حوزه فعالیت
+            .control
+                .select.is-primary
+                    select(
+                        v-model="zoneIndexData.zone_cat",
+                    )
+                        option(
+                            v-for="(zoneCat, zoneCatIndex) in zoneCats",
+                            :value="zoneCat._id"
+                        ) {{ zoneCat.title }}
+
+        .field
+            label.label مستندات
+            .control
+                input.input(
+                    type="text",
+                    placeholder="مستندات",
+                    autofocus,
+                    v-model="zoneIndexData.title",
+                    required
+                )
+        .field
+            label.label حداکثر امتیاز
+            .control
+                input.input(
+                    type="text",
+                    placeholder="حداکثر امتیاز",
+                    v-model="zoneIndexData.point",
+                    required,
+                    minlength="1",
+                    maxlength="3",
+                    pattern="[0-9\u06F0-\u06F9]*",
+                    validation-message="حداکثر امتیاز را بین 0 تا 100 وارد کنید"
+                )
+        .field
+            label.label منبع قضاوت
+            b-select(
+                placeholder="انتخاب منبع قضاوت",
+                v-model="zoneIndexData.source",
+            )
+                option(
+                    v-for="option in sources"
+                    :value="option.name"
+                    :key="option.name"
+                )
+                    | {{ option.name }}
 
         .field
             label.checkbox
@@ -83,13 +109,27 @@ export default {
         oldReferences: null,
         departmentCategories: [],
         departments: [],
+        zoneCats: [],
         zoneIndexData: {
+            zone_cat: null,
             title: null,
-            weight: null,
+            point: null,
+            source: null,
             department_category_id: null,
             references: null,
             is_active: false,
         },
+
+        sources: [
+            {
+                name: "سامانه",
+                key: "سامانه",
+            },
+            {
+                name: "کمیته",
+                key: "کمیته",
+            },
+        ],
 
         notificationMessage: null,
         notificationType: "is-info",
@@ -129,18 +169,21 @@ export default {
          * Load
          */
         loadZoneIndexData(data) {
+            console.log(data);
+            this.onChange(data.department_category_id);
             let temp = {
                 _id: data._id,
                 title: data.title,
-                weight: data.weight,
-                department_category_id: data.department_category_id,
-                references: data.references,
+                point: data.point,
+                source: data.source,
+                department_category_id: data.zonecat.department_category_id,
+                references: data.zonecat.references,
                 isActive: data.is_active,
             };
             console.log(temp);
             Vue.set(this, "oldReferences", temp.references);
             Vue.set(this, "zoneIndexData", temp);
-            this.onChange(data.department_category_id);
+
         },
 
         /**
@@ -220,7 +263,6 @@ export default {
             let zoneIndexData = {
                 _id: this.zoneIndexData._id,
                 title: this.zoneIndexData.title,
-                weight: this.zoneIndexData.weight,
                 department_category_id: this.zoneIndexData
                     .department_category_id,
                 references: this.zoneIndexData.references,

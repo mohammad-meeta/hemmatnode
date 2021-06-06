@@ -13,7 +13,7 @@
         tbody
             tr(v-for="zoneScore in zoneScores", :key="zoneScore.id")
                 td {{ zoneScore.year }}
-                td {{ zoneScore.zoneCat.title }}
+                td {{ zoneScore.zonecat.title }}
                 td {{ zoneScore.score }}
                 td(v-if="zoneScore.is_active")
                     | فعال

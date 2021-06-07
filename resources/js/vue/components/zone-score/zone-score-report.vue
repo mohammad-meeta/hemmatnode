@@ -10,9 +10,9 @@
         .container.page-header
             .title
                 h1 کارنامه
-    .columns
+    .columns.is-multiline
         .column.is-12
-            b-table(:data="results[0].result", expanded)
+            b-table(:data="results", expanded)
                 b-table-column(
                     label="نام",
                     v-slot="props",
@@ -45,25 +45,22 @@
                     | {{ props.row.nomreh }}
         .column.is-12
             .chart.container
-                SimpleLineChart(
-                    :Chartdata="monitoringValue"
-                    :Chartlabel="montoringLabel"
-                    :Label="indicatorData.title"
-                    YScaleLabel="سال"
-                    height=400
-                    :XScaleLabel="indicatorData.unit"
+                multi-line-chart(
+                    :labels="labels"
+                    :datasets="datasets"
                 )
 
 </template>
 
 <script>
-"use strict";
+import Vue from "vue";
+("use strict");
 
 const Buefy = require("buefy").default;
 const Routes = require("JS-CORE/routes");
 const ENUMS = require("JS-HELPERS/enums");
 const Loading = require("VUE-COMPONENTS/general/loading.vue").default;
-const SimpleLineChart = require("VUE-COMPONENTS/charts/line-chart-simple.vue")
+const MultiLineChart = require("VUE-COMPONENTS/charts/line-chart-multi-section.vue")
     .default;
 
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
@@ -74,7 +71,7 @@ export default {
     components: {
         Loading,
         Notification,
-        SimpleLineChart,
+        MultiLineChart,
     },
 
     data: () => ({
@@ -82,20 +79,9 @@ export default {
         notificationMessage: null,
         notificationType: "is-info",
         selectedYear: "1399",
-        results: [
-            {
-                year: "",
-                result: {
-                    year: "",
-                    name: "",
-                    mahsool: null,
-                    salamat: null,
-                    mohitzist: null,
-                    faaliat: null,
-                    nomreh: null,
-                }
-            }
-        ]
+        results: [{}],
+        datasets: [],
+        labels: [],
     }),
 
     computed: {
@@ -106,12 +92,9 @@ export default {
         this.init();
     },
 
-    mounted() {
-
-    },
+    mounted() {},
 
     methods: {
-
         /**
          * Init method
          */
@@ -123,12 +106,11 @@ export default {
          * Load data
          */
         loadData() {
-            let karnamehData= [
+            let karnamehData = [
                 {
                     year: "1398",
                     result: [
                         {
-                            year: "1398",
                             name: "محیط زیست",
                             mahsool: 19,
                             salamat: 21.3,
@@ -137,7 +119,6 @@ export default {
                             nomreh: 72.2,
                         },
                         {
-                            year: "1398",
                             name: "آبفای شهری و روستایی",
                             mahsool: 12.3,
                             salamat: 11.5,
@@ -146,7 +127,6 @@ export default {
                             nomreh: 49.8,
                         },
                         {
-                            year: "1398",
                             name: "آموزش و پرورش",
                             mahsool: 23,
                             salamat: 20,
@@ -155,7 +135,6 @@ export default {
                             nomreh: 66,
                         },
                         {
-                            year: "1398",
                             name: "منابع طبیعی",
                             mahsool: 17,
                             salamat: 23,
@@ -163,13 +142,12 @@ export default {
                             faaliat: 14,
                             nomreh: 65,
                         },
-                    ]
+                    ],
                 },
                 {
                     year: "1399",
                     result: [
                         {
-                            year: "1399",
                             name: "محیط زیست",
                             mahsool: 30,
                             salamat: 30,
@@ -178,7 +156,6 @@ export default {
                             nomreh: 100,
                         },
                         {
-                            year: "1399",
                             name: "آبفای شهری و روستایی",
                             mahsool: 15,
                             salamat: 13.5,
@@ -187,7 +164,6 @@ export default {
                             nomreh: 55.5,
                         },
                         {
-                            year: "1399",
                             name: "آموزش و پرورش",
                             mahsool: 24.4,
                             salamat: 22,
@@ -196,7 +172,6 @@ export default {
                             nomreh: 78.7,
                         },
                         {
-                            year: "1399",
                             name: "منابع طبیعی",
                             mahsool: 18,
                             salamat: 24,
@@ -204,11 +179,28 @@ export default {
                             faaliat: 19,
                             nomreh: 73,
                         },
-                    ]
+                    ],
                 },
             ];
-            let selectedData = karnamehData.filter((x) => x.year == this.selectedYear);
-            Vue.set(this, "results" ,selectedData);
+            let selectedData = karnamehData.filter(
+                (x) => x.year == this.selectedYear
+            );
+            Vue.set(this, "results", selectedData[0].result);
+
+            for (let index = 0; index < this.results.length; index++) {
+                const element = this.results[index];
+                const keys = Object.keys(element);
+                const values = Object.values(element);
+                const temp = {
+                    label: values[0],
+                    data: values.slice(1),
+                    backgroundColor: "transparent",
+                    backgroundColor:
+                        "#" + Math.floor(Math.random() * 16777215).toString(16),
+                };
+                Vue.set(this.datasets, this.datasets.length, temp);
+                Vue.set(this, "labels", keys.slice(1));
+            }
         },
 
         /**

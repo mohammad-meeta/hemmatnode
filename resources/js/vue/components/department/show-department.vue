@@ -580,7 +580,7 @@ export default {
 
         showReports() {
             this.changeFormMode(this.ENUMS.FORM_MODE.REPORT);
-            this.$refs.reportList.loadReports(1);
+            // this.$refs.reportList.loadReports(1);
         },
     },
 };

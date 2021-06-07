@@ -11,7 +11,10 @@
         tbody
             tr(v-for="projecttafahom in projecttafahoms", :key="projecttafahom.id")
                 td {{ projecttafahom.title }}
-                td {{ projecttafahom.is_active }}
+                td(v-if="projecttafahom.is_active")
+                    | فعال
+                td(v-if="!projecttafahom.is_active")
+                    | غیر فعال
                 td {{ toPersianDate(projecttafahom.created_at) }}
                 td.function-links.buttons
                     a.button.is-primary.is-rounded.is-small(

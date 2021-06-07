@@ -11,7 +11,10 @@
         tbody
             tr(v-for="regulation in regulations", :key="regulation.id")
                 td {{ regulation.title }}
-                td {{ regulation.is_active }}
+                td(v-if="regulation.is_active")
+                    | فعال
+                td(v-if="!regulation.is_active")
+                    | غیر فعال
                 td {{ toPersianDate(regulation.created_at) }}
                 td.function-links.buttons
                     a.button.is-primary.is-rounded.is-small(

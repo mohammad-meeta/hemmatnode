@@ -11,7 +11,10 @@
         tbody
             tr(v-for="blog in blogs", :key="blog.id")
                 td {{ blog.title }}
-                td {{ blog.is_active }}
+                td(v-if="blog.is_active")
+                    | فعال
+                td(v-if="!blog.is_active")
+                    | غیر فعال
                 td {{ toPersianDate(blog.created_at) }}
                 td.function-links.buttons
                     a.button.is-primary.is-rounded.is-small(

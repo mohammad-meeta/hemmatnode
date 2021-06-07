@@ -11,7 +11,10 @@
         tbody
             tr(v-for='request in requests', :key='request._id')
                 td {{ request.title }}
-                td {{ request.is_active }}
+                td(v-if="request.is_active")
+                    | فعال
+                td(v-if="!request.is_active")
+                    | غیر فعال
                 td {{ toPersianDate(request.created_at) }}
                 td.function-links.buttons
                     a.button.is-primary.is-rounded.is-small(href="#", @click.prevent="commandClick(ENUMS.COMMAND.NEW, request)")

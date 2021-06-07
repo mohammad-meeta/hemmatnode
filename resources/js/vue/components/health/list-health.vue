@@ -11,7 +11,10 @@
         tbody
             tr(v-for="health in healths", :key="health.id")
                 td {{ health.title }}
-                td {{ health.is_active }}
+                td(v-if="health.is_active")
+                    | فعال
+                td(v-if="!health.is_active")
+                    | غیر فعال
                 td {{ toPersianDate(health.created_at) }}
                 td.function-links.buttons
                     a.button.is-primary.is-rounded.is-small(

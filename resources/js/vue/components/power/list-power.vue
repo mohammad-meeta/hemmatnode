@@ -11,7 +11,10 @@
         tbody
             tr(v-for="power in powers", :key="power.id")
                 td {{ power.title }}
-                td {{ power.is_active }}
+                td(v-if="power.is_active")
+                    | فعال
+                td(v-if="!power.is_active")
+                    | غیر فعال
                 td {{ toPersianDate(power.created_at) }}
                 td.function-links.buttons
                     a.button.is-primary.is-rounded.is-small(

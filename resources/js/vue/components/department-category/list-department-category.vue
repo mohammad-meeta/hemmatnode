@@ -16,7 +16,10 @@
                 :key="departmentCategory.id"
             )
                 td {{ departmentCategory.title }}
-                td {{ departmentCategory.is_active }}
+                td(v-if="departmentCategory.is_active")
+                    | فعال
+                td(v-if="!departmentCategory.is_active")
+                    | غیر فعال
                 td {{ toPersianDate(departmentCategory.created_at) }}
                 td.function-links.buttons
                     a.button.is-primary.is-rounded.is-small(

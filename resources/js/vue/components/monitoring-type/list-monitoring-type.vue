@@ -14,7 +14,10 @@
                 :key="monitoringType.id"
             )
                 td {{ monitoringType.title }}
-                td {{ monitoringType.is_active }}
+                td(v-if="monitoringType.is_active")
+                    | فعال
+                td(v-if="!monitoringType.is_active")
+                    | غیر فعال
                 td {{ toPersianDate(monitoringType.created_at) }}
                 td.function-links.buttons
                     a.button.is-primary.is-rounded.is-small(

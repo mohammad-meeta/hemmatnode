@@ -11,7 +11,10 @@
         tbody
             tr(v-for="education in educations", :key="education.id")
                 td {{ education.title }}
-                td {{ education.is_active }}
+                td(v-if="education.is_active")
+                    | فعال
+                td(v-if="!education.is_active")
+                    | غیر فعال
                 td {{ toPersianDate(education.created_at) }}
                 td.function-links.buttons
                     a.button.is-primary.is-rounded.is-small(

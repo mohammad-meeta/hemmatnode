@@ -11,7 +11,10 @@
         tbody
             tr(v-for='project in projects', :key='project.id')
                 td {{ project.title }}
-                td {{ project.is_active }}
+                td(v-if="project.is_active")
+                    | فعال
+                td(v-if="!project.is_active")
+                    | غیر فعال
                 td {{ toPersianDate(project.created_at) }}
                 td.function-links.buttons
                     a.button.is-primary.is-rounded.is-small(href="#", @click.prevent="commandClick(ENUMS.COMMAND.EDIT, project)")

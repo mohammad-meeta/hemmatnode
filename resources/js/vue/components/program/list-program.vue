@@ -11,7 +11,10 @@
         tbody
             tr(v-for='program in programs', :key='program.id')
                 td {{ program.title }}
-                td {{ program.is_active }}
+                td(v-if="program.is_active")
+                    | فعال
+                td(v-if="!program.is_active")
+                    | غیر فعال
                 td {{ toPersianDate(program.created_at) }}
                 td.function-links.buttons
                     a.button.is-primary.is-rounded.is-small(href="#", @click.prevent="commandClick(ENUMS.COMMAND.SHOW, program)")

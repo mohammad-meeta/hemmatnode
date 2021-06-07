@@ -11,7 +11,10 @@
         tbody
             tr(v-for='response in responses', :key='response._id')
                 td {{ response.title }}
-                td {{ response.is_active }}
+                td(v-if="response.is_active")
+                    | فعال
+                td(v-if="!response.is_active")
+                    | غیر فعال
                 td {{ toPersianDate(response.created_at) }}
                 td.function-links.buttons
                     a.button.is-primary.is-rounded.is-small(href="#", @click.prevent="commandClick(ENUMS.COMMAND.EDIT, response)")

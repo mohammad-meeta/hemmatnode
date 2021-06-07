@@ -11,7 +11,10 @@
         tbody
             tr(v-for="department in departments", :key="department.id")
                 td {{ department.title }}
-                td {{ department.is_active }}
+                td(v-if="department.is_active")
+                    | فعال
+                td(v-if="!department.is_active")
+                    | غیر فعال
                 td {{ toPersianDate(department.created_at) }}
                 td.function-links.buttons
                     a.button.is-primary.is-rounded.is-small(

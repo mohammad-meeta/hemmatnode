@@ -11,7 +11,10 @@
         tbody
             tr(v-for="indicator in indicators", :key="indicator.id")
                 td {{ indicator.title }}
-                td {{ indicator.is_active }}
+                td(v-if="indicator.is_active")
+                    | فعال
+                td(v-if="!indicator.is_active")
+                    | غیر فعال
                 td {{ toPersianDate(indicator.created_at) }}
                 td.function-links.buttons
                     a.button.is-primary.is-rounded.is-small(

@@ -14,7 +14,10 @@
                 :key="actionCreative.id"
             )
                 td {{ actionCreative.title }}
-                td {{ actionCreative.is_active }}
+                td(v-if="actionCreative.is_active")
+                    | فعال
+                td(v-if="!actionCreative.is_active")
+                    | غیر فعال
                 td {{ toPersianDate(actionCreative.created_at) }}
                 td.function-links.buttons
                     a.button.is-primary.is-rounded.is-small(

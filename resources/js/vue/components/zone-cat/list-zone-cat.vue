@@ -11,7 +11,10 @@
         tbody
             tr(v-for="zoneCat in zoneCats", :key="zoneCat.id")
                 td {{ zoneCat.title }}
-                td {{ zoneCat.is_active }}
+                td(v-if="zoneCat.is_active")
+                    | فعال
+                td(v-if="!zoneCat.is_active")
+                    | غیر فعال
                 td {{ toPersianDate(zoneCat.created_at) }}
                 td.function-links.buttons
                     a.button.is-primary.is-rounded.is-small(

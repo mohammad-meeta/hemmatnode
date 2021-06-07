@@ -17,15 +17,14 @@ ZoneScoreIndexPage.boot = function() {
  * Init vue
  */
 ZoneScoreIndexPage.initVue = function() {
-  const ZoneScores = require("VUE-COMPONENTS/zone-score/zone-score-report.vue").default;
+  const ZoneScoreReport = require("VUE-COMPONENTS/zone-score/zone-score-report.vue").default;
 
   window.v = new Vue({
     el: "#app",
 
     components: {
-      ZoneScores,
+      ZoneScoreReport,
     },
-
   });
 };
 

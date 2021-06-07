@@ -130,13 +130,20 @@
         .container.main-content(v-show="modeShow")
             show-document(ref="documentShow", @on-command="onCommand")
 
-        department-report(
-            ref="reportList",
+        //- department-report(
+        //-     ref="reportList",
+        //-     @on-command="onCommand",
+        //-     :report-list-url="ReportListUrl",
+        //-     :department-id="departmentId",
+        //-     v-show="!isLoadingMode && modeReport"
+        //- )
+
+        zone-score-report(
+            ref="zoneScoreReport",
             @on-command="onCommand",
-            :report-list-url="ReportListUrl",
-            :department-id="departmentId",
             v-show="!isLoadingMode && modeReport"
         )
+
 
 </template>
 
@@ -149,6 +156,8 @@ const DepartmentDocument = require("VUE-COMPONENTS/document/department-document.
     .default;
 const DepartmentReport = require("VUE-COMPONENTS/report/department-report.vue")
     .default;
+const ZoneScoreReport = require("VUE-COMPONENTS/zone-score/zone-score-report.vue")
+    .default;
 const ShowDocument = require("VUE-COMPONENTS/document/show-document.vue")
     .default;
 
@@ -158,6 +167,7 @@ export default {
     components: {
         DepartmentDocument,
         DepartmentReport,
+        ZoneScoreReport,
         ShowDocument,
     },
     data: () => ({

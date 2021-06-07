@@ -27,6 +27,7 @@
                     v-model="healthData.date",
                     type="year",
                     display-format="jYYYY",
+                    format="YYYY",
                     required
                 )
         .field

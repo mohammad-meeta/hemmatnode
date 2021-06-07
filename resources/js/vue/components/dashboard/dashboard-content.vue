@@ -26,6 +26,15 @@
                 .column.is-4.dashboard-button
                     a(href="/response" target="blank")
                         | همکاری متقابل
+                .column.is-4.dashboard-button
+                    a(href="/zonecat" target="blank")
+                        | حوزه فعالیت
+                .column.is-4.dashboard-button
+                    a(href="/zoneindex" target="blank")
+                        | آیتم حوزه فعالیت
+                .column.is-4.dashboard-button
+                    a(href="/zonescore" target="blank")
+                        | امتیازدهی
 </template>
 <script>
 "use strict";

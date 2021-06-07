@@ -26,6 +26,7 @@
                 date-picker(
                     v-model="healthData.date",
                     display-format="jYYYY",
+                    format="YYYY"
                     type="year",
                     required
                 )

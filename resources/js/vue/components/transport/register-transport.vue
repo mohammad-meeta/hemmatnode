@@ -27,6 +27,7 @@
                     v-model="transportData.date",
                     type="year",
                     display-format="jYYYY",
+                    format="YYYY",
                     required
                 )
         .field

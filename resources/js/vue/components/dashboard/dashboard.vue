@@ -45,6 +45,12 @@
                      :class="{active:FORM_MODE.ALLSESSION == selected}"
                      )
                         | همه جلسات
+                .dashboard-item
+                    a(
+                        href="/zonescore/report",
+                        target="_blank",
+                     )
+                        | کارنامه پیام گزاران
             .column.is-9.dashboard-contents
                 .dashboard-content(v-show="modeContent")
                     dashboard-content

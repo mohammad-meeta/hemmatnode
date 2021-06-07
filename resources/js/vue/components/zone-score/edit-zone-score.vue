@@ -55,6 +55,7 @@
                 date-picker(
                     v-model="zoneScoreData.year",
                     display-format="jYYYY",
+                    format="YYYY",
                     type="year",
                     required
                 )

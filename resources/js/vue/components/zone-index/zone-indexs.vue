@@ -203,7 +203,7 @@ export default {
             this.$refs.zoneIndexList.editInZoneIndexList(payload.data);
             this.changeFormMode(ENUMS.FORM_MODE.LIST);
 
-            this.setNotification(".حوزه فعالیت با موفقیت ویرایش شد", "is-success");
+            this.setNotification(".آیتم حوزه فعالیت با موفقیت ویرایش شد", "is-success");
         },
 
         /**

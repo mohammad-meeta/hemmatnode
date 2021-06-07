@@ -16,7 +16,8 @@
                 .control
                     date-picker(
                         v-model='programData.date'
-                        display-format="jYYYY"
+                        display-format="jYYYY",
+                        format="YYYY",
                         type="year"
                         required
                     )

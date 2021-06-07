@@ -16,6 +16,7 @@
                 date-picker(
                     v-model="reportData.year",
                     display-format="jYYYY",
+                    format="YYYY",
                     type="year",
                     required
                 )
@@ -27,10 +28,10 @@
                         v-model='title'
                         disabled=true
                         placeholder='انتخاب شاخص'
-                        :data='filteredDataObjEd' 
+                        :data='filteredDataObjEd'
                         :open-on-focus="openOnFocus"
-                        field='title' 
-                        @select='option => (selected = option)' 
+                        field='title'
+                        @select='option => (selected = option)'
                         :clearable='clearable'
                     )
                             template(slot='empty') شاخصی یافت نشد

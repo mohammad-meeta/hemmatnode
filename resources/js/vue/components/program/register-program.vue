@@ -16,7 +16,8 @@
                     date-picker(
                         v-model='programData.date'
                         type="year"
-                        display-format="jYYYY"
+                        display-format="jYYYY",
+                        format="YYYY",
                         required
                     )
             .field

@@ -42,6 +42,7 @@
                     v-model="educationData.date",
                     type="year",
                     display-format="jYYYY",
+                    format="YYYY",
                     required
                 )
         .field

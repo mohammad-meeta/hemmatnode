@@ -23,8 +23,9 @@
                 .control
                     date-picker(
                         v-model='memorandumData.date'
-                        type="year"
-                        display-format="jYYYY"
+                        type="year",
+                        display-format="jYYYY",
+                        format="YYYY",
                         required
                     )
 

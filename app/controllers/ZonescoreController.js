@@ -4,7 +4,7 @@ const ZonescoreHelper = use("app/helpers/zonescore-helper");
 /**
  * Dep cat controller
  */
-function Zonescore() { }
+function Zonescore() {}
 module.exports = Zonescore;
 
 /**
@@ -30,6 +30,7 @@ Zonescore.report = async function report(req, res, next) {
         pageRoute,
     });
 };
+
 /**
  * paginate route
  */
@@ -46,7 +47,11 @@ Zonescore.paginateZonescore = async function paginateZonescore(req, res, next) {
         let data = await ZonescoreHelper.loadAllZonescoreCountData(type);
         let count = data.data;
 
-        data = await ZonescoreHelper.loadAllZonescoreData(req, dataPaginate, type);
+        data = await ZonescoreHelper.loadAllZonescoreData(
+            req,
+            dataPaginate,
+            type
+        );
         result = {
             success: true,
             data: {
@@ -66,10 +71,43 @@ Zonescore.paginateZonescore = async function paginateZonescore(req, res, next) {
             .end();
     }
 };
+
+/**
+ * report year
+ */
+Zonescore.reportYear = async function reportYear(req, res, next) {
+    const year = req.params.year;
+    const depCat = req.params.depCat;
+
+    try {
+        let result = {};
+
+        let data = await ZonescoreHelper.reportYear(year, depCat);
+        result = {
+            success: true,
+            data,
+        };
+
+        res.status(200)
+            .send(result)
+            .end();
+    } catch (err) {
+        Logger.error(err);
+
+        res.status(500)
+            .send(err)
+            .end();
+    }
+};
+
 /**
  * paginate all route
  */
-Zonescore.paginateZonescoreAll = async function paginateZonescoreAll(req, res, next) {
+Zonescore.paginateZonescoreAll = async function paginateZonescoreAll(
+    req,
+    res,
+    next
+) {
     const dataPaginate = {
         page: req.params.page,
         pageSize: req.params.size || 10,
@@ -89,7 +127,7 @@ Zonescore.paginateZonescoreAll = async function paginateZonescoreAll(req, res, n
                 count: count,
             },
         };
-        console.log(result)
+        console.log(result);
         res.status(200)
             .send(result)
             .end();

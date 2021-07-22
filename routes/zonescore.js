@@ -18,6 +18,12 @@ Router.get("/zonescore/report", [
     "Zonescore@report",
 ]).as("zonescore.report");
 
+Router.get("/zonescore/report/:depCat/:year", [
+    checkSession,
+    // Rule.canAsync("user.permision", "zonescore.report"),
+    "Zonescore@reportYear",
+]).as("zonescore.report-year");
+
 Router.get("/api/zonescores/:type/:page/:size?", [
     checkSession,
     Rule.canAsync("user.permision", "api.zonescore"),

@@ -1,11 +1,11 @@
-'use strict';
+"use strict";
 
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 /**
  * Article model
  */
-function Model() { }
+function Model() {}
 module.exports = Model;
 
 /**
@@ -18,7 +18,7 @@ Model.setup = function setup() {
     Model.plugins(schema);
     Model.extraFunctions(schema);
 
-    mongoose.model('Zonescore', schema, "zonescores");
+    mongoose.model("Zonescore", schema, "zonescores");
 };
 
 /**
@@ -28,35 +28,35 @@ Model.model = function model() {
     const ObjectId = mongoose.Schema.ObjectId;
 
     return {
-        'score': {
+        score: {
             type: String,
-            required: true
+            required: true,
         },
-        'year': {
-            type: Date,
-            required: true
+        year: {
+            type: String,
+            required: true,
         },
-        'is_active': {
+        is_active: {
             type: Boolean,
             default: true,
-            required: true
+            required: true,
         },
-        'zone_cat': {
+        zone_cat: {
             type: ObjectId,
-            required: true
+            required: true,
         },
-        'department': {
+        department: {
             type: ObjectId,
-            required: true
+            required: true,
         },
-        'zone_index': {
+        zone_index: {
             type: ObjectId,
-            required: true
+            required: true,
         },
-        'user_id': {
+        user_id: {
             type: ObjectId,
-            required: true
-        }
+            required: true,
+        },
     };
 };
 
@@ -64,11 +64,11 @@ Model.model = function model() {
  * Setup plugins
  */
 Model.plugins = function plugins(schema) {
-    const timestamps = require('mongoose-timestamp');
+    const timestamps = require("mongoose-timestamp");
 
     schema.plugin(timestamps, {
-        createdAt: 'created_at',
-        updatedAt: 'updated_at'
+        createdAt: "created_at",
+        updatedAt: "updated_at",
     });
 };
 
@@ -82,7 +82,7 @@ Model.extraFunctions = function extraFunctions(schema) {
 
     schema.methods.enable = Model.enable;
     schema.methods.disable = Model.disable;
-}
+};
 
 /**
  * Insert user function

@@ -17,7 +17,7 @@
                     option(v-for="year in years", :value="year", :key="year")
                         | {{ year }}
 
-            b-field(grouped label="گروه")
+            b-field(grouped, label="گروه")
                 b-field
                     .control
                         .select.is-primary
@@ -39,7 +39,12 @@
                                 ) {{ department.title }}
                 b-field.mr-2
                     .control
-                        b-button(type="is-primary", @click="loadData", rounded, label="اجرا")
+                        b-button(
+                            type="is-primary",
+                            @click="loadData",
+                            rounded,
+                            label="اجرا"
+                        )
     .columns.is-multiline
         .column.is-12
             b-table(:data="results", expanded)
@@ -88,7 +93,7 @@ export default {
         notificationMessage: null,
         notificationType: "is-info",
         selectedYear: "1399",
-        results: {},
+        results: [],
         datasets: [],
         labels: [],
         years: [],
@@ -103,6 +108,11 @@ export default {
             default: "",
         },
         departmentsUrl: {
+            type: String,
+            default: "",
+        },
+
+        reportUrl: {
             type: String,
             default: "",
         },
@@ -158,6 +168,7 @@ export default {
          * Load data
          */
         loadData() {
+            this.loadReportData()
             // let karnamehData = [
             //     {
             //         year: "1398",
@@ -234,46 +245,47 @@ export default {
             //         ],
             //     },
             // ];
-            let karnamehData =
-                {
-                    result: [
-                        {
-                            name: "محیط زیست",
-                            mahsool: 30,
-                            salamat: 30,
-                            mohitzist: 20,
-                            faaliat: 20,
-                            nomreh: 100,
-                        },
-                        {
-                            name: "آبفای شهری و روستایی",
-                            mahsool: 15,
-                            salamat: 13.5,
-                            mohitzist: 14,
-                            faaliat: 13,
-                            nomreh: 55.5,
-                        },
-                        {
-                            name: "آموزش و پرورش",
-                            mahsool: 24.4,
-                            salamat: 22,
-                            mohitzist: 17,
-                            faaliat: 15.3,
-                            nomreh: 78.7,
-                        },
-                        {
-                            name: "منابع طبیعی",
-                            mahsool: 18,
-                            salamat: 24,
-                            mohitzist: 12,
-                            faaliat: 19,
-                            nomreh: 73,
-                        },
-                    ],
-                };
+            // let karnamehData =
+            //     {
+            //         result: [
+            //             {
+            //                 name: "محیط زیست",
+            //                 mahsool: 30,
+            //                 salamat: 30,
+            //                 mohitzist: 20,
+            //                 faaliat: 20,
+            //                 nomreh: 100,
+            //             },
+            //             {
+            //                 name: "آبفای شهری و روستایی",
+            //                 mahsool: 15,
+            //                 salamat: 13.5,
+            //                 mohitzist: 14,
+            //                 faaliat: 13,
+            //                 nomreh: 55.5,
+            //             },
+            //             {
+            //                 name: "آموزش و پرورش",
+            //                 mahsool: 24.4,
+            //                 salamat: 22,
+            //                 mohitzist: 17,
+            //                 faaliat: 15.3,
+            //                 nomreh: 78.7,
+            //             },
+            //             {
+            //                 name: "منابع طبیعی",
+            //                 mahsool: 18,
+            //                 salamat: 24,
+            //                 mohitzist: 12,
+            //                 faaliat: 19,
+            //                 nomreh: 73,
+            //             },
+            //         ],
+            //     };
             // let selectedData = karnamehData.filter(
             //     (x) => x.year == this.selectedYear
             // );
+
             Vue.set(this, "results", karnamehData.result);
             console.log(this.results);
             for (let index = 0; index < this.results.length; index++) {
@@ -290,6 +302,27 @@ export default {
                 Vue.set(this.datasets, this.datasets.length, temp);
                 Vue.set(this, "labels", keys.slice(1));
             }
+        },
+
+        /**
+         * Load link access
+         */
+        async loadReportData() {
+            let depCat = this.department_category_id;
+            let year = this.year;
+            let url = this.reportUrl;
+
+            url = url.replace(/\$department_category\$/g, depCat)
+            .replace(/\$year\$/g, year);
+            try {
+                let res = await AxiosHelper.send("get", url);
+
+                if (res.data.success) {
+                    const data = res.data.data || [];
+                    console.log(res);
+                    // Vue.set(this, )
+                }
+            } catch (err) {}
         },
 
         /**

@@ -179,7 +179,7 @@ ZonescoreHelper.reportYear = async function reportYear(year, depCat) {
         },
         {
             $match: {
-                "zonecat.department_category_id": ObjectId(depCat),
+                "zonecat.references": ObjectId(depCat),
             },
         },
         {

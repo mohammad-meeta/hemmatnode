@@ -168,7 +168,7 @@ export default {
          * Load data
          */
         loadData() {
-            this.loadReportData()
+            this.loadReportData();
             // let karnamehData = [
             //     {
             //         year: "1398",
@@ -286,40 +286,42 @@ export default {
             //     (x) => x.year == this.selectedYear
             // );
 
-            Vue.set(this, "results", karnamehData.result);
-            console.log(this.results);
-            for (let index = 0; index < this.results.length; index++) {
-                const element = this.results[index];
-                const keys = Object.keys(element);
-                const values = Object.values(element);
-                const temp = {
-                    label: values[0],
-                    data: values.slice(1),
-                    backgroundColor: "transparent",
-                    backgroundColor:
-                        "#" + Math.floor(Math.random() * 16777215).toString(16),
-                };
-                Vue.set(this.datasets, this.datasets.length, temp);
-                Vue.set(this, "labels", keys.slice(1));
-            }
+            // Vue.set(this, "results", karnamehData.result);
+            // console.log(this.results);
+            //     for (let index = 0; index < this.results.length; index++) {
+            //         const element = this.results[index];
+            //         const keys = Object.keys(element);
+            //         const values = Object.values(element);
+            //         const temp = {
+            //             label: values[0],
+            //             data: values.slice(1),
+            //             backgroundColor: "transparent",
+            //             backgroundColor:
+            //                 "#" + Math.floor(Math.random() * 16777215).toString(16),
+            //         };
+            //         Vue.set(this.datasets, this.datasets.length, temp);
+            //         Vue.set(this, "labels", keys.slice(1));
+            //     }
         },
 
         /**
          * Load link access
          */
         async loadReportData() {
-            let depCat = this.department_category_id;
-            let year = this.year;
+            let depCat = this.references;
+            let year = this.selectedYear;
             let url = this.reportUrl;
 
-            url = url.replace(/\$department_category\$/g, depCat)
-            .replace(/\$year\$/g, year);
+            url = url
+                .replace("#department_category#", depCat)
+                .replace("#year#", year);
+            console.log(url);
             try {
                 let res = await AxiosHelper.send("get", url);
 
                 if (res.data.success) {
                     const data = res.data.data || [];
-                    console.log(res);
+                    console.log(data);
                     // Vue.set(this, )
                 }
             } catch (err) {}

@@ -8,7 +8,7 @@ block content
         zone-score-report(
             department-categories-url=route('api.departmentcategory', { page: 1, size: 1000 }),
             departments-url=route('departmentcategories.department', { department_category: '$department_category$'})
-            report-url=route('zonescore.report-year', { department_category: '$department_category$', year: '$year$'})
+            report-url=route('zonescore.report-year', { depCat: '#department_category#', year: '#year#'})
         )
 block scripts
     script(defer, src=mix('js/pages/zone-score/report/index.js'))

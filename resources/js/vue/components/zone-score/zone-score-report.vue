@@ -49,17 +49,17 @@
         .column.is-12
             b-table(:data="results", expanded)
                 b-table-column(label="نام", v-slot="props")
-                    | {{ props.row.name }}
-                b-table-column(label="محصول و خدمت سالم", v-slot="props")
-                    | {{ props.row.mahsool }}
-                b-table-column(label="سلامت کارکنان", v-slot="props")
-                    | {{ props.row.salamat }}
-                b-table-column(label="اثرات محیط زیست", v-slot="props")
-                    | {{ props.row.mohitzist }}
-                b-table-column(label="فعالیت های بسترسازی", v-slot="props")
-                    | {{ props.row.faaliat }}
+                    | {{ props.row.depName }}
+                b-table-column(:label="label1", v-slot="props")
+                    | {{ props.row.data[label1] }}
+                b-table-column(:label="label2", v-slot="props")
+                    | {{ props.row.data[label2] }}
+                b-table-column(:label="label3", v-slot="props")
+                    | {{ props.row.data[label3] }}
+                b-table-column(label="فعالیت ها بستر سازی", v-slot="props")
+                    | {{ props.row.data[label4] }}
                 b-table-column(label="نمره سال", v-slot="props")
-                    | {{ props.row.nomreh }}
+                    | {{ props.row.data.sum }}
         .column.is-12
             .chart.container
                 multi-line-chart(:labels="labels", :datasets="datasets")
@@ -120,6 +120,52 @@ export default {
 
     computed: {
         showNotification: (state) => state.notificationMessage != null,
+        label1: function () {
+            if (0 == this.results.length) {
+                return null;
+            }
+
+            const arr = Object.keys(this.results[0]["data"]);
+            return arr.find(
+                (item) =>
+                    item == "محصول و خدمت سالم" ||
+                    item == "انتقال مطالبات مردم مخاطب"
+            );
+        },
+        label2: function () {
+            if (0 == this.results.length) {
+                return null;
+            }
+
+            return Object.keys(this.results[0]["data"]).find(
+                (item) =>
+                    item == "سلامت کارکنان" ||
+                    item == "انتقال پیام به مردم مخاطب"
+            );
+        },
+
+        label3: function () {
+            if (0 == this.results.length) {
+                return null;
+            }
+
+            return Object.keys(this.results[0]["data"]).find(
+                (item) =>
+                    item == "پروژه های سلامت محور" || item == "اثرات محیط زیست"
+            );
+        },
+
+        label4: function () {
+            if (0 == this.results.length) {
+                return null;
+            }
+
+            return Object.keys(this.results[0]["data"]).find(
+                (item) =>
+                    item == "فعالیت ها بستر سازی شبکه مردمی" ||
+                    item == "فعالیت ها بستر سازی دستگاه"
+            );
+        },
     },
 
     created() {
@@ -169,139 +215,6 @@ export default {
          */
         loadData() {
             this.loadReportData();
-            // let karnamehData = [
-            //     {
-            //         year: "1398",
-            //         result: [
-            //             {
-            //                 name: "محیط زیست",
-            //                 mahsool: 19,
-            //                 salamat: 21.3,
-            //                 mohitzist: 17.5,
-            //                 faaliat: 14.4,
-            //                 nomreh: 72.2,
-            //             },
-            //             {
-            //                 name: "آبفای شهری و روستایی",
-            //                 mahsool: 12.3,
-            //                 salamat: 11.5,
-            //                 mohitzist: 13,
-            //                 faaliat: 13,
-            //                 nomreh: 49.8,
-            //             },
-            //             {
-            //                 name: "آموزش و پرورش",
-            //                 mahsool: 23,
-            //                 salamat: 20,
-            //                 mohitzist: 12,
-            //                 faaliat: 11,
-            //                 nomreh: 66,
-            //             },
-            //             {
-            //                 name: "منابع طبیعی",
-            //                 mahsool: 17,
-            //                 salamat: 23,
-            //                 mohitzist: 11,
-            //                 faaliat: 14,
-            //                 nomreh: 65,
-            //             },
-            //         ],
-            //     },
-            //     {
-            //         year: "1399",
-            //         result: [
-            //             {
-            //                 name: "محیط زیست",
-            //                 mahsool: 30,
-            //                 salamat: 30,
-            //                 mohitzist: 20,
-            //                 faaliat: 20,
-            //                 nomreh: 100,
-            //             },
-            //             {
-            //                 name: "آبفای شهری و روستایی",
-            //                 mahsool: 15,
-            //                 salamat: 13.5,
-            //                 mohitzist: 14,
-            //                 faaliat: 13,
-            //                 nomreh: 55.5,
-            //             },
-            //             {
-            //                 name: "آموزش و پرورش",
-            //                 mahsool: 24.4,
-            //                 salamat: 22,
-            //                 mohitzist: 17,
-            //                 faaliat: 15.3,
-            //                 nomreh: 78.7,
-            //             },
-            //             {
-            //                 name: "منابع طبیعی",
-            //                 mahsool: 18,
-            //                 salamat: 24,
-            //                 mohitzist: 12,
-            //                 faaliat: 19,
-            //                 nomreh: 73,
-            //             },
-            //         ],
-            //     },
-            // ];
-            // let karnamehData =
-            //     {
-            //         result: [
-            //             {
-            //                 name: "محیط زیست",
-            //                 mahsool: 30,
-            //                 salamat: 30,
-            //                 mohitzist: 20,
-            //                 faaliat: 20,
-            //                 nomreh: 100,
-            //             },
-            //             {
-            //                 name: "آبفای شهری و روستایی",
-            //                 mahsool: 15,
-            //                 salamat: 13.5,
-            //                 mohitzist: 14,
-            //                 faaliat: 13,
-            //                 nomreh: 55.5,
-            //             },
-            //             {
-            //                 name: "آموزش و پرورش",
-            //                 mahsool: 24.4,
-            //                 salamat: 22,
-            //                 mohitzist: 17,
-            //                 faaliat: 15.3,
-            //                 nomreh: 78.7,
-            //             },
-            //             {
-            //                 name: "منابع طبیعی",
-            //                 mahsool: 18,
-            //                 salamat: 24,
-            //                 mohitzist: 12,
-            //                 faaliat: 19,
-            //                 nomreh: 73,
-            //             },
-            //         ],
-            //     };
-            // let selectedData = karnamehData.filter(
-            //     (x) => x.year == this.selectedYear
-            // );
-
-            // Vue.set(this, "results", karnamehData.result);
-            // console.log(this.results);
-            //     for (let index = 0; index < this.results.length; index++) {
-            //         const element = this.results[index];
-            //         const keys = Object.keys(element);
-            //         const values = Object.values(element);
-            //         const temp = {
-            //             label: values[0],
-            //             data: values.slice(1),
-            //             backgroundColor: "transparent",
-            //             backgroundColor:
-            //                 "#" + Math.floor(Math.random() * 16777215).toString(16),
-            //         };
-            //         Vue.set(this.datasets, this.datasets.length, temp);
-            //         Vue.set(this, "labels", keys.slice(1));
-            //     }
         },
 
         /**
@@ -321,12 +234,38 @@ export default {
 
                 if (res.data.success) {
                     const data = res.data.data || [];
-                    console.log(data);
-                    // Vue.set(this, )
+                    const resData = this.convertData(data);
+                    Vue.set(this, "results", resData);
                 }
             } catch (err) {}
         },
 
+        /**
+         *convertData
+         */
+        convertData(payload) {
+            let data = payload;
+
+            function convertToObject(data, name) {
+                let result = {};
+
+                let sum = 0;
+                data.forEach((item) => {
+                    result[item[name]] =
+                        item.weight * item["score"]["$numberDecimal"];
+                    sum = sum + parseFloat(result[item[name]]);
+                    result["sum"] = sum;
+                });
+                return result;
+            }
+
+            data = data.map((item) => ({
+                ...item,
+                data: convertToObject(item.data, "name"),
+            }));
+
+            return data;
+        },
         /**
          * Set notification
          */

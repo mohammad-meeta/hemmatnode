@@ -127,7 +127,6 @@ Zonescore.paginateZonescoreAll = async function paginateZonescoreAll(
                 count: count,
             },
         };
-        console.log(result);
         res.status(200)
             .send(result)
             .end();

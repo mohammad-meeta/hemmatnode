@@ -1,18 +1,21 @@
+"use strict";
 
-'use strict';
-
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 /**
  * Zonescore controller
  */
-function ZonescoreHelper() { }
+function ZonescoreHelper() {}
 module.exports = ZonescoreHelper;
 
 /**
  * find all dep cat data index
  */
-ZonescoreHelper.loadAllZonescoreData = async function loadAllZonescoreData(req, dataPaginate, type) {
+ZonescoreHelper.loadAllZonescoreData = async function loadAllZonescoreData(
+    req,
+    dataPaginate,
+    type
+) {
     const page = parseInt(dataPaginate.page);
     const pageSize = parseInt(dataPaginate.pageSize);
     const skip = page > 0 ? (page - 1) * pageSize : 0;
@@ -23,88 +26,200 @@ ZonescoreHelper.loadAllZonescoreData = async function loadAllZonescoreData(req, 
     const pipeline = [
         {
             $match: {
-                zone_index: ObjectId(type)
-            }
+                zone_index: ObjectId(type),
+            },
         },
         {
             $lookup: {
                 from: "zoneindexs",
                 localField: "zone_index",
                 foreignField: "_id",
-                as: "zoneindex"
-            }
+                as: "zoneindex",
+            },
         },
         {
-            $unwind: "$zoneindex"
+            $unwind: "$zoneindex",
         },
         {
             $lookup: {
                 from: "zonecats",
                 localField: "zone_cat",
                 foreignField: "_id",
-                as: "zonecat"
-            }
+                as: "zonecat",
+            },
         },
         {
-            $unwind: "$zonecat"
+            $unwind: "$zonecat",
         },
         {
             $lookup: {
                 from: "departments",
                 localField: "department",
                 foreignField: "_id",
-                as: "department"
-            }
+                as: "department",
+            },
         },
         {
-            $unwind: "$department"
+            $unwind: "$department",
         },
         {
             $group: {
                 _id: "$_id",
                 score: {
-                    $last: "$score"
+                    $last: "$score",
                 },
                 year: {
-                    $last: "$year"
+                    $last: "$year",
                 },
                 department: {
-                    $last: "$department"
+                    $last: "$department",
                 },
                 is_active: {
-                    $last: "$is_active"
+                    $last: "$is_active",
                 },
                 created_at: {
-                    $last: "$created_at"
+                    $last: "$created_at",
                 },
                 zonecat: {
-                    $last: "$zonecat"
+                    $last: "$zonecat",
                 },
                 zoneindex: {
-                    $last: "$zoneindex"
+                    $last: "$zoneindex",
                 },
-            }
+            },
         },
         {
             $sort: {
-                created_at: -1
-            }
+                created_at: -1,
+            },
         },
         {
-            $skip: skip
+            $skip: skip,
         },
         {
-            $limit: pageSize
-        }
+            $limit: pageSize,
+        },
     ];
     let res = await Zonescore.aggregate(pipeline);
 
     return res;
 };
+
+/**
+ * report year
+ */
+ZonescoreHelper.reportYear = async function reportYear(year, depCat) {
+    const ObjectId = require("mongoose").Types.ObjectId;
+    const Zonescore = mongoose.model("Zonescore");
+
+    const pipeline = [
+        {
+            $match: {
+                year: year,
+            },
+        },
+        {
+            $lookup: {
+                from: "zoneindexs",
+                localField: "zone_index",
+                foreignField: "_id",
+                as: "zoneindex",
+            },
+        },
+        {
+            $unwind: "$zoneindex",
+        },
+        {
+            $lookup: {
+                from: "zonecats",
+                localField: "zone_cat",
+                foreignField: "_id",
+                as: "zonecat",
+            },
+        },
+        {
+            $unwind: "$zonecat",
+        },
+        {
+            $lookup: {
+                from: "departments",
+                localField: "department",
+                foreignField: "_id",
+                as: "department",
+            },
+        },
+        {
+            $unwind: "$department",
+        },
+        {
+            $group: {
+                _id: "$_id",
+                score: {
+                    $last: "$score",
+                },
+                year: {
+                    $last: "$year",
+                },
+                department: {
+                    $last: "$department",
+                },
+                is_active: {
+                    $last: "$is_active",
+                },
+                created_at: {
+                    $last: "$created_at",
+                },
+                zonecat: {
+                    $last: "$zonecat",
+                },
+                zoneindex: {
+                    $last: "$zoneindex",
+                },
+            },
+        },
+        {
+            $match: {
+                "zonecat.department_category_id": ObjectId(depCat),
+            },
+        },
+        {
+            $group: {
+                _id: {
+                    dep: "$department._id",
+                    zone: "$zonecat._id",
+                },
+                depName: { $last: "$department.title" },
+                zoneCat: { $last: "$zonecat.title" },
+                sumScore: { $sum: { $toDecimal: "$score" } },
+                weight: { $last: "$zonecat.weight" },
+                zoneindexes: { $push: "$zoneindex" },
+            },
+        },
+        {
+            $group: {
+                _id: "$_id.dep",
+                depName: { $last: "$depName" },
+                data: {
+                    $push: {
+                        name: "$zoneCat",
+                        score: "$sumScore",
+                        weight: "$weight",
+                    },
+                },
+            },
+        },
+    ];
+
+    let res = await Zonescore.aggregate(pipeline);
+    return res;
+};
 /**
  * find all dep cat data index
  */
-ZonescoreHelper.loadAllZonescoreDataAll = async function loadAllZonescoreDataAll(req, dataPaginate) {
+ZonescoreHelper.loadAllZonescoreDataAll = async function loadAllZonescoreDataAll(
+    req,
+    dataPaginate
+) {
     const page = parseInt(dataPaginate.page);
     const pageSize = parseInt(dataPaginate.pageSize);
     const skip = page > 0 ? (page - 1) * pageSize : 0;
@@ -118,71 +233,71 @@ ZonescoreHelper.loadAllZonescoreDataAll = async function loadAllZonescoreDataAll
                 from: "zoneindexs",
                 localField: "zone_index",
                 foreignField: "_id",
-                as: "zoneindex"
-            }
+                as: "zoneindex",
+            },
         },
         {
-            $unwind: "$zoneindex"
+            $unwind: "$zoneindex",
         },
         {
             $lookup: {
                 from: "zonecats",
                 localField: "zone_cat",
                 foreignField: "_id",
-                as: "zonecat"
-            }
+                as: "zonecat",
+            },
         },
         {
-            $unwind: "$zonecat"
+            $unwind: "$zonecat",
         },
         {
             $lookup: {
                 from: "departments",
                 localField: "department",
                 foreignField: "_id",
-                as: "department"
-            }
+                as: "department",
+            },
         },
         {
-            $unwind: "$department"
+            $unwind: "$department",
         },
         {
             $group: {
                 _id: "$_id",
                 score: {
-                    $last: "$score"
+                    $last: "$score",
                 },
                 year: {
-                    $last: "$year"
+                    $last: "$year",
                 },
                 department: {
-                    $last: "$department"
+                    $last: "$department",
                 },
                 is_active: {
-                    $last: "$is_active"
+                    $last: "$is_active",
                 },
                 created_at: {
-                    $last: "$created_at"
+                    $last: "$created_at",
                 },
                 zonecat: {
-                    $last: "$zonecat"
+                    $last: "$zonecat",
                 },
                 zoneindex: {
-                    $last: "$zoneindex"
+                    $last: "$zoneindex",
                 },
-            }
+            },
         },
         {
             $sort: {
-                created_at: -1
-            }
+                created_at: -1,
+            },
         },
         {
-            $skip: skip
+            $skip: skip,
         },
         {
-            $limit: pageSize
-        }
+            $limit: pageSize,
+        },
     ];
     let res = await Zonescore.aggregate(pipeline);
 
@@ -191,37 +306,37 @@ ZonescoreHelper.loadAllZonescoreDataAll = async function loadAllZonescoreDataAll
 /**
  * find all dep cat count data result
  */
-ZonescoreHelper.loadAllZonescoreCountData = function loadAllZonescoreCountData(type) {
-    const Zonescore = mongoose.model('Zonescore');
+ZonescoreHelper.loadAllZonescoreCountData = function loadAllZonescoreCountData(
+    type
+) {
+    const Zonescore = mongoose.model("Zonescore");
     const ObjectId = require("mongoose").Types.ObjectId;
     const filterQuery = {
-        zone_index: ObjectId(type)
+        zone_index: ObjectId(type),
     };
 
     return new Promise((resolve, reject) => {
         Zonescore.countDocuments(filterQuery)
-            .then(res => {
-
+            .then((res) => {
                 resolve(res);
             })
-            .catch(err => reject(err));
+            .catch((err) => reject(err));
     });
 };
 /**
  * find all dep cat count data result
  */
 ZonescoreHelper.loadAllZonescoreCountDataAll = function loadAllZonescoreCountDataAll() {
-    const Zonescore = mongoose.model('Zonescore');
+    const Zonescore = mongoose.model("Zonescore");
 
-    const filterQuery = {
-    };
+    const filterQuery = {};
 
     return new Promise((resolve, reject) => {
         Zonescore.countDocuments(filterQuery)
-            .then(res => {
+            .then((res) => {
                 resolve(res);
             })
-            .catch(err => reject(err));
+            .catch((err) => reject(err));
     });
 };
 
@@ -229,19 +344,19 @@ ZonescoreHelper.loadAllZonescoreCountDataAll = function loadAllZonescoreCountDat
  * find Zonescore data result
  */
 ZonescoreHelper.loadZonescoreData = function loadZonescoreData(id) {
-    const Zonescore = mongoose.model('Zonescore');
+    const Zonescore = mongoose.model("Zonescore");
 
     const filterQuery = {
-        _id: id
+        _id: id,
     };
     const projection = {};
 
     return new Promise((resolve, reject) => {
         Zonescore.findOne(filterQuery, projection, {})
-            .then(res => {
+            .then((res) => {
                 resolve(res);
             })
-            .catch(err => reject(err));
+            .catch((err) => reject(err));
     });
 };
 
@@ -249,80 +364,80 @@ ZonescoreHelper.loadZonescoreData = function loadZonescoreData(id) {
  * insert Zonescore data
  */
 ZonescoreHelper.insertNewZonescore = async function insertNewZonescore(data) {
-    const Zonescore = mongoose.model('Zonescore');
-    const index = new Zonescore(data)
+    const Zonescore = mongoose.model("Zonescore");
+    const index = new Zonescore(data);
 
     let res2 = await index.save();
     const pipeline = [
         {
             $match: {
                 _id: res2._id,
-            }
+            },
         },
         {
             $lookup: {
                 from: "zoneindexs",
                 localField: "zone_index",
                 foreignField: "_id",
-                as: "zoneindex"
-            }
+                as: "zoneindex",
+            },
         },
         {
-            $unwind: "$zoneindex"
+            $unwind: "$zoneindex",
         },
         {
             $lookup: {
                 from: "zonecats",
                 localField: "zone_cat",
                 foreignField: "_id",
-                as: "zonecat"
-            }
+                as: "zonecat",
+            },
         },
         {
-            $unwind: "$zonecat"
+            $unwind: "$zonecat",
         },
         {
             $lookup: {
                 from: "departments",
                 localField: "department",
                 foreignField: "_id",
-                as: "department"
-            }
+                as: "department",
+            },
         },
         {
-            $unwind: "$department"
+            $unwind: "$department",
         },
         {
             $group: {
                 _id: "$_id",
                 score: {
-                    $last: "$score"
+                    $last: "$score",
                 },
                 year: {
-                    $last: "$year"
+                    $last: "$year",
                 },
                 department: {
-                    $last: "$department"
+                    $last: "$department",
                 },
                 is_active: {
-                    $last: "$is_active"
+                    $last: "$is_active",
                 },
                 created_at: {
-                    $last: "$created_at"
+                    $last: "$created_at",
                 },
                 zonecat: {
-                    $last: "$zonecat"
+                    $last: "$zonecat",
                 },
                 zoneindex: {
-                    $last: "$zoneindex"
+                    $last: "$zoneindex",
                 },
-            }
+            },
         },
         {
             $sort: {
-                created_at: -1
-            }
-        }
+                created_at: -1,
+            },
+        },
     ];
     let res = await Zonescore.aggregate(pipeline);
     return res;
@@ -332,14 +447,17 @@ ZonescoreHelper.insertNewZonescore = async function insertNewZonescore(data) {
  * update Zonescore data
  */
 ZonescoreHelper.updateZonescoreData = async function updateZonescoreData(data) {
-    const Zonescore = mongoose.model('Zonescore');
-    let res2 = await Zonescore.findByIdAndUpdate(data._id, data, { useFindAndModify: false, new: true });
+    const Zonescore = mongoose.model("Zonescore");
+    let res2 = await Zonescore.findByIdAndUpdate(data._id, data, {
+        useFindAndModify: false,
+        new: true,
+    });
 
     const pipeline = [
         {
             $match: {
                 _id: res2._id,
-            }
+            },
         },
 
         {
@@ -347,65 +465,65 @@ ZonescoreHelper.updateZonescoreData = async function updateZonescoreData(data) {
                 from: "zoneindexs",
                 localField: "zone_index",
                 foreignField: "_id",
-                as: "zoneindex"
-            }
+                as: "zoneindex",
+            },
         },
         {
-            $unwind: "$zoneindex"
+            $unwind: "$zoneindex",
         },
         {
             $lookup: {
                 from: "zonecats",
                 localField: "zone_cat",
                 foreignField: "_id",
-                as: "zonecat"
-            }
+                as: "zonecat",
+            },
         },
         {
-            $unwind: "$zonecat"
+            $unwind: "$zonecat",
         },
         {
             $lookup: {
                 from: "departments",
                 localField: "department",
                 foreignField: "_id",
-                as: "department"
-            }
+                as: "department",
+            },
         },
         {
-            $unwind: "$department"
+            $unwind: "$department",
         },
         {
             $group: {
                 _id: "$_id",
                 score: {
-                    $last: "$score"
+                    $last: "$score",
                 },
                 year: {
-                    $last: "$year"
+                    $last: "$year",
                 },
                 department: {
-                    $last: "$department"
+                    $last: "$department",
                 },
                 is_active: {
-                    $last: "$is_active"
+                    $last: "$is_active",
                 },
                 created_at: {
-                    $last: "$created_at"
+                    $last: "$created_at",
                 },
                 zonecat: {
-                    $last: "$zonecat"
+                    $last: "$zonecat",
                 },
                 zoneindex: {
-                    $last: "$zoneindex"
+                    $last: "$zoneindex",
                 },
-            }
+            },
         },
         {
             $sort: {
-                created_at: -1
-            }
-        }
+                created_at: -1,
+            },
+        },
     ];
     let res = await Zonescore.aggregate(pipeline);
     return res;
@@ -416,12 +534,15 @@ ZonescoreHelper.updateZonescoreData = async function updateZonescoreData(data) {
  */
 ZonescoreHelper.deleteZonescore = function deleteZonescore(data) {
     return new Promise((resolve, reject) => {
-        const Zonescore = mongoose.model('Zonescore');
-        Zonescore.findByIdAndUpdate(data._id, { is_active: false }, { useFindAndModify: false, new: true })
-            .then(res => {
+        const Zonescore = mongoose.model("Zonescore");
+        Zonescore.findByIdAndUpdate(
+            data._id,
+            { is_active: false },
+            { useFindAndModify: false, new: true }
+        )
+            .then((res) => {
                 resolve(res);
             })
-            .catch(err => reject(err));
+            .catch((err) => reject(err));
     });
 };
-

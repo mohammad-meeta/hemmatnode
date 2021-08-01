@@ -51,18 +51,30 @@
                 b-table-column(label="نام", v-slot="props")
                     | {{ props.row.depName }}
                 b-table-column(:label="label1", v-slot="props")
-                    | {{ props.row.data[label1] }}
+                    | {{ props.row.data[label1].toFixed(2) }}
                 b-table-column(:label="label2", v-slot="props")
-                    | {{ props.row.data[label2] }}
+                    | {{ props.row.data[label2].toFixed(2) }}
                 b-table-column(:label="label3", v-slot="props")
-                    | {{ props.row.data[label3] }}
+                    | {{ props.row.data[label3].toFixed(2) }}
                 b-table-column(label="فعالیت ها بستر سازی", v-slot="props")
-                    | {{ props.row.data[label4] }}
+                    | {{ props.row.data[label4].toFixed(2) }}
                 b-table-column(label="نمره سال", v-slot="props")
-                    | {{ props.row.data.sum }}
+                    | {{ props.row.data.sum.toFixed(2) }}
+
         .column.is-12
             .chart.container
-                multi-line-chart(:labels="labels", :datasets="datasets")
+                //- multi-line-chart(
+                //-     ref="chart",
+                //-     :labels="labels",
+                //-     :datasets="datasets",
+                //-     v-if="showChartFlag"
+                //- )
+                bar-chart(
+                    ref="chart",
+                    :labels="labels",
+                    :datasets="datasets",
+                    v-if="showChartFlag"
+                )
 </template>
 
 <script>
@@ -75,6 +87,7 @@ const ENUMS = require("JS-HELPERS/enums");
 const Loading = require("VUE-COMPONENTS/general/loading.vue").default;
 const MultiLineChart =
     require("VUE-COMPONENTS/charts/line-chart-multi-section.vue").default;
+const BarChart = require("VUE-COMPONENTS/charts/bar-chart.vue").default;
 
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
@@ -85,14 +98,16 @@ export default {
         Loading,
         Notification,
         MultiLineChart,
+        BarChart,
     },
 
     data: () => ({
         ENUMS,
+        showChartFlag: false,
         departments: [],
         notificationMessage: null,
         notificationType: "is-info",
-        selectedYear: "1399",
+        selectedYear: "1400",
         results: [],
         datasets: [],
         labels: [],
@@ -120,6 +135,7 @@ export default {
 
     computed: {
         showNotification: (state) => state.notificationMessage != null,
+
         label1: function () {
             if (0 == this.results.length) {
                 return null;
@@ -172,8 +188,6 @@ export default {
         this.init();
     },
 
-    mounted() {},
-
     methods: {
         /**
          * Init method
@@ -213,8 +227,12 @@ export default {
         /**
          * Load data
          */
-        loadData() {
-            this.loadReportData();
+        async loadData() {
+            Vue.set(this, "showChartFlag", false);
+            await this.loadReportData();
+            Vue.nextTick(() => {
+                Vue.set(this, "showChartFlag", true);
+            });
         },
 
         /**
@@ -228,7 +246,6 @@ export default {
             url = url
                 .replace("#department_category#", depCat)
                 .replace("#year#", year);
-            console.log(url);
             try {
                 let res = await AxiosHelper.send("get", url);
 
@@ -238,6 +255,60 @@ export default {
                     Vue.set(this, "results", resData);
                 }
             } catch (err) {}
+
+            let finalData = [];
+            for (let index = 0; index < this.results.length; index++) {
+                const temp = {
+                    labels: [
+                        this.label1,
+                        this.label2,
+                        this.label3,
+                        this.label4,
+                    ],
+                    label: this.results[index].depName,
+                    data: [
+                        this.results[index].data[this.label1].toFixed(2),
+                        this.results[index].data[this.label2].toFixed(2),
+                        this.results[index].data[this.label3].toFixed(2),
+                        this.results[index].data[this.label4].toFixed(2),
+                    ],
+                    backgroundColor: [
+                        "rgba(255, 99, 132, 0.2)",
+                        "rgba(255, 159, 64, 0.2)",
+                        "rgba(255, 205, 86, 0.2)",
+                        "rgba(75, 192, 192, 0.2)",
+                    ],
+                    borderColor: [
+                        "rgb(255, 99, 132)",
+                        "rgb(255, 159, 64)",
+                        "rgb(255, 205, 86)",
+                        "rgb(75, 192, 192)",
+                    ],
+                    borderWidth: 1,
+                };
+
+                finalData.push(temp);
+            }
+            // Vue.set(this.datasets, this.datasets.length, temp);
+            Vue.set(this, "datasets", finalData);
+
+            const labels = [this.label1, this.label2, this.label3, this.label4];
+            Vue.set(this, "labels", labels);
+
+            // for (let index = 0; index < this.results.length; index++) {
+            //     const element = this.results[index];
+            //     const keys = Object.keys(element);
+            //     const values = Object.values(element);
+            //     const temp = {
+            //         label: values[0],
+            //         data: values.slice(1),
+            //         backgroundColor: "transparent",
+            //         backgroundColor:
+            //             "#" + Math.floor(Math.random() * 16777215).toString(16),
+            //     };
+            //     Vue.set(this.datasets, this.datasets.length, temp);
+            //     Vue.set(this, "labels", keys.slice(1));
+            // }
         },
 
         /**

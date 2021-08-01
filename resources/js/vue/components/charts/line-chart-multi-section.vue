@@ -25,6 +25,7 @@ export default {
     },
     methods: {
         showData() {
+            console.log(this.datasets);
             this.renderChart(
                 {
                     labels: this.Chartlabel,

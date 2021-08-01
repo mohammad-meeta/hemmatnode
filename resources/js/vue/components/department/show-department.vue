@@ -109,9 +109,12 @@
                                         .info-card-value
                                             | {{ userData.cellphone }}
                 .big-button
+                    //- a(
+                    //-     href="#"
+                    //-     @click.prevent="showReports"
+                    //- )
                     a(
-                        href="#"
-                        @click.prevent="showReports"
+                        href="/zonescore/report"
                     )
                         span.big-button-icon
                             i.fa.fa-bar-chart
@@ -579,7 +582,8 @@ export default {
         },
 
         showReports() {
-            this.changeFormMode(this.ENUMS.FORM_MODE.REPORT);
+            // this.changeFormMode(this.ENUMS.FORM_MODE.REPORT);
+
             // this.$refs.reportList.loadReports(1);
         },
     },

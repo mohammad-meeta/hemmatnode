@@ -49,16 +49,19 @@
                             v-for="(zoneIndex, zoneIndexScore) in zoneIndexs",
                             :value="zoneIndex._id"
                         ) {{ zoneIndex.title }}
-        .field
-            label.label سال
-            .control
-                date-picker(
+        b-field(
+                label="سال",
+            )
+                b-select(
+                    placeholder="انتخاب سال",
                     v-model="zoneScoreData.year",
-                    display-format="jYYYY",
-                    format="YYYY",
-                    type="year",
-                    required
                 )
+                    option(
+                        v-for="year in years"
+                        :value="year"
+                        :key="year"
+                    )
+                        | {{ year }}
         .field
             label.label امتیاز
             .control
@@ -114,7 +117,7 @@ export default {
         zoneScoreData: {
             zone_cat: {},
             zone_index: {},
-            year: "",
+            year: null,
             score: null,
             department: null,
             is_active: true,
@@ -133,6 +136,7 @@ export default {
         notificationMessage: null,
         notificationType: "is-info",
         showLoadingFlag: false,
+        years:[],
     }),
 
     props: {
@@ -165,6 +169,7 @@ export default {
     created() {
         this.loadDepartments();
         this.loadZoneCats();
+        this.loadYears();
     },
 
     mounted() {},
@@ -217,6 +222,14 @@ export default {
             const resData = res.data;
             const datas = resData.data.data;
             Vue.set(this, "departments", datas);
+        },
+
+        /**
+         * Load years
+         */
+        loadYears() {
+            const years= [1395,1396,1397,1398,1399,1400];
+            Vue.set(this, "years", years);
         },
 
         /**

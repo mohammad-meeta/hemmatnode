@@ -92,7 +92,7 @@ const BarChart = require("VUE-COMPONENTS/charts/bar-chart.vue").default;
 const Notification = require("VUE-COMPONENTS/general/notification.vue").default;
 
 export default {
-    name: "ZoneScores",
+    name: "ZoneScoreReport",
 
     components: {
         Loading,

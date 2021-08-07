@@ -50,7 +50,7 @@
                         href="/zonescore/report",
                         target="_blank",
                      )
-                        | کارنامه پیام گزاران
+                        | کارنامه
             .column.is-9.dashboard-contents
                 .dashboard-content(v-show="modeContent")
                     dashboard-content

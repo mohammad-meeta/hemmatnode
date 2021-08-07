@@ -7,7 +7,7 @@
         .dashboard-content-body.columns.is-multiline
                 .column.is-4.dashboard-button
                     a(href="/zonescore/report" target="_blank")
-                        | کارنامه پیام گزاران
+                        | کارنامه
 
 </template>
 <script>
